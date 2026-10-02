@@ -1,5 +1,12 @@
 # CombatSolver 测试清单
 
+## B016/T023 生成牌附魔来源与一次性遗物消费（2026-10-02）
+
+- 失败基线取自问题包 `21980d83adf740879ddf16d466f8c499`（0.47.0，原版小啃兽遭遇，`diagnostics/logs/combat/000.jsonl:197/199`）：第 2 回合续用对账报 `field=relicCounters expected={UNSETTLING_LAMP/0/0} actual={UNSETTLING_LAMP/1/0}` 与 `field=P[0] expected={<missing>} actual={1:WEAK_POWER=1/0[DamageDecrease=0.75,]}`。两处同源：墨染附魔的 OnPlay 镜像当时没有把生成卡实例作为卡来源，灯的 `BeforePowerAmountChanged` 拿不到 `cardSource`，既不翻倍虚弱也不标记已消费。
+- 新增原生夹具 `LAMP-INKY-SHIV-ROUTE-CONTINUATION` / `LampInkyShiv:RouteContinuation:CardSourceIdentitySearchBoundaryMatchesLiveTurn`：墨刃 + 墨染小刀 + 不安之灯，固定前缀 `[BLADE_OF_INK, SHIV]` 走真实搜索，再用实机打出同一前缀并结束回合；核对触发来源就是打出的那张附魔小刀、目标虚弱层数，以及搜索缓存的下一回合边界状态与实机逐字段一致。
+- 对照：同一命令在把 `EnchantmentOnPlayMirrors.HandleInky` 回退成 `ApplyPower`（无 cardSource）后 `Failed`，错误与失败基线逐字段一致；恢复 `ApplyPowerFromSource(..., context.PreviewCard)` 后 `Passed`。Release 构建 0 警告 0 错误，实例由启动器输出删除。
+- 本主题只覆盖生成牌附魔来源与灯的一次性消费时点；跨回合续用对账的泛化状态一致性仍按 T006 归口，未在此重派生。
+
 ## 无人测试隔离静音（2026-10-02）
 
 | 验证 | 实际结果 |

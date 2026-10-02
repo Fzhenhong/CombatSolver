@@ -131,6 +131,11 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertLampInkyShivAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "LAMP-INKY-SHIV-ROUTE-CONTINUATION")
+            {
+                await runner.AssertLampInkyShivRouteContinuationAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "FIXED-PREFIX-TURN-LOSS")
             {
                 await runner.AssertFixedPrefixTurnLossAsync(combatState, player);
