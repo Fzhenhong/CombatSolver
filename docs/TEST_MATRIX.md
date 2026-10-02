@@ -21,7 +21,9 @@
 
 `B015-T016-AFTERIMAGE-ROUTE` / `coverage/unattended/b015-t016-afterimage-route.json`：同原根按日志STRANGLE→AFTERIMAGE顺序从生产PrepareCardActions取六步动作，每步完整/增量/原生状态与RNG一致；目标自然跨ID1→ID2。生产ReplayAdjustedRoute前移余像使第二张SHIV目标2失效，同输入修前Failed、修后Passed；合法两步前移、无重排控制、共享路径失效目标及原路线保留通过。120秒，0.111.0/Ritsu0.6.3/同MVID BaseLib3.4.7；不是完整Solve胜利路线发布验收。
 
-`B015-FIXED-PREFIX-TARGETS` / `coverage/unattended/b015-fixed-prefix-targets.json`：直接生产候选→ApplyFixedPrefix单动作，合法目标致胜、缺失目标拒绝、原生Continuation不变，Passed（18.33秒）。既有ADJUSTED-ROUTE-INVALID-SUFFIX Passed（20.12秒）；更广FIXED-PREFIX-TURN-OUTCOMES在120秒无结果，仍记未验证，未提高预算。
+`B015-FIXED-PREFIX-TARGETS` / `coverage/unattended/b015-fixed-prefix-targets.json`：直接生产候选→ApplyFixedPrefix单动作，合法目标致胜、缺失目标拒绝、原生Continuation不变，Passed（18.33秒）。既有ADJUSTED-ROUTE-INVALID-SUFFIX Passed（20.12秒）；更广FIXED-PREFIX-TURN-OUTCOMES起初在120秒无结果，未提高预算；后查明是全新隔离档案第一次洗牌时原版洗牌引导等待确认，上游同样卡住。放入只关闭引导的进度档后，上游 `c4e0b47d` 与本分支均Passed（19.42 / 23.86秒）。
+
+整合上游 `c4e0b47d` 后：`B015-T016-AFTERIMAGE-ROUTE` Passed（32.80秒），`B015-FIXED-PREFIX-TARGETS` Passed，统计存储合同通过。PR哨兵按上游→本分支→本分支→上游交替：`TURN-SETUP-FIXED-PREFIX-STAMPEDE` 四次路线（含卡牌状态键）、根续用戳、展开8549/转移17245均相同，搜索耗时8649/3213/6653/6992 ms，四次都在同一条macOS无法建立No-GC区域的断言失败（发生在搜索结果之后，上游相同）；`PROFILE-SHIV-DEPLOY` 四次Passed，路线与续用戳相同、部署后战损0。0.111.0/Ritsu0.6.3，macOS隔离无头，各120秒。
 
 `B015-T016-ORIGINAL-PREFIX` / `coverage/unattended/b015-t016-original-prefix.json` 是保留失败的诊断入口：原ZIP开战双状态、日志选牌、前五步完整/增量/原生状态与RNG均通过；生产串行兄弟及两个父节点的真实调度器/worker检查通过，2准备/4动作且实测动作并发2，同原报告MVID BaseLib3.4.7。当前生成器未产生非法目标，随后强制历史SHIV→ID2仍失败，故请求总Failed；不是当前生产RED或修复验收。真实0.111.0/Ritsu0.6.3、120秒；差异环境及复跑参数见[后续证据](community/b015-follow-up.md)。
 

@@ -1,6 +1,6 @@
 # B015 后续：统计饱和隔离与其余主题的证据边界
 
-关联 Refs #174，延续[阶段一](b015-stage-one.md)。源码基线仍为 `88298ae5`；只在 `fix/batch-b015` 本地工作。初始调查时认领获得维护者积极回复、Assignee仍空；收尾刷新[任务页](https://github.com/Torch1230/CombatSolver/issues/174)确认已正式指派 `s1f102500012`（issue updated_at=2026-10-02T10:49:17Z）。没有推送、评论、PR、原游戏目录部署或发布。 上游PR #188随后合入 `fbe469b77e55f1269a563725df001023597cd9a0`，父提交为本次冻结基线；该性能合并涉及根捕获、Hook、搜索及测试入口，但未直接改T018统计文件。本轮未变基，既有结论仍只属于冻结基线；发布前整合另做影响范围核对。
+关联 Refs #174，延续[阶段一](b015-stage-one.md)。源码基线仍为 `88298ae5`；只在 `fix/batch-b015` 本地工作。初始调查时认领获得维护者积极回复、Assignee仍空；收尾刷新[任务页](https://github.com/Torch1230/CombatSolver/issues/174)确认已正式指派 `s1f102500012`（issue updated_at=2026-10-02T10:49:17Z）。没有推送、评论、PR、原游戏目录部署或发布。 上游PR #188随后合入 `fbe469b77e55f1269a563725df001023597cd9a0`，父提交为本次冻结基线；该性能合并涉及根捕获、Hook、搜索及测试入口，但未直接改T018统计文件。下文调查期间的证据都在冻结基线上取得；之后已变基到上游 `c4e0b47d`，影响范围核对和补充验证见“整合上游后复核与PR哨兵”。
 
 最新进展：下文T016“当前生产未复现”是前一阶段对扩展候选/worker路径的结论，后续已在**余像前移的生产路线后处理**取得同输入修前Failed、修后Passed。当前可评审的生产修复范围为T016与T018，详见“T016后处理因果复现与修复”。早期强制非法动作的总Failed记录保留，不改写成通过。
 
@@ -99,7 +99,7 @@ pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGIN
 
 专项请求为 `coverage/unattended/b015-t016-afterimage-route.json`；按上一专项复跑参数将ScenarioId替换为 `B015-T016-AFTERIMAGE-ROUTE`。两份专项共享原根恢复和逐步差分工具，旧 `B015-T016-ORIGINAL-PREFIX` 仍保留历史非法动作失败，不改预期以伪造修复。源码与夹具已独立只读审查。
 
-相邻既有 `ADJUSTED-ROUTE-INVALID-SUFFIX` 在同Ritsu0.6.3通过（20.12秒）：失效手牌、终局后缀和合法致胜路线合同保留。较大的 `FIXED-PREFIX-TURN-OUTCOMES` 在120秒外层截止前未产出result，启动器终止进程并删除实例；日志最后为原生回合/洗牌FTUE，不能断定是哪个断言或归因于本修复。此项记未验证，不延长预算或宣称通过，另缩小到直接经过固定前缀入口的单动作合同。 缩小后的 `B015-FIXED-PREFIX-TARGETS` 已Passed（18.33秒）：两个独立根分别经过真实PrepareCardActions与ApplyFixedPrefix，合法目标致胜、缺失目标返回null，原生Continuation不变；没有跨回合等待。窄合同不替代宽用例验收。
+相邻既有 `ADJUSTED-ROUTE-INVALID-SUFFIX` 在同Ritsu0.6.3通过（20.12秒）：失效手牌、终局后缀和合法致胜路线合同保留。较大的 `FIXED-PREFIX-TURN-OUTCOMES` 在120秒外层截止前未产出result，启动器终止进程并删除实例；日志最后为原生回合/洗牌FTUE，不能断定是哪个断言或归因于本修复。此项当时记未验证，不延长预算或宣称通过，另缩小到直接经过固定前缀入口的单动作合同（后续已查明为环境原因并在两侧通过，见“整合上游后复核与PR哨兵”）。 缩小后的 `B015-FIXED-PREFIX-TARGETS` 已Passed（18.33秒）：两个独立根分别经过真实PrepareCardActions与ApplyFixedPrefix，合法目标致胜、缺失目标返回null，原生Continuation不变；没有跨回合等待。窄合同不替代宽用例验收。
 
 ### T020 进一步收敛
 
@@ -114,6 +114,34 @@ pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGIN
 其他公开入口不能混同：[InspectCardEdit](https://github.com/Quorafind/FreeLoadout/blob/3b151757b6997effa338abe7219595e4a04fe625/InspectCardEdit.cs)的获得与 LoadoutStore 重建会登记编辑覆盖；[OverrideStore](https://github.com/Quorafind/FreeLoadout/blob/3b151757b6997effa338abe7219595e4a04fe625/OverrideStore.cs)与保存补丁才注入/恢复fl_edit。已知覆盖表为模组目录 `data/run_overrides.json`。仅凭坏牌无fl_edit不能排除所有第三方恢复路径。前战结束至本战约96.299秒、一次INIT都成立，但日志索引声明前战仅摘要，录制也为空，不能据“没看到恢复日志”排除同进程恢复。
 
 剩余判别证据收敛为：匹配已知MVID的只读实现/构建映射，加TinkerTime替换边界调用记录或前后检查点；若查恢复，需源快照及恢复后字段。未发现需要在CombatSolver对合法MadScience补默认字段的证据。
+
+## 整合上游后复核与PR哨兵
+
+分支已变基到上游 `c4e0b47d`（含 #188 重战斗性能、#189 无人测试静音和社区PR哨兵验收规则）。冲突只在开发记录、测试矩阵和文档导航；变基前后本批对 `src/`、`tools/`、`coverage/` 的改动逐行一致。#188 改了 `Solve` 收尾的可存活边界回退、Hook 续执行和根捕获，没有改 `CanApplyFixedPrefixAction`、`ReplayAdjustedRoute`、`AfterimageFrontloading` 或统计文件，因此只补以下与改动相交的验证：
+
+- Release 构建0警告0错误，`verify-refactor-boundaries.sh` 为 `REFACTOR_BOUNDARIES_OK search_files=239`，统计存储纯 .NET 合同通过。T018 运行时文件不受上游改动影响，没有重跑游戏用例。
+- `B015-T016-AFTERIMAGE-ROUTE` 同输入 Passed（32.80秒），`B015-FIXED-PREFIX-TARGETS` Passed。
+- 宽 `FIXED-PREFIX-TURN-OUTCOMES` 的120秒无结果已查明是本机隔离启动器的环境问题：全新档案第一次洗牌时原版 `CardPileCmd.ShuffleFtueCheck` 弹出洗牌引导并等待玩家确认，无头进程停在这里。上游 `c4e0b47d` 同条件同样无结果，两侧日志停在同一行。按仓库启动脚本 `--progress-snapshot-path` 的同一做法放入只关闭引导的最小进度档（`enable_ftues=false`，不含其他进度）后，上游与本分支均 Passed（19.42 / 23.86秒，检查项相同）。
+
+最终PR哨兵均为同机、同Ritsu0.6.3、同请求，按上游→本分支→本分支→上游交替各跑一次：
+
+| 哨兵 | 选择理由 | 质量 | 工作量 | 搜索耗时（ms，上游 / 本分支） |
+|---|---|---|---|---|
+| `TURN-SETUP-FIXED-PREFIX-STAMPEDE` | 固定预算、DOP2，经过固定前缀入口 | 四次路线（含卡牌状态键）与根续用戳逐位相同，预计战损21 | 展开8549、转移17245，四次相同 | 8649 / 3213 / 6653 / 6992 |
+| `PROFILE-SHIV-DEPLOY` | SILENT 搜索加实际部署的相邻正确路径 | 四次路线与续用戳相同，部署后战斗结束、战损0、无计划外重算 | 短搜受时间边界影响：首个上游样本展开268，其余三次均为9 | 3253 / 978 / 739 / 720 |
+| `FIXED-PREFIX-TURN-OUTCOMES` | 跨三回合固定前缀与后续搜索 | 两侧 Passed，9项检查相同 | — | 单次，不作耗时比较 |
+
+STAMPEDE 每次运行最后都在同一条 No-GC 断言失败：请求要求的战斗级 No-GC 区域在本机 macOS 无法建立，上游和本分支相同。这个失败发生在初始搜索结果产出之后，所以上表的路线和工作量仍然有效，但这个请求本身在 macOS 上算未通过。耗时样本只能说明本分支没有稳定增加；它不是可见游戏的性能结论。原包完整胜利路线的 Solve、发布和部署仍未验收。
+
+## 五主题当前版本结论
+
+| 主题 | 当前版本是否仍存在 | 首因 | 本批处理 |
+|---|---|---|---|
+| T016 | 存在，已修复 | 余像前移改变紧勒伤害，后续动作沿用的旧目标尚未生成 | 调整路线时校验目标身份，失效即保留原路线；同输入修改前失败/修改后通过 |
+| T017 | 按设计拒绝 | 第三方 TheHeroExpansion 给原版 SovereignBlade 加了 `SeekingEdgeSuffix` 和额外战斗行为，不是原版字段遗漏 | 保留未知字段拒绝；建议按第三方适配处理，本仓库不放行 |
+| T018 | 存在，已修复 | 统计消费者退出或健康队列满时，写入失败一直传到部署 | 故障与饱和隔离、partial 持久化；同输入修改前失败/修改后通过 |
+| T019 | 主线不存在 | 多人实验提交 `f1461c7d` 的 `Last(...)` 守卫在无人存活时抛错；main 从未有这段代码 | 主线最小原生对照通过，重建历史条件后精确复现；实验分支补丁提案待维护者指定目标分支 |
+| T020 | 坏状态早于求解器 | 进入战斗前的原始存档已含 type0 的 MadScience+1；合法牌经求解器保持类型 | 保留 None 显式拒绝；来源需第三方实现映射或 TinkerTime 前后记录 |
 
 
 ## 验证记录与限制
@@ -139,7 +167,10 @@ pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGIN
 | T016余像前移生产后处理，同输入修改前/后 | `t016-afterimage-red-063` / `t016-afterimage-green-063` | Failed（31.50秒）target2缺失 / Passed（33.70秒）；六步生产动作的原生完整状态/RNG均通过，无效前移回退且合法短前移保留 |
 | 既有调整路线失效后缀合同 | `t016-adjusted-suffix-green-063` | Passed，20.12秒 |
 | 缩小的直接固定前缀目标合同 | `t016-fixed-prefix-targets-063` | Passed，18.33秒；合法生产目标/缺失目标拒绝及原生不变 |
-| 既有固定前缀跨回合结果合同 | `t016-fixed-prefix-green-063` | 120秒无result，未验证；停止并清理，不延长 |
+| 既有固定前缀跨回合结果合同 | `t016-fixed-prefix-green-063` | 120秒无result；后查明为全新档案洗牌引导阻塞，不延长 |
+| 整合上游后宽固定前缀合同，关闭引导 | `fixed-prefix-turn-upstream-noftue-063` / `fixed-prefix-turn-b015-noftue-063` | 上游 / 本分支均 Passed（19.42 / 23.86秒）；未关闭引导时上游同样无result |
+| 整合上游后T016原根后处理 | `t016-afterimage-rebase-c4e0-063` | Passed，32.80秒 |
+| PR哨兵交替对照 | `sentinel-stampede-*`、`sentinel-shiv-*` | 路线、续用戳、工作量一致；STAMPEDE 两侧同样在 macOS No-GC 断言失败 |
 | T016替补目标与T019原生败局差分 | `b015-boundaries-loss-062` | Passed，30.14秒（Ritsu0.6.2） |
 | MadScience合法/非法边界，真实原生差分 | `b015-madscience-062-retry` | Passed，27.37秒（Ritsu0.6.2） |
 
@@ -147,9 +178,9 @@ pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGIN
 
 ## 本地阶段交付与待确认项
 
-可供后续评审/提交PR的生产修复范围为 **T016余像前移后无效目标的保守回退**，以及 **T018统计消费者故障与健康队列饱和隔离**。T019/T020附带夹具与调查记录不宣称修复。T017保留未知字段拒绝；T019附实验分支补丁提案而未修改main。发布前需在届时上游上整合并按实际影响验证，本轮没有推送或发包授权。
+本批 PR 的生产修复范围为 **T016余像前移后无效目标的保守回退**，以及 **T018统计消费者故障与健康队列饱和隔离**，已在上游 `c4e0b47d` 上整合并按上节验证。T019/T020附带夹具与调查记录不宣称修复。T017保留未知字段拒绝；T019附实验分支补丁提案而未修改main。没有提升版本、发包或部署本地游戏目录。
 
-维护者问题草稿（尚未发送）：
+需维护者确认的问题：
 
 1. T017字段已定位 TheHeroExpansion；可否将其按仓库原版范围改列第三方适配，而不在本批放行未知字段？
 2. T019原产物来自多人实验提交f1461c7而非正式0.47.2；该缺陷应在哪个维护分支提交？附LastOrDefault最小提案，目标分支的单人败局/多人生存组合仍须验收。
