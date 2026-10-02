@@ -20,6 +20,8 @@
       "src/Testing/UnattendedTestRunner.Executor.cs",
       "src/Testing/UnattendedTestRunner.MirroredHookFilter.cs"
     ],
+    "snapshotCommit": "2812a100",
+    "comparisonScope": "exact retained transplantation at2812a100; later ef17 opening guard adds separate source/testing changes",
     "allChangedSourceContentsExact": true,
     "candidateDllSha256": "1d215125ab8e036e5713aa1dd333d4af20222c8d39a1f7147781bdb299894779",
     "build": "Release0warnings0errors28.35s CopyModOnBuild=false"
@@ -38,7 +40,7 @@
     "reuseLimit": "same retained source/input; no claim of a new paired measurement, new native run or equality of unrecorded legacy native binary fields"
   },
   "qualityGaps": {
-    "queen": "C52 two full samples won at67HP loss/T12,324.1425034s and315.7432298s; both RSS gates pass. OriginalA1 won67HP; originalA2 remained unfinished with539enemyHP. No2x speed pass; latest-upstream sentinel running.",
+    "queen": "Two C52 full samples won67HP/T12 at324.1425034 and315.7432298s. Latest upstream A1 timed out without victory at299.9777376s,enemy552HP. Observed quality/RSS pass; candidate full request takes5.26% longer than latest sample, unresolved time/speed gate; no2x claim.",
     "necrobinderBoss": "C52 full sample won with4HP loss/one potion versus original17HP/one potion; not2x speed acceptance.",
     "broadFinalRegression": "29/29 valid, all route quality comparisons pass;27 original single RSS comparisons pass,2 exceed10%;8 fresh ABBA processes for these2 roots pass observed quality/memory gates. Full paired speed acceptance remains incomplete."
   },
@@ -56,7 +58,7 @@
     "C53 free debuff ranking",
     "C54 Ironclad remaining healing certificate"
   ],
-  "delivery": "PR188 source is historical e3 stage only. This follow-up branch carries the later retained source; not merged or published yet. No version bump, visible game or workshop action.",
+  "delivery": "Stage follow-up PR199 has current-upstream target/sentinel observations and29-root quality screening. Validated C52 source deployed locally in five owned files. Broad2x goal remains active, not merged or released. No version bump, visible game or workshop action.",
   "openingPowerBoundaryFix": {
     "sourceCommit": "ef17f75b",
     "behavior": "Skip incremental power probes when the replayed prefix has a non-None boundary, dead player or completed victory; release prefix snapshot in the existing finally",
@@ -73,7 +75,7 @@
     "integratedBuild": "Release0warnings0errors13.69s CopyModOnBuild=false",
     "dllSha256": "5799436a6ed1bef1b44fef7791d0dfd181c52c3307adf5588d5b076f4a646b14",
     "boundary": "Passed search_files241",
-    "deployment": "isolated build; final broad regression and final deployment remain pending"
+    "deployment": "validated C52 build reused for exact five-file local deployment after corpus/memory/current-upstream observations; later commits docs only"
   },
   "rejectedFreeDefenceRanking": {
     "initialFrozenQueen": "one full sample won with61HP loss at302.9172305s",
@@ -246,9 +248,186 @@
     "performanceGatePassed": false
   },
   "latestUpstreamPairing": {
+    "scope": "current-upstream target pair and fixed sentinels; separate from original88298 corpus acceptance",
     "baselineCommit": "1a3d1a3747953b5145b2f38809d49f882c7271c1",
-    "baselineBuild": "Release0warnings0errors27.78s CopyModOnBuild=false",
-    "status": "running serial Native Prism A/B, Offline Silent elite A/B and latest Queen A; unchanged C52 Queen B1/B2 reused",
-    "scope": "new current-upstream comparison kept separate from original88298 task acceptance"
+    "candidateBehaviorCommit": "ef17f75b",
+    "configuration": "VeryHigh/DOP16/Smart/width on/novelty off/300s/16GB configured NoGC",
+    "nativePrism": {
+      "baseline": {
+        "runId": "ecdffd45326b47c3b0fe824a9688185e",
+        "seconds": 304.26782380000003,
+        "peakRssBytes": 26231697408,
+        "totalExpanded": 286903,
+        "totalTransitions": 1798962,
+        "quality": {
+          "projectedBattleHpLost": 28,
+          "potionCount": 0,
+          "finalHp": 59,
+          "finalEnemyHp": 0,
+          "combatEndedTurn": 3,
+          "onlyDeathRoutes": false
+        },
+        "configuredNoGcBytes": 16000000000,
+        "reportedFinalNoGcBytes": 3929876689,
+        "gcLifecycle": {
+          "forcedCollections": 38,
+          "noGcStartAttempts": 40,
+          "noGcStarts": 40,
+          "noGcEndAttempts": 39,
+          "noGcEnds": 39,
+          "noGcRestarts": 39,
+          "noGcLosses": 0
+        }
+      },
+      "candidate": {
+        "runId": "a9c503fa8f564768b1c0ef8fcdf14325",
+        "seconds": 158.10816269999998,
+        "peakRssBytes": 26653032448,
+        "totalExpanded": 92097,
+        "totalTransitions": 630441,
+        "quality": {
+          "projectedBattleHpLost": 28,
+          "potionCount": 0,
+          "finalHp": 59,
+          "finalEnemyHp": 0,
+          "combatEndedTurn": 3,
+          "onlyDeathRoutes": false
+        },
+        "configuredNoGcBytes": 16000000000,
+        "reportedFinalNoGcBytes": 3929876689,
+        "gcLifecycle": {
+          "forcedCollections": 11,
+          "noGcStartAttempts": 13,
+          "noGcStarts": 13,
+          "noGcEndAttempts": 12,
+          "noGcEnds": 12,
+          "noGcRestarts": 12,
+          "noGcLosses": 0
+        }
+      },
+      "speedup": 1.9244283065721823,
+      "peakRssRatio": 1.0160620578015476,
+      "qualityEqual": true,
+      "observedMemoryPassed": true,
+      "nativeScope": "SearchOnly after original recorded continuation restoration; legacy native binary lacks identity mapping and is not comparable. Full actual deployment evidence remains the existing retained-source run632aac."
+    },
+    "offlineSentinels": {
+      "dev-01-silent-elite": {
+        "baseline": {
+          "wallSeconds": 21.9470512,
+          "peakProcessWorkingSetBytes": 12497469440,
+          "comparisonQuality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 40,
+            "strategicHpDeficit": 40,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 9999619974,
+            "combatEndedTurn": 4,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          },
+          "totalExpanded": 109550,
+          "totalTransitions": 627681
+        },
+        "candidate": {
+          "wallSeconds": 21.9649959,
+          "peakProcessWorkingSetBytes": 12504731648,
+          "comparisonQuality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 40,
+            "strategicHpDeficit": 40,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 9999619974,
+            "combatEndedTurn": 4,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          },
+          "totalExpanded": 109550,
+          "totalTransitions": 627681
+        },
+        "qualityNoRegression": true,
+        "peakRssRatio": 1.0005810942795152,
+        "observedMemoryPassed": true,
+        "speedup": 0.9991830319440214,
+        "reuse": "fresh serial A/B"
+      },
+      "screen-queen": {
+        "baseline": {
+          "wallSeconds": 299.9777376,
+          "peakProcessWorkingSetBytes": 22950658048,
+          "comparisonQuality": {
+            "won": false,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 31,
+            "strategicHpDeficit": 31,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 552,
+            "score": -6050018,
+            "combatEndedTurn": null,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          },
+          "totalExpanded": 128668,
+          "totalTransitions": 4357904
+        },
+        "candidate": {
+          "wallSeconds": 315.7432298,
+          "peakProcessWorkingSetBytes": 22858600448,
+          "comparisonQuality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 67,
+            "strategicHpDeficit": 67,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 9997619913,
+            "combatEndedTurn": 12,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          },
+          "totalExpanded": 119130,
+          "totalTransitions": 4142951
+        },
+        "qualityNoRegression": true,
+        "peakRssRatio": 0.9959888906101312,
+        "observedMemoryPassed": true,
+        "speedup": 0.9500686294683618,
+        "reuse": "unchanged fresh C52 B2; B1 also won67HP"
+      }
+    },
+    "allObservedQualityMemoryPassed": true
+  },
+  "localDeployment": {
+    "behaviorCommit": "ef17f75b",
+    "dllSha256": "5799436a6ed1bef1b44fef7791d0dfd181c52c3307adf5588d5b076f4a646b14",
+    "status": "copied successfully",
+    "files": [
+      "CombatSolver.dll",
+      "CombatSolver.json",
+      "CombatSolver.MemoryCleaner.exe",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "scope": "only five owned files; no version/launch/publication"
   }
 }
