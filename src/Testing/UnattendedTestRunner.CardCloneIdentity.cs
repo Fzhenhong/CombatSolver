@@ -263,10 +263,38 @@ internal sealed partial class UnattendedTestRunner
                 throw new InvalidOperationException($"预测侧改写了实机牌 {liveCard.Id.Entry} 的永久牌组关联。");
         }
 
+        AssertSameNameIdentitySwapIsReported();
+
         _completedChecks.Add("CardCloneIdentity:DeckVersionContractSurvivesPileTransfers");
         _completedChecks.Add("CardCloneIdentity:InCombatTransformReplacementHasNoDeckVersion");
         _completedChecks.Add("CardCloneIdentity:DeckIdentitySurvivesPileCycle");
         _completedChecks.Add("CardCloneIdentity:SameNameTokenOccurrencePicksTheOtherInstance");
+        _completedChecks.Add("CardCloneIdentity:StampReportsEveryDifferingSameNameIndex");
+    }
+
+    // B016/T024 现场包 004.jsonl:58 只留下一条 field=D[6]：旧实现在牌堆字段里遇到第一个
+    // 不同下标就 return，于是「预测侧丢了牌组身份」与「预测侧把身份记在另一个同名牌上」
+    // 这两种成因给出完全相同的现场文本，无法裁决。这里锁死「逐处报出」这条诊断合同。
+    private void AssertSameNameIdentitySwapIsReported()
+    {
+        const string body = "/False:0/False:-1/0/False/False/False/{0}/False/-:0:0/-:0[Cards=3,Damage=6,]/private=-/keywords=[]/baselib=-";
+        string filler = "STRIKE_REGENT+0" + string.Format(body, "True");
+        var expected = new ContinuationStamp(
+            "turn=7;D=MAKE_IT_SO+0" + string.Format(body, "False") + "," + filler
+            + ",MAKE_IT_SO+0" + string.Format(body, "True"));
+        var actual = new ContinuationStamp(
+            "turn=7;D=MAKE_IT_SO+0" + string.Format(body, "True") + "," + filler
+            + ",MAKE_IT_SO+0" + string.Format(body, "False"));
+
+        IReadOnlyList<string> differences = expected.DescribeDifferences(actual);
+        if (differences.Count != 2)
+            throw new InvalidOperationException(
+                "同名牌身份互换必须同时报出两个下标，实际只报了 " + differences.Count + " 条："
+                + string.Join(" | ", differences));
+        if (!differences[0].Contains("field=D[0]", StringComparison.Ordinal)
+            || !differences[1].Contains("field=D[2]", StringComparison.Ordinal))
+            throw new InvalidOperationException(
+                "同名牌身份互换的差异下标不是 0 与 2：" + string.Join(" | ", differences));
     }
 
     private static int IndexOfCard(SimCardPile pile, PredictedCard card)
