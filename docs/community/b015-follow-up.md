@@ -41,7 +41,7 @@
 - T016：保留原生Stock、将原敌HP设为1，第一张SHIV击杀并产生不同CombatId的替补；验证活动/已退场身份、Fork、父分支不变、对替补第二张SHIV的完整与增量回放、两步原生完整状态一致。
 - T019：替补执行无伤害Boot Up，玩家1HP实际打出CrimsonMantle确认SelfDamage=1，EndTurn到T+1；预测死亡与终局戳、Fork、原生ProcessPendingLoss安全点前完整状态一致。
 
-这两个最小边界在本轮行为源码修改前后没有差异；未改卡牌目标或Power生命周期实现。它们没有复现原包异常，不能代替原报告完整动作链、Silent/A9配置及BaseLib/其他Mod环境，也不构成“已修复”结论。T016仍需从原根复现完整前缀并确认目标2何时不可解析。T019的实际构建及失败调用已在后续核对中定位，见下文；不能把主线最小通过描述为修复了实验分支。
+这两个最小边界在本轮行为源码修改前后没有差异；未改卡牌目标或Power生命周期实现。它们没有复现原包异常，不能代替原报告完整动作链、Silent/A9配置及BaseLib/其他Mod环境，也不构成“已修复”结论。T016后续已从原根核验五步前缀，剩余问题是生产生成器如何产生无效的第六步，见下文。T019的实际构建及失败调用已在后续核对中定位，见下文；不能把主线最小通过描述为修复了实验分支。
 
 夹具校正均保留失败证据：第一次增量调用误传priorActionCount=0，状态键/续用相同但评分不一致，后改为1；第二次沿用胜利EndCombatInternal观察点，原生已正常死亡但无对应快照，120秒无结果。核对原版后改用败局ProcessPendingLoss，另加15秒局部等待；未扩大总预算或放宽状态断言。
 
@@ -58,6 +58,28 @@ T019 实际使用[多人实验提交 f1461c7d](https://github.com/Torch1230/Comb
 ### T016 原包恢复进展
 
 官方ZIP通过 Preflight（材料完整性），实际在0.111.0/Ritsu0.6.3恢复 `combat_start` 后，原生二进制状态与 ContinuationStamp 均严格匹配。但整个 RestoreOnly 请求仍为 Failed：原包只有开战与导出两个不可搜索检查点，录制事件仅一个 GAMBLING_CHIP Hook、没有选牌；start目标cursor=0后收到原生自动Hook，被录制驱动按 `recorded_action_mismatch:0` 拒绝。这不等于原根状态不匹配，也不等于完整恢复或原失败前缀验收成功。证据 `t016-original-restore-063`；下一步仅按日志记录的明确选牌与失败动作前缀做确定性诊断，不延长预算盲搜。 已新增专项 `B015-T016-ORIGINAL-PREFIX`：Builder严格恢复原根并在原生SetupPlayerTurn边界捕获，Executor按日志选择及六动作逐步做完整/增量回放和原生状态/RNG差分。第一次请求 `t016-original-prefix-063` 在建局读日志时失败，因为检查点导入器不提取diagnostics；尚未执行语义步骤。夹具随后改为从原ZIP只读指定、有大小上限的日志条目。 修订请求 `t016-original-prefix-zip-063` 已完成原开战双状态、日志选牌及前五步完整/增量/原生全状态和RNG对账，六个日志父标量也一致；第六步按原日志强制重放SHIV target2，精确抛出原 `CardPlay has no target creature`。此时实际与预测原敌ID1仍有4HP，ID2不存在。该证据证明原记录动作不适用于已重建父状态，但尚未证明当前生产候选生成会自行产生该动作，不能自动重定向目标或将这一步当完整修复基线。已排除HelicalDart出牌前击杀假设（实际为出牌后临时敏捷）；继续对已核验父根做有界生产候选/兄弟分支诊断。
+
+### T016 生产生成与并发归属检查
+
+在已核验的五步父节点上调用生产 `PrepareCardActions`，再分别回放一个 SHIV 和一个 BACKSTAB 兄弟分支。两者均可击杀ID1并产生87HP的ID2；父节点与原生状态保持不变，前后候选目标仍为ID1。证据 `t016-production-siblings-063`；整份请求在随后强制历史无效第六步处仍为 Failed。
+
+最后一次请求 `t016-parallel-baselib-063` 加载原报告同MVID的 BaseLib3.4.7（`e1ce449c-88a4-4ba0-bbee-eb1e33f0310b`）。从五步父节点和合法第六步之后的子节点组成两个父节点，限定2个准备任务、4个真实动作任务；通过生产 `AdmittedJobScheduler`、`ExpansionLane`、执行、发布和 `Receive` 路径检查归属。每个动作都与独立串行回放做完整状态/RNG差分，同时检查两个父节点及原生状态未变化。
+
+配置DOP2，实测 `maximumActiveWorkers=2`、`maximumActiveActionReplayWorkers=2`，实际动作执行重叠。全部分项通过：五步父节点候选使用ID1，六步父节点候选使用ID2，没有跨父节点目标或状态污染，`currentGeneratorProducedInvalidTarget=false`。之后强制历史 SHIV→ID2 仍抛 `CardPlay has no target creature`，故总结果仍为 **Failed**，不是绿色回归用例或当前生产生成器RED。该结果不代表原DOP16全前沿搜索、原始0.47.2完整运行或所有Mod环境通过。
+
+游戏平台MVID与原Windows不同；官方Ritsu0.6.3的MVID也与报告不同，另有QuickRestart等Mod未加载；这些差异写入结果。BaseLib身份相同不能消除其他环境差异。日志缺少候选生成时的父节点标识、准备目标列表及派发记录，当前材料无法区分历史版本差异、完整前沿时序或环境影响。没有新的可判别假说时停止重复健康场景，不扩大120秒预算，不加自动改目标、跳过动作或吞异常补丁。
+
+专项入口为 `coverage/unattended/b015-t016-original-prefix.json`。它只适用于B015官方T016原ZIP，读取唯一指定日志条目且限制1MiB，不执行档案内容；选择以失败日志中的明确记录为依据，报告 `historySource=original_native_root_plus_failed_candidate`，不伪称 ReplayRecorded。旧状态键只允许已审计的费用后缀增量，所有旧字段及实例序号必须匹配；本次6步映射实际没有改键或序号。15秒局部取消是合作式取消，worker排空可能等待，外层120秒仍是硬上限。
+
+本机使用隔离macOS启动器执行；Windows/Linux公共入口可按以下参数复跑（这两平台本轮未执行；完整Mod身份需另按当地隔离实例流程配置）：
+
+```bash
+./tools/run-unattended-test.sh --scenario-id B015-T016-ORIGINAL-PREFIX --character-id SILENT --encounter-id AXEBOTS_NORMAL --checkpoint-archive-path .local/issue-bundles/174/raw/B015/T016/reports/e63cd12543994bb08b9497e45839005c.zip --checkpoint-selector start --replay-mode RestoreOnly --timeout-seconds 120 --cleanup-instance-on-exit
+```
+
+```powershell
+pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGINAL-PREFIX -CharacterId SILENT -EncounterId AXEBOTS_NORMAL -CheckpointArchivePath .local/issue-bundles/174/raw/B015/T016/reports/e63cd12543994bb08b9497e45839005c.zip -CheckpointSelector start -ReplayMode RestoreOnly -TimeoutSeconds 120 -CleanupInstanceOnExit
+```
 
 ### T020 进一步收敛
 
@@ -91,7 +113,21 @@ T019 实际使用[多人实验提交 f1461c7d](https://github.com/Torch1230/Comb
 | T016原报告Ritsu0.6.3依赖复核（同时包含T019边界） | `b015-boundaries-063` | Passed，29.14秒 |
 | T019重建历史Last条件负对照 | `b015-boundaries-historical-guard-062` | Failed，精确命中原Last异常；主线同输入Passed |
 | T016原包combat_start严格恢复 | `t016-original-restore-063` | 开战双状态匹配；后续自动Hook使整个请求Failed |
+| T016原根、选牌和五步原生差分 | `t016-original-prefix-zip-063` | 前五步通过；强制历史第六步目标不存在，总Failed |
+| T016生产准备与兄弟分支 | `t016-production-siblings-063` | 候选/父节点检查通过；随后历史第六步总Failed |
+| T016生产双父节点并发，同MVID BaseLib | `t016-parallel-baselib-063` | 2准备/4动作且实际并发2；全部归属差分通过，未生成非法目标；随后历史第六步总Failed |
 | T016替补目标与T019原生败局差分 | `b015-boundaries-loss-062` | Passed，30.14秒（Ritsu0.6.2） |
 | MadScience合法/非法边界，真实原生差分 | `b015-madscience-062-retry` | Passed，27.37秒（Ritsu0.6.2） |
 
 证据位于忽略的 `.local/evidence/`；专项原包来源与托管探针位于 `.local/triage-agents/`。正式结论只覆盖上述最小行为；未执行原包全环境的 ReplayRecorded/整场部署、真实统计上传或Windows/Linux验收。整批仍用 Refs #174，不关闭问题。
+
+## 本地阶段交付与待确认项
+
+可供后续评审/提交PR的生产修复范围仅为 **T018统计消费者故障与健康队列饱和隔离**，包括持久partial和问题包诊断；T016/T019/T020附带夹具与调查记录不宣称修复。T017保留未知字段拒绝；T019附实验分支补丁提案而未修改main。发布前需在届时上游上整合并按实际影响验证，本轮没有推送或发包授权。
+
+维护者问题草稿（尚未发送）：
+
+1. T017字段已定位 TheHeroExpansion；可否将其按仓库原版范围改列第三方适配，而不在本批放行未知字段？
+2. T019原产物来自多人实验提交f1461c7而非正式0.47.2；该缺陷应在哪个维护分支提交？附LastOrDefault最小提案，目标分支的单人败局/多人生存组合仍须验收。
+3. T016当前限定生产生成、兄弟回放和真实双父节点并发均未产生非法目标。是否有仍会自然报错的当前构建报告，或能补采首次失败的父节点/准备候选/派发归属？已记录历史构建MVID，无需重复索取同一身份；需要将错误动作与生成它的实际父状态关联。
+4. T020能否提供与已知FreeLoadout/Rewind MVID对应的实现或构建映射，以及TinkerTime替换前后的检查点/操作调用记录？若是恢复流程，需要源快照和恢复后的字段。现有公开机制仅证明可行，不能据此归责某Mod。

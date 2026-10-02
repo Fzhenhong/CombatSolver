@@ -39,6 +39,11 @@ internal sealed partial class UnattendedTestRunner
             bool expectedCardPlayed = request.ExpectedPlayedCardId == null;
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
+            if (request.ScenarioId == "B015-T016-ORIGINAL-PREFIX")
+            {
+                await runner.AssertB015OriginalPrefixAsync(combatState, player);
+                return Observation(combatEnded: !CombatManager.Instance.IsInProgress);
+            }
             if (request.ScenarioId == "B015-MAD-SCIENCE")
             {
                 runner.SetStage("b015_mad_science");

@@ -19,6 +19,8 @@
 
 ## B015统计消费者终止隔离（2026-10-02）
 
+`B015-T016-ORIGINAL-PREFIX` / `coverage/unattended/b015-t016-original-prefix.json` 是保留失败的诊断入口：原ZIP开战双状态、日志选牌、前五步完整/增量/原生状态与RNG均通过；生产串行兄弟及两个父节点的真实调度器/worker检查通过，2准备/4动作且实测动作并发2，同原报告MVID BaseLib3.4.7。当前生成器未产生非法目标，随后强制历史SHIV→ID2仍失败，故请求总Failed；不是当前生产RED或修复验收。真实0.111.0/Ritsu0.6.3、120秒；差异环境及复跑参数见[后续证据](community/b015-follow-up.md)。
+
 `RUN-STATISTICS-WORKER-FAILURE` / `coverage/unattended/run-statistics-worker-failure.json`：原始NUL JSON导致真实消费者构造失败后，300次入队；修改前Failed（capacity exceeded），修改后Passed（队列空、快照无效、损坏文件保留）。游戏0.111.0、RitsuLib0.6.5、macOS隔离无头，请求均120秒预算。统计聚合/持久化既有合同通过；该阶段尚未覆盖的边界见下方后续记录。命令及边界见[B015阶段证据](community/b015-stage-one.md)。
 
 `RUN-STATISTICS-SATURATION` / `coverage/unattended/run-statistics-saturation.json`：屏障暂停真实健康consumer，256业务信号、满sync合并重试、第257业务事件显式停用；已接收事件排空持久化，partial重开与原生结算保留，禁止重新上传，排空期间I/O错误不被吞。真实0.111.0/Ritsu0.6.5同输入修前Failed、修后Passed；最终故障及饱和请求均在Ritsu0.6.2复核通过；纯Store另覆盖旧full收据撤销和纠正收据不重复上传。详见[B015后续证据](community/b015-follow-up.md)。
