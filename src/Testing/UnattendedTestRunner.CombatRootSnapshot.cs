@@ -1,7 +1,9 @@
+using HarmonyLib;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Singleton;
 using MegaCrit.Sts2.Core.Modding;
 using MegaCrit.Sts2.Core.Nodes;
@@ -62,6 +64,7 @@ internal sealed partial class UnattendedTestRunner
             if (modifiedCost != (liveEveryCardFree ? 0m : 1m))
                 throw new InvalidOperationException("Loadout 全卡免费 hook 返回了未知费用语义。");
         }
+        string liveBeforeCaptureText = ContinuationStamp.CaptureLive(combat).StateText;
         CombatRootSnapshot root = CombatRootSnapshot.Capture(combat);
         if (expectOnlyPostCombatHealing is { } expectedHealingBound)
         {
@@ -102,6 +105,35 @@ internal sealed partial class UnattendedTestRunner
         });
         if (!workerLiveConstructorRejected)
             throw new InvalidOperationException("后台线程直接构造 live SimulatedCombatState 未被拒绝。");
+
+        // #182/T021：实机卡牌集合在根捕获窗口内被写入时必须得到具名拒绝，而不是裸的
+        // Collection was modified。探针卡只临时插入实机 _allCards，拒绝后立即移除。
+        List<CardModel> liveCombatCards = (List<CardModel>)AccessTools
+            .Field(typeof(CombatState), "_allCards")
+            .GetValue(combat)!;
+        CardModel captureProbeCard = ModelDb.Card<StrikeRegent>().ToMutable();
+        int liveCombatCardBaseline = liveCombatCards.Count;
+        bool collectionWriteRejected = false;
+        LiveCollectionGuard.CaptureWindowProbeForTesting = () => liveCombatCards.Add(captureProbeCard);
+        try
+        {
+            _ = CombatRootSnapshot.Capture(combat);
+        }
+        catch (LiveCollectionModifiedException ex)
+        {
+            collectionWriteRejected = ex.CollectionName == "CombatState._allCards";
+        }
+        finally
+        {
+            LiveCollectionGuard.CaptureWindowProbeForTesting = null;
+            liveCombatCards.Remove(captureProbeCard);
+        }
+        if (!collectionWriteRejected)
+            throw new InvalidOperationException("根捕获没有把窗口内的实机卡牌集合写入拒绝为具名异常。");
+        if (liveCombatCards.Count != liveCombatCardBaseline)
+            throw new InvalidOperationException("根捕获集合拒绝路径改动了实机卡牌集合。");
+        if (ContinuationStamp.CaptureLive(combat).StateText != liveBeforeCaptureText)
+            throw new InvalidOperationException("根捕获集合拒绝路径改动了实机状态。");
 
         try
         {

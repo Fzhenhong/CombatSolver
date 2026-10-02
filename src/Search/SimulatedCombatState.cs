@@ -251,6 +251,11 @@ internal sealed partial class SimulatedCombatState
         _cardMultiplayerConstraint = inner.RunState.CardMultiplayerConstraint;
         _playerCreatures = inner.PlayerCreatures.ToArray();
         _players = inner.Players.ToArray();
+        // 实机卡牌集合在根捕获窗口内必须保持不动：#182/T021 的裸 Collection was modified
+        // 来自写者在枚举 _allCards 期间改写该列表，导致搜索初始化无法归因地失败。
+        List<CardModel> liveCombatCards = (List<CardModel>)AllCombatCardsField.GetValue(inner)!;
+        using LiveCollectionGuard.Window rootLiveCollectionWindow = LiveCollectionGuard.BeginWindow(
+            ("CombatState._allCards", liveCombatCards));
         _madScienceUpgradeCapacity = MadScienceGrowth.CaptureRemainingCapacity(inner);
         _rootCardGenerationPools = RootCombatCardGenerationPoolSnapshot.Capture(
             _players,
@@ -332,9 +337,11 @@ internal sealed partial class SimulatedCombatState
             .Where(player => player.PlayerCombatState != null)
             .SelectMany(player => player.PlayerCombatState!.AllCards)
             .ToHashSet();
-        _rootFloatingCards = ((List<CardModel>)AllCombatCardsField.GetValue(inner)!)
+        _rootFloatingCards = LiveCollectionGuard
+            .SnapshotStable(liveCombatCards, "CombatState._allCards")
             .Where(card => !piledCards.Contains(card))
             .ToHashSet();
+        rootLiveCollectionWindow.Verify();
         _potionSlots = [];
         foreach (Player player in _players)
         {
