@@ -50,7 +50,34 @@
     "C44",
     "C45",
     "C46",
-    "C47"
+    "C47",
+    "C49 projected actual death ranking",
+    "C50/C51 ready free defence ranking"
   ],
-  "delivery": "PR188 source is historical e3 stage only. This follow-up branch carries the later retained source; not merged or published yet. No version bump, visible game or workshop action."
+  "delivery": "PR188 source is historical e3 stage only. This follow-up branch carries the later retained source; not merged or published yet. No version bump, visible game or workshop action.",
+  "openingPowerBoundaryFix": {
+    "sourceCommit": "ef17f75b",
+    "behavior": "Skip incremental power probes when the replayed prefix has a non-None boundary, dead player or completed victory; release prefix snapshot in the existing finally",
+    "nativeRegression": {
+      "runId": "6a381b31bb8f4c3a86ee05aaec7da8e5",
+      "status": "Passed",
+      "checks": [
+        "normal power remains playable",
+        "native Prepared prefix PendingChoice returns no probes",
+        "terminal victory returns no probes",
+        "root and live unchanged"
+      ]
+    },
+    "integratedBuild": "Release0warnings0errors13.69s CopyModOnBuild=false",
+    "dllSha256": "5799436a6ed1bef1b44fef7791d0dfd181c52c3307adf5588d5b076f4a646b14",
+    "boundary": "Passed search_files241",
+    "deployment": "isolated build; final broad regression and final deployment remain pending"
+  },
+  "rejectedFreeDefenceRanking": {
+    "initialFrozenQueen": "one full sample won with61HP loss at302.9172305s",
+    "repeatFrozenQueen": "one full C51 sample won with77HP loss at322.0813522s versus original67; rejected for quality instability",
+    "nativeOperational": "C51 native root won with18HP loss and zero unexpected replans; different initial state, not proof of the frozen61HP route",
+    "threeRepresentatives": "C51 single samples passed quality/memory, insufficient to override Queen failure",
+    "sourceIncluded": false
+  }
 }

@@ -4412,3 +4412,12 @@ pwsh -NoProfile -File tools\run-unattended-test.ps1 -ScenarioId MONSTER-MOVES-BA
 | Queen与完整回归 | 未通过／未完成 | Queen当前完整搜索可能未获胜；旧67战损胜利动作仍可重放。后续分支保持Draft，合并前修复覆盖与完成质量/内存回归。 |
 
 详细版本对应见[后续报告](performance/heavy-combat-followup-20261003.json)。
+
+### 2026-10-03：能力路线边界与免费防御排序筛查
+
+| 检查项 | 状态 | 证据与限制 |
+| --- | --- | --- |
+| OPENING-POWER-BOUNDARY | 通过 | 后续源码原生run6a381b31bb8f4c3a86ee05aaec7da8e5；正常Panache、Prepared未决选牌、胜利终局及根/live不变；未使用场景专属生产路线。 |
+| 后续边界修复构建 | 通过 | Release13.69秒，0警告/0错误；架构search_files241通过；隔离产物。 |
+| C50/C51排序原型 | 拒绝 | 冻结Queen完整首次61战损、复测77战损，原基线67；不纳入后续PR。不同Native根18战损与三个代表场景单样本通过不构成该冻结根验收。 |
+| 最终重场景质量/内存/时间回归 | 未完成 | 独立边界修复不改变已记录Queen搜索覆盖缺口；PR继续Draft。 |
