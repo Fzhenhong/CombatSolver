@@ -45,6 +45,11 @@ internal sealed partial class UnattendedTestRunner
                 await runner.RunNoveltySearchBenchmarkAsync(combatState, player);
                 return Observation(combatEnded: !CombatManager.Instance.IsInProgress);
             }
+            if (request.ScenarioId == "DISPLAY-NAME-SUMMON")
+            {
+                await runner.AssertDisplayNameSummonAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "LOOP-REPLAY-REQUEST-BUDGET")
             {
                 await runner.AssertLoopReplayBudgetAsync(combatState);
