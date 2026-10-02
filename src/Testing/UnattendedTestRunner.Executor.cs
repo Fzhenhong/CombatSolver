@@ -632,6 +632,13 @@ internal sealed partial class UnattendedTestRunner
                 runner._completedChecks.Add("EnergyResetPowerOrder");
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId is "TURN-END-FOCUS-EVOKE-ORDER" or "TURN-END-FOCUS-EVOKE-ORDER-REVERSE"
+                or "TURN-END-ORB-EVOKE-SENTINEL")
+            {
+                runner.SetStage("turn_end_focus_evoke_order");
+                await runner.AssertTurnEndFocusEvokeOrderAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId is "REPLAY-START-HISTORY" or "REPLAY-START-HISTORY-ECHO")
             {
                 runner.SetStage("replay_start_history");
