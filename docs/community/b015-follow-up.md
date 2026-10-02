@@ -1,6 +1,6 @@
 # B015 后续：统计饱和隔离与其余主题的证据边界
 
-关联 Refs #174，延续[阶段一](b015-stage-one.md)。源码基线仍为 `88298ae5`；只在 `fix/batch-b015` 本地工作。初始调查时认领获得维护者积极回复、Assignee仍空；收尾刷新[任务页](https://github.com/Torch1230/CombatSolver/issues/174)确认已正式指派 `s1f102500012`（issue updated_at=2026-10-02T10:49:17Z）。没有推送、评论、PR、原游戏目录部署或发布。
+关联 Refs #174，延续[阶段一](b015-stage-one.md)。源码基线仍为 `88298ae5`；只在 `fix/batch-b015` 本地工作。初始调查时认领获得维护者积极回复、Assignee仍空；收尾刷新[任务页](https://github.com/Torch1230/CombatSolver/issues/174)确认已正式指派 `s1f102500012`（issue updated_at=2026-10-02T10:49:17Z）。没有推送、评论、PR、原游戏目录部署或发布。 上游PR #188随后合入 `fbe469b77e55f1269a563725df001023597cd9a0`，父提交为本次冻结基线；该性能合并涉及根捕获、Hook、搜索及测试入口，但未直接改T018统计文件。本轮未变基，既有结论仍只属于冻结基线；发布前整合另做影响范围核对。
 
 ## T018：健康消费者饱和也不再中断战斗
 
@@ -22,7 +22,7 @@
 
 原包明确加载 TheHeroExpansion 1.0.0.0。公开提交 `0726b34cb2329bc5b1484b7ac7d110a981603526` 的 [SovereignBladePatch](https://github.com/BlackHero20/TheHeroExpansionMod/blob/0726b34cb2329bc5b1484b7ac7d110a981603526/TheHeroExpansionCode/Patches/SovereignBladePatch.cs) 对原版 CanonicalVars getter 无条件追加 `StringVar("SeekingEdgeSuffix")`，同补丁还增加两个变量。[EdgeOfDestinyPower](https://github.com/BlackHero20/TheHeroExpansionMod/blob/0726b34cb2329bc5b1484b7ac7d110a981603526/TheHeroExpansionCode/Powers/EdgeOfDestinyPower.cs) 写入显示后缀，同时含有额外攻击等战斗行为。
 
-因此不应把该字段按原版显示字段放行：忽略字符串不能实现该 Mod 的战斗语义。当前保留未知字段拒绝。包中没有该 Mod 的实际 DLL/MVID/源码映射，未证明历史二进制与此提交完全一致，也未验收完整第三方适配。此项的可交付结果是纠正“原版遗漏字段”的分诊前提和明确适配范围，而不是声称已修兼容性。没有证据将字段归因于 RegentFX。
+因此不应把该字段按原版显示字段放行：忽略字符串不能实现该 Mod 的战斗语义。当前保留未知字段拒绝。`replay/checkpoint.json.build` 已记录该 Mod 的 MVID `bd5b6a43-df85-4910-9687-3a96b702c7dd`，但包中没有实际 DLL 或对应源码映射，未证明历史二进制与此提交完全一致，也未验收完整第三方适配。此项的可交付结果是纠正“原版遗漏字段”的分诊前提和明确适配范围，而不是声称已修兼容性。没有证据将字段归因于 RegentFX。
 
 ## T020：坏状态早于战斗，合法状态对照通过
 
@@ -41,11 +41,38 @@
 - T016：保留原生Stock、将原敌HP设为1，第一张SHIV击杀并产生不同CombatId的替补；验证活动/已退场身份、Fork、父分支不变、对替补第二张SHIV的完整与增量回放、两步原生完整状态一致。
 - T019：替补执行无伤害Boot Up，玩家1HP实际打出CrimsonMantle确认SelfDamage=1，EndTurn到T+1；预测死亡与终局戳、Fork、原生ProcessPendingLoss安全点前完整状态一致。
 
-这两个最小边界在本轮行为源码修改前后没有差异；未改卡牌目标或Power生命周期实现。它们没有复现原包异常，不能代替原报告完整动作链、Silent/A9配置及BaseLib/其他Mod环境，也不构成“已修复”结论。T016仍需从原根复现完整前缀并确认目标2何时不可解析；T019仍需报告实际构建及参与者/Power组合。
+这两个最小边界在本轮行为源码修改前后没有差异；未改卡牌目标或Power生命周期实现。它们没有复现原包异常，不能代替原报告完整动作链、Silent/A9配置及BaseLib/其他Mod环境，也不构成“已修复”结论。T016仍需从原根复现完整前缀并确认目标2何时不可解析。T019的实际构建及失败调用已在后续核对中定位，见下文；不能把主线最小通过描述为修复了实验分支。
 
 夹具校正均保留失败证据：第一次增量调用误传priorActionCount=0，状态键/续用相同但评分不一致，后改为1；第二次沿用胜利EndCombatInternal观察点，原生已正常死亡但无对应快照，120秒无结果。核对原版后改用败局ProcessPendingLoss，另加15秒局部等待；未扩大总预算或放宽状态断言。
 
-T019 官方 v0.47.2 发布包 SHA256 为 `d908542df68d3e8e0f0f294d9d081c6e6f9479c703141ca605dcc9755a19d1d1`，DLL MVID 为 `0ac802ba-4f27-4050-9c11-f342f12fbdfd`。定向 C#/IL 核对发现 PersistentPowerSupport 整类无 Enumerable.First，入口已分段；对应 GetAmount/GetPower 缺失项返回零/null或用FirstOrDefault，与 tag 一致。包中未带实际 CombatSolver DLL/MVID，所以这仍不能解释原始 First 栈，也不能称“当前已经修好”。
+### 构建身份更正与 T019 实验分支根因
+
+此前遗漏了 `replay/checkpoint.json.build`，错误地写成“原包没有实际构建MVID”，并把 LINQ 异常猜成 First；现明确撤回这两项表述。该文件记录完整 informational version 和 MVID。T016/T017 对应官方0.47.2提交 `1b9109695b34f82f98b74c8915215b3b38c9d5d4`，Solver MVID `0ac802ba-4f27-4050-9c11-f342f12fbdfd`；下载官方包SHA256为 `d908542df68d3e8e0f0f294d9d081c6e6f9479c703141ca605dcc9755a19d1d1`，身份相符。
+
+T019 实际使用[多人实验提交 f1461c7d](https://github.com/Torch1230/CombatSolver/commit/f1461c7d6dbb2145a0df7fd6743c65bc59c56c35)，Solver MVID `151cb9b9-f2d3-4f9a-b12e-a9d3517576a5`，并非官方0.47.2产物。该提交 `PersistentPowerSupport.TriggerAfterSideTurnStart` 在执行玩家回合开始 Power 后，用 `combat.Players.Last(member => simulator.State.GetCreature(member.Creature).IsAlive)` 选最后存活玩家，再判断本轮 participants 是否包含它以触发 Rampart。唯一玩家1HP被 CrimsonMantle 自伤击杀后，谓词没有匹配项，即抛出原报告 `Sequence contains no matching element`。即使没有 RampartPower，这个 Last 也会先求值。
+
+该守卫来自多人分支 `8a5e493f`；`f1461c7d` 不是冻结main基线的祖先，主线没有这段逻辑。因而不应在main加入该守卫再修复，也不能写成main已经删除旧缺陷。已准备针对实验分支的最小补丁提案：`LastOrDefault` 加显式非空参与者判断，保留有存活玩家时的最后参与者一次触发规则；无人存活时继续原有败局安全点。原生 PendingLoss 下 GainBlock 无效果，不能通过提前更改胜负判定或吞异常处理。补丁与分支多人生存组合仍需在目标分支验收。 [补丁提案](b015-t019-experimental-branch.patch)仅供目标分支评审，未应用到main。
+
+控制实验仅把上述历史 Last 守卫移植到冻结main，运行同一 `B015-BOUNDARIES` 输入，在披风自伤后精确复现 `Sequence contains no matching element → Enumerable.Last → TriggerAfterSideTurnStart`；该输入在未注入守卫的主线已通过严格原生差分。证据 `b015-boundaries-historical-guard-062`，两侧游戏0.111.0/Ritsu0.6.2、预算120秒。临时守卫与构建DLL已恢复；这是“重建历史条件”的因果负对照，不是实际f1461c7 DLL或原报告T5动作链复放，也不代表所附补丁完成多人语义验收。
+
+### T016 原包恢复进展
+
+官方ZIP通过 Preflight（材料完整性），实际在0.111.0/Ritsu0.6.3恢复 `combat_start` 后，原生二进制状态与 ContinuationStamp 均严格匹配。但整个 RestoreOnly 请求仍为 Failed：原包只有开战与导出两个不可搜索检查点，录制事件仅一个 GAMBLING_CHIP Hook、没有选牌；start目标cursor=0后收到原生自动Hook，被录制驱动按 `recorded_action_mismatch:0` 拒绝。这不等于原根状态不匹配，也不等于完整恢复或原失败前缀验收成功。证据 `t016-original-restore-063`；下一步仅按日志记录的明确选牌与失败动作前缀做确定性诊断，不延长预算盲搜。 已新增专项 `B015-T016-ORIGINAL-PREFIX`：Builder严格恢复原根并在原生SetupPlayerTurn边界捕获，Executor按日志选择及六动作逐步做完整/增量回放和原生状态/RNG差分。第一次请求 `t016-original-prefix-063` 在建局读日志时失败，因为检查点导入器不提取diagnostics；尚未执行语义步骤。夹具随后改为从原ZIP只读指定、有大小上限的日志条目。 修订请求 `t016-original-prefix-zip-063` 已完成原开战双状态、日志选牌及前五步完整/增量/原生全状态和RNG对账，六个日志父标量也一致；第六步按原日志强制重放SHIV target2，精确抛出原 `CardPlay has no target creature`。此时实际与预测原敌ID1仍有4HP，ID2不存在。该证据证明原记录动作不适用于已重建父状态，但尚未证明当前生产候选生成会自行产生该动作，不能自动重定向目标或将这一步当完整修复基线。已排除HelicalDart出牌前击杀假设（实际为出牌后临时敏捷）；继续对已核验父根做有界生产候选/兄弟分支诊断。
+
+### T020 进一步收敛
+
+最早 `recording/origin.save`（save_time1790564493）已经包含坏牌；一秒后的战前存档相同。开局到首次手动记录的16秒内，永久牌组由15张变14张，当前房间新增移除坏牌历史，但战斗手牌仍保留该坏实例。这说明永久牌组删除没有同步清除当前战斗牌，并不能确定谁执行替换/删除。
+
+原包已提供 FreeLoadout MVID `ab0c70b6-95fd-4711-bfa5-70286aad00cf`、Rewind MVID `fe9e6d12-c159-4895-962c-e910ab635d80`；缺的是与这些身份匹配的实际实现，或第45层替换发生前后的操作记录，而不是再次索取MVID。公开Rewind发布说明不足以证明字段丢失，未将其他同类回退模组冒认为该二进制。
+
+用户转回外部分析后，独立核验[FreeLoadout 108分支固定提交3b151757](https://github.com/Quorafind/FreeLoadout/tree/3b151757b6997effa338abe7219595e4a04fe625)：`Tabs/AddCardsTab.cs` 的“获得升级牌”从 ModelDb 原型 CreateCard，在尚未入Deck时 Upgrade，然后 Add；没有复制 TinkerTime 字段，也没有 CopyCardOverride。其 manifest0.9.12/BonModConfig 与原包另一张 BATTLE_TRANCE 的 `fl_edit=1` 相容。它能产生与坏牌相同的 +1/type0/无rider/无fl_edit 形态，但这不是已知MVID到该提交的映射，更不是原局调用证据；未安装、编译或执行此Mod。
+
+本机正版0.111.0独立核对：Add在获得历史序列化之后才赋 FloorAddedToDeck；Remove在实际移除前序列化移除历史；CardCmd.Upgrade仅在当时处于Deck才记升级历史；FromSerializable先恢复SavedProperties再升级。type为AlwaysSave，默认None会写0；rider默认None按SaveIfNotTypeDefault省略。这些规则解释了“移除合法A→目录新建B→入库前升级→加入”的可行链，不足以证明“B一定入库前新建升级”：移出后修改、内部升级API、恢复/历史重写或缺记录仍须区分。
+
+其他公开入口不能混同：[InspectCardEdit](https://github.com/Quorafind/FreeLoadout/blob/3b151757b6997effa338abe7219595e4a04fe625/InspectCardEdit.cs)的获得与 LoadoutStore 重建会登记编辑覆盖；[OverrideStore](https://github.com/Quorafind/FreeLoadout/blob/3b151757b6997effa338abe7219595e4a04fe625/OverrideStore.cs)与保存补丁才注入/恢复fl_edit。已知覆盖表为模组目录 `data/run_overrides.json`。仅凭坏牌无fl_edit不能排除所有第三方恢复路径。前战结束至本战约96.299秒、一次INIT都成立，但日志索引声明前战仅摘要，录制也为空，不能据“没看到恢复日志”排除同进程恢复。
+
+剩余判别证据收敛为：匹配已知MVID的只读实现/构建映射，加TinkerTime替换边界调用记录或前后检查点；若查恢复，需源快照及恢复后字段。未发现需要在CombatSolver对合法MadScience补默认字段的证据。
+
 
 ## 验证记录与限制
 
@@ -62,6 +89,8 @@ T019 官方 v0.47.2 发布包 SHA256 为 `d908542df68d3e8e0f0f294d9d081c6e6f9479
 | Store纯.NET合同 | `statistics-contracts-v2.log` | Passed；含partial恢复、旧收据撤销及纠正收据保留 |
 | 已退出消费者最终检查 | `t018-worker-final-062` | Passed，25.12秒（Ritsu0.6.2） |
 | T016原报告Ritsu0.6.3依赖复核（同时包含T019边界） | `b015-boundaries-063` | Passed，29.14秒 |
+| T019重建历史Last条件负对照 | `b015-boundaries-historical-guard-062` | Failed，精确命中原Last异常；主线同输入Passed |
+| T016原包combat_start严格恢复 | `t016-original-restore-063` | 开战双状态匹配；后续自动Hook使整个请求Failed |
 | T016替补目标与T019原生败局差分 | `b015-boundaries-loss-062` | Passed，30.14秒（Ritsu0.6.2） |
 | MadScience合法/非法边界，真实原生差分 | `b015-madscience-062-retry` | Passed，27.37秒（Ritsu0.6.2） |
 

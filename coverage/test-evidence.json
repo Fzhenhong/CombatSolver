@@ -12,7 +12,7 @@
     "level": "HeadlessNativeDifferential",
     "procedure": "真实0.111.0/Ritsu0.6.2和0.6.3，B015-BOUNDARIES，120秒。",
     "expected": "Stock替补目标ID/Fork/增量完整回放及两步原生SHIV状态一致；1HP CrimsonMantle下一回合死亡，原生败局安全点与预测完整状态一致。",
-    "observed": "b015-boundaries-loss-062和b015-boundaries-063 Passed。没有修改目标或Power语义，原包异常未复现；官方0.47.2对应方法IL未发现First，仍缺报告实际DLL身份及完整环境。",
+    "observed": "b015-boundaries-loss-062和b015-boundaries-063 Passed。T016原包开战ContinuationStamp/native-state均匹配，随后缺选牌录制且cursor0自动Hook触发recorded_action_mismatch；原失败前缀未复现。更正：构建身份已在checkpoint.json.build；T019来自f1461c7多人分支的Last(predicate)无人存活异常，非官方0.47.2，冻结main没有此逻辑。 仅重建历史Last守卫的同输入负对照精确复现异常；并非实际历史DLL或完整T5链回放，实验分支补丁未验收。",
     "evidence": "docs/community/b015-follow-up.md; src/Testing/B015BoundaryChecks.cs; coverage/unattended/b015-boundaries.json"
   },
   "B015-T020-MADSCIENCE-20261002": {
@@ -20,7 +20,7 @@
     "level": "HeadlessNativeDifferentialAndPacketForensics",
     "procedure": "真实0.111.0/Ritsu0.6.2，B015-MAD-SCIENCE，120秒；原包战前存档与原版源码核对。",
     "expected": "合法Skill/Chaos升级、保存、root/Fork及原生出牌全状态/RNG一致；无效None仍明确拒绝。",
-    "observed": "b015-madscience-062-retry Passed。原包TinkerTime事件后的战前牌已为None/None+1，无证据为求解器克隆丢字段；具体替换调用者仍未确定。",
+    "observed": "b015-madscience-062-retry Passed。原包TinkerTime事件后的战前牌已为None/None+1，无证据为求解器克隆丢字段；具体替换调用者仍未确定。 最早origin.save已有坏牌；战中永久牌组删除后战斗实例仍在。原包含FreeLoadout/Rewind的MVID，但未取得匹配实现或战前替换操作记录。 独立核实FreeLoadout108分支目录CreateCard→入Deck前Upgrade→Add可产生同形坏牌，且原包另一牌fl_edit=1；仅为机制可行，未匹配历史DLL或证明本局调用，不排除同进程恢复。",
     "evidence": "docs/community/b015-follow-up.md; src/Testing/B015MadScienceChecks.cs; coverage/unattended/b015-mad-science.json"
   },
   "INFUSED-CORE-INITIAL-SETUP-20260927": {

@@ -25,7 +25,7 @@
 
 `B015-MAD-SCIENCE` / `coverage/unattended/b015-mad-science.json`：真实0.111.0/Ritsu0.6.2中Skill/Chaos原生升级、保存恢复、root/Fork、兄弟隔离、合法出牌完整状态/RNG差分通过；None明确拒绝。不是原包坏牌修复，也未定位战前替换调用者。
 
-`B015-BOUNDARIES` / `coverage/unattended/b015-boundaries.json`：真实0.111.0/Ritsu0.6.2中Stock替补CombatId/Fork/父不变/增量完整回放/两次原生SHIV状态一致；1HP原生CrimsonMantle自伤在T+1死亡，模拟终局/Fork与原生ProcessPendingLoss安全点完整状态一致。另用T016原报告Ritsu0.6.3复核通过；仅最小边界通过，原包T016/T019尚未复现。
+`B015-BOUNDARIES` / `coverage/unattended/b015-boundaries.json`：真实0.111.0/Ritsu0.6.2中Stock替补CombatId/Fork/父不变/增量完整回放/两次原生SHIV状态一致；1HP原生CrimsonMantle自伤在T+1死亡，模拟终局/Fork与原生ProcessPendingLoss安全点完整状态一致。另用T016原报告Ritsu0.6.3复核通过；主线最小边界通过。T016原包开战双状态对账通过；cursor0后的自动Hook触发recorded_action_mismatch，整个RestoreOnly失败；原包另缺选牌录制；T019已定位f1461c7多人实验分支的Last(predicate)无人存活异常，详见后续证据中的构建身份更正。
 
 ## 0.47.3 版本与发布登记（2026-10-01）
 

@@ -1,6 +1,6 @@
 # B015 阶段一：故障基线与统计消费者隔离（2026-10-02）
 
-关联：Refs #174。基线为 `88298ae54fd626e52e87efd568dd19ffd507aafd`（0.47.3）。整批 T016–T020 仍未全部验收。本文保留阶段一历史；更新结论见[后续证据](b015-follow-up.md)。
+关联：Refs #174。基线为 `88298ae54fd626e52e87efd568dd19ffd507aafd`（0.47.3）。整批 T016–T020 仍未全部验收。本文保留阶段一历史；更新结论见[后续证据](b015-follow-up.md)。后续发现：构建身份在 checkpoint.json.build 中已存在；T019 实际为多人实验分支的 Last(predicate) 空匹配，下面早期对 First 的推测已撤回。
 
 ## 认领与范围
 
@@ -14,7 +14,7 @@
 | T017 | `17d363178b9b4a58a478c6ab41d453a5` 的未分类字符串异常属实。但本机正版 0.111.0 原版 SovereignBlade.CanonicalVars 仅有数值/计算变量，整个 arm64/x64 原版程序集均无 SeekingEdgeSuffix 的 ASCII/UTF-16LE 文本。原包加载 RegentFX 等额外 Mod。 | 原资料称“原版字段”尚不能成立；未知字符串继续显式拒绝。需要定位实际字段写入者、核对它是否仅显示后再决定合同；尚未证明具体 Mod 是写入者，也未做原包环境复现。 |
 | T018 | `ad752303ab53403faf085c2f7e4b1c83` 的 process/000.jsonl:11 更早记录 RunStatisticsStore 构造时的 JsonException：0x00、offset=0。消费者已经 faulted，旧 `_Process` 只停帧处理；后续 Activity 仍向容量256的队列写入，最终 combat/003.jsonl:41 中断部署。 | 已取得此根因的修改前失败/修改后通过。修复只隔离已经终止的统计消费者；健康消费者跟不上而真实满队列的情况仍沿原显式失败政策，未称所有队列故障已修。 |
 | T019 | `fc5a35417db14e428143e8df72750a3e` 的 combat/000.jsonl:372 失败候选为 turn=5 EndTurn，玩家仅1 HP，前缀最后为 UsePotion、CRIMSON_MANTLE。:383 的最早项目帧为 TriggerAfterSideTurnStart。 | 下一步在1 HP下构造 CrimsonMantle 回合开始自伤、参与者移除与状态查找边界。当前及 v0.47.2 源码该函数已分段，源码没有直接 First 调用；可能涉及内联下层查找，不能据此判已修。当前未复现。 |
-| T020 | `3f4c6b58670143308359a048b0d4899e` 的战前 save 已保存 MAD_SCIENCE+1 的 TinkerTimeType=0；同一历史房间先获得 type=2/rider=6，再移除该牌并添加升级但 type=0 的牌。combat_start 与首个搜索根也都为0，live continuation 为 None/None。原版 OnPlay 同样拒绝 None。 | 最早可见无效边界在战前牌组替换/升级过程，早于捕获/Fork/搜索。不能默认补 Attack，也不能称已证明模拟克隆丢状态。下一步追该替换来源与合法原生生成/升级/保存恢复对照；原包有 FreeLoadout 等 Mod，但未归因。 |
+| T020 | `3f4c6b58670143308359a048b0d4899e` 的战前 save 已保存 MAD_SCIENCE+1 的 TinkerTimeType=0；同一历史房间记录获得 type=2/rider=6、移除该牌及获得升级但 type=0 的牌；这些数组不能确定精确操作先后或调用者。combat_start 与首个搜索根也都为0，live continuation 为 None/None。原版 OnPlay 同样拒绝 None。 | 最早可见无效边界在战前牌组替换/升级过程，早于捕获/Fork/搜索。不能默认补 Attack，也不能称已证明模拟克隆丢状态。下一步追该替换来源与合法原生生成/升级/保存恢复对照；原包有 FreeLoadout 等 Mod，但未归因。 |
 
 五个包均声明游戏0.111.0；T016使用RitsuLib0.6.3，其余0.6.2。原包完整环境、索引、静态证据与安全解包清单保留在忽略目录 `.local/issue-bundles/174/`。未执行原包 Preflight、RestoreOnly、ReplayRecorded 或整场部署。
 
