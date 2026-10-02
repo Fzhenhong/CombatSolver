@@ -223,8 +223,49 @@ internal sealed partial class UnattendedTestRunner
                 $"同名牌选牌回放没有复现错位：token 指向牌组克隆（StateKey={tokenForDeckCard.StateKey}，"
                 + $"occurrence={tokenForDeckCard.SourceOccurrence}），回放却{(deckCardLeftPile ? "移动了克隆本身" : "没有移动任何一张")}。");
 
+        // —— 非转换路径的清空写点排查（B016/T024 t11）——
+        // 现场包没有任何战斗内转换事件，所以改用一条覆盖「弃牌—洗牌—抽牌」多轮往返的身份不变量来扫非转换路径：
+        // 只要某条路径把既有牌当成生成牌（CreateCard / FromGenerated）或新克隆重建，它就会在该 wrapper 上写出
+        // null 或另一个 DeckVersion 实例；这条链会把它读出来。
+        var cycleSimulator = new CombatPredictionSimulator(new SimulatedCombatState(combat));
+        SimPlayerCombatState cycleState = cycleSimulator.State.GetPlayerCombatState(player);
+        List<(PredictedCard Card, CardModel Version, string Id)> traced =
+        [.. cycleState.AllCards
+            .Where(card => card.Preview.DeckVersion != null)
+            .Select(card => (card, card.Preview.DeckVersion!, card.Preview.Id.Entry))];
+        if (traced.Count == 0)
+            throw new InvalidOperationException("非转换清空写点排查要求预测根里至少有一张带永久牌组身份的牌。");
+
+        for (int round = 1; round <= 3; round++)
+        {
+            List<PredictedCard> hand = [.. cycleState.Hand.Cards];
+            if (hand.Count > 0)
+                cycleSimulator.Discard(hand);
+            cycleSimulator.Draw(player, 5);
+            cycleSimulator.Draw(player, 5);
+            foreach ((PredictedCard card, CardModel version, string id) in traced)
+            {
+                if (card.GetPile(cycleSimulator.State) is null)
+                    continue;
+                if (ReferenceEquals(card.Preview.DeckVersion, version))
+                    continue;
+                string actual = card.Preview.DeckVersion is { } got ? got.Id.Entry : "null";
+                throw new InvalidOperationException(
+                    $"第 {round} 轮「弃牌—洗牌—抽牌」后 {id} 在非转换路径上丢了永久牌组身份："
+                    + $"expected={version.Id.Entry}({version.GetHashCode()}) actual={actual}"
+                    + $"（pile={card.GetPile(cycleSimulator.State)?.Type}）。");
+            }
+        }
+
+        foreach (CardModel liveCard in allCards.Where(card => card.DeckVersion != null))
+        {
+            if (liveCard.DeckVersion is null)
+                throw new InvalidOperationException($"预测侧改写了实机牌 {liveCard.Id.Entry} 的永久牌组关联。");
+        }
+
         _completedChecks.Add("CardCloneIdentity:DeckVersionContractSurvivesPileTransfers");
         _completedChecks.Add("CardCloneIdentity:InCombatTransformReplacementHasNoDeckVersion");
+        _completedChecks.Add("CardCloneIdentity:DeckIdentitySurvivesPileCycle");
         _completedChecks.Add("CardCloneIdentity:SameNameTokenOccurrencePicksTheOtherInstance");
     }
 
