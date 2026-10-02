@@ -131,9 +131,9 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertLampInkyShivAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
-            if (request.ScenarioId == "LAMP-INKY-SHIV-ROUTE-CONTINUATION")
+            if (request.ScenarioId == "CARD-CLONE-IDENTITY-CONTRACT")
             {
-                await runner.AssertLampInkyShivRouteContinuationAsync(combatState, player);
+                await runner.AssertCardCloneIdentityContractAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId == "FIXED-PREFIX-TURN-LOSS")
