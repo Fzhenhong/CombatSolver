@@ -32,6 +32,7 @@ using MegaCrit.Sts2.Core.Saves;
 using MegaCrit.Sts2.Core.Settings;
 using MegaCrit.Sts2.Core.ValueProps;
 using CombatSolver.Engine.Common;
+using CombatSolver.Engine.InCombat.Mirrors.Orbs;
 using CombatSolver.Engine.InCombat.Simulation;
 
 namespace CombatSolver;
@@ -1065,7 +1066,7 @@ internal sealed partial class UnattendedTestRunner
             simulator = new CombatPredictionSimulator(simulatedCombat);
         }
         int simulatedRoundHistoryEntryStart = simulator.History.Entries.Count;
-        AssertDerivedPowerHooks(combatState, simulatedCombat, player, enemy, check);
+        AssertDerivedPowerHooks(combatState, simulatedCombat, simulator, player, enemy, check);
         MoveStateSnapshot before = CaptureActual(combatState, player, enemy);
         foreach (UnattendedCardPlayCheck playCheck in check.CardPlayChecksBeforeMove)
         {
@@ -1809,6 +1810,7 @@ internal sealed partial class UnattendedTestRunner
     private static void AssertDerivedPowerHooks(
         CombatState actualCombat,
         SimulatedCombatState simulatedCombat,
+        CombatPredictionSimulator simulator,
         Player player,
         Creature enemy,
         UnattendedMonsterMoveCheck check)
@@ -1858,8 +1860,12 @@ internal sealed partial class UnattendedTestRunner
                 .First(candidate => candidate.Id.Entry.Equals(
                     check.DerivedHookOrbId,
                     StringComparison.OrdinalIgnoreCase));
+            OrbModel simulatedOrb = simulator.State.GetPlayerCombatState(player).OrbQueue.Orbs
+                .First(candidate => candidate.Id.Entry.Equals(
+                    check.DerivedHookOrbId,
+                    StringComparison.OrdinalIgnoreCase));
             int actual = (int)Hook.ModifyOrbValue(actualCombat, orb, check.DerivedHookBaseValue);
-            int simulated = (int)Hook.ModifyOrbValue(simulatedCombat, orb, check.DerivedHookBaseValue);
+            int simulated = (int)OrbMirrors.ModifyValue(simulator, simulatedOrb, check.DerivedHookBaseValue);
             AssertDerivedHookValue("ModifyOrbValue", actual, simulated, expectedOrbValue);
         }
         if (check.ExpectedShouldClearBlock is { } expectedClear)
