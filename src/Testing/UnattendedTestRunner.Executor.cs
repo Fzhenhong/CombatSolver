@@ -50,6 +50,11 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertDisplayNameSummonAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "PREDICTED-MONSTER-SCALING")
+            {
+                runner.AssertPredictedMonsterScalingBoundary(combatState);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "LOOP-REPLAY-REQUEST-BUDGET")
             {
                 await runner.AssertLoopReplayBudgetAsync(combatState);
