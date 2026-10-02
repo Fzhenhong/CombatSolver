@@ -24,11 +24,12 @@ internal sealed partial class RunStatistics : Node
     private readonly object _transportGate = new();
     private readonly HashSet<string> _activities = new();
     private Task? _worker;
+    private volatile bool _recordingStopped;
     private double _elapsed;
     private bool _disabled;
     private volatile bool _uploadEnabled;
     private CancellationTokenSource? _uploadCancellation;
-    internal static RunStatisticsSnapshot? Snapshot => _instance?._run is { } run && _instance._snapshot?.ProfileId != run.ProfileId ? null : _instance?._snapshot;
+    internal static RunStatisticsSnapshot? Snapshot => _instance?._recordingStopped == true ? null : _instance?._run is { } run && _instance._snapshot?.ProfileId != run.ProfileId ? null : _instance?._snapshot;
     internal static void Start(NGame host)
     {
         if (_instance != null || OnlinePresence.IsHeadless() || UnattendedTestRunner.IsActive) return;
@@ -40,7 +41,27 @@ internal sealed partial class RunStatistics : Node
     }
     private void Enqueue(Signal signal)
     {
+        if (!CanRecord()) return;
         if (!_signals.Writer.TryWrite(signal)) throw new InvalidOperationException("Run statistics queue capacity exceeded.");
+    }
+    private bool CanRecord()
+    {
+        if (_recordingStopped) return false;
+        if (_worker?.IsCompleted != true) return true;
+
+        // A dead consumer cannot recover by accepting more events. Invalidate this
+        // tracking session explicitly; preserve its files and original failure for diagnosis.
+        _recordingStopped = true;
+        _run = null;
+        _snapshot = null;
+        _activities.Clear();
+        SetUploading(false);
+        SetProcess(false);
+        _signals.Writer.TryComplete();
+        // The consumer is completed, so draining cannot race its store operations.
+        while (_signals.Reader.TryRead(out _)) { }
+        Entry.Logger.Error($"Run statistics unavailable; tracking stopped and source files retained: {_worker.Exception?.ToString() ?? _worker.Status.ToString()}");
+        return false;
     }
     private static string Key(string value) => Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(value)))[..32];
     internal static void Launched(RunManager manager)
@@ -53,6 +74,7 @@ internal sealed partial class RunStatistics : Node
             || manager.State.Players.Count != 1 || manager.State.GameMode != GameMode.Standard) return;
         Start(NGame.Instance!);
         var instance = _instance!;
+        if (!instance.CanRecord()) return;
         string profile = Key(OS.GetUserDataDir() + ":" + SaveManager.Instance.CurrentProfileId);
         string character = LocalContext.GetMe(manager.State)!.Character.Id.Entry;
         string id = Key(profile + ":" + manager._startTime + ":" + manager.State.Rng.StringSeed);
@@ -113,7 +135,7 @@ internal sealed partial class RunStatistics : Node
     }
     public override void _Process(double delta)
     {
-        if (_worker?.IsFaulted == true) { SetProcess(false); Entry.Logger.Error($"Run statistics stopped: {_worker.Exception}"); return; }
+        if (!CanRecord()) return;
         ObserveSetting();
         SetUploading(SolverSettings.Current.OnlineStatisticsEnabled && !SolverController.IsMultiplayerSession && !UnattendedTestRunner.IsActive);
         _elapsed += delta;

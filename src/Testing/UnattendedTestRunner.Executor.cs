@@ -39,6 +39,12 @@ internal sealed partial class UnattendedTestRunner
             bool expectedCardPlayed = request.ExpectedPlayedCardId == null;
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
+            if (request.ScenarioId == "RUN-STATISTICS-WORKER-FAILURE")
+            {
+                await RunStatistics.AssertWorkerFailureIsolationAsync(request.EvidenceDirectory
+                    ?? throw new InvalidOperationException("Statistics fixture requires an evidence directory."));
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "GENERATED-NOVELTY-SEARCH")
             {
                 _ = ApplySettingsOverrides();

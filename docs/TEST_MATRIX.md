@@ -17,6 +17,10 @@
 
 既有阶段原生证据包括 `MIRRORED-HOOK-FILTER`、`CARD-EXECUTION-CONTINUATION`、`EXECUTION-CHOICE-INCREMENTAL`、`SURVIVABLE-BOUNDARY-CONTRACT`、`REFINEMENT-INCUMBENT-CONTRACT` 和治疗闭包合同；历史通过不等同于合并上游后重新通过。四场阶段 ABBA 的战损与内核峰值门槛通过，保守提速 2.336～5.544 倍。合并后的 Release／结构门禁和受影响原生合同，以及 29 根完整极高／DOP16 的质量／内存回归另行记录。详见[范围与证据](performance/veryhigh-dop16-20261001.md)。
 
+## B015统计消费者终止隔离（2026-10-02）
+
+`RUN-STATISTICS-WORKER-FAILURE` / `coverage/unattended/run-statistics-worker-failure.json`：原始NUL JSON导致真实消费者构造失败后，300次入队；修改前Failed（capacity exceeded），修改后Passed（队列空、快照无效、损坏文件保留）。游戏0.111.0、RitsuLib0.6.5、macOS隔离无头，请求均120秒预算。统计聚合/持久化既有合同通过；健康消费者满队列、整场部署及T016/T017/T019/T020未验收。命令及边界见[B015阶段证据](community/b015-stage-one.md)。
+
 ## 0.47.3 版本与发布登记（2026-10-01）
 
 本次小版本由0.47.2更新至0.47.3，整合内存修复分支至main，并同步项目、manifest、开发笔记与中英玩家日志。main整合只新增既有多人规划文档；本次版本登记没有行为源码或测试输入变化，复用本页GC与储君生成路线部署合同及PR #147原生费用/选牌合同。最终发布只执行Release构建、最小ZIP和统一三渠道脚本，不重跑已通过场景、不启动可见Steam或完整发布门禁。恢复后的管理员系统清理与完整重型生成流的可见100%卡死仍保持未实测口径。
