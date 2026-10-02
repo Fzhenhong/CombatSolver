@@ -11,6 +11,13 @@
 
 配置阶段检查通过 PowerShell AST 截取 `settingsPath` 初始化至 `resolvedProgressSnapshotPath` 前的真实语句，并在临时目录执行；临时目录已清理，没有新增永久测试或复制实现。未启动或停止游戏、未重跑战斗验证；上述证据证明配置生成行为，不替代 FMOD 实际音频输出验收。
 
+## 社区批次 B014 修复夹具（2026-10-02，Refs #173）
+
+- `DISPLAY-NAME-SUMMON`：修改前 `e1894470bdce4850a28bd5561094cc97` Failed（`GremlinMercNormal` 死亡召唤后预测 `sneaky` 槽位缺映射，KeyNotFoundException）；修改后 `70c003d27fc9410aa3c86397833af6a4` Passed（`sneaky1=左起1/sneaky2=左起2/fat=左起1`）。同记录策略对 f217 报告做 `SearchOnly`，修复前后指标一致（5 回合胜、finalHp 3、预计战损 5、零药）。
+- `PREDICTED-MONSTER-SCALING`：修改前 `40b0ce9f7d0941d58dfb45570901fee0` Failed（单人预测怪构造仍调用 `ScaleMonsterHpForMultiplayer`，搜索 worker 会执行第三方 postfix）；修改后 `3daf40f0d1f441aaa1df9b7edfd5d134` Passed（HP 17∈14..18，多人缩放调用 0 次）。命令入口：`tools/run-unattended-test.ps1 -ScenarioId <ID> -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 999 -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。
+- `CARD-CONTINUATION-EXPANDED` / `af3944d5d9a6495499b87dc4923d2a0e` Passed：原版 HEIRLOOM_HAMMER+0/+1 选牌续执行合同通过；T013 代表包运行环境含 RebalancedSpire，按第三方内容记录。
+- `SMOKE-001 -VerifyForkBoundaries` / `7fc97fd1a99c4b61889bc68063919952` Failed：停在既有“回合结束 Power 挂起”检查；去本批改动复跑同样失败。该场景内的生成怪生命检查未执行，T011 由专用夹具覆盖。本轮未提升版本、未发包、未部署可见 Mod。
+
 ## 部分重战斗场景搜索优化（2026-10-02，合并前回归待完成）
 
 本 PR 在上游 `88298ae5` 上保留 AfterCardPlayed 捕获参与过滤、安全边界保留、已证明无额外治疗路线的战损下界、组合成员共享无药完整胜利、开局完整路线，以及原生感染棱柱／灵魂枢纽／摄政虱虫场景的受限治疗闭包。未纳入伤害目标过滤原型或已撤回实验。
