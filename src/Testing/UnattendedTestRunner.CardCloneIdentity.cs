@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
 using CombatSolver.Engine.Common;
+using CombatSolver.Engine.InCombat.Extensions;
 using CombatSolver.Engine.InCombat.Simulation;
 
 namespace CombatSolver;
@@ -88,7 +89,40 @@ internal sealed partial class UnattendedTestRunner
         if (simState.FindCard(deckCard) != null)
             throw new InvalidOperationException($"{cardId} 转换后预测根仍能找到已被替换的原牌包装。");
 
+        // 同名牌对 + 随机转换（PlanChoiceEffect.Transform）。原版合同（sts2.decompiled.cs）：
+        //   CardCmd.Transform 193658-193706：战斗内目标只做 RemoveFromCurrentPile → AddInternal(replacement)，
+        //     整段没有任何 DeckVersion 搬运；只有 PileType.Deck 分支才做 FloorAddedToDeck/CardsTransformed 记账。
+        //   CardTransformation.GetReplacement 182557-182576 与 CardFactory.CreateRandomCardForTransform
+        //     173509-173513 用 original.CardScope.CreateCard(...) 新建替换牌；
+        //   CardModel.AfterCloned 74049-74070 把 DeckVersion 清空；
+        //   GetFilteredTransformationOptions 173537 排除原牌自身 Id，所以转换永远不会产出同名牌。
+        // 推论：战斗内转换的替换牌必须是无身份牌，且该路径不可能把现场那张原牌换成同名牌。
+        var transformSimulator = new CombatPredictionSimulator(new SimulatedCombatState(combat));
+        SimPlayerCombatState transformState = transformSimulator.State.GetPlayerCombatState(player);
+        PredictedCard transformTarget = transformState.FindCard(deckCard)
+            ?? throw new InvalidOperationException($"随机转换路径找不到实机原牌 {cardId}。");
+        CardModel randomReplacement = transformSimulator.CreateRandomCardForTransform(
+            deckCard,
+            isInCombat: true,
+            transformSimulator.Rng.CombatCardSelection);
+        if (randomReplacement.Id.Entry == cardId)
+            throw new InvalidOperationException(
+                $"战斗内随机转换产出了同名牌 {cardId}，违反原版 GetFilteredTransformationOptions 的 Id 过滤。");
+        CardChoiceSupport.TransformCardToGeneratedReplacement(transformSimulator, transformTarget, randomReplacement);
+        // 断言对象必须是「进入原位置的替换牌」，不是被替换掉的原牌包装（后者按原版只是被移出战斗）。
+        PredictedCard placed = transformState.FindCard(randomReplacement)
+            ?? throw new InvalidOperationException($"转换替换牌 {randomReplacement.Id.Entry} 没有进入预测牌堆。");
+        if (placed.Preview.DeckVersion is { } retained)
+            throw new InvalidOperationException(
+                $"战斗内转换替换保留了永久牌组身份（{retained.Id.Entry}），"
+                + "与原版 CardModel.AfterCloned 清空 DeckVersion 的语义不符。");
+        if (!ReferenceEquals(deckCard.DeckVersion, deckVersion))
+            throw new InvalidOperationException($"随机转换改写了实机原牌 {cardId} 的永久牌组关联。");
+        if (transformState.FindCard(deckCard) != null)
+            throw new InvalidOperationException($"随机转换后预测根仍能找到已被替换的 {cardId} 原牌包装。");
+
         _completedChecks.Add("CardCloneIdentity:DeckVersionContractSurvivesPileTransfers");
+        _completedChecks.Add("CardCloneIdentity:InCombatTransformReplacementHasNoDeckVersion");
     }
 
     private static void RequireDeckVersion(
