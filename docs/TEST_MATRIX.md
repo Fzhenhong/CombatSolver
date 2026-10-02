@@ -19,7 +19,13 @@
 
 ## B015统计消费者终止隔离（2026-10-02）
 
-`RUN-STATISTICS-WORKER-FAILURE` / `coverage/unattended/run-statistics-worker-failure.json`：原始NUL JSON导致真实消费者构造失败后，300次入队；修改前Failed（capacity exceeded），修改后Passed（队列空、快照无效、损坏文件保留）。游戏0.111.0、RitsuLib0.6.5、macOS隔离无头，请求均120秒预算。统计聚合/持久化既有合同通过；健康消费者满队列、整场部署及T016/T017/T019/T020未验收。命令及边界见[B015阶段证据](community/b015-stage-one.md)。
+`RUN-STATISTICS-WORKER-FAILURE` / `coverage/unattended/run-statistics-worker-failure.json`：原始NUL JSON导致真实消费者构造失败后，300次入队；修改前Failed（capacity exceeded），修改后Passed（队列空、快照无效、损坏文件保留）。游戏0.111.0、RitsuLib0.6.5、macOS隔离无头，请求均120秒预算。统计聚合/持久化既有合同通过；该阶段尚未覆盖的边界见下方后续记录。命令及边界见[B015阶段证据](community/b015-stage-one.md)。
+
+`RUN-STATISTICS-SATURATION` / `coverage/unattended/run-statistics-saturation.json`：屏障暂停真实健康consumer，256业务信号、满sync合并重试、第257业务事件显式停用；已接收事件排空持久化，partial重开与原生结算保留，禁止重新上传，排空期间I/O错误不被吞。真实0.111.0/Ritsu0.6.5同输入修前Failed、修后Passed；最终故障及饱和请求均在Ritsu0.6.2复核通过；纯Store另覆盖旧full收据撤销和纠正收据不重复上传。详见[B015后续证据](community/b015-follow-up.md)。
+
+`B015-MAD-SCIENCE` / `coverage/unattended/b015-mad-science.json`：真实0.111.0/Ritsu0.6.2中Skill/Chaos原生升级、保存恢复、root/Fork、兄弟隔离、合法出牌完整状态/RNG差分通过；None明确拒绝。不是原包坏牌修复，也未定位战前替换调用者。
+
+`B015-BOUNDARIES` / `coverage/unattended/b015-boundaries.json`：真实0.111.0/Ritsu0.6.2中Stock替补CombatId/Fork/父不变/增量完整回放/两次原生SHIV状态一致；1HP原生CrimsonMantle自伤在T+1死亡，模拟终局/Fork与原生ProcessPendingLoss安全点完整状态一致。另用T016原报告Ritsu0.6.3复核通过；仅最小边界通过，原包T016/T019尚未复现。
 
 ## 0.47.3 版本与发布登记（2026-10-01）
 

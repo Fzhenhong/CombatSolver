@@ -1,4 +1,28 @@
 {
+  "B015-T018-STATISTICS-20261002": {
+    "status": "PassedWithDocumentedBoundaries",
+    "level": "HeadlessRuntimeFaultInjectionAndStoreContracts",
+    "procedure": "真实0.111.0；120秒最小请求：消费者构造NUL JSON故障、屏障暂停健康消费者并填满256事件；纯.NET持久化/原生结算合同。",
+    "expected": "统计故障不再积满死队列或中断战斗；明确诊断，快照/上传停止，已接受事件持久化且丢失事件跑局不能恢复为full。",
+    "observed": "Ritsu0.6.5两条路径均同输入修前capacity exceeded、修后Passed；补验排空再发生I/O错误、失败详情及上传门禁通过；纯Store旧full+sent+marker重开修正与纠正收据保留通过。最终两请求在Ritsu0.6.2复核通过。原NUL损坏文件种类/写坏来源未定，非真实部署/上传验收。",
+    "evidence": "docs/community/b015-follow-up.md; coverage/unattended/run-statistics-worker-failure.json; coverage/unattended/run-statistics-saturation.json; tools/RunStatisticsTests/Program.cs"
+  },
+  "B015-T016-T019-BOUNDARIES-20261002": {
+    "status": "Pending",
+    "level": "HeadlessNativeDifferential",
+    "procedure": "真实0.111.0/Ritsu0.6.2和0.6.3，B015-BOUNDARIES，120秒。",
+    "expected": "Stock替补目标ID/Fork/增量完整回放及两步原生SHIV状态一致；1HP CrimsonMantle下一回合死亡，原生败局安全点与预测完整状态一致。",
+    "observed": "b015-boundaries-loss-062和b015-boundaries-063 Passed。没有修改目标或Power语义，原包异常未复现；官方0.47.2对应方法IL未发现First，仍缺报告实际DLL身份及完整环境。",
+    "evidence": "docs/community/b015-follow-up.md; src/Testing/B015BoundaryChecks.cs; coverage/unattended/b015-boundaries.json"
+  },
+  "B015-T020-MADSCIENCE-20261002": {
+    "status": "Pending",
+    "level": "HeadlessNativeDifferentialAndPacketForensics",
+    "procedure": "真实0.111.0/Ritsu0.6.2，B015-MAD-SCIENCE，120秒；原包战前存档与原版源码核对。",
+    "expected": "合法Skill/Chaos升级、保存、root/Fork及原生出牌全状态/RNG一致；无效None仍明确拒绝。",
+    "observed": "b015-madscience-062-retry Passed。原包TinkerTime事件后的战前牌已为None/None+1，无证据为求解器克隆丢字段；具体替换调用者仍未确定。",
+    "evidence": "docs/community/b015-follow-up.md; src/Testing/B015MadScienceChecks.cs; coverage/unattended/b015-mad-science.json"
+  },
   "INFUSED-CORE-INITIAL-SETUP-20260927": {
     "status": "Pending",
     "level": "OfflineProductionHookDiagnostic",

@@ -25,6 +25,10 @@ internal sealed partial class RunStatistics : Node
     private readonly HashSet<string> _activities = new();
     private Task? _worker;
     private volatile bool _recordingStopped;
+    private volatile RunStatisticsFailure? _failure;
+    private volatile RunStatisticsRecord? _incompleteRun;
+    private bool _workerCompletionObserved;
+    internal static RunStatisticsFailure? Failure => _instance?._failure;
     private double _elapsed;
     private bool _disabled;
     private volatile bool _uploadEnabled;
@@ -42,26 +46,44 @@ internal sealed partial class RunStatistics : Node
     private void Enqueue(Signal signal)
     {
         if (!CanRecord()) return;
-        if (!_signals.Writer.TryWrite(signal)) throw new InvalidOperationException("Run statistics queue capacity exceeded.");
+        if (_signals.Writer.TryWrite(signal)) return;
+        // Sync is a periodic notification: the next tick retries pending uploads.
+        if (signal.Kind == "sync") return;
+        StopRecording(new("queue_capacity", signal.Run?.RunId, signal.Kind,
+            _signals.Reader.Count, false, "Run statistics queue capacity exceeded."));
+        _incompleteRun = signal.Run;
+        // The healthy consumer owns its store and drains accepted events before finishing.
+        _signals.Writer.TryComplete();
     }
     private bool CanRecord()
     {
-        if (_recordingStopped) return false;
-        if (_worker?.IsCompleted != true) return true;
-
-        // A dead consumer cannot recover by accepting more events. Invalidate this
-        // tracking session explicitly; preserve its files and original failure for diagnosis.
+        if (_worker?.IsCompleted == true && !_workerCompletionObserved)
+        {
+            _workerCompletionObserved = true;
+            string error = _worker.Exception?.ToString() ?? _worker.Status.ToString();
+            if (!_recordingStopped)
+                StopRecording(new("consumer_completed", _run?.RunId, null, _signals.Reader.Count, false, error));
+            else if (!_worker.IsCompletedSuccessfully)
+            {
+                _failure = _failure! with { Error = _failure.Error + "\nDrain failed: " + error };
+                Entry.Logger.Error($"Run statistics drain failed; incomplete marker saved={_failure.IncompleteMarkerSaved}: {error}");
+            }
+            _signals.Writer.TryComplete();
+            // Only a completed consumer can be drained from the main thread.
+            while (_signals.Reader.TryRead(out _)) { }
+            SetProcess(false);
+        }
+        return !_recordingStopped;
+    }
+    private void StopRecording(RunStatisticsFailure failure)
+    {
+        _failure = failure;
         _recordingStopped = true;
         _run = null;
         _snapshot = null;
         _activities.Clear();
         SetUploading(false);
-        SetProcess(false);
-        _signals.Writer.TryComplete();
-        // The consumer is completed, so draining cannot race its store operations.
-        while (_signals.Reader.TryRead(out _)) { }
-        Entry.Logger.Error($"Run statistics unavailable; tracking stopped and source files retained: {_worker.Exception?.ToString() ?? _worker.Status.ToString()}");
-        return false;
+        Entry.Logger.Error($"Run statistics unavailable; tracking stopped, source files retained; reason={failure.Reason} run={failure.RunId} rejected={failure.RejectedSignal} queued={failure.QueuedSignals} incompleteMarkerSaved={failure.IncompleteMarkerSaved}: {failure.Error}");
     }
     private static string Key(string value) => Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(value)))[..32];
     internal static void Launched(RunManager manager)
@@ -129,6 +151,7 @@ internal sealed partial class RunStatistics : Node
     }
     private void SetUploading(bool enabled)
     {
+        enabled &= !_recordingStopped;
         if (_uploadEnabled == enabled) return;
         _uploadEnabled = enabled;
         if (!enabled) lock (_transportGate) _uploadCancellation?.Cancel();
@@ -149,8 +172,17 @@ internal sealed partial class RunStatistics : Node
         using var client = OnlinePresence.CreateStatisticsClient();
         string? identity = null;
         string? profile = null;
+        string? markedRun = null;
+        void MarkIncomplete()
+        {
+            if (_incompleteRun is not { } incomplete || markedRun == incomplete.RunId) return;
+            store.MarkIncomplete(incomplete);
+            markedRun = incomplete.RunId;
+            _failure = _failure! with { IncompleteMarkerSaved = true };
+        }
         await foreach (var signal in _signals.Reader.ReadAllAsync())
         {
+            MarkIncomplete();
             if (signal.Kind == "sync")
             {
                 if (!_uploadEnabled || client == null) continue;
@@ -202,8 +234,10 @@ internal sealed partial class RunStatistics : Node
                 record = record with { Participation = !record.EverEnabled ? "none" : record.ObservedFromStart && !record.DisabledInCombat ? "full" : "partial" };
                 if (record != previous) store.Save(record);
             }
-            _snapshot = store.Snapshot(profile);
+            if (!_recordingStopped) _snapshot = store.Snapshot(profile);
         }
+        MarkIncomplete();
+        if (_recordingStopped) _snapshot = null;
     }
     public override void _ExitTree() { _uploadEnabled = false; lock (_transportGate) _uploadCancellation?.Cancel(); _signals.Writer.TryComplete(); _instance = null; }
 }
