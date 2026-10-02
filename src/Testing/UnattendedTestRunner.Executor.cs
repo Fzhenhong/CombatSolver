@@ -39,7 +39,7 @@ internal sealed partial class UnattendedTestRunner
             bool expectedCardPlayed = request.ExpectedPlayedCardId == null;
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
-            if (request.ScenarioId == "B015-T016-ORIGINAL-PREFIX")
+            if (request.ScenarioId is "B015-T016-ORIGINAL-PREFIX" or "B015-T016-AFTERIMAGE-ROUTE")
             {
                 await runner.AssertB015OriginalPrefixAsync(combatState, player);
                 return Observation(combatEnded: !CombatManager.Instance.IsInProgress);

@@ -268,6 +268,9 @@ internal sealed partial class UnattendedTestRunner
         B015OriginalPrefixContext context = _b015OriginalPrefix
             ?? throw new InvalidOperationException("B015 original prefix was not prepared by its builder.");
         string evidence = _request.EvidenceDirectory ?? throw new InvalidOperationException("B015 prefix requires evidence output.");
+        bool adjustedRoute = _request.ScenarioId == "B015-T016-AFTERIMAGE-ROUTE";
+        if (adjustedRoute)
+            (context.Actions[0], context.Actions[1]) = (context.Actions[1], context.Actions[0]);
         JsonArray stages = [];
         JsonArray keyMappings = [];
         SimulationSnapshot parent = context.Setup;
@@ -296,12 +299,20 @@ internal sealed partial class UnattendedTestRunner
                 int currentOccurrence = PileType.Hand.GetPile(player).Cards.TakeWhile(candidate => !ReferenceEquals(candidate, card))
                     .Count(candidate => CardChoiceSupport.ChoiceCardKey(candidate) == currentKey);
                 PlanAction action = recordedAction with { CardStateKey = currentKey, CardStateOccurrence = currentOccurrence };
+                if (adjustedRoute)
+                {
+                    object[] prepared = ((System.Collections.IEnumerable)InvokeForcedTerminalMethod(context.Driver,
+                        "PrepareCardActions", [candidateParent, true])!).Cast<object>().ToArray();
+                    action = prepared.Select(item => (PlanAction)item.GetType().GetProperty("Action")!.GetValue(item)!)
+                        .Single(item => item.CardId == action.CardId && item.CardStateKey == currentKey
+                            && item.CardStateOccurrence == currentOccurrence);
+                }
                 context.Actions[index] = action;
                 keyMappings.Add(new JsonObject { ["actionIndex"] = index, ["legacyKey"] = recordedAction.CardStateKey,
                     ["currentKey"] = currentKey, ["legacyOccurrence"] = recordedAction.CardStateOccurrence,
                     ["currentOccurrence"] = currentOccurrence });
                 SetStage($"b015_t016_original_action_{index + 1}_{action.CardId}_target_{action.TargetCombatId}");
-                if (index == 5)
+                if (index == 5 && !adjustedRoute)
                 {
                     JsonObject expectedParent = context.Candidate;
                     if (parent.PlayerHp != expectedParent["PlayerHp"]!.GetValue<int>()
@@ -359,7 +370,14 @@ internal sealed partial class UnattendedTestRunner
                 }
                 finally { next?.ReleaseSimulator(); direct?.ReleaseSimulator(); }
             }
-            _writer.ReplayVerification!["failedCandidatePrefixVerified"] = true;
+            if (adjustedRoute)
+            {
+                if (context.Actions[4].TargetCombatId != 1 || context.Actions[5].TargetCombatId != 2)
+                    throw new InvalidOperationException("B015 baseline production actions did not cross the expected Stock target boundary.");
+                _completedChecks.Add("B015T016Afterimage:ProductionGeneratedSixActions:NativeFullStateAndRng");
+                await VerifyB015AdjustedRouteAsync(context, candidateParent, combat, player, evidence);
+            }
+            _writer.ReplayVerification!["failedCandidatePrefixVerified"] = !adjustedRoute;
             _writer.ReplayVerification["prefixActionCount"] = context.Actions.Length;
         }
         catch (Exception error) { failures.Add(error); }

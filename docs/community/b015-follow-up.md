@@ -2,6 +2,8 @@
 
 关联 Refs #174，延续[阶段一](b015-stage-one.md)。源码基线仍为 `88298ae5`；只在 `fix/batch-b015` 本地工作。初始调查时认领获得维护者积极回复、Assignee仍空；收尾刷新[任务页](https://github.com/Torch1230/CombatSolver/issues/174)确认已正式指派 `s1f102500012`（issue updated_at=2026-10-02T10:49:17Z）。没有推送、评论、PR、原游戏目录部署或发布。 上游PR #188随后合入 `fbe469b77e55f1269a563725df001023597cd9a0`，父提交为本次冻结基线；该性能合并涉及根捕获、Hook、搜索及测试入口，但未直接改T018统计文件。本轮未变基，既有结论仍只属于冻结基线；发布前整合另做影响范围核对。
 
+最新进展：下文T016“当前生产未复现”是前一阶段对扩展候选/worker路径的结论，后续已在**余像前移的生产路线后处理**取得同输入修前Failed、修后Passed。当前可评审的生产修复范围为T016与T018，详见“T016后处理因果复现与修复”。早期强制非法动作的总Failed记录保留，不改写成通过。
+
 ## T018：健康消费者饱和也不再中断战斗
 
 原包首先发生的是统计存储构造读取 JSON 时的 NUL/offset=0 错误，随后消费者退出、队列填满。包内没有损坏文件本体或文件名；构造器会读 `.run.json` 和 `.history.json`，因此不能断定损坏来自哪种文件，也没有证据解释写坏来源。四 NUL 字节 `.run.json` 是代表性最小输入，并非声称还原了历史文件。
@@ -81,6 +83,24 @@ T019 实际使用[多人实验提交 f1461c7d](https://github.com/Torch1230/Comb
 pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGINAL-PREFIX -CharacterId SILENT -EncounterId AXEBOTS_NORMAL -CheckpointArchivePath .local/issue-bundles/174/raw/B015/T016/reports/e63cd12543994bb08b9497e45839005c.zip -CheckpointSelector start -ReplayMode RestoreOnly -TimeoutSeconds 120 -CleanupInstanceOnExit
 ```
 
+### T016 后处理因果复现与修复
+
+用户转回外部AI的新假说后，独立核对原日志和源码：`POLICY_BASELINE` 在1790836560128记录胜利路线开头 `STRANGLE, AFTERIMAGE, UP_MY_SLEEVE, SIDESTEP, SHIV, SHIV`，11毫秒后 `FAILED_CANDIDATE` 前两步变成 `AFTERIMAGE, STRANGLE`，随后保留旧攻击目标。`MaterializeSelectedRoute` 调用 `TryFrontloadAfterimages`；它通过 `ReplayAdjustedRoute(frontloadAfterimages:true)` 重排，并完整回放候选。余像前移只先验证余像是否在手和能否支付，后续动作仍带原 `TargetCombatId`。`CanApplyFixedPrefixAction` 原本只检查牌及费用，目标不存在仍进入回放抛异常，中断已选路线的发布。原0.47.2至冻结main的AfterimageFrontloading/BlockPotionInsertion两文件无差异。
+
+新增 `B015-T016-AFTERIMAGE-ROUTE` 使用同一原生根、明确的GAMBLING_CHIP选择，并按日志给定的原顺序逐步调用真实 `PrepareCardActions`，按卡牌完整状态键和实例序号取唯一动作，**不手造攻击目标**。六步目标自然为紧勒→1、第一张小刀→1、第二张小刀→2；每步完整回放、增量回放、实际原生状态及RNG全部一致。顺序由日志指定，不声称由Solve自主找到路线。
+
+因果数值也一致：紧勒先出时，第二步后旧敌31HP，Strangle6；余像先出时，第二步后旧敌37HP。旧顺序第五步击杀ID1、生成ID2，玩家格挡7；前移后第五步ID1仍4HP、玩家格挡8。因此前移虽然多得格挡，却少触发一次6伤紧勒，后续小刀的ID2尚未生成。
+
+同六动作传给生产 `ReplayAdjustedRoute`：`frontload:false` 与原生完整状态/RNG匹配；前两步的安全前移控制确实重排成功；`frontload:true` 在第六步精确抛 `SearchTransitionException → CardPlay has no target creature`，堆栈包含 `ReplayAdjustedRoute`，证据 `t016-afterimage-red-063`。这是生产后处理路径的RED，有别于之前强制历史非法动作的负对照。
+
+最小修复在既有 `CanApplyFixedPrefixAction` 牌分支追加生产 `TargetsFor` 的目标身份匹配。当前分支目标不存在、已退场、不可命中或目标类型已改变时，按已有无效调整契约释放调整候选并返回null；`MaterializeSelectedRoute` 因此保留原已选路线。不重定向目标、不跳过动作、不新增catch。该检查也服务固定前缀入口；合法生产候选的规则一致，药水和EndTurn分支未改。BlockPotionInsertion调用同一调整路线方法，因插入动作而失效的后续牌目标也遵守这一契约。
+
+**相同请求、相同依赖、相同120秒预算**，修后 `t016-afterimage-green-063` 总Passed：六步原生/完整/增量状态与RNG、未重排控制、安全短路线前移、无效前移返回null、共享非前移路径缺失目标拒绝，以及原路线和原生状态不变均通过。游戏0.111.0/Ritsu0.6.3/同MVID BaseLib3.4.7，未扩大搜索预算。环境差异仍如前文；没有验收原完整胜利路线的Solve、最终发布和整场部署，不将六步边界通过外推为这些范围。
+
+专项请求为 `coverage/unattended/b015-t016-afterimage-route.json`；按上一专项复跑参数将ScenarioId替换为 `B015-T016-AFTERIMAGE-ROUTE`。两份专项共享原根恢复和逐步差分工具，旧 `B015-T016-ORIGINAL-PREFIX` 仍保留历史非法动作失败，不改预期以伪造修复。源码与夹具已独立只读审查。
+
+相邻既有 `ADJUSTED-ROUTE-INVALID-SUFFIX` 在同Ritsu0.6.3通过（20.12秒）：失效手牌、终局后缀和合法致胜路线合同保留。较大的 `FIXED-PREFIX-TURN-OUTCOMES` 在120秒外层截止前未产出result，启动器终止进程并删除实例；日志最后为原生回合/洗牌FTUE，不能断定是哪个断言或归因于本修复。此项记未验证，不延长预算或宣称通过，另缩小到直接经过固定前缀入口的单动作合同。 缩小后的 `B015-FIXED-PREFIX-TARGETS` 已Passed（18.33秒）：两个独立根分别经过真实PrepareCardActions与ApplyFixedPrefix，合法目标致胜、缺失目标返回null，原生Continuation不变；没有跨回合等待。窄合同不替代宽用例验收。
+
 ### T020 进一步收敛
 
 最早 `recording/origin.save`（save_time1790564493）已经包含坏牌；一秒后的战前存档相同。开局到首次手动记录的16秒内，永久牌组由15张变14张，当前房间新增移除坏牌历史，但战斗手牌仍保留该坏实例。这说明永久牌组删除没有同步清除当前战斗牌，并不能确定谁执行替换/删除。
@@ -116,6 +136,10 @@ pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGIN
 | T016原根、选牌和五步原生差分 | `t016-original-prefix-zip-063` | 前五步通过；强制历史第六步目标不存在，总Failed |
 | T016生产准备与兄弟分支 | `t016-production-siblings-063` | 候选/父节点检查通过；随后历史第六步总Failed |
 | T016生产双父节点并发，同MVID BaseLib | `t016-parallel-baselib-063` | 2准备/4动作且实际并发2；全部归属差分通过，未生成非法目标；随后历史第六步总Failed |
+| T016余像前移生产后处理，同输入修改前/后 | `t016-afterimage-red-063` / `t016-afterimage-green-063` | Failed（31.50秒）target2缺失 / Passed（33.70秒）；六步生产动作的原生完整状态/RNG均通过，无效前移回退且合法短前移保留 |
+| 既有调整路线失效后缀合同 | `t016-adjusted-suffix-green-063` | Passed，20.12秒 |
+| 缩小的直接固定前缀目标合同 | `t016-fixed-prefix-targets-063` | Passed，18.33秒；合法生产目标/缺失目标拒绝及原生不变 |
+| 既有固定前缀跨回合结果合同 | `t016-fixed-prefix-green-063` | 120秒无result，未验证；停止并清理，不延长 |
 | T016替补目标与T019原生败局差分 | `b015-boundaries-loss-062` | Passed，30.14秒（Ritsu0.6.2） |
 | MadScience合法/非法边界，真实原生差分 | `b015-madscience-062-retry` | Passed，27.37秒（Ritsu0.6.2） |
 
@@ -123,11 +147,11 @@ pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGIN
 
 ## 本地阶段交付与待确认项
 
-可供后续评审/提交PR的生产修复范围仅为 **T018统计消费者故障与健康队列饱和隔离**，包括持久partial和问题包诊断；T016/T019/T020附带夹具与调查记录不宣称修复。T017保留未知字段拒绝；T019附实验分支补丁提案而未修改main。发布前需在届时上游上整合并按实际影响验证，本轮没有推送或发包授权。
+可供后续评审/提交PR的生产修复范围为 **T016余像前移后无效目标的保守回退**，以及 **T018统计消费者故障与健康队列饱和隔离**。T019/T020附带夹具与调查记录不宣称修复。T017保留未知字段拒绝；T019附实验分支补丁提案而未修改main。发布前需在届时上游上整合并按实际影响验证，本轮没有推送或发包授权。
 
 维护者问题草稿（尚未发送）：
 
 1. T017字段已定位 TheHeroExpansion；可否将其按仓库原版范围改列第三方适配，而不在本批放行未知字段？
 2. T019原产物来自多人实验提交f1461c7而非正式0.47.2；该缺陷应在哪个维护分支提交？附LastOrDefault最小提案，目标分支的单人败局/多人生存组合仍须验收。
-3. T016当前限定生产生成、兄弟回放和真实双父节点并发均未产生非法目标。是否有仍会自然报错的当前构建报告，或能补采首次失败的父节点/准备候选/派发归属？已记录历史构建MVID，无需重复索取同一身份；需要将错误动作与生成它的实际父状态关联。
+3. T016已在生产后处理取得同输入修前失败、修后通过；评审目标身份预检及保留原路线的范围即可，无需再索取已具备的MVID。原完整胜利路线发布/部署仍未验收。
 4. T020能否提供与已知FreeLoadout/Rewind MVID对应的实现或构建映射，以及TinkerTime替换前后的检查点/操作调用记录？若是恢复流程，需要源快照和恢复后的字段。现有公开机制仅证明可行，不能据此归责某Mod。

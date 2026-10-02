@@ -252,11 +252,13 @@ internal sealed partial class UnattendedTestRunner
                     arsenal: request.ScenarioId == "ARSENAL-HAND-DRAW-SHUFFLE-CHOICE-REPLAY");
                 runner._completedChecks.Add("EndTurnChoiceReplay");
             }
-            if (request.ScenarioId == "ADJUSTED-ROUTE-INVALID-SUFFIX")
+            if (request.ScenarioId is "ADJUSTED-ROUTE-INVALID-SUFFIX" or "B015-FIXED-PREFIX-TARGETS")
             {
                 runner.SetStage("adjusted_route_invalid_suffix");
                 await runner.AssertAdjustedRouteInvalidSuffixAsync(scenario.CombatState, scenario.Player);
-                runner._completedChecks.Add("AdjustedRouteInvalidSuffix");
+                runner._completedChecks.Add(request.ScenarioId == "B015-FIXED-PREFIX-TARGETS"
+                    ? "B015FixedPrefixTargets:LegalGeneratedTarget:AbsentTargetRejected:NativeUnchanged"
+                    : "AdjustedRouteInvalidSuffix");
             }
             if (request.ScenarioId == "EARLY-END-TURN")
             {

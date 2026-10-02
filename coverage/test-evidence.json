@@ -1,4 +1,12 @@
 {
+  "B015-T016-AFTERIMAGE-ROUTE-20261002": {
+    "status": "PassedWithDocumentedBoundaries",
+    "level": "OriginalRootNativeDifferentialAndProductionPostprocessing",
+    "procedure": "同原ZIP原根、日志指定紧勒先于余像顺序，逐步生产PrepareCardActions取动作；0.111.0/Ritsu0.6.3/同MVID BaseLib3.4.7，120秒。",
+    "expected": "原六步完整/增量/原生状态和RNG一致；余像前移后缺失目标拒绝调整、保留原路线；合法前移继续成功。",
+    "observed": "t016-afterimage-red-063在生产ReplayAdjustedRoute精确Failed target2缺失；相同输入t016-afterimage-green-063 Passed。六步合法生产目标1→2、无重排原生全状态、安全短前移、非法前移返回null、共享路径缺失目标及原路线/native不变均通过。不同于此前强制非法动作；没有验收完整Solve胜利路线发布或整场部署。 既有失效后缀合同Passed；宽固定前缀回合合同120秒无result未验证，缩小直接ApplyFixedPrefix目标合同Passed（合法致胜/缺失拒绝/native不变）。",
+    "evidence": "docs/community/b015-follow-up.md; coverage/unattended/b015-t016-afterimage-route.json; src/Testing/B015AdjustedRouteChecks.cs"
+  },
   "B015-T016-ORIGINAL-PREFIX-20261002": {
     "status": "Pending",
     "level": "OriginalRootNativeDifferentialAndBoundedProductionWorkers",
