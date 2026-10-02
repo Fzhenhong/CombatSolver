@@ -751,6 +751,13 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "OPENING-POWER-BOUNDARY")
+            {
+                runner.SetStage("opening_power_boundary");
+                await runner.AssertOpeningPowerBoundaryAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "FIXED-PREFIX-TURN-OUTCOMES")
             {
                 runner.SetStage("fixed_prefix_turn_outcomes");

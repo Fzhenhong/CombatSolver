@@ -147,6 +147,11 @@ internal sealed partial class CombatBeamSolver
         SimulationSnapshot prefixSnapshot = Replay(prefix);
         try
         {
+            // A prefix may stop at a choice or another replay boundary. Only
+            // settled, live states can be parents of an incremental power probe.
+            if (prefixSnapshot.BoundaryReason != SearchBoundaryReason.None
+                || prefixSnapshot.PlayerDead || prefixSnapshot.AllEnemiesDead)
+                return [];
             CombatPredictionSimulator simulator = (CombatPredictionSimulator)prefixSnapshot.Simulator;
             SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
             SimPlayerCombatState playerState = simulator.State.GetPlayerCombatState(_player);
