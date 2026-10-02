@@ -71,7 +71,7 @@ python tools/export-community-bundle.py .local/raw/REPORT.zip .local/public/REPO
 
 ## 处理记录
 
-每批由一名 Assignee 负责全部五个主题。首因、最小夹具和实际验证放 issue/PR，按主题登记验收；五主题全部完成后关闭批次。交接时整理已完成/未解决主题及证据，维护者调整 Assignee。
+每批由一名 Assignee 负责全部五个主题，建议以批次为粒度集中提交一个 PR，五个主题通过 commit 和验收记录区分。可以先建立 Draft PR，持续追加进度与实现；全批完成后转为 Ready for review，五主题全部验收后关闭批次。首因、最小夹具和实际验证放 issue/PR。交接时整理已完成/未解决主题及证据，维护者调整 Assignee。
 
 认领者自行定位、实现、验证并提交 PR，跨模块、镜像登记和模拟生命周期等方案在 PR 中审阅。最终搜索/模拟路径改动以目标修复证据、固定哨兵的质量无退化与搜索耗时无明显增加验收，详见[指南](testing-guide.md#最终-pr-哨兵验收)。范围讨论采用异步记录，已明确主题持续推进。
 
