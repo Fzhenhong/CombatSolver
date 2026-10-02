@@ -1,0 +1,56 @@
+{
+  "scope": "follow-up source omitted from mergedPR188, integrated onto current upstream; not broad quality acceptance",
+  "baseCommit": "1a3d1a3747953b5145b2f38809d49f882c7271c1",
+  "mergedPR188": {
+    "mergeCommit": "fbe469b77e55f1269a563725df001023597cd9a0",
+    "headCommit": "e3cd33d2539d216180bf2648058e52a9ce88b838",
+    "mergedAt": "2026-10-02T10:29:18Z"
+  },
+  "retainedSource": {
+    "sourceReference": "21497698, C40 af626245 search+Powerordering fix",
+    "paths": [
+      "src/Prediction/PredictionModHookSubscriberCapture.cs",
+      "src/Search/CombatBeamSolver.Phases.cs",
+      "src/Search/CombatBeamSolver.Retention.cs",
+      "src/Search/CombatBeamSolver.SmartPotionBound.cs",
+      "src/Search/SimulatedCombatState.cs",
+      "src/Search/StrategicHpRecoveryBound.DefectPrism.cs",
+      "src/Search/StrategicHpRecoveryBound.Remaining.cs",
+      "src/Testing/UnattendedTestRunner.DefectPrismHealing.cs",
+      "src/Testing/UnattendedTestRunner.Executor.cs",
+      "src/Testing/UnattendedTestRunner.MirroredHookFilter.cs"
+    ],
+    "allChangedSourceContentsExact": true,
+    "candidateDllSha256": "1d215125ab8e036e5713aa1dd333d4af20222c8d39a1f7147781bdb299894779",
+    "build": "Release0warnings0errors28.35s CopyModOnBuild=false"
+  },
+  "playerPrismEvidence": {
+    "baselineCommit": "88298ae54fd626e52e87efd568dd19ffd507aafd",
+    "baselineSeconds": 313.0166646,
+    "candidateSeconds": 158.1704336,
+    "speedup": 1.9789834,
+    "baselinePeakRssBytes": 26283286528,
+    "candidatePeakRssBytes": 28094922752,
+    "peakRssIncreasePercent": 6.8927,
+    "quality": "victory,28HP loss,nohealing/noPotion,T3",
+    "userException": "user accepts this scene at about1.98x; original2x requirement remains for others",
+    "nativeCompleteDeployment": "632aac0c34dc4f56b8c75edb9628d965 Passed,actual87to59HP,T3,noUnexpectedReplan",
+    "reuseLimit": "same retained source/input; no claim of a new paired measurement, new native run or equality of unrecorded legacy native binary fields"
+  },
+  "qualityGaps": {
+    "queen": "C40 current screen incomplete at306.470376s,enemy557HP; frozen85action old victory remains legal at67HP loss. Requires coverage fix and regression.",
+    "necrobinderBoss": "C40 original88298 baseline17HP/onePotion versus9HP/onePotion; one sample each, no2xspeed pass.",
+    "broadFinalRegression": "remaining current-source corpus regression unfinished"
+  },
+  "rejectedCandidates": [
+    "C36",
+    "C41",
+    "C42",
+    "C43",
+    "C44",
+    "C45",
+    "C46",
+    "C47"
+  ],
+  "delivery": "PR188 source is historical e3 stage only. This follow-up branch carries the later retained source; not merged or published yet. No version bump, visible game or workshop action."
+}

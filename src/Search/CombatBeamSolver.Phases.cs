@@ -39,6 +39,7 @@ internal sealed partial class CombatBeamSolver
         }
         finally
         {
+            EmitSmartPotionEligibilityBoundDiagnostics();
             // 最后才扫描标签，避免诊断在候选热路径上枚举整张表。
             var transpositions = _run.TranspositionDiagnostics.Capture(
                 policy.TranspositionEntryLimit, _run.Expanded, _run.TranspositionLimitBypasses,
@@ -1673,6 +1674,13 @@ internal sealed partial class CombatBeamSolver
                         fallback = child;
                     if (child.IsTerminal || child.Turn > node.Turn)
                     {
+                        // Publish an eligible victory before an unbounded play
+                        // layer finishes. Counter ties remain eligible at all turns.
+                        if (_strictHpBoundWithRelicTargets && child.IsTerminal
+                            && !child.Snapshot.HasRisk
+                            && child.BoundaryReason == SearchBoundaryReason.None)
+                            _ = TightenPrimarySearchIncumbentAtTurnLayer(
+                                [child], searchedTurnLayers + 1);
                         int explicitPotionUses = ExplicitPotionUseCount(child);
                         if (explicitPotionUses == 0 && child.Score > potionFreeBoundaryFallbackScore)
                         {
