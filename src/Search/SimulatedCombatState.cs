@@ -50,6 +50,7 @@ internal sealed partial class SimulatedCombatState
     private readonly IReadOnlySet<Creature> _rootCreatures;
     private readonly AbstractModel[] _rootHookListeners;
     private readonly AbstractModel[] _rootRunHookListeners;
+    private readonly GoldRunHookSnapshot _goldRunHookSnapshot;
     private readonly IReadOnlyDictionary<Player, RelicModel[]> _rootRelics;
     private IReadOnlyDictionary<RelicModel, RelicModel>? _rootRelicSources;
     private IReadOnlyList<ModifierModel>? _rootModifierSources;
@@ -421,6 +422,8 @@ internal sealed partial class SimulatedCombatState
             }
         }
         _rootRunHookListeners = rootRunHookListeners.ToArray();
+        _goldRunHookSnapshot = GoldRunHookSnapshot.Capture(
+            concreteRunState, rootModelClones, _modHookSubscribers.RunSubscribers);
         _allies = new ForkableList<Creature>(inner.Allies);
         _enemies = new ForkableList<Creature>(inner.Enemies);
         _knownEnemies = new ForkableList<Creature>(inner.Enemies);
@@ -469,6 +472,7 @@ internal sealed partial class SimulatedCombatState
         _rootCreatures = source._rootCreatures;
         _rootHookListeners = source._rootHookListeners;
         _rootRunHookListeners = source._rootRunHookListeners;
+        _goldRunHookSnapshot = source._goldRunHookSnapshot;
         _rootRelics = source._rootRelics;
         _rootRelicSources = source._rootRelicSources;
         _rootModifierSources = source._rootModifierSources;

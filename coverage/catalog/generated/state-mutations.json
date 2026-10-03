@@ -15329,6 +15329,19 @@
       ]
     },
     {
+      "key": "Relic|MegaCrit.Sts2.Core.Models.Relics.DragonFruit|MegaCrit.Sts2.Core.Models.AbstractModel.AfterGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player)",
+      "entityType": "MegaCrit.Sts2.Core.Models.Relics.DragonFruit",
+      "hook": "AfterGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player)",
+      "phase": "FutureLifecycle",
+      "effectiveStatus": "Exact",
+      "capability": "EngineMirror",
+      "requiresRuntimeEvidence": true,
+      "runtimeVerified": true,
+      "writes": [
+        "call:MegaCrit.Sts2.Core.Commands.CreatureCmd.GainMaxHp"
+      ]
+    },
+    {
       "key": "Relic|MegaCrit.Sts2.Core.Models.Relics.EmotionChip|MegaCrit.Sts2.Core.Models.AbstractModel.AfterPlayerTurnStart(MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext,MegaCrit.Sts2.Core.Entities.Players.Player)",
       "entityType": "MegaCrit.Sts2.Core.Models.Relics.EmotionChip",
       "hook": "AfterPlayerTurnStart(MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext,MegaCrit.Sts2.Core.Entities.Players.Player)",

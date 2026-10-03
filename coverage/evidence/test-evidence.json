@@ -42,10 +42,10 @@
   "AXEBOT-JOSS-DEFERRED-FORK": {
     "status": "Passed",
     "level": "HeadlessRootStateAndForkContract",
-    "procedure": "金纸根含1次已计数与2次延迟消耗，捕获后推进live，核对父子/兄弟、指纹与续用文本。",
+    "procedure": "金纸根含1次已计数与2次延迟消耗，捕获后推进live，核对父子/兄弟、指纹与续用文本；追加零待结算分支与非零分支的区分及消费。",
     "expected": "延迟计数从主线程根冻结，在StateStore按值Fork；各分支只消费自身计数一次，live保持。",
-    "observed": "e7c0363924e74211b043ebfaca50ac0c Passed；根计数、live推进隔离、父子/兄弟Fork、指纹/续用文本及逐分支消费通过。初次e3faadd893c74974af6060628bbf13ec在测试自身的隔离域内捕获根，触发Power显示变量保护；修正测试捕获时点后通过。",
-    "evidence": "coverage/fixtures/regressions/axebot/axebot-joss-deferred-relics.json; src/Testing/Contracts/Combat/UnattendedTestRunner.JossPaperDeferred.cs; docs/issues/axebot-reports-20261003.md"
+    "observed": "e7c0363924e74211b043ebfaca50ac0c Passed；根计数、live推进隔离、父子/兄弟Fork、指纹/续用文本及逐分支消费通过。初次e3faadd893c74974af6060628bbf13ec在测试自身的隔离域内捕获根，触发Power显示变量保护；修正测试捕获时点后通过。指纹零状态兼容修复的6bf2b7299eae440ba42c87d18f27f290 Passed，新增零/非零分支区分、消费与父子隔离；未运行完整原生战斗。",
+    "evidence": "coverage/fixtures/regressions/axebot/axebot-joss-deferred-relics.json; src/Testing/Contracts/Combat/UnattendedTestRunner.JossPaperDeferred.cs; docs/issues/axebot-reports-20261003.md; docs/performance/gold-max-hp-healing-20261003.md"
   },
   "AXEBOT-TRANSFORM-SENTINEL": {
     "status": "Passed",
@@ -526,7 +526,7 @@
     "procedure": "从问题包回放状态导入有序牌堆、升级、附魔、苦难与疯狂科学枚举状态；分别恢复多尼斯异鸟和实验体的开战根。另在中档预设上覆盖出牌分支与 No-GC 预算，断言实际自定义值。",
     "expected": "复现器不再依赖手写牌表；导入后得到包内精确首手与有序抽牌堆。性能覆盖将设置标记为自定义，并按实际覆盖值断言。质量基线只记录，不改变搜索策略。",
     "observed": "多尼斯异鸟 runId b4e2837cecc04cb59dad6a4e4be6cb37 Passed，预计战损 55；实验体 runId cad36ba7007d40e392ee882c49be2308 Passed，预计战损 20；自定义覆盖 runId 011e9c0e7daa4564867e8195a6299a11 Passed，Branches=23/37、NoGC=7000000000。",
-    "evidence": "tools/run-unattended-test.ps1；src/Testing/Host/UnattendedTestRunner.Executor.cs；src/Testing/Contracts/Search/UnattendedTestRunner.SolverPolicy.cs；三个上述 runId；验证日期 2026-08-30。"
+    "evidence": "tools/testing/run-unattended-test.ps1；src/Testing/Host/UnattendedTestRunner.Executor.cs；src/Testing/Contracts/Search/UnattendedTestRunner.SolverPolicy.cs；三个上述 runId；验证日期 2026-08-30。"
   },
   "POST018-DETAILED-PLAN-REPLAY-STATE": {
     "status": "Passed",
@@ -598,7 +598,7 @@
     "procedure": "将 RankBest/RankFinal、Beam 多样性通道、药水配额、Pareto 和相关比较器移入 BeamRetentionPolicy；通过窄 stand-pat 委托保留延迟伤害评估，复跑固定机甲完整自动战斗。",
     "expected": "动作序列、expanded、transitions、choice branches、所有保留/剪枝计数和终局结果精确不变；策略不读取全局设置或拥有模拟器。",
     "observed": "第 5 回合结束；动作序列不变，expanded=4624、transitions=33432、choice_branches=17735 及全部剪枝计数与基线一致；11.64 s / 3.55 GB / 0 ms GC / 17.1 ms 最大帧，UnexpectedReplans=0。",
-    "evidence": "src/Search/CombatBeamSolver.BeamRetentionPolicy.cs；src/Search/CombatBeamSolver.Retention.cs；src/Search/CombatBeamSolver.Phases.cs；tools/verify-refactor-boundaries.ps1；coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；验证日期 2026-08-26。"
+    "evidence": "src/Search/CombatBeamSolver.BeamRetentionPolicy.cs；src/Search/CombatBeamSolver.Retention.cs；src/Search/CombatBeamSolver.Phases.cs；tools/inspection/verify-refactor-boundaries.ps1；coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；验证日期 2026-08-26。"
   },
   "SEARCH-RUN-CONTEXT-537": {
     "status": "Passed",
@@ -606,7 +606,7 @@
     "procedure": "将 solver 实例上的单次搜索计数、性能统计、帧节流、转置表及 stand-pat/威胁/coverage/路由缓存迁入 SearchRunContext；不池化集合或改变算法，复跑固定机甲完整自动战斗。",
     "expected": "动作序列、expanded、transitions、choice branches、所有剪枝计数、终局结果和零非预期重算精确不变。",
     "observed": "第 5 回合结束；动作序列不变，expanded=4624、transitions=33432、choice_branches=17735 及全部剪枝计数与纯拆分基线一致；11.52 s / 3.55 GB / 0 ms GC / 17.4 ms 最大帧，UnexpectedReplans=0。",
-    "evidence": "src/Search/CombatBeamSolver.cs；src/Search/CombatBeamSolver.Models.cs；src/Search/CombatBeamSolver.*.cs；tools/verify-refactor-boundaries.ps1；coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；验证日期 2026-08-26。"
+    "evidence": "src/Search/CombatBeamSolver.cs；src/Search/CombatBeamSolver.Models.cs；src/Search/CombatBeamSolver.*.cs；tools/inspection/verify-refactor-boundaries.ps1；coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；验证日期 2026-08-26。"
   },
   "BEAM-PARTIAL-SPLIT-536": {
     "status": "Passed",
@@ -614,7 +614,7 @@
     "procedure": "只移动 CombatBeamSolver 现有成员到 Entry/Models/Phases/Expansion/Retention/Terminal/StateEvaluation partial 文件；运行结构门禁、固定机甲完整 headless 和 Defect Lightning/Frost + Synchronize 严格差分。",
     "expected": "字段、方法体、集合与迭代顺序不变；固定场景动作序列、expanded、transitions、choice branches、剪枝计数和终局结果精确一致；严格差分不退化。",
     "observed": "固定机甲第 5 回合结束并零非预期重算；动作序列与拆分前一致，expanded=4624、transitions=33432、choice_branches=17735、dominance_pruned=214、transposition_pruned=700、repeatable_no_progress_pruned=0，11.35 s / 3.55 GB / 0 ms GC / 17.2 ms 最大帧。Defect 球与 Synchronize 严格差分 Passed。",
-    "evidence": "src/Search/CombatBeamSolver*.cs；tools/verify-refactor-boundaries.ps1；coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；无人场景 BEAM-PARTIAL-SPLIT-STRICT-536；验证日期 2026-08-26。"
+    "evidence": "src/Search/CombatBeamSolver*.cs；tools/inspection/verify-refactor-boundaries.ps1；coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；无人场景 BEAM-PARTIAL-SPLIT-STRICT-536；验证日期 2026-08-26。"
   },
   "MOD-SUBSCRIBER-BOUNDARY-534": {
     "status": "Passed",
@@ -1366,7 +1366,7 @@
     "procedure": "固定机甲跑局以 5s/60s 搜索运行 headless 与 Steam 正常可见完整 Mod 栈；核对搜索时间、分配、GC、帧间隔、路线质量和跨回合复用。",
     "expected": "搜索低于 20 秒，0 搜索期 GC，无超过 100ms 慢帧；第 8 回合内、0 药、预计战损不高于 31。",
     "observed": "headless runId 032a6d03ed9d44879f67308ac9f14830 Passed：8.207s/2,212,442,352B、GC 0ms、17.7ms 最大帧间隔。Steam 可见 runId 6d264252aef049928f8d07813f822f0e Passed：9.208s/2,291,229,384B、GC 0ms、11.0ms 最大帧间隔。两者均第 8 回合、预计战损 31、0 药并精确复用。",
-    "evidence": "coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；tools/run-visible-steam-benchmark.ps1；上述两个 runId；验证日期 2026-08-23。"
+    "evidence": "coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；tools/performance/run-visible-steam-benchmark.ps1；上述两个 runId；验证日期 2026-08-23。"
   },
   "LAGAVULIN-DEPLOY-REPLAN-175": {
     "status": "Passed",
@@ -1398,7 +1398,7 @@
     "procedure": "先以固定双小啃兽快照验证零药零战损长线和第 3 回合复用，再以固定机甲快照分别运行 headless 与 Steam 正常可见完整 Mod 栈。",
     "expected": "双小啃兽保持第 6 回合 0/0；机甲保持预计战损 31、0 药、第 8 回合结束、搜索低于 20 秒、无搜索期 GC 和明显慢帧。",
     "observed": "双小啃兽 runId f3398d7307b6492aadeaaeea2b7b66fc Passed：2.288s/386,064,304B，第 6 回合、两次洗牌、0 药、0 战损、0 卖血并第 3 回合复用。机甲 headless runId a673959490eb4f7c8f4fb09998402155 为 9.820s/2,266,224,376B；Steam 可见 runId 442db1253b7143fb913213c009b32820 为 9.818s/2,350,113,424B，GC 0ms、最大帧间隔 8.4ms，均第 8 回合、预计战损 31、0 药并第 3 回合复用。",
-    "evidence": "coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json、coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；tools/run-visible-steam-benchmark.ps1；上述三个 runId；验证日期 2026-08-22。"
+    "evidence": "coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json、coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json；tools/performance/run-visible-steam-benchmark.ps1；上述三个 runId；验证日期 2026-08-22。"
   },
   "VITAL-SPARK-LIFECYCLE-160": {
     "status": "Passed",
@@ -1438,7 +1438,7 @@
     "procedure": "使用 Steam 正常可见会话、用户完整 Mod 组合、固定机甲跑局、5s/60s 搜索和 6GB No-GC，执行首轮正式后台搜索并无人值守完成战斗。",
     "expected": "总时间不超过 15 秒，分配不超过 2.6GB，最大帧间隔不超过 100ms、无超过 100ms 帧；路线无药、无主动卖血并在 9 回合内结束。",
     "observed": "runId 051f690ba3554ad0baa6fb5518fad668 Passed：首轮 14.736s / 2,438,441,472B，GC 0ms，最大帧间隔 42.5ms、无 >50ms 帧；第 8 回合结束，1 次洗牌，0 药、0 卖血、Unmirrored=0，预计战损 31（旧 0.11.3 基线为 43）。战斗结束后托管堆 258,696,640B、碎片 102,672B、工作集约 2.30GB。",
-    "evidence": "tools/run-visible-steam-benchmark.ps1；runId 051f690ba3554ad0baa6fb5518fad668 的 SEARCH_PHASE/MAIN_THREAD_FRAMES/RESULT；验证日期 2026-08-22。"
+    "evidence": "tools/performance/run-visible-steam-benchmark.ps1；runId 051f690ba3554ad0baa6fb5518fad668 的 SEARCH_PHASE/MAIN_THREAD_FRAMES/RESULT；验证日期 2026-08-22。"
   },
   "STRATAGEM-DYNAMIC-BOUNDARY-144": {
     "status": "Passed",
@@ -2661,5 +2661,37 @@
     "expected": "逐实例有序状态、费用/升级或生成历史、父根及Fork一致。",
     "observed": "afd4056a2fff4fb4aef3a17d76496efd Passed；实际输出与实例清理已在批次前段确认。",
     "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.LogicBugBatch.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "GOLD-HEALING-MECHANISMS": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, merged upstream 56b6d6ee; IRONCLAD 50/80, minimum native effect, 120 seconds, owned instance cleanup; no Solve/diagnostics.",
+    "expected": "Complete state/RNG and parent/live isolation; preserve gold modifiers, healing callbacks and growth.",
+    "observed": "e45b785e58be408eb24a058cea44cddc Passed; GoldHealing:NoHealing:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonNegative:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonZero:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonFractional:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonPositive:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:BowlerDragon:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:BowlerDragonFractional:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:EctoplasmBlocksDragon:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:BowlerThenEctoplasm:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:EctoplasmThenBowler:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:MeltedDragon:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:UnknownThreeCallbacksRejectedWithoutExecution:ParentIsolation; GoldHealing:HandOfGreedFatal:NativePlay:Gold=25:GrowthResource:FullStateRng:ParentLiveIsolation; GoldHealing:HandOfGreedFatal:NativePlay:Gold=0:GrowthResource:FullStateRng:ParentLiveIsolation",
+    "evidence": "docs/performance/gold-max-hp-healing-20261003.md; src/Testing/Contracts/Combat/UnattendedTestRunner.GoldHealing.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.MaxHpHealing.cs"
+  },
+  "MAX-HP-HEALING-CALLBACKS": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, merged upstream 56b6d6ee; IRONCLAD 50/80, minimum native effect, 120 seconds, owned instance cleanup; no Solve/diagnostics.",
+    "expected": "Complete state/RNG and parent/live isolation; preserve gold modifiers, healing callbacks and growth.",
+    "observed": "1e611f0aa1624d908d7c4f07d893fde4 Passed; MaxHpHealing:Zero:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:FractionalTruncated:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:Positive:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:PartialCap:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:FullCapGold:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:WrongOwnerNativeCallbackIdentity:NoStateChanges; MaxHpHealing:RedSkullThresholdCrossing:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:FruitJuiceNativeUse:RedSkullHpCallback:FullStateRng:ParentLiveIsolation",
+    "evidence": "docs/performance/gold-max-hp-healing-20261003.md; src/Testing/Contracts/Combat/UnattendedTestRunner.GoldHealing.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.MaxHpHealing.cs"
+  },
+  "FEED-MAX-HP-CAP": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, merged upstream 56b6d6ee; IRONCLAD 50/80, minimum native effect, 120 seconds, owned instance cleanup; no Solve/diagnostics.",
+    "expected": "Complete state/RNG and parent/live isolation; preserve gold modifiers, healing callbacks and growth.",
+    "observed": "de2062aa4fc847f98b7293a8d848d22b Passed; MaxHpHealing:FeedNativeFatal:ActualGain=2:GrowthProtected:FullStateRng:ParentLiveIsolation; MaxHpHealing:FeedNativeFatal:ActualGain=0:GrowthProtected:FullStateRng:ParentLiveIsolation",
+    "evidence": "docs/performance/gold-max-hp-healing-20261003.md; src/Testing/Contracts/Combat/UnattendedTestRunner.GoldHealing.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.MaxHpHealing.cs"
+  },
+  "RELIC-MAX-HP-HEALING-BOUNDS": {
+    "status": "Passed",
+    "level": "HeadlessNativeCallbackFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, exact ChosenCheese.AfterCombatEnd / DarkstonePeriapt.AfterCardChangedPiles callback; IRONCLAD 50/80, 120-second owned instance cleanup, no Solve.",
+    "expected": "Unclosed held sources retain healing allowance; melted sources excluded; full state/RNG, parent/live isolation. Does not assert whole combat-end dispatch or permanent-deck mutation simulation.",
+    "observed": "35f61a69acf74cc3b6cc56f6e5269f8d Failed: bound=0 vs native heal=1. b16bb21caa4441bda3f931705fc0dddd Passed: two native callbacks, actual HP/max-HP +1/+6, and two melted-source exclusions.",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.RelicMaxHpHealing.cs; docs/performance/gold-max-hp-healing-20261003.md"
   }
 }

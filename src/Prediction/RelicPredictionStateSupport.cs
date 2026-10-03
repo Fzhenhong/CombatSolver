@@ -260,7 +260,14 @@ internal static class RelicPredictionStateSupport
                 break;
             case JossPaper value:
                 fingerprint.Add(JossPaperValueReadOnly(simulator, value));
-                fingerprint.Add(GetJossPaperEtherealCount(simulator, value));
+                int etherealCount = GetJossPaperEtherealCount(simulator, value);
+                // Preserve the established key when no deferred effect is pending.
+                // Nonzero deferred state still distinguishes future draw behavior.
+                if (etherealCount != 0)
+                {
+                    fingerprint.Add("JossPaper.EtherealCount");
+                    fingerprint.Add(etherealCount);
+                }
                 break;
             case Kusarigama value:
                 fingerprint.Add(CounterValueReadOnly(simulator, value, value._attacksPlayedThisTurn));

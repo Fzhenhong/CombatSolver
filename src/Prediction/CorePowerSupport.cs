@@ -137,9 +137,7 @@ internal static class CorePowerSupport
                 historyEntryStart):
             {
                 int maxHpGain = card.DynamicVars.MaxHp.IntValue;
-                SimCreatureState ownerState = simulator.State.GetCreature(owner);
-                ownerState.SetMaxHp(ownerState.MaxHp + maxHpGain);
-                simulator.Heal(owner, maxHpGain);
+                simulator.GainMaxHp(owner, maxHpGain);
                 combat.RecordGrowthReward(GrowthSource.Feed);
                 break;
             }
@@ -151,8 +149,9 @@ internal static class CorePowerSupport
                 historyEntryStart):
             {
                 int gold = card.DynamicVars["Gold"].IntValue;
-                combat.GainPlayerGold(card.Owner, gold);
-                combat.RecordLongTermResource(gold);
+                int gainedGold = combat.GainPlayerGold(simulator, card.Owner, gold);
+                if (gainedGold > 0)
+                    combat.RecordLongTermResource(gainedGold);
                 combat.RecordGrowthReward(GrowthSource.HandOfGreed);
                 break;
             }
