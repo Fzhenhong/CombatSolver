@@ -74,6 +74,10 @@ v2 索引保存稳定战斗/检查点 ID、永久递增编号、原生事件位�
 
 ## 验证
 
+完整预测路线可用无人测试场景 `CHECKPOINT-RECORDED-PLAN-DEPLOYMENT` 验证：传原 ZIP、含获胜预测的检查点 selector、`ReplayMode=DeploySolver`、显式政策文件和 EvidenceDirectory。测试按事件游标及起始回合选择最后一条完整获胜预测，保留所有动作、完整牌身份与选择，逐步对账增量/完整回放，再通过正常原生部署入口执行。断言真实胜负、战损、药水数量/身份及终局回合；后台搜索代次跨战斗结束保留，用于确认执行期间没有额外搜索。此模式证明保存预测的可执行性，不能称为纯玩家录制通关或搜索自主发现。
+
+同一输入使用 `CHECKPOINT-RECORDED-PLAN-PATH`、`ReplayMode=SearchOnly`，将冻结路线作为只读观察目标运行正常协调器；不把参照动作注入候选或评分。`RecordedPrediction-path-trace.json` 保存准确动作和完整状态的生成、转置、保留与展开事件，观察器丢事件时显式失败。路径诊断耗时不能作正常性能证据。两种模式都要求原生录制和对应检查点的完整获胜预测，旧身份不匹配时失败，不删去费用层或改写录制内容。Power Potion 等已录制前缀与未来预测用药分别计算，不能漏掉前缀消耗。
+
 包协议与顺序文件：`dotnet run --project tools/CheckpointTool/CheckpointTool.csproj -c Release -- self-test`。边界门禁使用 `verify-refactor-boundaries.ps1` / `.sh`。
 
 可见采集测量：`run-visible-steam-benchmark.ps1 -LoggingFixture -TimeoutSeconds 120 -EvidenceDirectory <目录>`，Linux 为 `--logging-fixture --timeout-seconds 120 --evidence-directory <目录>`。该短原生战斗另存 ZIP，索引提供采集累计/最大时间和积压，session.json 提供材料大小。headless 只用于导入和吞吐测量。具体证据及未覆盖场景见 TEST_MATRIX.md。

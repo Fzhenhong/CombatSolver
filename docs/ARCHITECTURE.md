@@ -80,6 +80,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 检查点完整搜索 profile 由 `ProtocolHost` 在请求内持有，Runtime 捕获政策时读取其不可变记录；请求结束清除。显式 CLI 扰动沿既有入口覆盖单项，不将测试 profile 写入玩家设置或后台读取器。
 
+保存预测路线的读取、严格回放、路径观察及原生终局断言属于Testing；生产Search不识别报告或测试场景。部署沿现有Runtime入口，跨战斗结束的真实后台搜索代次只通过`SolverController.Testing`只读暴露；不以会话清零计数或已清空的临时账本推断终局。
+
 ## 7. 工具与维护
 
 `tools/verify-refactor-boundaries.ps1` 和 `.sh` 维护同一职责边界。CoverageCatalog 从公开描述与结构化证据生成覆盖报告，报告的生成版本与测试来源分别说明。

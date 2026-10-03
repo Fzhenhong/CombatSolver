@@ -49,6 +49,11 @@ internal sealed partial class UnattendedTestRunner
                 await runner.RunQ002TestSubjectOpeningPathAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "CHECKPOINT-RECORDED-PLAN-PATH")
+            {
+                await runner.PrepareRecordedPlanDeploymentAsync(combatState, deploy: false);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "KNOWN-HEALING-POLICY")
             {
                 runner.SetStage("known_healing_policy");
@@ -1260,6 +1265,8 @@ internal sealed partial class UnattendedTestRunner
             if (SolverController.LastTurnSetupResultForTesting == null
                 && !request.PreserveNativeCombatStateForTest && !runner.HasNativeRecording)
                 SolverController.BeginCombat(combatState);
+            if (request.ScenarioId == "CHECKPOINT-RECORDED-PLAN-DEPLOYMENT")
+                await runner.PrepareRecordedPlanDeploymentAsync(combatState);
             if (request.TheftPolicyForTest is { } theftPolicy)
                 SolverController.SetTheftPolicyForTesting(combatState, theftPolicy);
             SolverController.SetStopFullAutoOnCombatEnd(false, persist: false);
@@ -1768,6 +1775,8 @@ internal sealed partial class UnattendedTestRunner
                 && !stoppedAfterWorseRecalculationPause
                 && !stoppedAfterLiveRiskPause
                 && !stoppedAfterExpectedUnexpectedReplan;
+            if (request.ScenarioId == "CHECKPOINT-RECORDED-PLAN-DEPLOYMENT")
+                runner.AssertRecordedPlanDeployment(combatState);
             return Observation(combatEnded);
 
             ExecutionOutcome Observation(bool combatEnded, bool initialSearchHeld = false)
