@@ -8441,5 +8441,69 @@
       "frozen native full deployment",
       "coordinator-total new-bound counters and actual bound overhead"
     ]
+  },
+  "queenOpeningScheduleIsolatedContract": {
+    "reusedComponentProof": {
+      "nativeRunId": "81f5705b0d3c481e954b7f1a014ce638",
+      "nativeResultPath": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/queen-component-native/result.json",
+      "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+      "sameRuntimeFiles": {
+        "src/Search/StrategicHpRecoveryBound.Components.cs": true,
+        "src/Runtime/CombatRootSnapshot.cs": true
+      },
+      "scheduleOnlyDelta": "PlanSearch eligibility changes CanRunEarlyOpeningPlanIncumbent -> CanCertifyRemainingHealing; all plan construction and node/time limits unchanged"
+    },
+    "dllSha256": "90c907a734d5b91fa6b24fa874e7a4116ce31692c2b8981618b8968bcea2fe54",
+    "nativeContract": {
+      "runId": "959cc284419f453eba8a119d10fb2752",
+      "status": "Passed",
+      "elapsedMilliseconds": 43248.801,
+      "mainAssemblyHash": "90C907A734D5B91FA6B24FA874E7A4116CE31692C2B8981618B8968BCEA2FE54",
+      "completedChecks": [
+        "QueenOpeningSchedule:NewComponentCertifiedRoot:EarlyOnce:PlanOnce:FirstMemberSeed:StrictDop1vs16:NoAdditionalLossOrPotion:loss=0/0:ParentLiveRngIsolation",
+        "QueenOpeningSchedule:NativeSpectrumShiftCompleteState:ParentForkRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=75:maxHp=75"
+      ],
+      "resultPath": ".local/general-healing-audit/queen-opening-schedule-native/result.json",
+      "instanceCleanup": "launcher removed owned instance",
+      "profile": "Coordinator explicit policy Profile Beam12/Nodes2000/20000ms; DOP1 with early plans disabled vs DOP16 candidate, strict incremental, 35sec cancellation/120sec launcher"
+    },
+    "rootDiagnostic": {
+      "resultPath": ".local/general-healing-audit/queen-opening-schedule-probe/root-healing-sources.json",
+      "root": {
+        "playerCount": 1,
+        "canCertifyRemainingHealing": true,
+        "usesKnownNativeHealingPolicy": true,
+        "hasOnlyPostCombatHealing": false,
+        "healingBoundCertificationReason": "unsupported_character",
+        "healingBoundCertificationSourceId": "REGENT",
+        "initialRemainingHealingUpperBound": 0,
+        "usesComponentHealingCertificate": true,
+        "componentHealingRejection": null,
+        "capturedRunModSubscriberCount": 0,
+        "capturedCombatModSubscriberCount": 0,
+        "capturedBaseLibCardModifiers": false,
+        "captureElapsedMilliseconds": 96.5886
+      },
+      "sameOriginalFrozenRoot": true,
+      "liveUnchanged": true,
+      "certificateMicroseconds": 106.7921875,
+      "branchBoundMicroseconds": 14.49697265625,
+      "timingScope": "isolated diagnostic loop after warmup; not whole search overhead",
+      "hostBuildSeconds": 2.64,
+      "hostDllSha256": "84f43f0bb96eafeb8fc1b64625b185d9d78f1c91bebd20fd5611e3e13d9b438e",
+      "searchRan": false,
+      "coverageScope": "one new prototype root, not full corpus"
+    },
+    "scope": "same C63 positive 14-card/Queen/Torch/Bound component proof; new scheduling gate only, no additional semantic certification; one frozen root diagnosed, not full corpus coverage",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final serial interleaved acceptance",
+      "fixed full regression",
+      "frozen native full deployment",
+      "new schedule all-root quality coverage",
+      "request-level exclusive bound overhead"
+    ]
   }
 }

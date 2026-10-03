@@ -115,3 +115,7 @@ TheInsatiable的初始行动明确给玩家生成六张FranticEscape，三张进
 ## Smart 开局的完整胜利见证传递（2026-10-04）
 
 复用同一亡灵来源组合，不新增默认认证。隔离`SMART-OPENING-WITNESS` / `1336ac4aa23f4274be8a832dd37ac99e`在27.44秒Passed：真实有界无药搜索未获胜与真实完整用药胜利分别产生，保留获胜路线并只传标量上界，严格DOP1/DOP16、实际2次剪枝、原政策门禁及CureAll原生完整状态/父/live/Fork/RNG。两次此前夹具未显式传搜索配置而Failed，修正后显式Beam24/1200节点/10000毫秒，无药控制仅1节点；120秒启动器帽，三个实例均清理。既有提前胜利夹具同样实际使用Default，行为证据保留但不声称1200节点。正式性能宿主显式传参。整请求42.86秒、0战损/1瓶/13回合，仅原始1.063倍，未纳入生产；完整来源、失败和限制见配套JSON与[性能记录](component-healing-bound-20261003.md)。
+
+## 女王实际冻结根与前置计划合同（2026-10-04）
+
+隔离DLL`90c907a7…`复用女王组件原型的Components/CombatRootSnapshot同哈希源码，改动仅为既有前置计划采用当前严格回复证书。`QUEEN-OPENING-SCHEDULE` / `959cc284419f453eba8a119d10fb2752`，43.25秒Passed：真实Coordinator新认证根、前置/计划各一次、首个成员胜利界、DOP1/DOP16严格质量/父/live/RNG，以及SpectrumShift原生完整状态/Fork；实例删除。独立无Solve诊断首次确认该原型的实际冻结女王根证书成立、回复界0、完整根匹配，不把生产f266的BundleOfJoy拒绝沿用为此原型的拒绝，也不外推全语料覆盖。完整请求405.60秒NoWin，速度及质量失败，没有推广运行时资格；具体范围见配套JSON及[性能记录](component-healing-bound-20261003.md)。
