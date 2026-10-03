@@ -61,6 +61,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 未知 gameplay subscriber 显式拒绝；已支持来源在主线程捕获，并在分支中消费隔离状态。登记合同与封闭入口见 [第三方适配手册](third-party/README.md)。
 
+金币命令由 `GoldGainSupport` 串联标准镜像：修改使用跑局前缀和战斗监听表，获得后的回调使用原生 null-child 跑局作用域。`SimulatedCombatState.GoldHooks` 在主线程冻结活动成员与已克隆全局来源，Fork 只读共享；遗物、药水、金币和 HP 仍从所属分支读取。未知金币 override 显式拒绝。监听参与位图为三个金币方法共用一位，只形成保守成员超集，精确方法仍由 registry 区分；不溢出或复用其他 Hook 位。`CombatPredictionSimulator.GainMaxHp` 单独实现实际封顶增量与后续 Heal，Feed、FruitJuice 和 DragonFruit 共用这一权威入口。
+
 ## 5. UI
 
 `SolverOverlaySnapshot.Capture` 是结果到展示的唯一投影边界，可读取 `SolverResult` 与显示元数据。`SolverOverlay`、`SolverRouteRow`、`SolverActionPill` 只渲染只读 snapshot。

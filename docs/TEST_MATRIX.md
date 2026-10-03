@@ -34,10 +34,16 @@ Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。该
 
 两条分支 CoverageCatalog 实际生成，`--verify-state-fields --verify-branch-state-reads` 通过。主线仍有注能核心一个 active exact Hook 缺运行证据；多人分支该目录未报运行证据缺口。目录生成消费历史证据，本次没有运行原生战斗、性能或全量 verify，不扩大旧结果的适用范围。
 
-金币回调审计追加：`88843d10d5b94471ad61d36d0efd20f4` 原生/模拟严格差分 Failed，持有DragonFruit获得20金币后，实际51/81、预测50/80，金币均157；严格证书拒绝正确，但已知来源估计漏计。未通过夹具留在忽略目录，生产修复待完成，详见[来源审计](performance/native-health-source-audit-20261003.md)。
+金币回调负基线 `88843d10d5b94471ad61d36d0efd20f4` 保持 Failed；合并后修复的独立原生证据见下节。
 
 ## 0.48.0合入研究分支与前置计划搜索回归（2026-10-03）
 
 合入上游 `a789aad2`，Release构建及Bash结构门禁通过。五角色 `NATIVE-HEALING-ALL-ENCOUNTERS` 各一次 Passed，开局原生合同另一次 Passed。四根 VeryHigh/DOP16 完整筛查的根续用戳及目录指纹与原始基线一致；储君女王423.57秒未获胜，质量门槛拒绝，宿主Passed不等于质量通过。隔离单变量对照恢复300.61秒/67战损/0瓶完整胜利。
 
 最终修复候选恢复原认证根的提前计划资格，保留通用胜利界消费。`KNOWN-HEALING-OPENING` / `7241445571bb49179e4d56b071892aa6` 和储君 `NATIVE-HEALING-ALL-ENCOUNTERS` / `e15b0024740e403a922963721bf705f8` 严格原生合同 Passed；Bash/PowerShell门禁均 `search_files=246`。最终29根回归完成：26个原始获胜根均保留胜利、3个原始未获胜根保持未获胜，战损没有超过原始基线。受试体单次内存超限记录保留，最终ABBA对照提速3.06倍、峰值+6.95%、战损26→24；其原生全程部署等待第一张Automation后超时，未列为原生验收完成。猎手首领47/62战损波动另有四次对照记录，结果与限制见[合并检查](performance/upstream-0480-merge-check-20261003.md)。回复入口扫描工具构建及已知直接/间接来源清单断言通过，不替代原生语义差分；其余审计未完成项见[第一阶段来源审计](performance/native-health-source-audit-20261003.md)。
+
+## 金币、最大生命与 HP 回调（2026-10-03）
+
+合入 `56b6d6ee` 后，`GOLD-HEALING-MECHANISMS`、`MAX-HP-HEALING-CALLBACKS`、`FEED-MAX-HP-CAP` 分别以 `c68a0c923fa84f48b9f4ce1ee9f68831`、`1e611f0aa1624d908d7c4f07d893fde4`、`de2062aa4fc847f98b7293a8d848d22b` Passed。覆盖 24 项检查，包含完整状态/RNG、父子与 live 隔离、未知回调拒绝、金币修正、真实致命出牌/用药、最大生命封顶和 HP 阈值回调。Release 构建零警告/错误。具体原生前提、复跑方法、失败夹具记录与性能待验收项见[金币与最大生命回复链](performance/gold-max-hp-healing-20261003.md)。
+
+`RELIC-MAX-HP-HEALING-BOUNDS` 的 `35f61a69acf74cc3b6cc56f6e5269f8d` 原生回调负基线保持 Failed（已知界 0、实际回复 1）。修复后 `b16bb21caa4441bda3f931705fc0dddd` Passed：ChosenCheese / DarkstonePeriapt 的原生回调、完整状态/RNG、父分支/live 隔离及各自熔化排除，共四项。IRONCLAD、50/80、120 秒帽，不运行 Solve；不代表完整战斗结束派发或永久牌组变更已模拟。复跑使用同名 scenario 与上述初始生命参数，Linux/PowerShell 各自原生无人测试入口，必须带实例清理。

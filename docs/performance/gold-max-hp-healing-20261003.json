@@ -1,0 +1,679 @@
+{
+  "scope": "Gold callbacks and actual max-HP gain; native semantics first, final performance pending",
+  "upstreamCommit": "56b6d6ee",
+  "mergeCommit": "027bd6da7f3375a7bcaa7de7f28be4ba82756084",
+  "game": {
+    "version": "0.111.0",
+    "commit": "41cef1ea",
+    "dllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+    "mvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e"
+  },
+  "candidateDllSha256": "e44c15bee6dd498c3ebe5bb93dc8e7967ae868ab12afb6ac3374375e29ccad1b",
+  "productionSourceSha256": {
+    "src/Engine/InCombat/Mirrors/Hooks/Resources/GoldGainedMirrors.cs": "8ac42670181a7a68cc31932a3b853951b06e27020579f2b2f8b3ff4649c248ed",
+    "src/Engine/InCombat/Simulation/CombatPredictionSimulator.Heal.cs": "5f4e22c664435176ec8c1b186f6bd38c81affb32e42bbac76b126ad2e1cc6fae",
+    "src/Prediction/GoldGainSupport.cs": "9113e9c4f2c56f3039068d156f5fc95d28299afd93d44e80e591007c31c45803",
+    "src/Prediction/CorePowerSupport.cs": "a032b5da30e5758daf262567309d610d811d28412ebaf96e9e1e97e896bb8dcb",
+    "src/Prediction/PotionOnUseSupport.cs": "26c705a0660d90d911c89bfa7bb623ddfded488d8bcef7f5afbcfc8a92f8f4cf",
+    "src/Search/SimulatedCombatState.cs": "efc501e5c335f1f706bafb762770e27cc0a5f060114d7f1c106ac54903502d89",
+    "src/Search/SimulatedCombatState.GoldHooks.cs": "1443c8fd5af536196dcc6cc97d77527fa1009face4c1d5fdce13540c28a9ec54",
+    "src/Search/SimulatedCombatState.RelicResources.cs": "c5880e77acbad48d621abd47e7b96886c8dd266cb8344a8084ac32777c9cb16f",
+    "src/Search/StrategicHpRecoveryBound.KnownSources.cs": "3460f17f117522ffaf95f7f974954ab34d094da732e52436ec3a080e5b208c85",
+    "src/Engine/Common/MirroredHookListenerFilter.cs": "8b1d480e73a37cd6ade87175db7be1602622b9238dfd43180bc7599e9d5b984f"
+  },
+  "build": {
+    "warnings": 0,
+    "errors": 0,
+    "seconds": 13.46,
+    "outputDirectory": ".local/general-healing-audit/upstream-56b6-final/build"
+  },
+  "native": [
+    {
+      "scenarioId": "GOLD-HEALING-MECHANISMS",
+      "runId": "c68a0c923fa84f48b9f4ce1ee9f68831",
+      "status": "Passed",
+      "completedChecks": [
+        "GoldHealing:NoHealing:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonNegative:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonZero:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonFractional:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonPositive:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:BowlerDragon:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:BowlerDragonFractional:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:EctoplasmBlocksDragon:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:BowlerThenEctoplasm:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:EctoplasmThenBowler:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:MeltedDragon:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:UnknownThreeCallbacksRejectedWithoutExecution:ParentIsolation",
+        "GoldHealing:HandOfGreedFatal:NativePlay:Gold=25:GrowthResource:FullStateRng:ParentLiveIsolation",
+        "GoldHealing:HandOfGreedFatal:NativePlay:Gold=0:GrowthResource:FullStateRng:ParentLiveIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=55:maxHp=85"
+      ],
+      "evidenceDirectory": ".local/general-healing-audit/upstream-56b6-final/gold-healing-mechanisms"
+    },
+    {
+      "scenarioId": "MAX-HP-HEALING-CALLBACKS",
+      "runId": "1e611f0aa1624d908d7c4f07d893fde4",
+      "status": "Passed",
+      "completedChecks": [
+        "MaxHpHealing:Zero:FullNativeStateRng:ParentLiveIsolation",
+        "MaxHpHealing:FractionalTruncated:FullNativeStateRng:ParentLiveIsolation",
+        "MaxHpHealing:Positive:FullNativeStateRng:ParentLiveIsolation",
+        "MaxHpHealing:PartialCap:FullNativeStateRng:ParentLiveIsolation",
+        "MaxHpHealing:FullCapGold:FullNativeStateRng:ParentLiveIsolation",
+        "MaxHpHealing:WrongOwnerNativeCallbackIdentity:NoStateChanges",
+        "MaxHpHealing:RedSkullThresholdCrossing:FullNativeStateRng:ParentLiveIsolation",
+        "MaxHpHealing:FruitJuiceNativeUse:RedSkullHpCallback:FullStateRng:ParentLiveIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=45:maxHp=85"
+      ],
+      "evidenceDirectory": ".local/general-healing-audit/upstream-56b6-final/max-hp-healing-callbacks"
+    },
+    {
+      "scenarioId": "FEED-MAX-HP-CAP",
+      "runId": "de2062aa4fc847f98b7293a8d848d22b",
+      "status": "Passed",
+      "completedChecks": [
+        "MaxHpHealing:FeedNativeFatal:ActualGain=2:GrowthProtected:FullStateRng:ParentLiveIsolation",
+        "MaxHpHealing:FeedNativeFatal:ActualGain=0:GrowthProtected:FullStateRng:ParentLiveIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=50:maxHp=999999999"
+      ],
+      "evidenceDirectory": ".local/general-healing-audit/upstream-56b6-final/feed-max-hp-cap"
+    },
+    {
+      "scenarioId": "GOLD-HEALING-MECHANISMS",
+      "runId": "e45b785e58be408eb24a058cea44cddc",
+      "status": "Passed",
+      "completedChecks": [
+        "GoldHealing:NoHealing:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonNegative:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonZero:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonFractional:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:DragonPositive:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:BowlerDragon:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:BowlerDragonFractional:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:EctoplasmBlocksDragon:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:BowlerThenEctoplasm:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:EctoplasmThenBowler:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:MeltedDragon:FullNativeStateRng:ForkParentLiveIsolation",
+        "GoldHealing:UnknownThreeCallbacksRejectedWithoutExecution:ParentIsolation",
+        "GoldHealing:HandOfGreedFatal:NativePlay:Gold=25:GrowthResource:FullStateRng:ParentLiveIsolation",
+        "GoldHealing:HandOfGreedFatal:NativePlay:Gold=0:GrowthResource:FullStateRng:ParentLiveIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=55:maxHp=85"
+      ],
+      "evidenceDirectory": ".local/general-healing-audit/upstream-56b6-final/gold-with-hook-metadata",
+      "reason": "Participation metadata changes root listener filtering; rerun affected Gold native fixture only"
+    }
+  ],
+  "negativeBaseline": {
+    "runId": "88843d10d5b94471ad61d36d0efd20f4",
+    "status": "Failed",
+    "native": {
+      "hp": 51,
+      "maxHp": 81,
+      "gold": 157
+    },
+    "predicted": {
+      "hp": 50,
+      "maxHp": 80,
+      "gold": 157
+    }
+  },
+  "sourceEvidence": {
+    "dllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+    "extractions": [
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Cards.HandOfGreed",
+        "exitCode": 0,
+        "bytes": 2500,
+        "sourceSha256": "abc8986483f42c078ad3bb181f187c79470513afdfee8638983514a6f7cec47a",
+        "path": ".local/general-healing-audit/gold-source-audit/HandOfGreed.cs"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Relics.BowlerHat",
+        "exitCode": 0,
+        "bytes": 1208,
+        "sourceSha256": "6d9c86f3f2591f5711142ac32dd262d66c52d9aad71cb30bbb38f5ee87349e8c",
+        "path": ".local/general-healing-audit/gold-source-audit/BowlerHat.cs"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Relics.Ectoplasm",
+        "exitCode": 0,
+        "bytes": 1262,
+        "sourceSha256": "15a3fca3059f5128a30fc81ceb29e1f428934b62354ebd05bb8a6683b2b5612f",
+        "path": ".local/general-healing-audit/gold-source-audit/Ectoplasm.cs"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Runs.RunState",
+        "exitCode": 0,
+        "bytes": 24576,
+        "sourceSha256": "cb27d007ef1fff57394fe7805fb51a8e7abfeec7a8854374f59deced3e85f043",
+        "path": ".local/general-healing-audit/gold-source-audit/RunState.cs"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Runs.IRunState",
+        "exitCode": 0,
+        "bytes": 10888,
+        "sourceSha256": "0b295b40548ddbb4901e7c35bb7c0edee05349c8f415984555503c8b78aac49f",
+        "path": ".local/general-healing-audit/gold-source-audit/IRunState.cs"
+      }
+    ]
+  },
+  "additionalSourceEvidence": {
+    "type": "MegaCrit.Sts2.Core.Models.RelicModel",
+    "sourceSha256": "d472cd0769273779f321f2629b54378ee57d2857c14702012cef694fc430ddf2",
+    "exitCode": 0,
+    "bytes": 14344
+  },
+  "bounds": {
+    "heldUnmeltedDragonFruit": "int.MaxValue until total trigger count and reachability are proved",
+    "meltedOrAbsentDragonFruit": "zero contribution from this mechanism only",
+    "unknownGoldCallback": "PredictionUnsupportedException; no callback execution",
+    "strictCertificateExpanded": false,
+    "heldUnmeltedChosenCheeseOrDarkstonePeriapt": "int.MaxValue until callbacks and acquisition/permanent-deck source closure are certified"
+  },
+  "previousExperiments": [
+    {
+      "runId": "4110dd3ea8b84bc6afcc9e68925697b7",
+      "status": "Failed",
+      "scope": "10 basic native cases passed; Melt fixture lacked IsWax"
+    },
+    {
+      "runId": "24a7e59405284e97852dbe186808bf7d",
+      "status": "Failed",
+      "scope": "Melt passed; test subscriber incorrectly constructed"
+    },
+    {
+      "runId": "bfc92ad4b1b74901931d82abe5cf3d31",
+      "status": "Failed",
+      "scope": "Generic registry ignored unknown non-gameplay override; final dispatcher rejects unreviewed Ignored"
+    },
+    {
+      "runId": "52829af2d42040fa91e939a12dd524ca",
+      "status": "Passed",
+      "scope": "pre-56b6 Gold boundary native checks"
+    },
+    {
+      "runId": "1339b327ff044a5f8f8cc56a68a2f3fd",
+      "status": "Passed",
+      "scope": "pre-56b6 max-HP native checks"
+    },
+    {
+      "runId": "bc13f9290bd94510859f664683b730f3",
+      "status": "Passed",
+      "scope": "pre-56b6 Feed capped native checks"
+    }
+  ],
+  "finalPerformance": {
+    "state": "Rejected before completion: screen-queen lost complete victory",
+    "completedRoots": 4,
+    "expectedRoots": 29,
+    "batchStopped": true,
+    "rows": [
+      {
+        "label": "pressure-queen-56b6-gold-final",
+        "wallSeconds": 31.4369715,
+        "quality": {
+          "won": true,
+          "outstandingStolenResource": 0,
+          "projectedBattleHpLost": 63,
+          "strategicHpDeficit": 63,
+          "potionStrategicCost": 536870911,
+          "projectedBattlePotionCount": 2,
+          "enemyHp": 0,
+          "score": 9998591982,
+          "combatEndedTurn": 5,
+          "theftPolicy": null,
+          "survives": true,
+          "deathSaveUseCount": 0,
+          "growthHpCredit": 0,
+          "growthRewardCount": 0
+        },
+        "peakProcessWorkingSetBytes": 20566147072,
+        "rootEqualToPrior": true,
+        "primaryIncumbentBranchesPruned": 0,
+        "timeBoundary": false
+      },
+      {
+        "label": "screen-test-subject-56b6-gold-final",
+        "wallSeconds": 48.4872675,
+        "quality": {
+          "won": true,
+          "outstandingStolenResource": 0,
+          "projectedBattleHpLost": 24,
+          "strategicHpDeficit": 24,
+          "potionStrategicCost": 0,
+          "projectedBattlePotionCount": 0,
+          "enemyHp": 0,
+          "score": 10000959922,
+          "combatEndedTurn": 12,
+          "theftPolicy": null,
+          "survives": true,
+          "deathSaveUseCount": 0,
+          "growthHpCredit": 0,
+          "growthRewardCount": 0
+        },
+        "peakProcessWorkingSetBytes": 25570349056,
+        "rootEqualToPrior": true,
+        "primaryIncumbentBranchesPruned": 405,
+        "timeBoundary": false
+      },
+      {
+        "label": "dev-06-silent-boss-56b6-gold-final",
+        "wallSeconds": 46.2122562,
+        "quality": {
+          "won": true,
+          "outstandingStolenResource": 0,
+          "projectedBattleHpLost": 62,
+          "strategicHpDeficit": 62,
+          "potionStrategicCost": 45,
+          "projectedBattlePotionCount": 1,
+          "enemyHp": 0,
+          "score": 9998331940,
+          "combatEndedTurn": 11,
+          "theftPolicy": null,
+          "survives": true,
+          "deathSaveUseCount": 0,
+          "growthHpCredit": 0,
+          "growthRewardCount": 0
+        },
+        "peakProcessWorkingSetBytes": 23565959168,
+        "rootEqualToPrior": true,
+        "primaryIncumbentBranchesPruned": 0,
+        "timeBoundary": false
+      },
+      {
+        "label": "screen-queen-56b6-gold-final",
+        "wallSeconds": 299.6583652,
+        "quality": {
+          "won": false,
+          "outstandingStolenResource": 0,
+          "projectedBattleHpLost": 22,
+          "strategicHpDeficit": 22,
+          "potionStrategicCost": 0,
+          "projectedBattlePotionCount": 0,
+          "enemyHp": 557,
+          "score": -5240020,
+          "combatEndedTurn": null,
+          "theftPolicy": null,
+          "survives": true,
+          "deathSaveUseCount": 0,
+          "growthHpCredit": 0,
+          "growthRewardCount": 0
+        },
+        "peakProcessWorkingSetBytes": 23880556544,
+        "rootEqualToPrior": true,
+        "primaryIncumbentBranchesPruned": 0,
+        "timeBoundary": true
+      }
+    ],
+    "control": {
+      "scope": "Diagnostic only; removed upstream star-only end-turn cleanup from otherwise same candidate; production restored immediately after build",
+      "result": {
+        "won": true,
+        "outstandingStolenResource": 0,
+        "projectedBattleHpLost": 67,
+        "strategicHpDeficit": 67,
+        "potionStrategicCost": 0,
+        "projectedBattlePotionCount": 0,
+        "enemyHp": 0,
+        "score": 9997731919,
+        "combatEndedTurn": 12,
+        "theftPolicy": null,
+        "survives": true,
+        "deathSaveUseCount": 0,
+        "growthHpCredit": 0,
+        "growthRewardCount": 0
+      },
+      "seconds": 302.2803406,
+      "notShipped": true,
+      "notProofOfNativeLegality": true
+    },
+    "candidateDllSha256": "912da5c4ed46d9689c783b7adbf50593a841a79eb9302cd67e738570857ae1e7",
+    "includesRelicMaxHpGuard": false
+  },
+  "deployed": false,
+  "unverified": [
+    "Finite DragonFruit trigger total and recursive source closure",
+    "All original healing mechanism certification",
+    "Per-branch certification overhead/coverage",
+    "Native full TestSubject route",
+    "Visible Steam performance",
+    "Repeatability / runtime sensitivity of screen-queen search, and final fixed regression after relic guard"
+  ],
+  "finalBuild": {
+    "outputDirectory": ".local/general-healing-audit/upstream-56b6-final/build-with-hook-metadata",
+    "dllSha256": "912da5c4ed46d9689c783b7adbf50593a841a79eb9302cd67e738570857ae1e7",
+    "seconds": 13.66,
+    "warnings": 0,
+    "errors": 0,
+    "changeAfterInitialBuild": "Added conservative shared gold callback participation bit; exact method registries unchanged"
+  },
+  "structureGates": {
+    "Bash": "Passed search_files=247",
+    "PowerShell": "Passed search_files=247"
+  },
+  "coverage": {
+    "generated": true,
+    "verifyStateFields": "Passed",
+    "verifyBranchStateReads": "Passed",
+    "goldHookRows": [
+      {
+        "key": "Relic|MegaCrit.Sts2.Core.Models.Relics.BowlerHat|MegaCrit.Sts2.Core.Models.AbstractModel.AfterModifyingGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "category": "Relic",
+        "entityType": "MegaCrit.Sts2.Core.Models.Relics.BowlerHat",
+        "entityName": "BowlerHat",
+        "hookOwner": "MegaCrit.Sts2.Core.Models.AbstractModel",
+        "hook": "AfterModifyingGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "scopeGuess": "Combat",
+        "engineRegistration": "Ignored",
+        "engineDispatch": "Exact",
+        "status": "NotCombatRelevant",
+        "source": "src/Engine/InCombat/Mirrors/Hooks/Resources/GoldGainedMirrors.cs",
+        "notes": "Native in-combat gold command; modifier notification only flashes, actual modify/gain affect gold/max HP/healing. Reviewed on game 0.111.0; no out-of-combat-only assumption.",
+        "testId": "GOLD-HEALING-MECHANISMS",
+        "effectiveStatus": "OutOfScope",
+        "verification": "Runtime",
+        "capability": "OutOfScope",
+        "methodHash": "5f23b21cb30662bef64f3c8572dfaa981d0b77175f1eafd08b5200456f64b62c"
+      },
+      {
+        "key": "Relic|MegaCrit.Sts2.Core.Models.Relics.BowlerHat|MegaCrit.Sts2.Core.Models.AbstractModel.ModifyGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "category": "Relic",
+        "entityType": "MegaCrit.Sts2.Core.Models.Relics.BowlerHat",
+        "entityName": "BowlerHat",
+        "hookOwner": "MegaCrit.Sts2.Core.Models.AbstractModel",
+        "hook": "ModifyGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "scopeGuess": "Combat",
+        "engineRegistration": "Registered",
+        "engineDispatch": "Exact",
+        "status": "EngineExact",
+        "source": "src/Engine/InCombat/Mirrors/Hooks/Resources/GoldGainedMirrors.cs",
+        "notes": "Native in-combat gold command; modifier notification only flashes, actual modify/gain affect gold/max HP/healing. Reviewed on game 0.111.0; no out-of-combat-only assumption.",
+        "testId": "GOLD-HEALING-MECHANISMS",
+        "effectiveStatus": "Exact",
+        "verification": "Runtime",
+        "capability": "EngineMirror",
+        "methodHash": "3c96e60a6aa4021c46ca171a36452fd83f7032b14ee0e64562e6a4e363999f92"
+      },
+      {
+        "key": "Relic|MegaCrit.Sts2.Core.Models.Relics.DragonFruit|MegaCrit.Sts2.Core.Models.AbstractModel.AfterGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player)",
+        "category": "Relic",
+        "entityType": "MegaCrit.Sts2.Core.Models.Relics.DragonFruit",
+        "entityName": "DragonFruit",
+        "hookOwner": "MegaCrit.Sts2.Core.Models.AbstractModel",
+        "hook": "AfterGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player)",
+        "scopeGuess": "Combat",
+        "engineRegistration": "Registered",
+        "engineDispatch": "Exact",
+        "status": "EngineExact",
+        "source": "src/Engine/InCombat/Mirrors/Hooks/Resources/GoldGainedMirrors.cs",
+        "notes": "Native in-combat gold command; modifier notification only flashes, actual modify/gain affect gold/max HP/healing. Reviewed on game 0.111.0; no out-of-combat-only assumption.",
+        "testId": "GOLD-HEALING-MECHANISMS",
+        "effectiveStatus": "Exact",
+        "verification": "Runtime",
+        "capability": "EngineMirror",
+        "methodHash": "d257291e482a4aa97ce697df384ab8e66ccb2d592daaffb590b2d7efbdd07cd4"
+      },
+      {
+        "key": "Relic|MegaCrit.Sts2.Core.Models.Relics.Ectoplasm|MegaCrit.Sts2.Core.Models.AbstractModel.AfterModifyingGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "category": "Relic",
+        "entityType": "MegaCrit.Sts2.Core.Models.Relics.Ectoplasm",
+        "entityName": "Ectoplasm",
+        "hookOwner": "MegaCrit.Sts2.Core.Models.AbstractModel",
+        "hook": "AfterModifyingGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "scopeGuess": "Combat",
+        "engineRegistration": "Ignored",
+        "engineDispatch": "Exact",
+        "status": "NotCombatRelevant",
+        "source": "src/Engine/InCombat/Mirrors/Hooks/Resources/GoldGainedMirrors.cs",
+        "notes": "Native in-combat gold command; modifier notification only flashes, actual modify/gain affect gold/max HP/healing. Reviewed on game 0.111.0; no out-of-combat-only assumption.",
+        "testId": "GOLD-HEALING-MECHANISMS",
+        "effectiveStatus": "OutOfScope",
+        "verification": "Runtime",
+        "capability": "OutOfScope",
+        "methodHash": "34c59f963246cc724f59c053f4c347964bf95127863e1b2583afb84943de3e4b"
+      },
+      {
+        "key": "Relic|MegaCrit.Sts2.Core.Models.Relics.Ectoplasm|MegaCrit.Sts2.Core.Models.AbstractModel.ModifyGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "category": "Relic",
+        "entityType": "MegaCrit.Sts2.Core.Models.Relics.Ectoplasm",
+        "entityName": "Ectoplasm",
+        "hookOwner": "MegaCrit.Sts2.Core.Models.AbstractModel",
+        "hook": "ModifyGoldGained(MegaCrit.Sts2.Core.Entities.Players.Player,System.Decimal)",
+        "scopeGuess": "Combat",
+        "engineRegistration": "Registered",
+        "engineDispatch": "Exact",
+        "status": "EngineExact",
+        "source": "src/Engine/InCombat/Mirrors/Hooks/Resources/GoldGainedMirrors.cs",
+        "notes": "Native in-combat gold command; modifier notification only flashes, actual modify/gain affect gold/max HP/healing. Reviewed on game 0.111.0; no out-of-combat-only assumption.",
+        "testId": "GOLD-HEALING-MECHANISMS",
+        "effectiveStatus": "Exact",
+        "verification": "Runtime",
+        "capability": "EngineMirror",
+        "methodHash": "05db3d543b87d21afc41520a89a9412c695d2ef7bc2e07a4c04ff5b3ddffa165"
+      }
+    ],
+    "fullVerifyExecuted": false,
+    "notes": "Preserves unrelated pre-existing runtime evidence gap; source evidence is not a full game audit."
+  },
+  "additionalSourceEvidencePlayerCombatState": {
+    "type": "MegaCrit.Sts2.Core.Entities.Players.PlayerCombatState",
+    "dllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+    "sourceSha256": "2bdec72de77a259982762163dad6e6e38161bfb7d93b070855c2a96b985ce011",
+    "exitCode": 0
+  },
+  "shadowRouteReplay": {
+    "scope": "Simulation only, no native execution or search acceptance; previous winning route remains legal in shadow replay",
+    "actions": 78,
+    "prefixes": 79,
+    "allStateKeysEqualAcrossPreviousFinalAndStarAblation": true,
+    "hpLoss": 67,
+    "potions": 0,
+    "turns": 13,
+    "liveRootUnchanged": true,
+    "evidenceDirectory": ".local/general-healing-audit/upstream-56b6-final/route-replay-probe",
+    "pathSearchPending": true
+  },
+  "relicMaxHpGuard": {
+    "scope": "Exact native relic callback + shared GainMaxHp differential; no whole combat-end / permanent-deck-mutation claim",
+    "negativeBaseline": {
+      "runId": "35f61a69acf74cc3b6cc56f6e5269f8d",
+      "status": "Failed",
+      "mainAssemblyHash": "98D9ECC719BF76ECD94806C7065C2CD3B4A3CC5A33C4552E34E61ED9FC45BB9A",
+      "observed": [
+        {
+          "relicId": "CHOSEN_CHEESE",
+          "bound": 0,
+          "observedHeal": 1,
+          "observedMaxHpGain": 1,
+          "canCertifyRemainingHealing": false,
+          "usesKnownNativeHealingPolicy": true
+        }
+      ],
+      "evidenceDirectory": ".local/general-healing-audit/relic-max-hp-bound/native-baseline"
+    },
+    "final": {
+      "runId": "b16bb21caa4441bda3f931705fc0dddd",
+      "status": "Passed",
+      "mainAssemblyHash": "E44C15BEE6DD498C3EBE5BB93DC8E7967AE868AB12AFB6AC3374375E29CCAD1B",
+      "elapsedMilliseconds": 27696.6806,
+      "completedChecks": [
+        "RelicMaxHpHealing:CHOSEN_CHEESE:NativeCallback:FullStateRng:ForkParentLiveIsolation:UnclosedBound",
+        "RelicMaxHpHealing:CHOSEN_CHEESE:MeltedSourceExcluded",
+        "RelicMaxHpHealing:DARKSTONE_PERIAPT:NativeCallback:FullStateRng:ForkParentLiveIsolation:UnclosedBound",
+        "RelicMaxHpHealing:DARKSTONE_PERIAPT:MeltedSourceExcluded",
+        "NativeOutcome:combatEnded=False:turn=1:hp=56:maxHp=86"
+      ],
+      "observed": [
+        {
+          "relicId": "CHOSEN_CHEESE",
+          "bound": 2147483647,
+          "observedHeal": 1,
+          "observedMaxHpGain": 1,
+          "canCertifyRemainingHealing": false,
+          "usesKnownNativeHealingPolicy": true
+        },
+        {
+          "relicId": "DARKSTONE_PERIAPT",
+          "bound": 2147483647,
+          "observedHeal": 6,
+          "observedMaxHpGain": 6,
+          "canCertifyRemainingHealing": false,
+          "usesKnownNativeHealingPolicy": true
+        }
+      ],
+      "evidenceDirectory": ".local/general-healing-audit/relic-max-hp-bound/native-final"
+    },
+    "sourceEvidence": [
+      {
+        "batch": "native-source-provenance.json",
+        "type": "MegaCrit.Sts2.Core.Models.Relics.ChosenCheese",
+        "exitCode": 0,
+        "sourceSha256": "8cec319068c477d5067cc190d887dab9c543511f42f35138354df6c02bd9c603",
+        "bytes": 796
+      },
+      {
+        "batch": "native-source-provenance.json",
+        "type": "MegaCrit.Sts2.Core.Models.Relics.DarkstonePeriapt",
+        "exitCode": 0,
+        "sourceSha256": "dd64455769617cf64bd41554f9d981378bf8244a7876b6f611ac3fec78925c1d",
+        "bytes": 1014
+      }
+    ],
+    "fixtureSourceSha256": "f5ef30c043db83ffa6ad4db939fc3556d15ad4bf5b61e11092cb8f7b6fc6c75b",
+    "build": {
+      "seconds": 14.06,
+      "warnings": 0,
+      "errors": 0,
+      "outputDirectory": ".local/general-healing-audit/relic-max-hp-bound/final-build"
+    },
+    "performanceMeasured": false,
+    "structureGates": {
+      "bash": "Passed search_files=247",
+      "powershell": "Passed search_files=247"
+    }
+  },
+  "coordinatorPathDiagnostics": {
+    "previous": {
+      "diagnosticOnly": true,
+      "wholeWallSeconds": 301.5183527,
+      "quality": {
+        "Won": false,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 22,
+        "StrategicHpDeficit": 22,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 557,
+        "Score": -5240020,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "path": [
+        {
+          "solver": "806f9e4e-e6f4-4e4b-bd20-053de5b4f05c",
+          "beam": 203,
+          "lastGeneratedKnownStatePrefix": 23,
+          "lastRetainedKnownStatePrefix": 22,
+          "prefix23": [
+            {
+              "stage": "TurnAnnotated",
+              "reason": "turn_outcome_annotation",
+              "policyLabel": {
+                "potionCount": 0,
+                "potionStrategicCost": 0,
+                "futureSoldHp": 32,
+                "cumulativePlayerHpLost": 61,
+                "actionCount": 23,
+                "score": -1000006700023
+              },
+              "turn": 5,
+              "actionCount": 23,
+              "boundaryReason": "None"
+            },
+            {
+              "stage": "PruneInput",
+              "reason": "prune_input",
+              "policyLabel": {
+                "potionCount": 0,
+                "potionStrategicCost": 0,
+                "futureSoldHp": 32,
+                "cumulativePlayerHpLost": 61,
+                "actionCount": 23,
+                "score": -1000006700023
+              },
+              "turn": 5,
+              "actionCount": 23,
+              "boundaryReason": "None"
+            }
+          ]
+        }
+      ],
+      "directory": ".local/general-healing-audit/upstream-56b6-final/route-replay-probe/coordinator-watch-previous"
+    },
+    "final": {
+      "diagnosticOnly": true,
+      "wholeWallSeconds": 300.954163,
+      "quality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 67,
+        "StrategicHpDeficit": 67,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9997731919,
+        "CombatEndedTurn": 12,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "path": [
+        {
+          "solver": "f4ff5c87-0318-4529-b269-63772f81a01d",
+          "beam": 203,
+          "lastGeneratedKnownStatePrefix": 23,
+          "lastRetainedKnownStatePrefix": 22,
+          "prefix23": [
+            {
+              "stage": "TurnAnnotated",
+              "reason": "turn_outcome_annotation",
+              "policyLabel": {
+                "potionCount": 0,
+                "potionStrategicCost": 0,
+                "futureSoldHp": 32,
+                "cumulativePlayerHpLost": 61,
+                "actionCount": 23,
+                "score": -1000006700023
+              },
+              "turn": 5,
+              "actionCount": 23,
+              "boundaryReason": "None"
+            },
+            {
+              "stage": "PruneInput",
+              "reason": "prune_input",
+              "policyLabel": {
+                "potionCount": 0,
+                "potionStrategicCost": 0,
+                "futureSoldHp": 32,
+                "cumulativePlayerHpLost": 61,
+                "actionCount": 23,
+                "score": -1000006700023
+              },
+              "turn": 5,
+              "actionCount": 23,
+              "boundaryReason": "None"
+            }
+          ]
+        }
+      ],
+      "directory": ".local/general-healing-audit/upstream-56b6-final/route-replay-probe/coordinator-watch-final"
+    },
+    "conclusion": "Both versions lose the old exact prefix at turn 5, action 23; new version finds a different victory. Diagnostics affect time/allocation, cannot establish performance or causal regression."
+  },
+  "productionSourceSha256Scope": "Latest local candidate; individual native records retain their own DLL identity; finalPerformance belongs to the earlier Gold hook-metadata candidate."
+}

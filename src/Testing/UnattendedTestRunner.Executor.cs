@@ -251,6 +251,36 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertSignedGoldLossAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "GOLD-HEALING-CALLBACK")
+            {
+                await runner.AssertGoldHealingCallbackAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "GOLD-HEALING-MECHANISMS")
+            {
+                await runner.AssertGoldHealingMechanismsAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "GOLD-HEALING-BOUNDARIES")
+            {
+                await runner.AssertGoldHealingMechanismsAsync(combatState, player, includeBasicCases: false);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "MAX-HP-HEALING-CALLBACKS")
+            {
+                await runner.AssertMaxHpHealingCallbacksAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "FEED-MAX-HP-CAP")
+            {
+                await runner.AssertFeedMaxHpCapAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "RELIC-MAX-HP-HEALING-BOUNDS")
+            {
+                await runner.AssertRelicMaxHpHealingBoundsAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "NIGHTMARE-CAPTURED-ROOT")
             {
                 await runner.AssertNightmareCapturedRootAsync(combatState, player);

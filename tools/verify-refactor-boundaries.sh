@@ -1226,6 +1226,18 @@ require_fixed "$repository_root/src/Runtime/CombatRootSnapshot.cs" 'CanUseKnownN
 for closure_component in 'PendingReturningCards' 'AllCards' 'EffectivePowers()' 'GetPotionSlotCount(player)' 'HasCertifiedRemainingAttachments' 'typeof(InfestedPrism)' 'typeof(FuzzyWurmCrawler)'; do
     require_fixed "$remaining_healing_bound_path" "$closure_component" 'remaining-healing proof lost a closure component:'
 done
+require_fixed "$repository_root/src/Search/SimulatedCombatState.cs" '_goldRunHookSnapshot = GoldRunHookSnapshot.Capture(' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Search/SimulatedCombatState.cs" '_goldRunHookSnapshot = source._goldRunHookSnapshot;' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Search/SimulatedCombatState.GoldHooks.cs" 'run.IterateHookListeners(null)' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Search/SimulatedCombatState.GoldHooks.cs" 'GetPotionAtSlot(player, slot)' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Prediction/GoldGainSupport.cs" 'combat.GoldAfterGainHookListeners(simulator)' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Search/SimulatedCombatState.RelicResources.cs" 'GoldGainSupport.ModifyGoldGained(simulator, this, player, amount)' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Engine/InCombat/Mirrors/Hooks/Resources/GoldGainedMirrors.cs" 'allowReviewedIgnored: listener is BowlerHat or Ectoplasm' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Engine/InCombat/Simulation/CombatPredictionSimulator.Heal.cs" 'Heal(creature, state.MaxHp - before)' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Prediction/PotionOnUseSupport.cs" 'simulator.GainMaxHp(playerTarget, gained)' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Prediction/CorePowerSupport.cs" 'if (gainedGold > 0)' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.KnownSources.cs" 'or DragonFruit' 'gold/max-HP command ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.KnownSources.cs" 'or DarkstonePeriapt or ChosenCheese' 'unclosed relic healing allowance changed:'
 beam_phases_path="$search_root/CombatBeamSolver.Phases.cs"
 require_fixed "$beam_retention_facade_path" '_strictHpBoundWithRelicTargets = CanUseStrictHpRelicBound(root, policy)' 'missing common relic healing bound:'
 require_fixed "$beam_retention_facade_path" 'targets.All(target => target.HpAllowance == 0)' 'missing zero-allowance objective gate:'

@@ -2445,5 +2445,37 @@
     "procedure": "合并ce17a40，保留战略上下文双方变量；直接字段及回合前缀合同。",
     "observed": "合并上游ce17a40（0.38.0）后，保留双方战略上下文变量与各自消费者，文档冲突合并保留两批记录。正常Release零警告/错误，Bash/PowerShell结构门禁均90文件通过；STRATEGIC-CONTEXT-DEMAND / eae143ef4e3a4e32a23be62f060b937b Passed，END-TURN-CHOICE-REPLAY / 26494f1f7a1341a589f3a8ac35b54812 Passed。未重测性能，前述收益只属于原基线，不套用到上游新增语义后的产物。",
     "evidence": "docs/archive/performance/pr90-attempts-20260913.md"
+  },
+  "GOLD-HEALING-MECHANISMS": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, merged upstream 56b6d6ee; IRONCLAD 50/80, minimum native effect, 120 seconds, owned instance cleanup; no Solve/diagnostics.",
+    "expected": "Complete state/RNG and parent/live isolation; preserve gold modifiers, healing callbacks and growth.",
+    "observed": "e45b785e58be408eb24a058cea44cddc Passed; GoldHealing:NoHealing:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonNegative:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonZero:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonFractional:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:DragonPositive:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:BowlerDragon:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:BowlerDragonFractional:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:EctoplasmBlocksDragon:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:BowlerThenEctoplasm:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:EctoplasmThenBowler:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:MeltedDragon:FullNativeStateRng:ForkParentLiveIsolation; GoldHealing:UnknownThreeCallbacksRejectedWithoutExecution:ParentIsolation; GoldHealing:HandOfGreedFatal:NativePlay:Gold=25:GrowthResource:FullStateRng:ParentLiveIsolation; GoldHealing:HandOfGreedFatal:NativePlay:Gold=0:GrowthResource:FullStateRng:ParentLiveIsolation",
+    "evidence": "docs/performance/gold-max-hp-healing-20261003.md; src/Testing/UnattendedTestRunner.GoldHealing.cs; src/Testing/UnattendedTestRunner.MaxHpHealing.cs"
+  },
+  "MAX-HP-HEALING-CALLBACKS": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, merged upstream 56b6d6ee; IRONCLAD 50/80, minimum native effect, 120 seconds, owned instance cleanup; no Solve/diagnostics.",
+    "expected": "Complete state/RNG and parent/live isolation; preserve gold modifiers, healing callbacks and growth.",
+    "observed": "1e611f0aa1624d908d7c4f07d893fde4 Passed; MaxHpHealing:Zero:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:FractionalTruncated:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:Positive:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:PartialCap:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:FullCapGold:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:WrongOwnerNativeCallbackIdentity:NoStateChanges; MaxHpHealing:RedSkullThresholdCrossing:FullNativeStateRng:ParentLiveIsolation; MaxHpHealing:FruitJuiceNativeUse:RedSkullHpCallback:FullStateRng:ParentLiveIsolation",
+    "evidence": "docs/performance/gold-max-hp-healing-20261003.md; src/Testing/UnattendedTestRunner.GoldHealing.cs; src/Testing/UnattendedTestRunner.MaxHpHealing.cs"
+  },
+  "FEED-MAX-HP-CAP": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, merged upstream 56b6d6ee; IRONCLAD 50/80, minimum native effect, 120 seconds, owned instance cleanup; no Solve/diagnostics.",
+    "expected": "Complete state/RNG and parent/live isolation; preserve gold modifiers, healing callbacks and growth.",
+    "observed": "de2062aa4fc847f98b7293a8d848d22b Passed; MaxHpHealing:FeedNativeFatal:ActualGain=2:GrowthProtected:FullStateRng:ParentLiveIsolation; MaxHpHealing:FeedNativeFatal:ActualGain=0:GrowthProtected:FullStateRng:ParentLiveIsolation",
+    "evidence": "docs/performance/gold-max-hp-healing-20261003.md; src/Testing/UnattendedTestRunner.GoldHealing.cs; src/Testing/UnattendedTestRunner.MaxHpHealing.cs"
+  },
+  "RELIC-MAX-HP-HEALING-BOUNDS": {
+    "status": "Passed",
+    "level": "HeadlessNativeCallbackFullStateDifferentialAndForkIsolation",
+    "procedure": "Game 0.111.0, exact ChosenCheese.AfterCombatEnd / DarkstonePeriapt.AfterCardChangedPiles callback; IRONCLAD 50/80, 120-second owned instance cleanup, no Solve.",
+    "expected": "Unclosed held sources retain healing allowance; melted sources excluded; full state/RNG, parent/live isolation. Does not assert whole combat-end dispatch or permanent-deck mutation simulation.",
+    "observed": "35f61a69acf74cc3b6cc56f6e5269f8d Failed: bound=0 vs native heal=1. b16bb21caa4441bda3f931705fc0dddd Passed: two native callbacks, actual HP/max-HP +1/+6, and two melted-source exclusions.",
+    "evidence": "src/Testing/UnattendedTestRunner.RelicMaxHpHealing.cs; docs/performance/gold-max-hp-healing-20261003.md"
   }
 }
