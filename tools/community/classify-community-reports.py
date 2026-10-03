@@ -75,11 +75,12 @@ def classify(reports):
         c['diagnosticGroups'] = memberships[r['id']]
         c['rankMetric'] = ('potion_adjusted_hp_reduction' if c['hpLoss'] and 'potionAdjustedHpReduction' in c['hpLoss']
                            else 'reported_projected_hp_reduction_unverified_resources')
-    ordered_cases = sorted(cases.values(), key=lambda c: (
-        c['rankMetric'] == 'potion_adjusted_hp_reduction',
-        c['hpLoss'] is not None and c['hpLoss'].get('reduction') is not None,
-        c['hpLoss'].get('potionAdjustedHpReduction', c['hpLoss']['reduction']) if c['hpLoss'] else 0,
-        c['sessionId']), reverse=True)
+    def case_rank(case):
+        hp = case['hpLoss']
+        metric = hp.get('potionAdjustedHpReduction', hp.get('reduction')) if hp else None
+        return (case['rankMetric'] == 'potion_adjusted_hp_reduction', metric is not None,
+                metric if metric is not None else 0, case['sessionId'])
+    ordered_cases = sorted(cases.values(), key=case_rank, reverse=True)
     return {'schemaVersion':1,'minimumVersion':'0.44.0','verification':'static_classification_only','reportCount':len(reports),'sessionCount':len({r['combat']['sessionId'] or 'missing-session:'+r['id'] for r in reports}),'diagnosticGroups':sorted(groups.values(),key=lambda g:(version(g['versions'][-1]),g['sessionCount'],g['id']),reverse=True),'optimizationCases':ordered_cases,'reportMemberships':memberships}
 
 
