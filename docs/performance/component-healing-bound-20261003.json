@@ -2839,7 +2839,79 @@
     },
     "topNReportFailure": "exclusive and inclusive reports initially raced over same ETLX cache; exclusive rerun sequentially succeeded",
     "initialCollectFailure": "cpu-sampling applies to collect-linux, not collect; no child launched; corrected to managed sampling",
-    "interpretation": "115.83s sampled opening-power search versus21.73s primary; active-stack fork costs justify investigating clone work, not yet a causal attribution for victory regression"
+    "interpretation": "115.83s sampled opening-power search versus21.73s primary; active-stack fork costs justify investigating clone work, not yet a causal attribution for victory regression",
+    "allocationCallerReanalysis": {
+      "scope": "Managed sampled thread intervals; synthetic timing wrappers removed; wait leaves and JIT-hook stacks excluded. Not CPU time or performance acceptance.",
+      "activeSampledThreadMilliseconds": 682155.0647792611,
+      "excludedMilliseconds": {
+        "jit": 190141.78576043906,
+        "wait": 2549991.3540263623
+      },
+      "input": ".local/general-healing-audit/queen-diagnostic/queen.speedscope.json",
+      "output": ".local/general-healing-audit/queen-diagnostic/allocation-callers.json",
+      "analysisScript": ".local/general-healing-audit/queen-diagnostic/analyze-callers.py",
+      "sampleCollectionRepeated": false,
+      "failedInitialAnalysis": "synthetic timing frames initially remained as leaves and yielded near-zero managed caller weights; discarded; same trace reprocessed with wrappers removed",
+      "groupsFromTopTwelveCallerPaths": {
+        "ToArray": [
+          {
+            "caller": "CombatSolver!CombatSolver.SimulatedCombatState.AppendMonsterStateFingerprint(value class CombatSolver.StateFingerprintBuilder&)",
+            "sampledThreadMilliseconds": 41217.295716377834
+          },
+          {
+            "caller": "System.Linq!System.Linq.Enumerable+OrderedIterator`1[System.__Canon].ToList()",
+            "sampledThreadMilliseconds": 2914.448952199581
+          },
+          {
+            "caller": "CombatSolver!CombatSolver.SimulatedCombatState.RemapCachedModels(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+            "sampledThreadMilliseconds": 2080.1601391932036
+          }
+        ],
+        "ListCapacity": [
+          {
+            "caller": "CombatSolver!CombatSolver.SimulatedCombatState.GetBaseHookListeners()",
+            "sampledThreadMilliseconds": 27124.704423106064
+          },
+          {
+            "caller": "CombatSolver!CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class CombatSolver.Engine.Common.PredictedCard,value class MegaCrit.Sts2.Core.Entities.Cards.PileType,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+            "sampledThreadMilliseconds": 1850.3015857698138
+          },
+          {
+            "caller": "System.Private.CoreLib!System.Collections.Generic.List`1[System.__Canon].AddRange(class System.Collections.Generic.IEnumerable`1<!0>)",
+            "sampledThreadMilliseconds": 1368.6561702683566
+          }
+        ],
+        "ArrayWhereIterator": [
+          {
+            "caller": "sts2!MegaCrit.Sts2.Core.Factories.CardFactory.GetFilteredTransformationOptions(class MegaCrit.Sts2.Core.Models.CardModel,class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Models.CardModel>,bool)",
+            "sampledThreadMilliseconds": 26111.07676536733
+          },
+          {
+            "caller": "System.Linq!System.Linq.Enumerable+ListWhereIterator`1[System.__Canon].ToArray()",
+            "sampledThreadMilliseconds": 6213.458424765118
+          },
+          {
+            "caller": "System.Linq!System.Linq.Enumerable+ArrayWhereIterator`1[System.__Canon].ToArray()",
+            "sampledThreadMilliseconds": 1355.746164780273
+          }
+        ],
+        "MemberwiseClone": [
+          {
+            "caller": "CombatSolver!dynamicClass.CombatSolver_MemberwiseClone(class System.Object)",
+            "sampledThreadMilliseconds": 22258.5398066057
+          },
+          {
+            "caller": "sts2!MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVarSet..ctor(class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar>)",
+            "sampledThreadMilliseconds": 10123.317919754889
+          },
+          {
+            "caller": "0Harmony!dynamicClass.MegaCrit.Sts2.Core.Models.AbstractModel.MutableClone_Patch1(pMT: 0x7fdd3740d710)",
+            "sampledThreadMilliseconds": 5743.915030411381
+          }
+        ]
+      },
+      "limitation": "different explicit JIT/wait exclusions than the earlier stack summary; sampled thread interval weights are not CPU, allocated bytes, whole-request wall time or speedup"
+    }
   },
   "researchQueenComponentExtension": {
     "baseCommit": "c95ac09c6ef295ceab5b59baa5dfc8efbce096e0",
@@ -5038,5 +5110,232 @@
     "singleOriginalPeakRssChange": -0.15770889684918488,
     "singleF266PeakRssChange": 0.755480305183007,
     "singleF266Speedup": 1.0029382098400368
+  },
+  "researchAllocationLayout": {
+    "baseCommit": "95221488",
+    "baseDllSha256": "f266bf00e97852baf8b72fdf459bf7f0582e052549827145b2126d9ac27c7447",
+    "status": "native contract passed; whole request NoWin and failed original 2x initial screen; isolated research, not production",
+    "mechanisms": [
+      "immutable monster-key order reused only for unchanged monotonic private key set and captured stable CombatIds; branch COW values read anew; Fork shares immutable order, key insertion replaces only child array",
+      "branch-owned listener card/attachment/orb capacity counted for all positive deck sizes on existing cache-eligible roots; opaque subscriber path unchanged"
+    ],
+    "sourceHashes": {
+      "src/Search/SimulatedCombatState.MonsterState.cs": "2a4d2b28701cddf555ba4eed34acedc5472133679511676a3be20356a119473f",
+      "src/Search/SimulatedCombatState.Fork.cs": "a7bb14a167b40f8059e5d7ec8b4c5e5a79116ca5dd996e1c6787a196698785dd",
+      "src/Search/SimulatedCombatState.cs": "6aaf91e0ac5bf311b6b2a1ec3af2a43fa8ecf3d885bdc803a418fa2950faef1c",
+      "src/Testing/UnattendedTestRunner.AllocationLayout.cs": "b67fadaada6ffbe92ad6bc374cfdbdb3017cce35bd6da69b440b25fa9f45abd0",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "a3d0152dd963fad7e053402b9859da7d49b5ef11e3cfca68fdf55edc885535b5",
+      "src/Testing/UnattendedTestRunner.MirroredHookFilter.cs": "2b4761bcfbaee8bbb4d54f088a8d4827b608e37d03953ff8bf10b1891d98982e"
+    },
+    "dllSha256": "d59c772c97ec46bd7da6a47ff3ac97ac80edd9933d4d1e04ab0662645778499e",
+    "build": {
+      "seconds": 13.61,
+      "warnings": 0,
+      "errors": 0
+    },
+    "failedPreparation": "local.props copy attempted, but no file exists or is needed; archive retained; used project default installed paths",
+    "unverified": [
+      "final interleaved controls",
+      "full fixed regression",
+      "native frozen target whole deployment"
+    ],
+    "failedNativeContracts": [
+      {
+        "result": ".local/general-healing-audit/allocation-layout-native/result.json",
+        "runId": "00640b97736c47c38801e82e8f34ce49",
+        "status": "Failed",
+        "elapsedMilliseconds": 29438.7393,
+        "dllSha256": "7685340AA1A8D01CB114A8E4FA4CD7752CD25E511E6AE54D76355EBAC0FDDDA1",
+        "instanceRemoved": true,
+        "error": "System.InvalidOperationException: Filtered dispatch differs for GoldCallbacks.\n   at CombatSolver.UnattendedTestRunner.AssertMirroredHookFilter(CombatState combat, Player player)\n   at CombatSolver.UnattendedTestRunner.AssertAllocationLayoutAsync(CombatState live, Player player)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()"
+      }
+    ],
+    "firstBuild": {
+      "seconds": 27.78,
+      "warnings": 0,
+      "errors": 0
+    },
+    "firstDllSha256": "7685340aa1a8d01cb114a8e4fa4cd7752cd25e511e6ae54d76355ebac0fddda1",
+    "fixtureCorrection": "GoldCallbacks is a conservative bit for three actual callback methods; compare union of their native overrides instead of looking for a nonexistent method called GoldCallbacks",
+    "nativeContract": {
+      "runId": "9bf3158cf4d24fbfad0be546d27f1827",
+      "status": "Passed",
+      "elapsedMilliseconds": 34772.1121,
+      "mainAssemblyHash": "D59C772C97EC46BD7DA6A47FF3AC97AC80EDD9933D4D1E04AB0662645778499E",
+      "completedChecks": [
+        "MirroredHookFilter:Methods=63:Models=1672:OrderDuplicatesExternalForkInvalidationPatchRefreshSharedLayoutsSegmentsNoAnchorEffectivePrefixReuse",
+        "ExecutionChoiceSolve:setup=False:strict=False:complete-routes:budgets:live-isolation",
+        "ExecutionChoiceSolve:setup=False:strict=True:complete-routes:budgets:live-isolation",
+        "AllocationLayout:OriginalStableMonsterOrdering:ValueOverwrite:NewKeyInvalidation:ImmutableForkOrder:FullParentLiveRngIsolation:ListenerSequence:SerialParallelStrictSearch",
+        "NativeOutcome:combatEnded=False:turn=1:hp=80:maxHp=80"
+      ],
+      "result": ".local/general-healing-audit/allocation-layout-native-v2/result.json",
+      "launcherExitCode": 0,
+      "instanceRemoved": true
+    },
+    "performanceScreen": {
+      "candidate": {
+        "result": ".local/general-healing-audit/allocation-layout-queen-screen/harness-result.json",
+        "sameFullRootStamp": true,
+        "sameBudget": true,
+        "wallSeconds": 295.847346,
+        "peakProcessWorkingSetBytes": 23652614144,
+        "quality": {
+          "Won": false,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 22,
+          "StrategicHpDeficit": 22,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 557,
+          "Score": -5240020,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "expanded": 126380,
+        "transitions": 4282865,
+        "workAttributions": [
+          {
+            "Mechanism": "OpeningPowerRouteMember",
+            "ExpandedNodes": 114454,
+            "Transitions": 4008320,
+            "ChoiceBranches": 3454441,
+            "ElapsedMilliseconds": 277020.8216,
+            "WorkerAllocatedBytes": 214355512840,
+            "Gen0Collections": 326,
+            "Gen1Collections": 196,
+            "Gen2Collections": 77,
+            "GcPauseMilliseconds": 38855.847,
+            "MaxObservedGcPauseMilliseconds": 6333.805,
+            "RecordedSolverCount": 8
+          },
+          {
+            "Mechanism": "PrimaryBeam",
+            "ExpandedNodes": 11926,
+            "Transitions": 274545,
+            "ChoiceBranches": 214282,
+            "ElapsedMilliseconds": 18466.8876,
+            "WorkerAllocatedBytes": 13651271112,
+            "Gen0Collections": 3,
+            "Gen1Collections": 2,
+            "Gen2Collections": 2,
+            "GcPauseMilliseconds": 3030.559,
+            "MaxObservedGcPauseMilliseconds": 3027.618,
+            "RecordedSolverCount": 1
+          }
+        ]
+      },
+      "originalSingle": {
+        "result": "/home/ltlly/Code/nmslmod/CombatSolver-perf-stage1-20261002/.local/stage1/regression/runs/screen-queen-A1/harness-result.json",
+        "sameFullRootStamp": true,
+        "sameBudget": true,
+        "wallSeconds": 311.1683613,
+        "peakProcessWorkingSetBytes": 25583038464,
+        "quality": {
+          "Won": true,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 67,
+          "StrategicHpDeficit": 67,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 0,
+          "Score": 9997739915,
+          "CombatEndedTurn": 13,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "expanded": 107744,
+        "transitions": 3754118,
+        "workAttributions": [
+          {
+            "Mechanism": "OpeningPowerRouteMember",
+            "ExpandedNodes": 95818,
+            "Transitions": 3479573,
+            "ChoiceBranches": 3004893,
+            "ElapsedMilliseconds": 293099.1431,
+            "WorkerAllocatedBytes": 202580061200,
+            "Gen0Collections": 392,
+            "Gen1Collections": 250,
+            "Gen2Collections": 108,
+            "GcPauseMilliseconds": 36113.901999999995,
+            "MaxObservedGcPauseMilliseconds": 6436.618,
+            "RecordedSolverCount": 8
+          },
+          {
+            "Mechanism": "PrimaryBeam",
+            "ExpandedNodes": 11926,
+            "Transitions": 274545,
+            "ChoiceBranches": 214282,
+            "ElapsedMilliseconds": 17741.2563,
+            "WorkerAllocatedBytes": 14435458528,
+            "Gen0Collections": 3,
+            "Gen1Collections": 2,
+            "Gen2Collections": 2,
+            "GcPauseMilliseconds": 2601.31,
+            "MaxObservedGcPauseMilliseconds": 2597.711,
+            "RecordedSolverCount": 1
+          }
+        ]
+      },
+      "f266FinalRegressionSingle": {
+        "result": ".local/general-healing-audit/component-final-acceptance/runs/component-final-regression-screen-queen/harness-result.json",
+        "sameFullRootStamp": true,
+        "sameBudget": true,
+        "wallSeconds": 329.6824615,
+        "peakProcessWorkingSetBytes": 22383497216,
+        "quality": {
+          "Won": false,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 27,
+          "StrategicHpDeficit": 27,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 546,
+          "Score": -5430020,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "expanded": 122087,
+        "transitions": 4180063,
+        "workAttributions": [
+          {
+            "Mechanism": "OpeningPowerRouteMember",
+            "ExpandedNodes": 110161,
+            "Transitions": 3905518,
+            "ChoiceBranches": 3366921,
+            "ElapsedMilliseconds": 310338.2587,
+            "WorkerAllocatedBytes": 222164237744,
+            "Gen0Collections": 264,
+            "Gen1Collections": 182,
+            "Gen2Collections": 92,
+            "GcPauseMilliseconds": 37003.341,
+            "MaxObservedGcPauseMilliseconds": 7928.969,
+            "RecordedSolverCount": 8
+          },
+          {
+            "Mechanism": "PrimaryBeam",
+            "ExpandedNodes": 11926,
+            "Transitions": 274545,
+            "ChoiceBranches": 214282,
+            "ElapsedMilliseconds": 19021.6749,
+            "WorkerAllocatedBytes": 14497201160,
+            "Gen0Collections": 3,
+            "Gen1Collections": 2,
+            "Gen2Collections": 2,
+            "GcPauseMilliseconds": 3098.189,
+            "MaxObservedGcPauseMilliseconds": 3095.065,
+            "RecordedSolverCount": 1
+          }
+        ]
+      }
+    },
+    "singleOriginalSpeedup": 1.0517868945155249,
+    "singleOriginalPeakRssChange": -0.07545719491906555
   }
 }

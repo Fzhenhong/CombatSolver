@@ -69,3 +69,5 @@ Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。该
 隔离跨成员转移诊断三次结果保留。最终同前缀哈希/动作数/历史长度分组124617次跨成员重复，无记录标签差异；宽松分组326次历史差异。只统计机会，未验证完整状态复用或性能。储君首领六项新类型和四项同DLL复用来源只有源码审查，新增组合资格、原生/Fork差分及性能均未执行；见上述回复上界与组件审计报告。
 
 储君首领组件研究：`COMPONENT-REGENT-BOSS` / `642030889ba7496f9ddfb01e2bd90b69`，30.21秒Passed，原生初始/生成来源、两药水、遗物回调、Frantic及流沙强制死亡、完整状态/Fork/父/live/RNG；通知研究：`HYBRID-MAILBOX-CONTRACT` / `8e59254a56f04f9c872d9d3ad0b56ef8`，60.08秒Passed，串行/并行、严格增量、DOP2/16取消/异常与部分工作排空。实例均删除。各自无插桩完整初筛16.76/22.01秒未达原始2倍，通知单次峰值相对f266增加75.55%；未纳入生产，未做最终交错/全固定回归/目标整场，见[报告](performance/component-healing-bound-20261003.md)。
+
+分配研究：`ALLOCATION-LAYOUT-CONTRACT` / `9bf3158cf4d24fbfad0be546d27f1827`，34.77秒Passed，原始怪物指纹排序、键新增/值覆盖、不可变键表Fork、完整父/live/RNG、63监听方法组/1672模型、串行/并行及严格增量。初次`00640b97736c47c38801e82e8f34ce49`因旧GoldCallbacks断言Failed，方法组修正仅在隔离夹具，两个实例均删除。女王无插桩完整初筛295.85秒NoWin、原始1.05倍，未纳入生产或继续交错/回归/目标整场，见[报告](performance/component-healing-bound-20261003.md)。
