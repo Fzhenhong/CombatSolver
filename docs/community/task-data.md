@@ -45,6 +45,8 @@ python tools/community/classify-community-reports.py --reports .local/community-
 
 ## 下载和公开副本
 
+当前提供9个批次、45个主题、53个代表包。Q004、Q005已弃用，关闭议题与原始静态证据保存在发布账本的历史记录中。
+
 资料存放在独立 [community-tasks-2026-10-02 Release](https://github.com/Torch1230/CombatSolver/releases/tag/community-tasks-2026-10-02)，Release 正文提供各批次议题与整批下载：
 
 - [B012：T001～T005](https://github.com/Torch1230/CombatSolver/issues/149)，9 个代表包。
@@ -54,8 +56,6 @@ python tools/community/classify-community-reports.py --reports .local/community-
 - [B016：T021～T025](https://github.com/Torch1230/CombatSolver/issues/182)，5 个代表包。
 - [Q002：O001～O005](https://github.com/Torch1230/CombatSolver/issues/150)，5 个代表包。
 - [Q003：O006～O010](https://github.com/Torch1230/CombatSolver/issues/183)，5 个代表包。
-- [Q004：O011～O015](https://github.com/Torch1230/CombatSolver/issues/184)，5 个代表包。
-- [Q005：O016～O020](https://github.com/Torch1230/CombatSolver/issues/185)，5 个代表包。
 - [Q006：O021～O025](https://github.com/Torch1230/CombatSolver/issues/186)，5 个代表包。
 - [Q007：O026～O030](https://github.com/Torch1230/CombatSolver/issues/187)，5 个代表包。
 
