@@ -66,6 +66,8 @@ RunStatisticsTests 存储合同通过；OfflineSearchHarness `--check-early-turn
 
 ## 社区边界
 
+用户随后要求合并 [PR #201](https://github.com/Torch1230/CombatSolver/pull/201)，head `e11ab12e`。这是同一 T015 修复变基到 `45f87cd3` 后的四提交分支，完整合并，继续保留下述维护者严格费用比较修正。最终行为源码、工具、夹具和构建输入与已验证 `a0765da0` 相同，复用刚完成的验证与构建。0.48.0 玩家日志明确链接 #201。
+
 后续 B014 T015：用户追加要求合并已修复的 T015。#198 的已合并 head 仍为 `fae9b6ba`，作者 fork 分支新增 `0833dd1b`、`cf10d513`、`a53332da`、`a9162efd`；本轮取完整分支合并，保留原 main 的桥接异常修正和 Windows 门禁。Smart 主路线带药且丢失确定性插药标记时，先用原 Disabled 路径重新建立无药基线再审计，保留现有候选并按原终局政策选优。没有修改强制用药或智能用药的收益门槛。
 
 维护者拒绝新增的测试端自动费用剥离：费用子状态在当前无修改牌上也缺失，缺失本身不是旧版标识；直接编译作者 helper 的两个最小字符串反例得到 `CURRENT_UNMODIFIED_VS_MODIFIED_MATCH=True`、`LEGACY_TWO_CARDS_MATCH=False`。完整分支保留在合并历史中，最终源码删除该宽松匹配，并在 `REPLAY-BOUNDARY-CONTRACT` 加入费用与星能漂移反例。`SMART-AUDIT-POTION-BASELINE` 在真实最小场景中，通过实际主结果发布入口清除插药标记，隔离作者报告的审计交接；不重跑 227 万转移的原包。#173 已由用户与贡献者收口关闭，下面“保持开放”的结论是前一阶段状态。
