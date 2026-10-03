@@ -329,7 +329,8 @@
       "notProofOfNativeLegality": true
     },
     "candidateDllSha256": "912da5c4ed46d9689c783b7adbf50593a841a79eb9302cd67e738570857ae1e7",
-    "includesRelicMaxHpGuard": false
+    "includesRelicMaxHpGuard": false,
+    "scope": "Historical rejected 912da5c4 Hook-metadata candidate; final 89a8e2c2 incremental regression and serial controls are recorded separately below."
   },
   "deployed": true,
   "unverified": [
@@ -338,7 +339,7 @@
     "Per-branch certification overhead/coverage",
     "Native full TestSubject route",
     "Visible Steam performance",
-    "Repeatability / runtime sensitivity of screen-queen search, and final fixed regression after relic guard"
+    "Repeatability / runtime sensitivity of screen-queen search"
   ],
   "finalBuild": {
     "outputDirectory": ".local/general-healing-audit/upstream-56b6-final/build-with-hook-metadata",
@@ -2432,5 +2433,6 @@
     "regression": "28 behavior-unaffected roots reused plus affected JossPaper root final serial ABBA; all original victories retained and no HP/growth/death-save/stolen-resource regression observed.",
     "performance": "Final TestSubject serial ABBA offline passed: conservative 3.03x, median 3.12x, conservative peak +7.68%. Includes upstream gains; native whole-combat unverified.",
     "sourceRevision": "6f4d8f6e plus JossPaper fingerprint compatibility fix; final documentation commit adds no runtime changes."
-  }
+  },
+  "stagePullRequest": "https://github.com/Torch1230/CombatSolver/pull/203"
 }
