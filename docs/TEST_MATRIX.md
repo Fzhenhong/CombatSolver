@@ -4,6 +4,12 @@
 
 历史记录见 [归档索引](archive/testing/README.md)。
 
+## Windows Steam 配置初始化（2026-10-03）
+
+修改前 `SMOKE-001` 在配置初始化时失败：玩家仅有 Steam 账号配置，启动器未生成私有 `default/1/settings.save`。修改后 `tools/test-headless-profile.ps1` 通过 Steam 迁移、default 优先、配置/进度复制、私有副本复用、来源不变、缺少配置及多账号拒绝检查。Linux 入口通过 Bash 语法检查，未运行 Linux 行为测试。
+
+Windows 游戏 0.111.0、RitsuLib 0.6.5 的 `SMOKE-001` 请求 `84c21af68fc345e2a6d4a442cfa81e7b` Passed（20.55 秒）：游戏加载、测试请求、搜索和原生战斗结束通过，首回合结束，玩家 HP 80。采用 `-TimeoutSeconds 120 -CleanupInstanceOnExit`，实例删除成功；本地证据目录 `.local/preparation-smoke/`。这只是最小冒烟测试，不代表社区报告修复、完整语义或路线质量验收。
+
 ## 倾泻与手空效果边界（2026-10-03）
 
 `CASCADE-EMPTY-HAND-NATIVE` 使用报告 d9c106 的倾泻前牌堆顺序及 Shuffle 完整内部状态，单独保留倾泻+和无尽陀螺；无需恢复原包中的重生个体及历史 Power 施加者。未改行为源码上的 `cc37414e00274b6baaf0d877a60e3ac9` 出现原生/模拟手牌偏差；选择痛击的 `e3bac4a083574686b1e9d018ccc23f80` 复现 `NativeChoicePlanMismatchException`，计划 BASH+1、原生仅 STRIKE_IRONCLAD。修复后 `53ba69afa54544f3a1322b42367d5e90` Passed：嵌套坚毅原生页面完成，完整 continuation（有序牌堆、逐实例状态、Power、怪物和九条 RNG）一致；完整动作回放与执行检查点恢复、完成后 Fork、live 不变对账通过。该场景不运行 Solve，不带增量搜索开关，不代表原包整场部署通过。
