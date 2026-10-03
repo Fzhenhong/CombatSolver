@@ -107,3 +107,7 @@ TheInsatiable的初始行动明确给玩家生成六张FranticEscape，三张进
 同一DLL的十八项初始卡牌、Osty生命与召唤回调、四遗物、Shackling/CureAll药水和TheInsatiable动作形成显式组合。GainMaxHp/SetMaxHp/Heal的对象为Osty，已有玩家受伤/死亡/击杀及生成链前提仍需全部满足；Transfigure只修改持有手牌的费用/重放次数，CureAll只加能量和抽牌。未审来源保持拒绝，没有按原版程序集自动放行。
 
 `COMPONENT-NECRO-BOSS` / `c8a5cb87dfca4d52ab527d77f496a877`，29.18秒Passed，覆盖药水原生结算、临时力量恢复、召唤物增血、灵魂与遗物回调、选择/重复执行、明确状态生成与流沙玩家/Osty死亡，以及完整状态/Fork/父/live/RNG；两次夹具合法参数失败分别保留，实例均清理。源码审查和完整合同只用于隔离证明，完整请求42.37秒未达原始两倍，未推广到生产。具体来源哈希、七类机制条件和未验证项见配套JSON及[性能记录](component-healing-bound-20261003.md#亡灵首领组件闭包2026-10-04)。
+
+## 提前胜利见证的分支合同（2026-10-04）
+
+隔离DLL`6aad0784…`复用上述亡灵来源组合，未增加组件默认准入。`EARLY-HP-BOUND` / `b6d8528c2acb4fc396cc058c3ecf7feb`在27.79秒Passed：实际完整胜利保留并更新见证，DOP1/DOP16严格结果，较差生命分支实际剪枝、同战损和未知消耗来源保留，禁药下已有再生及父/live/Fork/RNG隔离，原生Offering完整状态相等；成长、遗物、追回资源与强制用药拒绝特化。该最小合同不代表所有完整搜索的质量或性能通过；同根完整初筛仅1.112倍，且此前零战损原型结果变为4，未推广生产。原生结果、失败构建和未验证范围见配套JSON的`earlyVictoryHpBoundContract`及[性能记录](component-healing-bound-20261003.md)。

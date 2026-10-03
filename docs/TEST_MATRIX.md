@@ -74,3 +74,5 @@ Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。该
 
 
 亡灵首领：`COMPONENT-NECRO-BOSS` / `c8a5cb87dfca4d52ab527d77f496a877`，29.18秒Passed，NECROBINDER/THE_INSATIABLE_BOSS/9999生命，种子`COMPONENT_NECRO_BOSS_20261004`、120秒帽/清理实例；仅最小差分，不运行Solve。两药水、临时力量、八次出牌/召唤/变牌重放/遗物、首领状态生成与玩家/Osty强制死亡，完整状态/Fork/父/live/RNG；首次药水错误目标、第二次主选择SourceId错误的Failed分别保留。完整请求初筛42.37秒未达2倍，未纳入生产，见[报告](performance/component-healing-bound-20261003.md)。
+
+提前完整胜利见证研究：`EARLY-HP-BOUND` / `b6d8528c2acb4fc396cc058c3ecf7feb`，27.79秒Passed，IRONCLAD/NIBBITS_WEAK/999生命、种子`EARLY_HP_BOUND_20261004`、120秒帽/实例删除。覆盖原生Offering、严格DOP1/DOP16完整搜索、真实胜利保留/1次更新/4次剪枝、同战损保留、未知Feed消耗来源、禁药已有再生及政策门禁/父/live/Fork/RNG。DLL`6aad0784…`完整亡灵首领初筛40.96秒未达2倍，未纳入生产或追加交错/全固定回归/目标整场；详见[报告](performance/component-healing-bound-20261003.md)。

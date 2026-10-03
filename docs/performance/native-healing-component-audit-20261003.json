@@ -8355,5 +8355,30 @@
         "reason": "single full request below 2x; one entry gate had no work-count effect"
       }
     }
+  },
+  "earlyVictoryHpBoundContract": {
+    "baseComponentContract": "necroBossIsolatedCompositionContract",
+    "dllSha256": "6aad07840a28f2ef30214e0ba7fdc8c86df8f9bc3248ad9f6df2ef83dbab7353",
+    "nativeContract": {
+      "resultPath": ".local/general-healing-audit/early-victory-bound-native/result.json",
+      "status": "Passed",
+      "elapsedMilliseconds": 27785.3384,
+      "mainAssemblyHash": "6AAD07840A28F2EF30214E0BA7FDC8C86DF8F9BC3248AD9F6DF2EF83DBAB7353",
+      "completedChecks": [
+        "EarlyHpBound:CompleteWitnessRetained:StrictDop1vs16:QualityLiveParentRng:updates=1:pruned=4:GrowthRelicTheftForcedGuards",
+        "EarlyHpBound:NativeOfferingFullStateFork:EqualLossKept:StrictWorsePruned:UnknownExhaustSourceKept:ActiveRegenUnderDisabledKept:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=64:maxHp=80"
+      ],
+      "instanceCleanup": "early-hp-native removed after completed process"
+    },
+    "scope": "isolated runtime only: existing complete policy-qualified victory helper, strict HP-only pruning, no tie-turn bound, unknown sources retained, active regeneration retained under Disabled; no new component semantics",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final interleaved acceptance",
+      "fixed full regression",
+      "frozen native full deployment",
+      "separate full-request early-prune counts and bound overhead"
+    ]
   }
 }
