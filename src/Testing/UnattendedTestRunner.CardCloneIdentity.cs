@@ -270,6 +270,114 @@ internal sealed partial class UnattendedTestRunner
         _completedChecks.Add("CardCloneIdentity:DeckIdentitySurvivesPileCycle");
         _completedChecks.Add("CardCloneIdentity:SameNameTokenOccurrencePicksTheOtherInstance");
         _completedChecks.Add("CardCloneIdentity:StampReportsEveryDifferingSameNameIndex");
+
+        // —— 跨回合 roll-out 的同名牌身份归属三分判定（B016/T024 t12）——
+        // 现场：实机 turn 7 抽牌堆 D[6] 是牌组原牌 deck=True、D[24] 是战斗副本 deck=False，两张除身份位外逐字节相同。
+        // roll-out 之后牌堆顺序会变，逐位置比较不再可用，所以按「实例归属」判定：
+        // 分别追踪原牌包装与副本包装的 Preview.DeckVersion 引用，再给出三分结论。
+        var rollout = new CombatPredictionSimulator(new SimulatedCombatState(combat));
+        SimPlayerCombatState rolloutState = rollout.State.GetPlayerCombatState(player);
+        if (rolloutState.FindCard(deckCard) is null || rolloutState.FindCard(liveCopy) is null)
+            throw new InvalidOperationException($"跨回合 roll-out 起点缺少 {cardId} 的同名牌对。");
+
+        var rolloutTrace = new List<string>
+        {
+            "start " + DescribeSameNameOwnership(rolloutState, cardId, deckCard, liveCopy),
+        };
+        for (int round = 1; round <= 6; round++)
+        {
+            List<PredictedCard> rolloutHand = [.. rolloutState.Hand.Cards];
+            if (rolloutHand.Count > 0)
+                rollout.Discard(rolloutHand);
+            rollout.Draw(player, 5);
+            rollout.Draw(player, 5);
+            if (round is 3 or 6)
+                rolloutTrace.Add($"round={round} " + DescribeSameNameOwnership(rolloutState, cardId, deckCard, liveCopy));
+        }
+
+        // 现场读数是抽牌堆里的位置，所以最后一个采样点把两张同名牌都送回抽牌堆再读一遍。
+        List<PredictedCard> rollingHand = [.. rolloutState.Hand.Cards];
+        if (rollingHand.Count > 0)
+            rollout.Discard(rollingHand);
+        rollout.Shuffle(player);
+        rolloutTrace.Add("drawpile " + DescribeSameNameOwnership(rolloutState, cardId, deckCard, liveCopy));
+
+        bool deckOwningWrapperPresent = TryFindOwnership(rolloutState, deckCard, out PredictedCard deckOwningWrapper);
+        bool copyOwningWrapperPresent = TryFindOwnership(rolloutState, liveCopy, out PredictedCard copyOwningWrapper);
+        bool deckCardKeptIdentity = deckOwningWrapperPresent
+            && ReferenceEquals(deckOwningWrapper.Preview.DeckVersion, deckVersion);
+        bool copyKeptNullIdentity = !copyOwningWrapperPresent || copyOwningWrapper.Preview.DeckVersion is null;
+        bool copyStoleIdentity = copyOwningWrapperPresent && copyOwningWrapper.Preview.DeckVersion is not null;
+
+        string rolloutVerdict = deckCardKeptIdentity && copyKeptNullIdentity
+            ? "one-to-one"
+            : copyStoleIdentity
+                ? "ownership-swapped"
+                : deckOwningWrapperPresent
+                    ? "identity-dropped"
+                    : "identity-owner-missing";
+
+        _completedChecks.Add(
+            $"CardCloneIdentity:RolloutOwnership={rolloutVerdict}"
+            + $":deckcard={DescribeIdentityOwner(deckOwningWrapperPresent, deckOwningWrapper)}"
+            + $":copy={DescribeIdentityOwner(copyOwningWrapperPresent, copyOwningWrapper)}");
+        _completedChecks.Add("CardCloneIdentity:RolloutTrace=" + string.Join(" || ", rolloutTrace));
+    }
+
+    /// <summary>按实机牌对象找出预测侧仍在某个牌堆里的包装。</summary>
+    private static bool TryFindOwnership(SimPlayerCombatState state, CardModel live, out PredictedCard card)
+    {
+        foreach (SimCardPile pile in state.AllPiles)
+        {
+            foreach (PredictedCard candidate in pile.Cards)
+            {
+                if (ReferenceEquals(candidate.Original, live) || ReferenceEquals(candidate.Preview, live))
+                {
+                    card = candidate;
+                    return true;
+                }
+            }
+        }
+        card = null!;
+        return false;
+    }
+
+    /// <summary>落盘一张包装的身份位与它引用的跑局版本（Id.Entry#HashCode）。</summary>
+    private static string DescribeIdentityOwner(bool present, PredictedCard card)
+    {
+        if (!present)
+            return "absent";
+        return card.Preview.DeckVersion is { } version
+            ? $"deck=true/{version.Id.Entry}#{version.GetHashCode()}"
+            : "deck=false/null";
+    }
+
+    /// <summary>逐牌堆列出同名牌包装的归属、身份位与版本引用，用于 roll-out 落盘。</summary>
+    private static string DescribeSameNameOwnership(
+        SimPlayerCombatState state,
+        string id,
+        CardModel deckCard,
+        CardModel copy)
+    {
+        List<string> parts = [];
+        foreach (SimCardPile pile in state.AllPiles)
+        {
+            foreach (PredictedCard card in pile.Cards)
+            {
+                if (card.Preview.Id.Entry != id)
+                    continue;
+                string owner = ReferenceEquals(card.Original, deckCard) || ReferenceEquals(card.Preview, deckCard)
+                    ? "deckcard"
+                    : ReferenceEquals(card.Original, copy) || ReferenceEquals(card.Preview, copy)
+                        ? "copy"
+                        : "unregistered";
+                string version = card.Preview.DeckVersion is { } value
+                    ? $"{value.Id.Entry}#{value.GetHashCode()}"
+                    : "null";
+                parts.Add($"{pile.Type}/{owner}/deck={card.Preview.DeckVersion != null}/ver={version}");
+            }
+        }
+        return parts.Count == 0 ? "none" : string.Join(',', parts);
     }
 
     // B016/T024 现场包 004.jsonl:58 只留下一条 field=D[6]：旧实现在牌堆字段里遇到第一个
