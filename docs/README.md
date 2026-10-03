@@ -14,7 +14,7 @@
 | [生成场景](GENERATED_COMBAT_SCENARIOS.md) | 场景生成与材料 |
 | [第三方适配](third-party/README.md) | 外部登记合同与封闭入口 |
 | [遗物计数](relic-counters.md) | 玩家战略目标 |
-| [多人状态](MULTIPLAYER_PLAN.md) | 主线与开发分支的范围及验收限制 |
+| [多人研究（已归档）](archive/multiplayer/README.md) | 保留需求与验收记录，停止维护 |
 | [问题](issues/README.md) / [社区验收](community/testing-guide.md) | 未解决问题和贡献证据 |
 | [性能](performance/README.md) / [策略](strategy/README.md) / [重构](refactoring/README.md) | 当前工作与历史路由 |
 | [在线服务](ONLINE_SERVICES.md) | 两服务的权威源码与维护边界 |
