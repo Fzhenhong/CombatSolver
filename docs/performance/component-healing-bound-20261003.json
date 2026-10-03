@@ -88,7 +88,7 @@
     ]
   },
   "schemaVersion": 1,
-  "status": "stage PR for review; two target ABBA controls pass; fixed regression complete with unresolved Queen victory and TestSubject memory blockers; not deployed",
+  "status": "stage PR for review; target and TestSubject ABBA pass; Queen victory control running; not deployed",
   "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
   "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
   "rootCoverage": {
@@ -2277,7 +2277,6 @@
   ],
   "unverified": [
     "Queen victory regression: qualified 89 versus final f266 ABBA pending",
-    "TestSubject final memory threshold: original 882 versus final f266 ABBA pending",
     "Native complete target deployment pending",
     "Remaining original slow roots not all at least 2x",
     "Full recursive source audit and universal component closure incomplete"
@@ -2297,6 +2296,9 @@
     ],
     "singleSampleMemoryBlockers": [
       "screen-test-subject"
+    ],
+    "resolvedSingleSampleMemoryBlockers": [
+      "screen-test-subject"
     ]
   },
   "staticValidation": {
@@ -2312,5 +2314,108 @@
       "bash": "REFACTOR_BOUNDARIES_OK search_files=248",
       "powershell": "REFACTOR_BOUNDARIES_OK search_files=248"
     }
-  }
+  },
+  "regressionBlockerControls": [
+    {
+      "scene": "screen-test-subject",
+      "baseline": "original 882ad42e",
+      "candidateDllSha256": "f266bf00e97852baf8b72fdf459bf7f0582e052549827145b2126d9ac27c7447",
+      "medianSpeedup": 2.999957748380414,
+      "conservativeSpeedup": 2.964457910868296,
+      "maxCandidateVsMinBaselinePeakChange": 0.0686006614861574,
+      "allRootsEqual": true,
+      "qualityAccepted": true,
+      "memoryAccepted": true,
+      "samples": [
+        {
+          "arm": "A1",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-test-subject-regression-control-A1/result.json",
+          "wallSeconds": 145.7584902,
+          "peakProcessWorkingSetBytes": 23637979136,
+          "quality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 26,
+            "strategicHpDeficit": 26,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 10000839953,
+            "combatEndedTurn": 11,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        },
+        {
+          "arm": "B1",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-test-subject-regression-control-B1/result.json",
+          "wallSeconds": 48.0115729,
+          "peakProcessWorkingSetBytes": 25122283520,
+          "quality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 24,
+            "strategicHpDeficit": 24,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 10000959922,
+            "combatEndedTurn": 12,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        },
+        {
+          "arm": "B2",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-test-subject-regression-control-B2/result.json",
+          "wallSeconds": 48.6143089,
+          "peakProcessWorkingSetBytes": 25124372480,
+          "quality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 24,
+            "strategicHpDeficit": 24,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 10000959922,
+            "combatEndedTurn": 12,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        },
+        {
+          "arm": "A2",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-test-subject-regression-control-A2/result.json",
+          "wallSeconds": 144.1150726,
+          "peakProcessWorkingSetBytes": 23511470080,
+          "quality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 26,
+            "strategicHpDeficit": 26,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 10000839953,
+            "combatEndedTurn": 11,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        }
+      ]
+    }
+  ]
 }
