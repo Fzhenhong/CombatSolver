@@ -541,6 +541,18 @@ internal sealed partial class UnattendedTestRunner
             string actualField = actualFields[index];
             if (string.Equals(expectedField, actualField, StringComparison.Ordinal))
                 continue;
+            // 旧报告在卡牌文本里还没有逐卡 cost-state/stars 子状态；记录侧整段缺失时，
+            // 从重放文本中剥离该子状态再比较（旧戳无法重建这两个子状态）。
+            if (expectedField.Length >= 2
+                && expectedField[1] == '='
+                && expectedField[0] is 'H' or 'D' or 'C' or 'X'
+                && string.Equals(
+                    expectedField,
+                    StripLegacyAbsentCardSubstates(expectedField, actualField),
+                    StringComparison.Ordinal))
+            {
+                continue;
+            }
             if (expectedField.Length >= 2
                 && expectedField[1] == '='
                 && expectedField[0] is 'H' or 'D' or 'C' or 'X'
@@ -569,6 +581,29 @@ internal sealed partial class UnattendedTestRunner
             }
         }
         return true;
+    }
+
+    private static string StripLegacyAbsentCardSubstates(string expectedField, string actualField)
+    {
+        if (!expectedField.Contains("/keywords=[", StringComparison.Ordinal))
+            return actualField;
+        int blockStart = actualField.IndexOf("|cost-state=", StringComparison.Ordinal);
+        if (blockStart >= 0 && !expectedField.Contains("|cost-state=", StringComparison.Ordinal))
+        {
+            int blockEnd = actualField.IndexOf("/keywords=[", blockStart, StringComparison.Ordinal);
+            if (blockEnd < 0)
+                blockEnd = actualField.Length;
+            actualField = actualField.Remove(blockStart, blockEnd - blockStart);
+        }
+        int starsStart = actualField.IndexOf("/stars=", StringComparison.Ordinal);
+        if (starsStart >= 0 && !expectedField.Contains("/stars=", StringComparison.Ordinal))
+        {
+            int starsEnd = actualField.IndexOf("/keywords=[", starsStart, StringComparison.Ordinal);
+            if (starsEnd < 0)
+                starsEnd = actualField.Length;
+            actualField = actualField.Remove(starsStart, starsEnd - starsStart);
+        }
+        return actualField;
     }
 
     private static IReadOnlyDictionary<char, IReadOnlyList<string>>? LoadLegacyReplayCardKeywords(
