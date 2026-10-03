@@ -1,4 +1,4 @@
-"""Claim registered batches and sync their status labels and entry owner cells.
+"""Claim registered batches and sync labels, queue ownership, and completion.
 
 Run through GitHub Actions, or locally with an authenticated gh CLI. Comments are
 data: only an exact first-line claim/unclaim command can change its author's assignment.
@@ -23,7 +23,8 @@ CLAIM_STATUS_LABELS = {'待定位', *CLAIM_LABELS}
 STATE_PATTERN = re.compile(r'<!-- combatsolver-community-claims: (\{[^\n]*\}) -->')
 COMMAND_PATTERN = re.compile(r'(认领|取消认领|放弃认领)(?:\s*([BQ]\d{3}))?(?:\s*整批)?[。！!]?', re.IGNORECASE)
 COMMAND_INTRO_PATTERN = re.compile(r'(认领|取消认领|放弃认领)(?:\s*([BQ]\d{3}))?\s*整批(?=$|[\s（(，,。.!！：:])', re.IGNORECASE)
-ROW_PATTERN = re.compile(r'^\s*\|\s*\[([BQ]\d{3})\]\(https://github\.com/Torch1230/CombatSolver/issues/(\d+)\)\s*\|')
+ROW_PATTERN = re.compile(r'^\s*\|\s*\[([BQ]\d{3})(?:\s*·\s*#(\d+))?\]\(https://github\.com/Torch1230/CombatSolver/issues/(\d+)\)\s*\|')
+QUEUE_MARKER_PATTERN = re.compile(r'<!-- (?P<closing>/?)community-task-queue:(?P<section>bugfix|worldline) -->')
 
 
 class GitHub:
@@ -83,60 +84,86 @@ def owner_cell(assignees):
     return '、'.join(names)
 
 
-def update_entry_body(body, batches, issues, state):
-    """Keep prose and existing table cells; add/update owner cells in batch tables."""
+def completion_cell(issue):
+    if issue['state'] == 'open':
+        return '未完成'
+    if issue['state'] == 'closed':
+        return '已完成' if issue.get('state_reason') == 'completed' else '已关闭（未完成）'
+    raise ValueError('Unsupported issue state')
+
+
+def update_queue_body(body, batches, issues):
+    """Update only owner and completion cells inside the two marked queue tables."""
     registered = {b['batchId']: b for b in batches}
     lines = body.splitlines(keepends=True)
     seen = set()
+    sections = set()
+    active_section = None
+    section_start = None
     row_tables = []
     for i, line in enumerate(lines):
+        marker = QUEUE_MARKER_PATTERN.fullmatch(line.strip())
+        if marker is not None:
+            section = marker['section']
+            if marker['closing']:
+                if active_section != section:
+                    raise ValueError('Queue section closing marker does not match')
+                active_section = None
+            else:
+                if active_section is not None or section in sections:
+                    raise ValueError('Duplicate or nested queue section')
+                active_section = section
+                section_start = i + 1
+                sections.add(section)
+            continue
+        if active_section is None:
+            continue
         match = ROW_PATTERN.match(line)
-        if match is None or match[1] not in registered:
+        if match is None:
             continue
         bid = match[1]
-        if int(match[2]) != registered[bid]['issueNumber'] or bid in seen:
-            raise ValueError('Entry batch link does not match publication ledger')
+        if bid not in registered or int(match[3]) != registered[bid]['issueNumber'] or bid in seen:
+            raise ValueError('Queue batch link does not match publication ledger')
+        if match[2] is not None and int(match[2]) != int(match[3]):
+            raise ValueError('Displayed issue number does not match queue link')
         seen.add(bid)
         header_index = i - 1
-        while header_index >= 0 and lines[header_index].lstrip().startswith('|'):
+        while header_index >= section_start and lines[header_index].lstrip().startswith('|'):
             header_index -= 1
         row_tables.append((i, header_index + 1, registered[bid]))
+    if active_section is not None or sections != {'bugfix', 'worldline'}:
+        raise ValueError('Queue section markers are incomplete')
     if seen != set(registered):
-        raise ValueError('Entry table and publication ledger contain different batches')
+        raise ValueError('Queue table and publication ledger contain different batches')
 
     headers = {}
     for _, header_index, _ in row_tables:
         if header_index in headers:
             continue
         cells = [cell.strip() for cell in lines[header_index].strip().strip('|').split('|')]
-        if cells[0] != '批次':
+        if cells[0] != '批次' or len(cells) != len(set(cells)) or not {'认领者', '完成状态'} <= set(cells):
             raise ValueError('Unsupported batch table header')
-        if '认领者' in cells:
-            headers[header_index] = (cells.index('认领者'), len(cells), False)
-        else:
-            column = len(cells)
-            headers[header_index] = (column, column + 1, True)
-            for idx, value in [(header_index, '认领者'), (header_index + 1, '---')]:
-                end = '\r\n' if lines[idx].endswith('\r\n') else '\n' if lines[idx].endswith('\n') else ''
-                lines[idx] = lines[idx].rstrip('\r\n').rstrip() + ' ' + value + ' |' + end
+        headers[header_index] = (cells.index('认领者'), cells.index('完成状态'), len(cells))
     for i, header_index, batch in row_tables:
-        column, width, appended = headers[header_index]
-        cell = owner_cell(issues[batch['issueNumber']]['assignees'])
+        owner_column, completion_column, width = headers[header_index]
+        issue = issues[batch['issueNumber']]
         end = '\r\n' if lines[i].endswith('\r\n') else '\n' if lines[i].endswith('\n') else ''
         line = lines[i].rstrip('\r\n')
         fields = line.split('|')
-        if len(fields) - 2 != width - int(appended):
+        if len(fields) - 2 != width:
             raise ValueError('Unexpected batch row width')
-        if appended:
-            lines[i] = line.rstrip() + ' ' + cell + ' |' + end
-        else:
-            fields[column + 1] = ' ' + cell + ' '
-            lines[i] = '|'.join(fields) + end
-    updated = ''.join(lines)
+        fields[owner_column + 1] = ' ' + owner_cell(issue['assignees']) + ' '
+        fields[completion_column + 1] = ' ' + completion_cell(issue) + ' '
+        lines[i] = '|'.join(fields) + end
+    return ''.join(lines)
+
+
+def update_entry_state(body, state):
+    """Keep the entry text intact; store consumed comment cursors in its marker."""
     marker = '<!-- combatsolver-community-claims: ' + json.dumps(state, ensure_ascii=False, separators=(',', ':')) + ' -->'
-    if STATE_PATTERN.search(updated):
-        return STATE_PATTERN.sub(lambda _: marker, updated)
-    return updated.rstrip('\r\n') + '\n\n' + marker + '\n'
+    if STATE_PATTERN.search(body):
+        return STATE_PATTERN.sub(lambda _: marker, body)
+    return body.rstrip('\r\n') + '\n\n' + marker + '\n'
 
 
 def synchronize_labels(api, batches, issues, dry_run):
@@ -162,11 +189,16 @@ def synchronize_labels(api, batches, issues, dry_run):
     return changes
 
 
-def synchronize(api, batches, dry_run=False):
+def synchronize(api, batches, queue_issue, dry_run=False):
+    if type(queue_issue) is not int or queue_issue <= 0 or queue_issue == ENTRY_ISSUE or queue_issue in {b['issueNumber'] for b in batches}:
+        raise ValueError('Invalid queue issue number')
     entry = api.request(f'issues/{ENTRY_ISSUE}')
     state = read_state(entry['body'])
     cursors = dict(state['lastCommentIds'])
+    queue = api.request(f'issues/{queue_issue}')
     issues = {b['issueNumber']: api.request(f"issues/{b['issueNumber']}") for b in batches}
+    # Validate both queue tables before changing assignments or labels.
+    update_queue_body(queue['body'], batches, issues)
     pending = []
     # Read all unseen comments, so a newer queued run also handles events it superseded.
     for batch in batches:
@@ -208,15 +240,22 @@ def synchronize(api, batches, dry_run=False):
                     raise RuntimeError('GitHub did not remove the commenter')
             actions.append({'commentId': comment['id'], 'action': 'unclaimed', 'batchId': batch['batchId'], 'login': login})
     # Read the current body after assignment work, preserving intervening editorial edits.
+    current_queue = api.request(f'issues/{queue_issue}')
+    queue_body = update_queue_body(current_queue['body'], batches, issues)
+    queue_changed = queue_body != current_queue['body']
     current = api.request(f'issues/{ENTRY_ISSUE}')
     current_state = read_state(current['body'])
     for number, cursor in current_state['lastCommentIds'].items():
         cursors[number] = max(cursors.get(number, 0), cursor)
-    body = update_entry_body(current['body'], batches, issues, {'schemaVersion': 1, 'lastCommentIds': cursors})
+    body = update_entry_state(current['body'], {'schemaVersion': 1, 'lastCommentIds': cursors})
     changed = body != current['body']
     label_changes = synchronize_labels(api, batches, issues, dry_run)
     result = {'dryRun': dry_run, 'entryTitle': current['title'], 'entryBodyChanged': changed,
+              'queueTitle': current_queue['title'], 'queueUrl': current_queue['html_url'], 'queueBodyChanged': queue_changed,
               'batches': len(batches), 'actions': actions, 'labelChanges': label_changes}
+    if queue_changed and not dry_run:
+        api.request(f'issues/{queue_issue}', 'PATCH', {'body': queue_body})
+    # Advance comment cursors only after the queue has been saved successfully.
     if changed and not dry_run:
         saved = api.request(f'issues/{ENTRY_ISSUE}', 'PATCH', {'body': body})
         result['entryTitle'] = saved['title']
@@ -242,7 +281,7 @@ def main():
         if event['issue'].get('pull_request') or event['issue']['number'] not in {b['issueNumber'] for b in batches}:
             print(json.dumps({'action': 'ignored', 'reason': 'issue_not_registered'}))
             return
-    result = synchronize(GitHub(), batches, args.dry_run)
+    result = synchronize(GitHub(), batches, ledger['queueIssueNumber'], args.dry_run)
     if args.receipt:
         args.receipt.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print(json.dumps(result, ensure_ascii=False))

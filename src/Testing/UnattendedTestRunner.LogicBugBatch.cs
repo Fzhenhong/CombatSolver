@@ -1,6 +1,7 @@
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Models.Relics;
 using CombatSolver.Engine.InCombat.Mirrors.Hooks.Card;
 using CombatSolver.Engine.InCombat.Simulation;
 using CombatSolver.Engine.Common;
@@ -452,6 +453,11 @@ internal sealed partial class UnattendedTestRunner
         rightState.Apply<NoDrawPower>(player.Creature, 1);
         PowerLifecycleSupport.ResolvePowerAmountChanges(left, leftState);
         PowerLifecycleSupport.ResolvePowerAmountChanges(right, rightState);
+        foreach (var (simulator, state) in new[] { (left, leftState), (right, rightState) })
+        {
+            JossPaper relic = state.RelicsOf(player).OfType<JossPaper>().Single();
+            RelicPredictionStateSupport.SetJossPaperEtherealCount(simulator, relic, 1);
+        }
         StateFingerprintBuilder leftKey = new();
         StateFingerprintBuilder rightKey = new();
         leftState.AppendFingerprint(ref leftKey, left);

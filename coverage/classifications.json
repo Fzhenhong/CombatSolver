@@ -6746,8 +6746,8 @@
   "Relic|MegaCrit.Sts2.Core.Models.Relics.JossPaper|MegaCrit.Sts2.Core.Models.AbstractModel.AfterSideTurnEnd(MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext,MegaCrit.Sts2.Core.Combat.CombatSide,System.Collections.Generic.IEnumerable<MegaCrit.Sts2.Core.Entities.Creatures.Creature>)": {
     "status": "SolverCompensation",
     "source": "src/Search/SimulatedCombatState.ReactiveRelics.cs; src/Prediction/RelicPredictionStateSupport.cs",
-    "notes": "After Ethereal cards are exhausted by hand flush, accumulates the exact count, draws at the canonical threshold, fingerprints the remainder, and stops at a shuffle boundary when required.",
-    "testId": "RELIC-HIDDEN-STATE-158"
+    "notes": "AfterCardExhausted records each deferred Ethereal exhaust in branch-owned state. AfterSideTurnEnd consumes that count, including cards generated during AutoPostPlay, at the canonical draw threshold. Root capture, Fork, fingerprints and continuation preserve both counters.",
+    "testId": "AXEBOT-JOSS-DEFERRED-FORK"
   },
   "Relic|MegaCrit.Sts2.Core.Models.Relics.Kusarigama|MegaCrit.Sts2.Core.Models.AbstractModel.AfterSideTurnEnd(MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext,MegaCrit.Sts2.Core.Combat.CombatSide,System.Collections.Generic.IEnumerable<MegaCrit.Sts2.Core.Entities.Creatures.Creature>)": {
     "status": "SolverCompensation",

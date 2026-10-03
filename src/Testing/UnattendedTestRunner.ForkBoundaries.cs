@@ -1045,6 +1045,7 @@ internal sealed partial class UnattendedTestRunner
         playerState.LoseStars(playerState.Stars);
         int starsBefore = playerState.Stars;
         int exhaustThreshold = jossPaper.DynamicVars[JossPaper._exhaustAmountKey].IntValue;
+        simulator.StateStore.Get(jossPaper, () => new JossPaperPredictionState(jossPaper)).EtherealCount = exhaustThreshold;
         if (exhaustThreshold <= 0 || laterRelic.DynamicVars.Stars.IntValue <= 0)
             throw new InvalidOperationException("遗物挂起测试的规范动态数值无效。");
         simulatedCombat.Apply<DisintegrationPower>(player.Creature, 1, player.Creature);

@@ -35,7 +35,7 @@ def prepare(output, dll):
     }, str(queen.relative_to(REPO)), 'Smart'))
 
     # Reconstruct the declared inputs, not their old results or time/node limits.
-    evidence = REPO / 'docs/performance/veryhigh-pressure-survey-20260908.json'
+    evidence = REPO / 'docs/archive/performance/veryhigh-pressure-survey-20260908.json'
     rows = json.loads(evidence.read_text())['rows']
     scalar = {
         '--character-id': 'characterId', '--seed': 'seed',

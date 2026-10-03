@@ -75,6 +75,11 @@ internal sealed partial class UnattendedTestRunner
                 _ = await runner.AssertB015BoundariesAsync(combatState, player);
                 return Observation(combatEnded: !CombatManager.Instance.IsInProgress);
             }
+            if (request.ScenarioId == "AXEBOT-JOSS-DEFERRED-FORK")
+            {
+                runner.AssertJossPaperDeferredFork(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "RUN-STATISTICS-SATURATION")
             {
                 await RunStatistics.AssertHealthySaturationIsolationAsync(request.EvidenceDirectory
@@ -426,6 +431,19 @@ internal sealed partial class UnattendedTestRunner
                     : request.ScenarioId == "CARD-DECISIONS-EXECUTION-CONTINUATION" ? ["Decisions"]
                     : request.ScenarioId == "CARD-REPEAT-EXECUTION-CONTINUATION" ? ["Repeat", "Decisions"]
                     : ["Havoc", "Cascade", "DrawPrefix", "Repeat", "Decisions"]);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "CASCADE-EMPTY-HAND-NATIVE")
+            {
+                await runner.AssertCascadeEmptyHandAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "EFFECT-SCOPE-ADJACENT-CONTRACT")
+            {
+                await runner.AssertEmptyHandEffectBoundaryAsync(combatState, player);
+                await runner.RunCardExecutionContinuationContractAsync(combatState, player, ["Havoc", "Cascade", "DrawPrefix", "Repeat", "Decisions"]);
+                await runner.RunCardContinuationContractAsync(combatState, player);
+                await runner.RunPotionContinuationContractAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId is "TURN-EXECUTION-CONTINUATION" or "TURN-AFTER-EXECUTION-CONTINUATION" or "TURN-NESTED-EXECUTION-CONTINUATION")

@@ -155,6 +155,8 @@ internal sealed partial class SimulatedCombatState
         Player player)
     {
         SimPlayerCombatState state = simulator.State.GetPlayerCombatState(player);
+        if (!simulator.IsInProgress || simulator.IsExecutingCardOrPotionEffect(player))
+            return;
         if (state.Phase is not (MegaCrit.Sts2.Core.Combat.PlayerTurnPhase.AutoPrePlay
             or MegaCrit.Sts2.Core.Combat.PlayerTurnPhase.Play
             or MegaCrit.Sts2.Core.Combat.PlayerTurnPhase.AutoPostPlay))
@@ -229,11 +231,12 @@ internal sealed partial class SimulatedCombatState
         {
             switch (relic)
             {
-                case JossPaper value when etherealExhaustCount > 0:
+                case JossPaper value:
                 {
                     int threshold = value.DynamicVars["ExhaustAmount"].IntValue;
                     int exhausted = RelicPredictionStateSupport.GetJossPaperCardsExhausted(simulator, value)
-                        + etherealExhaustCount;
+                        + RelicPredictionStateSupport.GetJossPaperEtherealCount(simulator, value);
+                    RelicPredictionStateSupport.SetJossPaperEtherealCount(simulator, value, 0);
                     int draws = exhausted / threshold;
                     RelicPredictionStateSupport.SetJossPaperCardsExhausted(
                         simulator,
