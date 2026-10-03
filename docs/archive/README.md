@@ -7,6 +7,7 @@
 | 开发记录 | [分卷](development/README.md) |
 | 测试证据 | [分卷](testing/README.md) |
 | 适配闭环 | [分卷](adaptation/README.md) |
+| 多人研究 | [归档入口](multiplayer/README.md) |
 | 架构旧地图 | [目录](architecture/) |
 | 审计 | [索引](audits/README.md) |
 | 问题排查 | [目录](issues/README.md) |
