@@ -907,6 +907,13 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "B013-FIXED-PREFIX-TURN-END-CARD")
+            {
+                runner.SetStage("b013_fixed_prefix_turn_end_card");
+                await runner.AssertB013FixedPrefixTurnEndCardAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "FIXED-PREFIX-TURN-OUTCOMES")
             {
                 runner.SetStage("fixed_prefix_turn_outcomes");

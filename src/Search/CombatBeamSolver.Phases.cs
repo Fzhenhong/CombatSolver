@@ -2308,7 +2308,7 @@ internal sealed partial class CombatBeamSolver
         {
             foreach (PlanAction action in prefix)
             {
-                if (action.EndsPlayerTurn || action.Turn != node.Turn)
+                if (action.Turn != node.Turn)
                 {
                     throw new InvalidOperationException(
                         $"固定搜索前缀动作无效：kind={action.Kind} actionTurn={action.Turn} " +
@@ -2331,6 +2331,23 @@ internal sealed partial class CombatBeamSolver
                 bool terminal = snapshot.PlayerDead
                     || snapshot.AllEnemiesDead
                     || snapshot.BoundaryReason != SearchBoundaryReason.None;
+                // Routes freeze "this play ended the turn" on card actions. The prefix may
+                // contain such an action; it must still end the turn here, otherwise the
+                // prefix was built from a different state than this root.
+                if (action.Kind == PlanActionKind.PlayCard
+                    && action.EndsPlayerTurn
+                    && snapshot.Turn <= node.Turn
+                    && !snapshot.PlayerDead
+                    && !snapshot.AllEnemiesDead)
+                {
+                    snapshot.ReleaseSimulator();
+                    throw new InvalidOperationException(
+                        $"固定搜索前缀动作无效：kind={action.Kind} actionTurn={action.Turn} " +
+                        $"nodeTurn={node.Turn} endsPlayerTurn={action.EndsPlayerTurn} " +
+                        $"turnAdvanced=False " +
+                        $"card={(string.IsNullOrEmpty(action.CardId) ? "-" : action.CardId)} " +
+                        $"potion={(string.IsNullOrEmpty(action.PotionId) ? "-" : action.PotionId)}。");
+                }
                 SearchRouteTraits traits = action.Kind == PlanActionKind.UsePotion
                     ? ClassifyPotionTraits(node.Traits, node.Snapshot, snapshot)
                     : node.Traits;
