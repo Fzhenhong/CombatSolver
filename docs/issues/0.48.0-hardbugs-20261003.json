@@ -1350,5 +1350,14 @@
     "completedAtUtc": "2026-10-03T14:50:42.9709988Z",
     "interface": "/admin/reports/delete",
     "scope": "48 explicit IDs, authenticated service handler"
+  },
+  "delivery": {
+    "version": "0.48.2",
+    "releaseSourceCommit": "58427631",
+    "releaseBuild": "Passed, 0 warnings, 0 errors",
+    "minimalZip": "releases/CombatSolver-0.48.2.zip",
+    "localDeployment": "Five files copied successfully",
+    "localCleanup": "Rejected by automatic approval: blocked by policy",
+    "retainedMaterialDirectory": ".local/issue-bundles/0.48.0-hardbugs"
   }
 }
