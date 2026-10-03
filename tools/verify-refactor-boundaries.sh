@@ -1231,7 +1231,7 @@ require_fixed "$beam_retention_facade_path" '_strictHpBoundWithRelicTargets = Ca
 require_fixed "$beam_retention_facade_path" 'targets.All(target => target.HpAllowance == 0)' 'missing zero-allowance objective gate:'
 require_fixed "$beam_retention_facade_path" 'allowTurnTieBound: !_strictHpBoundWithRelicTargets' 'equal-HP counter routes must keep later turns:'
 require_fixed "$search_root/CombatSearchCoordinator.cs" '!CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)' 'shared incumbent must retain objective eligibility:'
-require_fixed "$search_root/CombatSearchCoordinator.PlanSearch.cs" 'context.Root.CanCertifyRemainingHealing || context.Root.UsesKnownNativeHealingPolicy' 'opening incumbent must consume the common healing policy:'
+require_fixed "$search_root/CombatSearchCoordinator.PlanSearch.cs" 'if (!context.Root.CanCertifyRemainingHealing' 'speculative early plans require the existing certified-root schedule:'
 require_fixed \
     "$beam_phases_path" \
     'TightenPrimarySearchIncumbentAtTurnLayer(' \
