@@ -1,5 +1,7 @@
 # CombatSolver 文档导航
 
+- [铁甲巨型千足虫阶段优化 C59](performance/iron-generation-closure-research-20261003.md)：A/B/B/A中位数4.02倍、37战损/0瓶；完整原生部署及三个哨兵通过，原始波动保留。
+
 - [储君巨型千足虫搜索阶段优化 C58](performance/regent-potion-cap-bound-research-20261003.md)：完整请求保守提速32.91倍、原生0战损；29根回归及峰值复核完成，全部原始波动样本保留。
 
 - [社区贡献指南](../CONTRIBUTING.md)：整批自动认领、环境与 PR 验收。

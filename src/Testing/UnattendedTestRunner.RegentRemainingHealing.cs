@@ -54,8 +54,8 @@ internal sealed partial class UnattendedTestRunner
                 ModelDb.CardPool<StatusCardPool>(), ModelDb.CardPool<CurseCardPool>()];
             foreach (CardPoolModel pool in pools)
             {
-                if (!StrategicHpRecoveryBound.HasCertifiedRegentDecimillipedeGenerationPool(pool)
-                    || StrategicHpRecoveryBound.HasCertifiedRegentDecimillipedeGenerationPool(pool.ToMutable()))
+                if (!StrategicHpRecoveryBound.HasCertifiedNativeNonHealingGenerationPool(pool)
+                    || StrategicHpRecoveryBound.HasCertifiedNativeNonHealingGenerationPool(pool.ToMutable()))
                     throw new InvalidOperationException($"原生生成池或可变池门禁错误：{pool.Id}。");
                 _completedChecks.Add($"RegentRemainingHealing:NativePool:{pool.Id.Entry}:" +
                     CardFactory.FilterForCombat(pool.AllCards).Count());

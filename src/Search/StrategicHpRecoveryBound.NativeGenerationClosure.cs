@@ -4,8 +4,8 @@ namespace CombatSolver;
 
 internal static partial class StrategicHpRecoveryBound
 {
-    // C57 research only. Candidate exact type set, deliberately local to Regent /
-    // Decimillipede. Combat generation excludes Alchemize, Feed, NotYet and the other
+    // Audited native generation closure, enabled only by the separately certified
+    // Regent or Ironclad Decimillipede root environments. Combat generation excludes Alchemize, Feed, NotYet and the other
     // CanBeGeneratedInCombat=false cards. Entropy can transform a Splash-generated
     // foreign attack, so the closure includes all five character pools, not just Regent.
     // Generated Osty healing changes the pet, never player HP. Native callback powers,
@@ -13,7 +13,7 @@ internal static partial class StrategicHpRecoveryBound
     // native orbs are included. Ordinary transforms filter Common/Uncommon/Rare;
     // Status/Curse transforms keep their own pools. No generated card gains a run
     // DeckVersion; actual permanent growth cards remain conservative at the bound.
-    private static readonly FrozenSet<Type> RegentDecimillipedeGeneratedCards = new Type[]
+    private static readonly FrozenSet<Type> NativeNonHealingGeneratedCards = new Type[]
     {
         typeof(global::MegaCrit.Sts2.Core.Models.Cards.BadLuck),
         typeof(global::MegaCrit.Sts2.Core.Models.Cards.Beckon),
@@ -213,7 +213,7 @@ internal static partial class StrategicHpRecoveryBound
         typeof(global::MegaCrit.Sts2.Core.Models.Cards.WroughtInWar), typeof(global::MegaCrit.Sts2.Core.Models.Cards.Zap),
     }.ToFrozenSet();
 
-    private static readonly FrozenSet<Type> RegentDecimillipedeGeneratedPowers = new Type[]
+    private static readonly FrozenSet<Type> NativeNonHealingGeneratedPowers = new Type[]
     {
         typeof(global::MegaCrit.Sts2.Core.Models.Powers.AccelerantPower), typeof(global::MegaCrit.Sts2.Core.Models.Powers.AccuracyPower), typeof(global::MegaCrit.Sts2.Core.Models.Powers.AfterimagePower),
         typeof(global::MegaCrit.Sts2.Core.Models.Powers.AggressionPower), typeof(global::MegaCrit.Sts2.Core.Models.Powers.AnticipatePower), typeof(global::MegaCrit.Sts2.Core.Models.Powers.ArsenalPower),
