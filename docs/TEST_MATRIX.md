@@ -4,6 +4,16 @@
 
 历史记录见 [归档索引](archive/testing/README.md)。
 
+## Q002 O003 能力代表保路（2026-10-04）
+
+`Q002-O003-PLAYER-T3-PATH`、原O003 ZIP、selector `4052e28b38544018ab6f3f9b2acd8c8e:5`、RestoreOnly、固定5秒政策、120秒请求：最终夹具 `43ac830f2ac9475f9242febfd4c4bf13` Passed（62.05s），53动作增量/完整回放、原生9事件后的T4完整戳和推进后的冻结T3严格一致；13,558条事件、无丢弃，完整第7步候选池及2个实际别名的严格获胜后缀通过。别名后缀仅证明战斗合法性，不证明调度历史相同；观察耗时不作性能证据。
+
+正常协调器T3同根/同政策/原10秒预算：基线 `30f14344f9e84b15b987ad36273005a6` 未完成、敌方345，候选 `a40cc85a2e3b47a5961bd7868e4bd27e` T10获胜、损血31；总搜索23,541.16/19,670.09ms、展开41,218/41,259、转移259,483/258,567。原生DeploySolver `e9042b8d435341438f929c786b7af9ad` Passed（66.34s），Instant/0秒、实际T10/损血31/敌方0/未归因0、整场Stable Serum1瓶、导出四类计划外重算合计0。
+
+O005同根同5秒政策、同3GiB主机预留的正常哨兵：基线 `8d72a922aa3e4935a0d7513554bea63e` 与候选 `c6d7546911b94057b91110269de4c76c` 均T9/损血8/无药，完整根及执行政策逐字段相同；总搜索15,869.86/16,183.78ms、展开53,351/52,794、转移197,591/194,074。不是观察或增量诊断时间；单对不能证明广泛性能无退化。
+
+纯合同：`dotnet run --project tools/PowerCardValuationChecks/PowerCardValuationChecks.csproj -c Release`，`POWER_CARD_VALUATION_CHECKS_OK total=104`；新增集合/激活顺序/药水和回合隔离/死亡和终局排除/配额/输入不变测试运行真实代表选择器，工具值节点不替代原生正确性。实例全部删除，失败夹具、主机排队和未验证范围见[Q002记录](issues/q002-route-quality.md#o003-完整见证与能力代表保路)。Linux脚本接受同一scenario，Linux实机未运行。
+
 ## Q002 完整保存预测与原报告开关（2026-10-03）
 
 O004 `CHECKPOINT-RECORDED-PLAN-DEPLOYMENT`、原ZIP/latest、DeploySolver、5秒诊断政策、120秒请求、Instant/0秒：`c073913577214d1bb8caa44161733ad6` Passed（40.29 s），完整80动作逐步增量/完整回放严格一致，原生T12、实际损血5、整场能力药水+发光水2瓶、后台搜索代次无增加、导出四类计划外重算合计0。`CHECKPOINT-RECORDED-PLAN-PATH`、同根SearchOnly的`2caefffca9b94e77b3e2b0e8cb7727e4` Passed：观察130条事件、丢失0，前三步生成并展开，第4步用药未生成，主搜索6139ms耗尽5秒补搜预算。冻结动作仅作观察，不注入搜索；不是质量修复或正常性能证据。夹具失败及复跑入口见[Q002详情](issues/q002-route-quality.md#o004-完整预测可执行性与首个搜索缺口)与[检查点指南](CHECKPOINT_REPLAY.md#验证)。实例均删除。

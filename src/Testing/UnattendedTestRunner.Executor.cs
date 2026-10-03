@@ -54,6 +54,11 @@ internal sealed partial class UnattendedTestRunner
                 await runner.PrepareRecordedPlanDeploymentAsync(combatState, deploy: false);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "Q002-O003-PLAYER-T3-PATH")
+            {
+                await runner.RunQ002MercuryPlayerTurnPathAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "KNOWN-HEALING-POLICY")
             {
                 runner.SetStage("known_healing_policy");

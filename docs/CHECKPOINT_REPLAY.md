@@ -78,6 +78,8 @@ v2 索引保存稳定战斗/检查点 ID、永久递增编号、原生事件位�
 
 同一输入使用 `CHECKPOINT-RECORDED-PLAN-PATH`、`ReplayMode=SearchOnly`，将冻结路线作为只读观察目标运行正常协调器；不把参照动作注入候选或评分。`RecordedPrediction-path-trace.json` 保存准确动作和完整状态的生成、转置、保留与展开事件，观察器丢事件时显式失败。路径诊断耗时不能作正常性能证据。两种模式都要求原生录制和对应检查点的完整获胜预测，旧身份不匹配时失败，不删去费用层或改写录制内容。Power Potion 等已录制前缀与未来预测用药分别计算，不能漏掉前缀消耗。
 
+Q002 O003 的玩家T3干预另用 `Q002-O003-PLAYER-T3-PATH`、原ZIP、selector `4052e28b38544018ab6f3f9b2acd8c8e:5`、`ReplayMode=RestoreOnly`、显式短预算政策和EvidenceDirectory。夹具严格核对原生9事件与影子6动作的T4状态、冻结T3及保存获胜后续，再观察正常T3搜索的第7步完整候选池。纯值观察同时复制能力承诺，别名接获胜后续只证明战斗可执行，不保证搜索调度历史等价；场景不把玩家排列注入生产搜索。复跑与质量范围见[Q002验收](TEST_MATRIX.md#q002-o003-能力代表保路2026-10-04)。
+
 包协议与顺序文件：`dotnet run --project tools/CheckpointTool/CheckpointTool.csproj -c Release -- self-test`。边界门禁使用 `verify-refactor-boundaries.ps1` / `.sh`。
 
 可见采集测量：`run-visible-steam-benchmark.ps1 -LoggingFixture -TimeoutSeconds 120 -EvidenceDirectory <目录>`，Linux 为 `--logging-fixture --timeout-seconds 120 --evidence-directory <目录>`。该短原生战斗另存 ZIP，索引提供采集累计/最大时间和积压，session.json 提供材料大小。headless 只用于导入和吞吐测量。具体证据及未覆盖场景见 TEST_MATRIX.md。
