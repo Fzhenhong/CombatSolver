@@ -99,3 +99,5 @@ B016 发布后已删除五个代表及 17 条已有主题重复报告，共 22 �
 Q003～Q007 发布后已删除 25 个代表报告及 59 份同主题重复报告，共 84 条后台记录和 84 个服务器 ZIP；累计已清理 571 条后台记录及服务器 ZIP。本轮本地暂存的 65 个 ZIP 与私人快照、临时发布文件也已删除。公开资料保留在 GitHub，清理回执已写入索引与账本。
 
 [publication-ledger.json](publication-ledger.json) 保存当前主题批次、历史迁移和清理回执。清理工具 [retire-community-archives.py](../../tools/community/retire-community-archives.py) 在日志服务容器读取固定清单，支持 dry-run；`published` 表示已发布代表清理，`duplicate_theme` 表示重复主题删除跳过，后者还校验真实报告版本属于 0.47.x。
+
+Q008～Q010 发布后，15个代表报告及对应服务器 ZIP 已按发布回执删除，本地三个批次 ZIP 暂存已清理。累计社区资料清理586条后台记录和服务器 ZIP；逐报告回执保存在[发布记录](../archive/community/2026-10-04-worldlines/publication-cleanup.json)。

@@ -59,3 +59,7 @@
 - [Q008](https://github.com/Torch1230/CombatSolver/issues/208)：总折算战损改善量 34 HP。
 - [Q009](https://github.com/Torch1230/CombatSolver/issues/209)：总折算战损改善量 25 HP。
 - [Q010](https://github.com/Torch1230/CombatSolver/issues/210)：总折算战损改善量 19 HP。
+
+## 发布后清理
+
+已将15个代表包发布至 GitHub，随后删除15条后台报告记录及对应服务器 ZIP，本地三个批次 ZIP 暂存也已删除。发布与清理回执见 [publication.json](publication.json) 和 [publication-cleanup.json](publication-cleanup.json)。资料准备的验证范围仍为静态核对。
