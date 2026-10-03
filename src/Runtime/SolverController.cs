@@ -1210,6 +1210,11 @@ internal static partial class SolverController
                     "combat_root_snapshot",
                     settings.EnableNoGcRegion);
             }
+            searchPolicy = searchPolicy with
+            {
+                PrimaryIncumbents = _combat.AcquirePrimaryIncumbents(
+                    rootSnapshot, searchPolicy, battleDamage),
+            };
             Entry.Logger.Info(
                 $"[CombatSolver/Test] COMBAT_ROOT_CAPTURE generation={generation} " +
                 $"elapsed_ms={rootSnapshot.CaptureElapsedMilliseconds:F3} " +
