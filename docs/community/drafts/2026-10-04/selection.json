@@ -25,7 +25,9 @@
       ],
       "representativeCount": 5,
       "fileName": "Q008.zip",
-      "sizeBytes": 1276843
+      "sizeBytes": 1276803,
+      "title": "[更优世界线 Q008] 总折算战损改善量：34 HP",
+      "totalPotionAdjustedHpReduction": 34
     },
     {
       "batchId": "Q009",
@@ -38,7 +40,9 @@
       ],
       "representativeCount": 5,
       "fileName": "Q009.zip",
-      "sizeBytes": 1375713
+      "sizeBytes": 1375656,
+      "title": "[更优世界线 Q009] 总折算战损改善量：25 HP",
+      "totalPotionAdjustedHpReduction": 25
     },
     {
       "batchId": "Q010",
@@ -51,7 +55,9 @@
       ],
       "representativeCount": 5,
       "fileName": "Q010.zip",
-      "sizeBytes": 1403725
+      "sizeBytes": 1403699,
+      "title": "[更优世界线 Q010] 总折算战损改善量：19 HP",
+      "totalPotionAdjustedHpReduction": 19
     }
   ],
   "themes": [
