@@ -4,6 +4,10 @@
 
 历史记录见 [归档索引](archive/development/README.md)。
 
+## Q002 O005 开局路径诊断（2026-10-03）
+
+新增测试场景 `Q002-O005-OPENING-PATH`，只接受原包 T1 可出牌根。由原生 choice payload 解出 Burning Pact 的选择，在当前完整身份上重建玩家首回合，核对增量/完整回放，再原生执行 12 个录制事件并严格比较 T2 的完整 ContinuationStamp；不归一化差异。原生推进后另用新 worker 检查冻结根仍严格等于原 T1，随后使用推进前冻结的原根、战损账本、显示名和政策运行协调器。参照前缀只作为 SearchPathObserver 的观察目标，不注入搜索。纯值事件写入 EvidenceDirectory，实例清理后仍可排查；诊断不代表生产优化、完整路线或性能验收。
+
 ## Q002 检查点搜索 profile 恢复（2026-10-03）
 
 O005 单因素实验发现覆盖文件记录 `CurrentEnergy:0`，实际政策却为默认值。导入器把 profile 转成玩家设置时只恢复基础容量和时间，丢弃排序、组合等字段。现在由请求内 `ProtocolHost` 持有完整不可变 profile，Runtime 冻结政策时消费它，显式 CLI 扰动继续优先；结束或失败后清除，普通请求沿原设置。未调整生产搜索权重或战斗语义，O005 路线质量仍待优化；过程与验证见 [Q002 排查](issues/q002-route-quality.md)。

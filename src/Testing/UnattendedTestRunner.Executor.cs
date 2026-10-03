@@ -44,6 +44,11 @@ internal sealed partial class UnattendedTestRunner
                 runner.AssertCheckpointProfileContract(combatState);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "Q002-O005-OPENING-PATH")
+            {
+                await runner.RunQ002TestSubjectOpeningPathAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "KNOWN-HEALING-POLICY")
             {
                 runner.SetStage("known_healing_policy");

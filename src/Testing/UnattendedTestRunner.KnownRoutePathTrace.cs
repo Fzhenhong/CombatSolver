@@ -24,6 +24,10 @@ internal sealed partial class UnattendedTestRunner
 
     private readonly record struct KnownRouteVariantStep(string Variant, int Step);
 
+    private sealed record KnownRouteSearchContext(
+        CombatRootSnapshot Root, SolverDisplayNames Names, BattleDamageSnapshot Damage,
+        SearchPolicySnapshot Policy);
+
     // The known route is a test-only needle. It is never passed as a fixed search prefix,
     // candidate, score, policy override, or recovery instruction.
     private async Task<int> RunKnownRoutePathTraceAsync(
@@ -37,7 +41,8 @@ internal sealed partial class UnattendedTestRunner
         bool proveRetentionAliases = false,
         IReadOnlyDictionary<string, IReadOnlyList<KnownRoutePrefix>>? frozenVariants = null,
         int? observedRetentionStep = null,
-        BossHpStrategy? finalBossStrategyOverride = null)
+        BossHpStrategy? finalBossStrategyOverride = null,
+        KnownRouteSearchContext? frozenSearchContext = null)
     {
         if (prefixes.Count == 0
             || (requiredRetentionStep is { } step && (step < 1 || step > prefixes.Count))
@@ -78,13 +83,13 @@ internal sealed partial class UnattendedTestRunner
             throw new InvalidOperationException("路径观察要求非空原根敌方阵容；后缀别名回放目前仅支持单敌样本。");
         MoveStateSnapshot[] liveBefore = enemies.Select(enemy => CaptureActual(combat, player, enemy)).ToArray();
         ContinuationStamp stampBefore = ContinuationStamp.CaptureLive(combat);
-        CombatRootSnapshot root = CombatRootSnapshot.Capture(combat);
+        CombatRootSnapshot root = frozenSearchContext?.Root ?? CombatRootSnapshot.Capture(combat);
         MoveStateSnapshot[] rootBefore = CaptureKnownRouteRootStates(root, player, enemies);
-        SolverDisplayNames names = SolverDisplayNames.Capture(combat);
-        BattleDamageSnapshot damage = BattleDamageTracker.Observe(combat);
+        SolverDisplayNames names = frozenSearchContext?.Names ?? SolverDisplayNames.Capture(combat);
+        BattleDamageSnapshot damage = frozenSearchContext?.Damage ?? BattleDamageTracker.Observe(combat);
         SolverSettingsSnapshot settings = SolverSettings.Capture();
-        SearchPolicySnapshot policy = SolverController.CaptureSearchPolicy(settings, combat,
-            includeTurnSetup: false, theftPolicy: null);
+        SearchPolicySnapshot policy = frozenSearchContext?.Policy
+            ?? SolverController.CaptureSearchPolicy(settings, combat, includeTurnSetup: false, theftPolicy: null);
         if (finalBossStrategyOverride is { } finalBossStrategy)
             policy = policy with { FinalBossHpStrategy = finalBossStrategy };
         SearchDiagnosticsSink original = policy.Diagnostics;
@@ -177,6 +182,24 @@ internal sealed partial class UnattendedTestRunner
                 }));
             }
         }
+        if (!string.IsNullOrWhiteSpace(_request.EvidenceDirectory))
+            _writer.WriteGeneratedArtifact(sample + "-path-trace.json", new
+            {
+                sample, dropped,
+                prefixes = prefixes.Select((prefix, index) => new
+                {
+                    step = index + 1, prefix.Action, prefix.StateKey, prefix.Turn,
+                    prefix.HpLost, prefix.PotionsUsed, prefix.ShufflesCrossed,
+                }).ToArray(),
+                events = observations.Select(observation => new
+                {
+                    exactSteps = exactSteps[observation].Select(index => index + 1).ToArray(),
+                    stateSteps = Enumerable.Range(0, prefixes.Count)
+                        .Where(index => prefixes[index].StateKey == observation.StateKey)
+                        .Select(index => index + 1).ToArray(),
+                    observation,
+                }).ToArray(),
+            });
         foreach (IGrouping<Guid, SearchPathObservation> solver in observations.GroupBy(observation => observation.SolverId))
         {
             foreach (int index in Enumerable.Range(0, prefixes.Count))

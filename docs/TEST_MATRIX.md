@@ -4,6 +4,14 @@
 
 历史记录见 [归档索引](archive/testing/README.md)。
 
+## Q002 O005 原生前缀及搜索观察（2026-10-03）
+
+`Q002-O005-OPENING-PATH` 使用原始 O005 ZIP、`CheckpointSelector=start`、`ReplayMode=RestoreOnly`、显式同预算政策及 EvidenceDirectory，请求上限 120 s。先按原 payload 绑定首回合选择，验证每步完整/增量回放及影子回放不改 live；随后原生录制推进到 T2，与影子完整 ContinuationStamp 严格相等，才观察冻结的原始 T1 搜索。`O005-opening-state.json` 保存双方戳和完整动作；`Q002O005Opening-path-trace.json` 保存观察事件、准确动作匹配及状态别名。后者不把状态别名自动视作已知动作生成/保留，也不证明完整胜利。
+
+复跑使用 `tools/run-unattended-test.ps1 -ScenarioId Q002-O005-OPENING-PATH -CharacterId IRONCLAD -EncounterId TEST_SUBJECT_BOSS -CheckpointArchivePath <O005.zip> -CheckpointSelector start -ReplayMode RestoreOnly -ReplayPolicyOverridePath <policy.json> -EvidenceDirectory <evidence> -HeadlessInstance q002-o005-path -TimeoutSeconds 120 -CleanupInstanceOnExit`，按本机传入游戏/Ritsu 路径。Linux 入口使用对应参数；本轮未验证 Linux 实机。结果见 [Q002 排查](issues/q002-route-quality.md)。
+
+最终夹具 run `3fdeb72d4155449a826f7f87f4875668` Passed（27.90 s）：原生/影子 T2 严格相等，原生推进后新 worker 的冻结 T1 戳与原 T1 严格相等；2,399 条纯值事件、零丢弃，完整外层候选池、实际排序及最终保留集合检查通过，根与 live 未被观察修改。四个能力成员在第四步未保留此准确前缀；这是参考路径首丢点证据，不是 O005 已修复。Release 构建零警告/错误，实例自动删除。
+
 ## Q002 检查点 profile 完整恢复（2026-10-03）
 
 修复前 O005 的 `8674422264c342d19e26a1e49595bfc7` 覆盖文件为 `CurrentEnergy:0`，执行政策却是 null；损血仍为 22，不能视为有效权重实验。修复后 `CHECKPOINT-PROFILE-CONTRACT` 请求 `08c185eab6434ca3a95ebfef60a5f820` Passed（20.40 s）：完整 profile 字段进入冻结政策，清除后普通 profile 恢复；不运行 Solve，不作为路线或性能验收。首次启动 `9ae3ae2abd2a4d2591d496dbba1d7650` 在进程身份登记前失败，未运行合同；换独立实例后的通过与该失败分别保留。测试实例已自动删除。
