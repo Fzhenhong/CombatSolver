@@ -1,8 +1,8 @@
 # Q002 路线质量排查（2026-10-03）
 
-任务 [#150](https://github.com/Torch1230/CombatSolver/issues/150) 的 O001–O005 整批由 `shun-tong` 认领。当前是材料核验与基线阶段，未修复搜索、未完成整场质量验收。后续按主题组织提交，使用 `Refs #150`；全批验收前不使用 `Closes #150`。
+任务 [#150](https://github.com/Torch1230/CombatSolver/issues/150) 的 O001–O005 整批由 `shun-tong` 认领。当前完成材料核验与基线，并修正 O005 实验暴露的检查点 profile 导入；未完成搜索优化与全批质量验收。后续按主题组织提交，使用 `Refs #150`；全批验收前不使用 `Closes #150`。
 
-基线源码 `9d21f5fc`，manifest 0.48.0；Windows 游戏 0.111.0、RitsuLib 0.6.5。已合入上游 `556e7299`，本轮未修改 C#。原始 ZIP、完整日志和诊断政策保存在 `.local/issue-bundles/Q002/`，逐请求证据保存在 `.local/checkpoint-batch/`，不提交玩家存档。
+基线源码 `9d21f5fc`，manifest 0.48.0；Windows 游戏 0.111.0、RitsuLib 0.6.5。已合入上游 `556e7299`，下列基线均在修改 C# 前取得；后续 profile 修复单独记录。原始 ZIP、完整日志和诊断政策保存在 `.local/issue-bundles/Q002/`，逐请求证据保存在 `.local/checkpoint-batch/`，不提交玩家存档。
 
 ## 材料与严格恢复
 
@@ -14,7 +14,7 @@
 | O002 女王 / `8fbb4f7f7d1b4e30832296d73e7a114d` | 开战失败 run `facf75d4184d42b18affd343bc461218`：遗物槽 1 原生导入为 `DEPRECATED_RELIC` | 存档实际持有第三方模型 `ANCIENT_AFFECTION_RELIC_DEVOTED_BOOMING_CONCH`；需要原版内容代表，不能删除遗物伪造同根。 |
 | O003 永世沙漏 / `c5e305b95ff444fea1949a58c0b17b04` | 开战通过 run `729dd829931e4489acd8c3059777663a`；最新检查点 T4、29 事件的完整 continuation 与原生状态通过 run `ffb487504c644112a8f349b0d18ec56d` | 原报告 55→2 是跨 T1/T4 的预测变化，人工实机通关尚未验证。 |
 | O004 乐加维林族母 / `b76f10234d8b435286083ae1e614646d` | 最新检查点 T1、4 事件通过 run `3d9e776c288440d0833a07fedbb9cab2`，包含喝能力药水、选牌、打出 Tools of the Trade | 51→5 是预测变化；额外药水按每瓶 9 HP 计机会成本，需区分已经使用与未来计划使用。 |
-| O005 实验体 / `93133dcfdb114695b08aec08c36716c4` | 最新检查点 T2、12 事件通过 run `9d69774307834aa5ac38b1ecab3ec10f`，完整 continuation 与原生状态一致 | 55→10 是预测变化；尚无同预算质量或整场部署结论。 |
+| O005 实验体 / `93133dcfdb114695b08aec08c36716c4` | 最新检查点 T2、12 事件通过 run `9d69774307834aa5ac38b1ecab3ec10f`，完整 continuation 与原生状态一致 | 原报告 55→10 是预测变化；本轮原生执行及人工前缀参照见下文，不宣称同原报告预算的提升。 |
 
 最新检查点三包证据目录为 `Q002-remaining-recorded-prefix-restore`。开战三包证据目录为 `Q002-round1-opening-restore`。批次启动器均记录退出及实例删除。
 
@@ -52,3 +52,17 @@ O005 是本轮取得完整原生获胜基线的主题，可优先研究自伤换
 O001 首次诊断覆盖文件包含空的 `brightestFlameMaxHpLossLimit`，被 `invalid_policy_override` 拒绝，搜索并未执行；不能将批次等待超时计入搜索性能。修正为只覆盖 `profile` 与 `fixedBudget` 后才取得上述基线。
 
 目前没有可提交的搜索优化结论。有效缺口必须继续证明同根、同政策、同预算、同一比较区间的合法实际存活路线，并扣除额外药水成本；目标和受影响哨兵验收完成后才报告修复。
+
+## O005 人工前缀参照与 profile 导入修复
+
+`Q002-O005-guided-T2-deployment` / run `7fa90699021f4f608f040ea03f48fab6` 严格恢复原生首回合的 12 个事件至 T2，再以原 5,000 ms 诊断政策执行求解器后续。35.63 s 完成；完整战斗 outcome 为初始 HP 38、治疗 2、战中最终 HP 30、损血 10、自伤 5、无药水、实际存活。此 outcome 包括重放的首回合，不能把它当作仅 T2 以后的损血。它证明玩家前缀配合当前求解器后续可以兑现低损路线；不证明开局自主搜索已找到，也不是全手动通关。
+
+基线已有四个 `DARK_EMBRACE` 专门前缀成员：普通/宽/次段分别获胜损血 22/38/26，基础分成员未胜。能力已进入候选，不能把差距归因于根本没搜能力。针对换血收益，先做仅关闭 `CurrentEnergy` 中途加分的实验。
+
+修复前 `Q002-O005-energy-zero-experiment` / run `8674422264c342d19e26a1e49595bfc7` 虽然实机战损仍为 22、自伤 20，但 `policyOverrides.profile.beamWeightPerturbation` 为 `CurrentEnergy:0`，`executedPolicy.profile.beamWeightPerturbation` 却为 null。因此实验没有实际施加扰动，不能作为“降低能量评分无效”的证据。首因是 `ApplyRecordedCheckpointPolicy` 只把基础容量、时间映射到玩家设置，Runtime 再从设置重建 profile，其他记录字段丢失。
+
+修复将完整不可变 `SolverSearchProfile` 放入 `ProtocolHost` 的当前请求，在 `CaptureSearchPolicy` 捕获时消费。独立 CLI 权重扰动保持既有优先级；请求的 `finally/Reset` 清除 profile，普通请求继续使用原设置。没有改默认权重、状态键、模拟或终局政策。覆盖合同 `CHECKPOINT-PROFILE-CONTRACT` 检查完整字段进入冻结政策，并清除后恢复普通 profile；实际报告再核对 `executedPolicy`。这属于实验入口修复，O005 搜索质量仍未解决。
+
+修复后合同请求 `08c185eab6434ca3a95ebfef60a5f820` Passed（20.40 s）。首个启动请求 `9ae3ae2abd2a4d2591d496dbba1d7650` 在启动器进程身份登记处失败、未进入合同；独立实例重试通过。两个实例均已删除，不修改启动器掩盖该失败。
+
+`Q002-O005-energy-zero-profile-fixed` / run `1730f063cf0a40ca846c5327208d0a43` 原包部署 Passed，42.61 s；`executedPolicy.profile.beamWeightPerturbation` 确认为 `CurrentEnergy:0`，证明文件中的完整 profile 实际进入搜索。实机损血 30、自伤 26、战中 HP 10、无药水、存活获胜，比原基线损血 22 更差。撤回关闭能量加分的优化假设，仅保留导入修复；不将显式实验参数作为生产默认。Release 构建零警告/错误、结构门禁通过。未完成 O005 保路根因定位、默认搜索同预算改善或最终质量哨兵验收。

@@ -44,7 +44,9 @@ Linux：
 
 旧包没有完整输入记录时 `ReplayRecorded` 返回 `missing_native_event_recording`，仍可尝试 RestoreOnly、SearchOnly、DeploySolver。缺失的历史或复杂内部状态不能凭计数补造；导入不一致时保留首个差异。旧包兼容不代表所有历史包都已逐包验证。
 
-旧包政策从 settings 和 searchProfiles 恢复。`missingPolicyFields` 列明缺项，搜索/部署需用 `-ReplayPolicyOverridePath <JSON>` / `--policy <JSON>` 明确补齐。允许字段：`potionPolicy`、`potionDirectives`、`actTransitionBossHpStrategy`、`finalBossHpStrategy`、`acceptableBattleHpLoss`、`searchMaxDegreeOfParallelism`、`shortProfile`、`deepProfile`、`forceShortOnly`。覆盖文件保留在结果目录；原值、覆盖值和实际执行值分别记录。
+旧包政策从 settings 和 searchProfiles 恢复。`missingPolicyFields` 列明缺项，搜索/部署需用 `-ReplayPolicyOverridePath <JSON>` / `--policy <JSON>` 明确补齐。当前覆盖字段：`potionPolicy`、`potionDirectives`、`growthBudgets`、`relicStrategyEnabled`、`relicCounterRules`、`brightestFlameMaxHpLossLimit`、`actTransitionBossHpStrategy`、`finalBossHpStrategy`、`acceptableBattleHpLoss`、`stopAtAcceptableBattleHpLoss`、`searchMaxDegreeOfParallelism`、`profile`、`fixedBudget`、`act3BossStrategy`。旧政策中的 `shortProfile`、`deepProfile`、`forceShortOnly` 由兼容读取器归一化；不要将它们当作当前覆盖文件字段。覆盖文件保留在结果目录；原值、覆盖值和实际执行值分别记录。
+
+`profile` 按完整不可变记录注入冻结搜索政策，包括排序与组合字段，不仅恢复 Beam、节点和时间。显式无人测试 CLI 的能量权重扰动仍优先于 profile 内的同项设置。profile 由当前请求持有，结束、失败或下一请求前清除；普通游戏政策不受影响。检查实验是否生效时读取 `executedPolicy`，不能仅以 `policyOverrides` 中存在参数为依据。
 
 ## 批量与证据
 

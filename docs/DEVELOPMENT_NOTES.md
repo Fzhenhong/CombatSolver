@@ -4,6 +4,10 @@
 
 历史记录见 [归档索引](archive/development/README.md)。
 
+## Q002 检查点搜索 profile 恢复（2026-10-03）
+
+O005 单因素实验发现覆盖文件记录 `CurrentEnergy:0`，实际政策却为默认值。导入器把 profile 转成玩家设置时只恢复基础容量和时间，丢弃排序、组合等字段。现在由请求内 `ProtocolHost` 持有完整不可变 profile，Runtime 冻结政策时消费它，显式 CLI 扰动继续优先；结束或失败后清除，普通请求沿原设置。未调整生产搜索权重或战斗语义，O005 路线质量仍待优化；过程与验证见 [Q002 排查](issues/q002-route-quality.md)。
+
 ## Windows 无头测试配置初始化（2026-10-03）
 
 Windows 启动器补齐 Steam 账号配置向私有 `default/1` 的复制，修复只使用 Steam 配置的本机在游戏启动前报缺少 `settings.save` 的问题。保留已有 `default` 配置优先和隔离实例复用行为，沿用重解析点拒绝与来源只读复制。Windows/Linux 在多个可用 Steam 账号配置时均明确失败，避免静默选错账号。

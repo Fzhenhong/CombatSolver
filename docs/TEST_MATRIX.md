@@ -4,6 +4,14 @@
 
 历史记录见 [归档索引](archive/testing/README.md)。
 
+## Q002 检查点 profile 完整恢复（2026-10-03）
+
+修复前 O005 的 `8674422264c342d19e26a1e49595bfc7` 覆盖文件为 `CurrentEnergy:0`，执行政策却是 null；损血仍为 22，不能视为有效权重实验。修复后 `CHECKPOINT-PROFILE-CONTRACT` 请求 `08c185eab6434ca3a95ebfef60a5f820` Passed（20.40 s）：完整 profile 字段进入冻结政策，清除后普通 profile 恢复；不运行 Solve，不作为路线或性能验收。首次启动 `9ae3ae2abd2a4d2591d496dbba1d7650` 在进程身份登记前失败，未运行合同；换独立实例后的通过与该失败分别保留。测试实例已自动删除。
+
+复跑：`tools/run-unattended-test.ps1 -ScenarioId CHECKPOINT-PROFILE-CONTRACT -HeadlessInstance profile-contract -TimeoutSeconds 120 -CleanupInstanceOnExit`，按本机覆盖游戏/Ritsu 路径；Linux 使用等价 scenario 与 GNU 参数。未运行 Linux 实机。目标原包及实验后续结果见 [Q002 排查](issues/q002-route-quality.md)。
+
+实际输入链验证：原包 `93133dcfdb114695b08aec08c36716c4` 的 `1730f063cf0a40ca846c5327208d0a43` 完成原生部署（42.61 s），执行政策确为文件请求的 `CurrentEnergy:0`。实验实机战损 30、自伤 26、无药水，较旧默认基线战损 22 更差，未采纳该权重变更；只验收 profile 导入。初始原生恢复通过，实例自动清理。Release 零警告/错误、结构门禁通过，不代表默认搜索质量改善、性能无退化或完整社区验收。
+
 ## Windows Steam 配置初始化（2026-10-03）
 
 修改前 `SMOKE-001` 在配置初始化时失败：玩家仅有 Steam 账号配置，启动器未生成私有 `default/1/settings.save`。修改后 `tools/test-headless-profile.ps1` 通过 Steam 迁移、default 优先、配置/进度复制、私有副本复用、来源不变、缺少配置及多账号拒绝检查。Linux 入口通过 Bash 语法检查，未运行 Linux 行为测试。
