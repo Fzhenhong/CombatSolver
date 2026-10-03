@@ -2,6 +2,8 @@ using System.Collections.Concurrent;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace CombatSolver;
 
@@ -12,10 +14,16 @@ internal sealed partial class UnattendedTestRunner
         await ClearPlayerPilesAsync(player);
         await CreatureCmd.SetCurrentHp(player.Creature, 70);
         await CreatureCmd.SetCurrentHp(live.Enemies.Single(), 18);
+        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(),
+            live.Enemies.Single(), 12, null, null);
         await InjectCardAsync(live, player, new() { CardId = "STRIKE_SILENT", Pile = "Hand", UpgradeLevels = 1 });
         await InjectCardAsync(live, player, new() { CardId = "DEFEND_SILENT", Pile = "Hand", UpgradeLevels = 1 });
+        bool knownSourcePolicy = _request.ScenarioId == "KNOWN-HEALING-MEMBERS";
+        if (knownSourcePolicy)
+            await InjectCardAsync(live, player, new() { CardId = "ALCHEMIZE", Pile = "Exhaust" });
         SetEnergy(player, 3);
         CombatRootSnapshot root = CombatRootSnapshot.Capture(live);
+        SolverDisplayNames displayNames = SolverDisplayNames.Capture(live);
         string before = ContinuationStamp.CaptureLive(live).StateText;
         var damage = BattleDamageTracker.Observe(live);
         var policy = SolverController.CaptureSearchPolicy(SolverSettings.Capture(), live, false, null) with
@@ -35,12 +43,17 @@ internal sealed partial class UnattendedTestRunner
         } };
         using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(20));
         SolverResult control = await Task.Run(() => CombatSearchCoordinator.Solve(root,
-            SolverDisplayNames.Capture(live), damage,
+            displayNames, damage,
             policy with { DisableRefinementIncumbentForTesting = true }, deadline.Token, null));
-        if (!root.CanCertifyRemainingHealing || !control.Snapshot.AllEnemiesDead
+        if (!(root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy)
+            || knownSourcePolicy && root.CanCertifyRemainingHealing
+            || !control.Snapshot.AllEnemiesDead
             || control.Snapshot.PlayerDead || control.Snapshot.HasRisk
             || control.BoundaryReason != SearchBoundaryReason.None || control.ProjectedBattleHpLost <= 0)
-            throw new InvalidOperationException("Refinement incumbent requires a complete native nonzero-loss control.");
+            throw new InvalidOperationException($"Refinement incumbent requires a complete native nonzero-loss control: "
+                + $"certified={root.CanCertifyRemainingHealing} knownPolicy={root.UsesKnownNativeHealingPolicy} "
+                + $"won={control.Snapshot.AllEnemiesDead} dead={control.Snapshot.PlayerDead} risk={control.Snapshot.HasRisk} "
+                + $"boundary={control.BoundaryReason} loss={control.ProjectedBattleHpLost}.");
 
         var messages = new ConcurrentQueue<string>();
         SearchDiagnosticsSink original = policy.Diagnostics;
@@ -50,7 +63,7 @@ internal sealed partial class UnattendedTestRunner
             original.Info(message);
         }, original.Debug, original.PathObserver) };
         SolverResult candidate = await Task.Run(() => CombatSearchCoordinator.Solve(root,
-            SolverDisplayNames.Capture(live), damage, observed, deadline.Token, null));
+            displayNames, damage, observed, deadline.Token, null));
         if (!messages.Any(message => message.Contains("BEAM_REFINEMENT_INCUMBENT ", StringComparison.Ordinal))
             || !candidate.Snapshot.AllEnemiesDead || candidate.Snapshot.PlayerDead || candidate.Snapshot.HasRisk
             || candidate.ProjectedBattleHpLost > control.ProjectedBattleHpLost
@@ -67,11 +80,12 @@ internal sealed partial class UnattendedTestRunner
 
         await InjectCardAsync(live, player, new() { CardId = "STRIKE_IRONCLAD", Pile = "Exhaust" });
         CombatRootSnapshot unknown = CombatRootSnapshot.Capture(live);
-        if (unknown.CanCertifyRemainingHealing
-            || CombatSearchCoordinator.BuildRefinementPrimarySearchIncumbent(unknown, policy, null, control) != null)
-            throw new InvalidOperationException("An unaudited native card must retain refinement's conservative fallback.");
-        _completedChecks.Add("RefinementIncumbent:NativeRoot:Dop2:StrictIncremental:ControlQuality:Inherited:GrowthGuard:UnknownExhaustCard:LiveIsolation");
-        await AssertOpeningPlanIncumbentAsync(live, player);
+        if (unknown.CanCertifyRemainingHealing || !unknown.UsesKnownNativeHealingPolicy
+            || CombatSearchCoordinator.BuildRefinementPrimarySearchIncumbent(unknown, policy, null, control) == null)
+            throw new InvalidOperationException("Known native cards outside the closed set must inherit the policy bound.");
+        _completedChecks.Add("RefinementIncumbent:NativeRoot:Dop2:StrictIncremental:ControlQuality:Inherited:GrowthGuard:KnownExhaustCard:LiveIsolation");
+        if (!knownSourcePolicy)
+            await AssertOpeningPlanIncumbentAsync(live, player);
     }
 
     private async Task AssertOpeningPlanIncumbentAsync(CombatState live, Player player)
@@ -83,6 +97,7 @@ internal sealed partial class UnattendedTestRunner
             await InjectCardAsync(live, player, new() { CardId = id, Pile = "Hand", UpgradeLevels = 1 });
         SetEnergy(player, 3);
         CombatRootSnapshot root = CombatRootSnapshot.Capture(live);
+        SolverDisplayNames displayNames = SolverDisplayNames.Capture(live);
         string before = ContinuationStamp.CaptureLive(live).StateText;
         var damage = BattleDamageTracker.Observe(live);
         var policy = SolverController.CaptureSearchPolicy(SolverSettings.Capture(), live, false, null) with
@@ -101,7 +116,7 @@ internal sealed partial class UnattendedTestRunner
         } };
         using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(35));
         SolverResult control = await Task.Run(() => CombatSearchCoordinator.Solve(root,
-            SolverDisplayNames.Capture(live), damage,
+            displayNames, damage,
             policy with { DisableOpeningPlanIncumbentForTesting = true }, deadline.Token, null));
         var messages = new ConcurrentQueue<string>();
         SearchDiagnosticsSink original = policy.Diagnostics;
@@ -111,7 +126,7 @@ internal sealed partial class UnattendedTestRunner
             original.Info(message);
         }, original.Debug, original.PathObserver) };
         SolverResult candidate = await Task.Run(() => CombatSearchCoordinator.Solve(root,
-            SolverDisplayNames.Capture(live), damage, observed, deadline.Token, null));
+            displayNames, damage, observed, deadline.Token, null));
         if (!root.CanCertifyRemainingHealing || !control.Snapshot.AllEnemiesDead
             || control.Snapshot.PlayerDead || control.Snapshot.HasRisk
             || !candidate.Snapshot.AllEnemiesDead || candidate.Snapshot.PlayerDead

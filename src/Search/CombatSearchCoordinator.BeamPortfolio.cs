@@ -10,7 +10,7 @@ internal static partial class CombatSearchCoordinator
         CombatRootSnapshot root, SearchPolicySnapshot policy,
         SolverPotionPolicy? memberPotionPolicyOverride, SolverResult incumbent)
         => !policy.DisableRefinementIncumbentForTesting
-            && root.CanCertifyRemainingHealing
+            && (root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy)
             && (memberPotionPolicyOverride ?? policy.PotionPolicy)
                 is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart
             && !policy.PotionStrategy.HasForcedDirectives

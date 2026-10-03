@@ -39,6 +39,18 @@ internal sealed partial class UnattendedTestRunner
             bool expectedCardPlayed = request.ExpectedPlayedCardId == null;
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
+            if (request.ScenarioId == "KNOWN-HEALING-POLICY")
+            {
+                runner.SetStage("known_healing_policy");
+                await runner.AssertKnownHealingPolicyAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "KNOWN-HEALING-MEMBERS")
+            {
+                runner.SetStage("known_healing_members");
+                await runner.AssertRefinementIncumbentAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId is "B015-T016-ORIGINAL-PREFIX" or "B015-T016-AFTERIMAGE-ROUTE")
             {
                 await runner.AssertB015OriginalPrefixAsync(combatState, player);
@@ -178,6 +190,12 @@ internal sealed partial class UnattendedTestRunner
             if (request.ScenarioId == "LAMP-INKY-SHIV")
             {
                 await runner.AssertLampInkyShivAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "LAMP-INKY-SHIV-ROUTE-CONTINUATION")
+            {
+                runner.SetStage("lamp_inky_shiv_route_continuation");
+                await runner.AssertLampInkyShivRouteContinuationAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId == "CARD-CLONE-IDENTITY-CONTRACT")

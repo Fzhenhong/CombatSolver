@@ -1,5 +1,22 @@
 # CombatSolver 测试清单
 
+## 六个正式 PR 与已知回血策略合并（2026-10-03）
+
+完整合并 #194/#197/#190/#199/#200（最新铁甲增量）/#198。Release 构建 0 警告/0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=246`，`git diff --check` 通过。详细审计、最终 head、维护者修正与前半批证据见 [本轮审计](refactoring/merge-audit-20261003.md)。RunStatisticsTests 通过，早期回合续搜离线合同通过 143 项断言。
+
+- `KNOWN-HEALING-MEMBERS` / `090c88d57b7f4be69bf078599e7b8f04` Passed：旧闭包证书 false、新策略 true 的含消耗区炼制药水原版根；DOP2、800 节点、三宽度成员、strict incremental，对照和候选质量不下降，实际收到 `BEAM_REFINEMENT_INCUMBENT`，成长/禁用规则、根与 live 隔离通过。原 fixture 被防御完全挡住而对照零损血，首次 Failed；诊断 run `e3793cf5cb5e486db819b576041b8687` 明确 `won=True/boundary=None/loss=0`，给敌人增加确定力量以形成有损血两回合边界后通过。修 fixture 不修改生产算法，不报告性能收益。
+- `IRON-GENERATION-HEALING` / `ce8ad1cbe030416a860eac7195684954` Passed：地狱之刃/多面手/Jackpot 原生四动作、所有原版零费池、未知消耗区狂宴、再生、未知附着/错误拥有者、完整原生状态/Fork/父分支/live/RNG。
+- `DISPLAY-NAME-SUMMON` / `8fed110bf2f847af90a3e92e307d5036` Passed：模型未声明的原生召唤槽位与两个同类实例显示名。
+- `PREDICTED-MONSTER-SCALING` / `028c53879b4c4c00917292cde2d295ee` Passed：NECROBINDER 原版单人根，预测 ToughEgg HP=17∈14..18，多人缩放调用 0，live 不变。
+- `DYNAMIC-VAR-BRIDGE` / `2c80d103e2394ed4955a29bb46cc3039` Passed：牌/Power 字段快路径与强制公开枚举的键、值引用和顺序一致，live 不变；实际跨版本兼容 Mod 环境未运行。
+- `LAMP-INKY-SHIV-ROUTE-CONTINUATION` / `ca12e6563178410d8a3165416b101528` Passed：审计发现 #197 新增方法没有接入 Executor，补上入口后首次实跑。原生墨染小刀来源身份、遗物触发与 T+1 的搜索缓存完整续用戳一致；这证明既有生产修复合同，不能把未接入的场景名按普通默认测试 Passed 视为本项通过。
+
+单请求超时 120 秒以内。没有重跑长战斗、29 根矩阵、可见 FPS/帧时间；B014 T015 仍未验证，#173 保持开放。
+
+最终 `KNOWN-HEALING-POLICY` / `5a3d63a682264b72a2fa2d4c1be694ca` Passed：补齐返回牌附件资格后的实际DLL保留已有再生/持有药水、NotYet/Feed、明确额度及 FrozenRoot/Fork/live/RNG；随机炼药没有潜在回血余量。末项带 `CleanupInstanceOnExit`，启动器清理整个 `.local/headless-instances/pr-audit-20261003-final`。Bash 门禁同步维护，本轮仅执行 Windows 门禁。
+
+来源复核后再次在最终实际DLL执行 `KNOWN-HEALING-POLICY` / `95a89d6861f84a83a62e12b1bea95f01` Passed：`DoomKillRelicProtected` 验证 BookRepairKnife 的已知灾厄击杀回血保留完整余量，旧根不受后来添加遗物影响；原有随机炼药/NotYet/Feed/持有药水与剂量/额度/Fork/live/RNG 断言全部通过。启动器成功删除 `.local/headless-instances/pr-audit-20261003-doom-heal`。`bash -n tools/verify-refactor-boundaries.sh` 通过，未执行 Linux 原生门禁。
+
 ## B016/T023 生成牌附魔来源与一次性遗物消费（2026-10-02）
 
 - 失败基线取自问题包 `21980d83adf740879ddf16d466f8c499`（0.47.0，原版小啃兽遭遇，`diagnostics/logs/combat/000.jsonl:197/199`）：第 2 回合续用对账报 `field=relicCounters expected={UNSETTLING_LAMP/0/0} actual={UNSETTLING_LAMP/1/0}` 与 `field=P[0] expected={<missing>} actual={1:WEAK_POWER=1/0[DamageDecrease=0.75,]}`。两处同源：墨染附魔的 OnPlay 镜像当时没有把生成卡实例作为卡来源，灯的 `BeforePowerAmountChanged` 拿不到 `cardSource`，既不翻倍虚弱也不标记已消费。

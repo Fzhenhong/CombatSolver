@@ -1364,8 +1364,11 @@ foreach ($closureComponent in @("PendingReturningCards", "AllCards", "EffectiveP
 if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot "src/Runtime/CombatRootSnapshot.cs") -SimpleMatch "CanCertifyRemainingHealingEnvironment(" -Quiet)) {
     $violations.Add("CombatRootSnapshot.cs: remaining-healing environment proof is not frozen at the root")
 }
-if (-not (Select-String -LiteralPath $beamRetentionFacadePath -SimpleMatch "root.CanCertifyRemainingHealing ? RemainingHealingPotential : null" -Quiet)) {
-    $violations.Add("${beamRetentionFacadePath}: remaining-healing pruning bypasses its root certificate")
+if (-not (Select-String -LiteralPath $beamRetentionFacadePath -SimpleMatch "root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy" -Quiet)) {
+    $violations.Add("${beamRetentionFacadePath}: healing pruning requires a frozen certificate or native-source policy")
+}
+if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot "src/Runtime/CombatRootSnapshot.cs") -SimpleMatch "CanUseKnownNativeHealingPolicy(" -Quiet)) {
+    $violations.Add("CombatRootSnapshot.cs: native healing policy eligibility must be frozen at the root")
 }
 $beamPhasesPath = Join-Path $searchRoot "CombatBeamSolver.Phases.cs"
 if (-not (Select-String -LiteralPath $beamPhasesPath -SimpleMatch "TightenPrimarySearchIncumbentAtTurnLayer(" -Quiet)) {

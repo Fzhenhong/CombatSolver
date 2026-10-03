@@ -1,5 +1,7 @@
 # CombatSolver 文档导航
 
+- [社区 PR 合并与已知回血策略审计](refactoring/merge-audit-20261003.md)：六个正式 PR 完整分支的审查、最小验证、多成员胜利界复用和未验证边界。
+
 - [B015后续证据](community/b015-follow-up.md)：T016余像前移失效目标回退、T018队列故障隔离，以及其余主题来源/原生对照边界。
 - [B015阶段一证据](community/b015-stage-one.md)：五主题分诊、T018统计消费者失败隔离及未验收边界。
 - [静默猎手基础根的生命界认证](performance/silent-recovery-bound-20261001.md)：窄范围来源证明、原生治疗旁路及两个固定根的工作量和评分尾键取舍。

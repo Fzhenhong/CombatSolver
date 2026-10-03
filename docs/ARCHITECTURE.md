@@ -1,5 +1,9 @@
 # CombatSolver 架构与职责地图
 
+`Engine/Common/DynamicVarSetAccess` 独占 DynamicVarSet 内部字典访问。当前构建经一次反射和缓存委托读取，字段缺失或类型变化走公开枚举；委托构建异常直接失败。生产消费者只读，写入桥用于测试夹具；Windows/Bash 门禁共同禁止其他文件直接引用 `._vars`。召唤敌人的显示槽位顺序由 `SolverDisplayNames.Capture` 在主线程从模型或场景 Marker 冻结，未知槽位消费预测阵容插入顺序。
+
+`StrategicHpRecoveryBound.KnownSources` 提供原版单人搜索的已知回血来源策略，资格在 `CombatRootSnapshot.UsesKnownNativeHealingPolicy` 冻结。它保留已有再生、持有的回血药水、确定战后回血，以及时候未到、狂宴、可重复遗物回血和保命资源；随机炼药尚未生成时不给额外回血余量，实际生成的药水仍从分支槽读取。该估计与封闭语义证书分开，二者取较紧值；它不宣称随机生成下的严格可达上界。所有 Beam 成员在共用 Retention 入口消费该策略，宽度组合及能力续搜也据此取得既有无药胜利界。各成员仍独占转置、前沿、快照和预算，成长、偷窃、强制用药等资格门保持原规则。
+
 `CombatPredictionHistory` 拥有模拟历史及六项累计值；单人身份在模拟器建立时冻结，三类 Fork 按值继承。`CombatHistoryCounterKey` 消费根冻结的读者依赖掩码，不维护第二份账本。测试构建逐事件核对独立全扫描。
 
 `SearchRunContext` 拥有转置表触顶观测，新增条目后记录首次触顶节点和峰值；缓存重建不清空这些观测。搜索结束才枚举前沿的标签数，输出两表合计标签与每条目分布。诊断不进入状态键、路线排序、准入或结果合同。

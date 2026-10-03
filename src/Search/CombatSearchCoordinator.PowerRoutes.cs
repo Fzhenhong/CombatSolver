@@ -302,7 +302,7 @@ internal static partial class CombatSearchCoordinator
                         // A known potion-free victory remains available to the caller.
                         // Only seed the existing bound where it is eligible in this member's
                         // policy; forced/exact potion layers keep their separate audit proof.
-                        PrimaryIncumbent = root.CanCertifyRemainingHealing
+                        PrimaryIncumbent = (root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy)
                             && (potionPolicyOverride ?? policy.PotionPolicy)
                                 is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart
                             && !policy.PotionStrategy.HasForcedDirectives

@@ -312,7 +312,8 @@ internal sealed partial class CombatBeamSolver
             out int pruned,
             _strategicBossHpRelief,
             root.HasOnlyPostCombatHealing,
-            root.CanCertifyRemainingHealing ? RemainingHealingPotential : null,
+            root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy
+                ? RemainingHealingPotential : null,
             out int certifiedHealingBoundPruned,
             allowTurnTieBound: !_strictHpBoundWithRelicTargets);
         _run.PrimaryIncumbentBranchesPruned += pruned;
@@ -385,8 +386,7 @@ internal sealed partial class CombatBeamSolver
     }
 
     /// <summary>
-    /// Best strategic HP result an unfinished node could still reach, so the incumbent bound never prunes a
-    /// branch that could still overtake it.
+    /// Remaining healing allowance for incumbent pruning under the frozen root policy.
     /// </summary>
     /// <remarks>
     /// Future damage cannot help: every point of it raises cumulative loss and can at most be healed back, so
@@ -395,17 +395,27 @@ internal sealed partial class CombatBeamSolver
     ///
     /// A certified remaining-healing environment supplies the baseline bound for each unfinished branch.
     /// A separately certified non-healing root may tighten that bound to its fixed post-combat relic heal.
-    /// Unknown roots retain the full HP headroom, including future card generation and repeated healing.
+    /// The known-native policy reserves materialized healing and recurring sources, while omitting
+    /// speculative random potion generation. Other roots retain the full HP headroom.
     /// </remarks>
     private int RemainingHealingPotential(SimulationSnapshot snapshot)
     {
         if (!snapshot.HasSimulator || snapshot.HasRisk)
             return int.MaxValue;
-        return StrategicHpRecoveryBound.RemainingHealingUpperBound(
-            (CombatPredictionSimulator)snapshot.Simulator, _player,
-            root.PostCombatRelicHeal.UnconditionalHeal,
-            includePotionHealing: !_forceAllPotionsDisabled,
-            maximumExplicitPotionUses: _maximumPotionUses);
+        int certifiedPotential = root.CanCertifyRemainingHealing
+            ? StrategicHpRecoveryBound.RemainingHealingUpperBound(
+                (CombatPredictionSimulator)snapshot.Simulator, _player,
+                root.PostCombatRelicHeal.UnconditionalHeal,
+                includePotionHealing: !_forceAllPotionsDisabled,
+                maximumExplicitPotionUses: _maximumPotionUses)
+            : int.MaxValue;
+        if (root.UsesKnownNativeHealingPolicy && certifiedPotential != 0)
+            return Math.Min(certifiedPotential, StrategicHpRecoveryBound.KnownNativeHealingPotential(
+                (CombatPredictionSimulator)snapshot.Simulator, _player,
+                root.PostCombatRelicHeal.UnconditionalHeal + root.PostCombatRelicHeal.WoundedHeal,
+                includePotionHealing: !_forceAllPotionsDisabled,
+                maximumExplicitPotionUses: _maximumPotionUses));
+        return certifiedPotential;
     }
 
     private static int StrategicHpLowerBound(

@@ -14,20 +14,20 @@ internal sealed partial class UnattendedTestRunner
     {
         string liveBefore = ContinuationStamp.CaptureLive(combat).StateText;
         CardModel source = ModelDb.Card<StrikeRegent>().ToMutable();
-        _ = source.DynamicVars;
+        DynamicVarSet variables = source.DynamicVars;
         if (NativeModelCloneConcurrency.CanCloneIndependently(source))
             throw new InvalidOperationException("Non-isolated clone bypassed the framework gate.");
         using (SimulationNotificationIsolation.Enter())
         {
             if (!NativeModelCloneConcurrency.CanCloneIndependently(source))
                 throw new InvalidOperationException("Fixture did not reach eligible native card cloning.");
-            DynamicVarSetAccess.RequireVars(source._dynamicVars!).Add("ConcurrencyFixture", new CloneConcurrencyVariable());
+            DynamicVarSetAccess.RequireVars(variables).Add("ConcurrencyFixture", new CloneConcurrencyVariable());
             try
             {
                 if (NativeModelCloneConcurrency.CanCloneIndependently(source))
                     throw new InvalidOperationException("Third-party dynamic variable bypassed the gate.");
             }
-            finally { DynamicVarSetAccess.RequireVars(source._dynamicVars).Remove("ConcurrencyFixture"); }
+            finally { DynamicVarSetAccess.RequireVars(variables).Remove("ConcurrencyFixture"); }
         }
 
         // Holding the real framework gate must not prevent two independent native
