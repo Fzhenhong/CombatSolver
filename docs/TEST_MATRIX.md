@@ -4577,3 +4577,17 @@ pwsh -NoProfile -File tools\run-unattended-test.ps1 -ScenarioId MONSTER-MOVES-BA
 | Search结构门禁 | Passed | 最终交付分支REFACTOR_BOUNDARIES_OK search_files=243。 |
 
 [逐次范围与失败尝试](performance/regent-potion-cap-bound-research-20261003.json)。
+
+### 2026-10-03：铁甲巨型千足虫生成闭包 C59
+
+| 检查 | 状态 | 范围 |
+|---|---|---|
+| 最终Release | Passed | 12.75秒、0警告/错误；最终v3DLL用于配对、哨兵与完整原生部署。 |
+| IRON-GENERATION-HEALING | Passed | b793021c330843918cf511dc63efd77e；四张实际原生出牌、完整状态/Fork/RNG/旧根隔离，活动造牌及未知消耗区/再生/错误目标/附着边界。 |
+| IRON-FROZEN-GENERATION-DEPLOY | Passed | ac76c56b30c14ad486b8da55f56d3c03；完整根及默认进度冻结，初始37战损/0瓶/T5，原生T5获胜/战后49HP/意外重算0。 |
+| 完整DOP16 A/B/B/A | Passed | 4.021倍/保守3.904倍、RSS保守0.89431；43→37战损，0瓶/T5；根/政策/预算相同。 |
+| 三个最终哨兵 | Passed于原始和PR199基线 | 储君9.078/铁甲首领18.941/巨大牌组208.250秒；三个质量同C58；巨大牌组比C58单样本RSS+18.5%与耗时+9.7%保留。 |
+
+| 最终来源、结构与本地部署 | Passed | 构建源哈希相同、Search门禁245；五文件复制成功，复用最终v3DLL，0.47.3无版本变化。 |
+
+[完整范围](performance/iron-generation-closure-research-20261003.json)。最终C59未重新执行29根；C58对应版本的29根证据保留，不转述为C59全量通过。

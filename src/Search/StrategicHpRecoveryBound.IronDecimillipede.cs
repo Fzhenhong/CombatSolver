@@ -1,13 +1,14 @@
+using System.Collections.Frozen;
 using CombatSolver.Engine.Common;
 using CombatSolver.Engine.InCombat.Simulation;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.CardPools;
+using MegaCrit.Sts2.Core.Models.Orbs;
 using MegaCrit.Sts2.Core.Models.Characters;
 using MegaCrit.Sts2.Core.Models.Monsters;
-using MegaCrit.Sts2.Core.Models.Orbs;
 using MegaCrit.Sts2.Core.Models.Potions;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Models.Relics;
@@ -16,28 +17,52 @@ namespace CombatSolver;
 
 internal static partial class StrategicHpRecoveryBound
 {
-    private static bool IsNativeRegentDecimillipedeEnvironment(SimulatedCombatState combat, Player player)
-        => player.Character.GetType() == typeof(Regent) && combat.Players.Count == 1
+    // Reviewed initial Ironclad cards. Generated cards can retrieve Exhaust, so
+    // unknown initial cards are rejected permanently even in that pile. The
+    // broader generated closure is certified separately at the root.
+    private static readonly FrozenSet<Type> IronDecimillipedeSafeCards = new Type[]
+    {
+        typeof(StrikeIronclad), typeof(DefendIronclad), typeof(Bash), typeof(Headbutt),
+        typeof(Bully), typeof(StoneArmor), typeof(Taunt), typeof(BurningPact),
+        typeof(Mangle), typeof(Barricade), typeof(PerfectedStrike), typeof(TwinStrike),
+        typeof(Rampage), typeof(Thunderclap), typeof(Anger), typeof(DramaticEntrance),
+        typeof(HowlFromBeyond), typeof(Offering), typeof(Rage), typeof(Bloodletting),
+        typeof(BattleTrance), typeof(Brand), typeof(PactsEnd), typeof(PrimalForce),
+        typeof(Spite), typeof(GiantRock),
+    }.ToFrozenSet();
+
+    private static bool IsIronDecimillipedeSafeCard(Type type)
+        => IronDecimillipedeSafeCards.Contains(type) || RemainingSafeCards.Contains(type);
+
+    private static bool IsIronDecimillipedeGenerator(Type type)
+        => type == typeof(InfernalBlade) || type == typeof(JackOfAllTrades)
+            || type == typeof(Jackpot);
+
+    private static bool IsIronDecimillipedeRelic(RelicModel relic)
+        => relic.GetType() == typeof(BurningBlood) || relic.GetType() == typeof(IceCream)
+            || relic.GetType() == typeof(TungstenRod) || relic.GetType() == typeof(Kunai);
+
+    private static bool IsNativeIronDecimillipedeEnvironment(SimulatedCombatState combat, Player player)
+        => player.Character.GetType() == typeof(Ironclad) && combat.Players.Count == 1
             && combat.KnownEnemies.Count > 0
             && combat.KnownEnemies.All(enemy => enemy.Monster?.GetType() == typeof(DecimillipedeSegmentFront)
                 || enemy.Monster?.GetType() == typeof(DecimillipedeSegmentMiddle)
                 || enemy.Monster?.GetType() == typeof(DecimillipedeSegmentBack));
 
-    internal static bool CanCertifyRegentDecimillipedeHealingEnvironment(
+    internal static bool CanCertifyIronDecimillipedeHealingEnvironment(
         CombatPredictionSimulator simulator, Player player)
     {
         SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
-        return IsNativeRegentDecimillipedeEnvironment(combat, player)
+        return IsNativeIronDecimillipedeEnvironment(combat, player)
             && combat.Modifiers.Count == 0 && combat.RootRunModSubscriberCount == 0
             && combat.RootCombatModSubscriberCount == 0 && !combat.RootHasBaseLibCardModifiers
             && combat.AdaptedOnPlay is null
             && simulator.State.GetPlayerCombatState(player).OrbQueue.Orbs.Count == 0
+            && combat.RelicsOf(player).All(IsIronDecimillipedeRelic)
             && simulator.State.GetPlayerCombatState(player).AllCards.All(card =>
                 HasCertifiedRemainingAttachments(card.Preview)
-                && (RemainingSafeCards.Contains(card.Preview.GetType())
-                    || card.Preview.GetType() == typeof(BundleOfJoy)
-                    || card.Preview.GetType() == typeof(Entropy)))
-            && combat.RelicsOf(player).All(IsRegentDecimillipedeRelic)
+                && (IsIronDecimillipedeSafeCard(card.Preview.GetType())
+                    || IsIronDecimillipedeGenerator(card.Preview.GetType())))
             && HasCertifiedNativeNonHealingGenerationPool(ModelDb.CardPool<RegentCardPool>())
             && HasCertifiedNativeNonHealingGenerationPool(ModelDb.CardPool<ColorlessCardPool>())
             && HasCertifiedNativeNonHealingGenerationPool(ModelDb.CardPool<IroncladCardPool>())
@@ -46,35 +71,25 @@ internal static partial class StrategicHpRecoveryBound
             && HasCertifiedNativeNonHealingGenerationPool(ModelDb.CardPool<DefectCardPool>())
             && HasCertifiedNativeNonHealingGenerationPool(ModelDb.CardPool<StatusCardPool>())
             && HasCertifiedNativeNonHealingGenerationPool(ModelDb.CardPool<CurseCardPool>())
-            // Reject an unknown initial source permanently, even if it can later vanish.
-            && RegentDecimillipedeHealingUpperBound(simulator, player, 0) != int.MaxValue;
+            && IronDecimillipedeHealingUpperBound(simulator, player, 0) != int.MaxValue;
     }
 
-    private static bool IsRegentDecimillipedeRelic(RelicModel relic)
-        => relic.GetType() == typeof(DivineRight) || relic.GetType() == typeof(Girya)
-            || relic.GetType() == typeof(OldCoin) || relic.GetType() == typeof(VitruvianMinion);
-
-    internal static int RegentDecimillipedeHealingUpperBound(
-        CombatPredictionSimulator simulator, Player player, int postCombatHeal,
-        bool includePotionHealing = true, int? maximumExplicitPotionUses = null)
+    internal static int IronDecimillipedeHealingUpperBound(
+        CombatPredictionSimulator simulator, Player player, int postCombatHeal)
     {
         if (simulator.HasPendingChoice)
             return int.MaxValue;
         SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
-        // PotionUses is the branch-owned log used by normal manual replay. In this
-        // single-player closure it counts the same explicit uses as the solver cap;
-        // automatic consumption does not spend that cap. Do not remove active Regen.
-        if (maximumExplicitPotionUses is { } maximum
-            && combat.PotionUses.Count(static use => !use.Automatic) >= maximum)
-            includePotionHealing = false;
-        var state = simulator.State.GetPlayerCombatState(player);
-        bool SafeCard(PredictedCard card)
+        if (!combat.RelicsOf(player).All(IsIronDecimillipedeRelic))
+            return int.MaxValue;
+        bool SafeRemainingCard(PredictedCard card)
             => HasCertifiedRemainingAttachments(card.Preview)
                 && !GrowthValues.HasTarget(card.Preview)
-                && (RemainingSafeCards.Contains(card.Preview.GetType())
+                && (IsIronDecimillipedeSafeCard(card.Preview.GetType())
                     || NativeNonHealingGeneratedCards.Contains(card.Preview.GetType()));
-        if (!combat.RelicsOf(player).All(IsRegentDecimillipedeRelic)
-            || !state.AllCards.All(SafeCard) || !combat.PendingReturningCards.All(SafeCard)
+        var state = simulator.State.GetPlayerCombatState(player);
+        if (!state.AllCards.All(SafeRemainingCard)
+            || !combat.PendingReturningCards.All(SafeRemainingCard)
             || combat.Allies.Any(ally => ally.Player is null && ally.Monster?.GetType() != typeof(Osty))
             || state.OrbQueue.Orbs.Any(orb => orb.GetType() != typeof(LightningOrb)
                 && orb.GetType() != typeof(FrostOrb) && orb.GetType() != typeof(DarkOrb)
@@ -91,7 +106,7 @@ internal static partial class StrategicHpRecoveryBound
             }
             else if (type == typeof(ReattachPower))
             {
-                // Native Decimillipede revival restores only an enemy segment.
+                // The reviewed revival heals only an owning native segment.
                 if (power.Owner.Player is not null || !combat.KnownEnemies.Contains(power.Owner))
                     return int.MaxValue;
             }
@@ -105,14 +120,7 @@ internal static partial class StrategicHpRecoveryBound
             PotionModel? potion = combat.GetPotionAtSlot(player, slot);
             if (potion is null || !combat.IsPotionAvailable(player, slot))
                 continue;
-            if (potion.GetType() == typeof(RegenPotion))
-            {
-                // Omit this dose only when explicit use is forbidden or the branch
-                // has spent its allowance. Existing RegenPower continues to heal.
-                if (includePotionHealing)
-                    regen += Math.Max(0, potion.DynamicVars["RegenPower"].IntValue);
-            }
-            else if (potion.GetType() != typeof(HeartOfIron))
+            if (potion.GetType() != typeof(BeetleJuice) && potion.GetType() != typeof(GamblersBrew))
                 return int.MaxValue;
         }
         return RegenerationHealingUpperBound(regen, postCombatHeal);

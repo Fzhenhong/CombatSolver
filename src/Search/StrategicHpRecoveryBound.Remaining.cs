@@ -92,6 +92,8 @@ internal static partial class StrategicHpRecoveryBound
         if (player.Character.GetType() == typeof(MegaCrit.Sts2.Core.Models.Characters.Defect))
             return CanCertifyDefectPrismHealingEnvironment(simulator, player);
         SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
+        if (IsNativeIronDecimillipedeEnvironment(combat, player))
+            return CanCertifyIronDecimillipedeHealingEnvironment(simulator, player);
         if (IsNativeRegentDecimillipedeEnvironment(combat, player))
             return CanCertifyRegentDecimillipedeHealingEnvironment(simulator, player);
         bool nativeLouse = IsNativeRegentLouseEnvironment(combat, player);
@@ -140,6 +142,8 @@ internal static partial class StrategicHpRecoveryBound
         if (simulator.HasPendingChoice)
             return int.MaxValue;
         SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
+        if (IsNativeIronDecimillipedeEnvironment(combat, player))
+            return IronDecimillipedeHealingUpperBound(simulator, player, postCombatHeal);
         if (IsNativeRegentDecimillipedeEnvironment(combat, player))
             return RegentDecimillipedeHealingUpperBound(simulator, player, postCombatHeal,
                 includePotionHealing, maximumExplicitPotionUses);

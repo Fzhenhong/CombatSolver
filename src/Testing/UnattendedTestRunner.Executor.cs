@@ -796,6 +796,13 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "IRON-GENERATION-HEALING")
+            {
+                runner.SetStage("iron_generation_healing");
+                await runner.AssertIronRemainingHealingAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "REGENT-POTION-CAP-BOUND")
             {
                 runner.SetStage("regent_potion_cap_bound");
@@ -1169,8 +1176,8 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
-            if (request.ScenarioId == "REGENT-FROZEN-POTION-CAP-DEPLOY")
-                await runner.PrepareRegentFrozenPotionCapDeploymentAsync(combatState, player);
+            if (request.ScenarioId is "REGENT-FROZEN-POTION-CAP-DEPLOY" or "IRON-FROZEN-GENERATION-DEPLOY")
+                await runner.PrepareFrozenHealingBoundDeploymentAsync(combatState, player);
 
             runner.SetStage("full_auto");
             FastModeType? fastModeBeforeDeployment = ApplySettingsOverrides();
