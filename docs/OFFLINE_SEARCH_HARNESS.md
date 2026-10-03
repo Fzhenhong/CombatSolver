@@ -60,9 +60,9 @@ dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHa
 
 启用阶段测量时，`BEAM_WIDTH_PORTFOLIO_MEMBER_START` 在进入成员前记录实际运行序号、宽度、次段/基础分/能力承诺身份，以及有效节点/时间额度。`run_index` 只计算实际运行的成员，不能当作包含跳过项的最终成员表索引。即使后续成员超时，配合同步诊断也可识别正在执行的成员；不能仅凭“正在精炼路线”的进度文案推断策略身份。
 
-启用 `OFFLINE_HARNESS_INFUSED_CORE_CHECKS=1` 并使用 `--character DEFECT --milestone M1` 可运行注能核心的生产 Hook 诊断：从空球队列检查首回合生成、后续回合不重复、参与者条件、4/9 数值及 Fork 隔离，结果写入 `infused-core-checks.json`。该入口只修改宿主内的测试战斗；它不经过原生工具箱页面，不能替代 `coverage/unattended/initial-toolbox-infused-core.json` 的原生准备状态验收。
+启用 `OFFLINE_HARNESS_INFUSED_CORE_CHECKS=1` 并使用 `--character DEFECT --milestone M1` 可运行注能核心的生产 Hook 诊断：从空球队列检查首回合生成、后续回合不重复、参与者条件、4/9 数值及 Fork 隔离，结果写入 `infused-core-checks.json`。该入口只修改宿主内的测试战斗；它不经过原生工具箱页面，不能替代 `coverage/fixtures/scenarios/state/initial-toolbox-infused-core.json` 的原生准备状态验收。
 
-启用 `OFFLINE_HARNESS_FIXED_PREFIX_CONTINUATIONS=1` 并以 `coverage/unattended/generic-cross-turn-hidden-buffer-positive-v0111.json` 为 `--request`，使用 `--dop 1 --search-mode Evaluate` 且关闭NoGC／增量验证，可运行4／8／17回合完整固定前缀基准。每根预热一次、测量三次生产 `Solve`，计时外用独立前缀重放对账完整续用戳，输出 `fixed-prefix-continuations.json`。它只度量人工长路线的前缀建立与收尾，不代表普通搜索或原生正确性；用 `OFFLINE_HARNESS_COMBATSOLVER_DLL` 交错切换基线／候选，完整比较根、政策和 `annotatedResult`，见[本轮证据](archive/performance/fixed-dop-20260927.md)。
+启用 `OFFLINE_HARNESS_FIXED_PREFIX_CONTINUATIONS=1` 并以 `coverage/fixtures/search/generic-cross-turn-hidden-buffer-positive-v0111.json` 为 `--request`，使用 `--dop 1 --search-mode Evaluate` 且关闭NoGC／增量验证，可运行4／8／17回合完整固定前缀基准。每根预热一次、测量三次生产 `Solve`，计时外用独立前缀重放对账完整续用戳，输出 `fixed-prefix-continuations.json`。它只度量人工长路线的前缀建立与收尾，不代表普通搜索或原生正确性；用 `OFFLINE_HARNESS_COMBATSOLVER_DLL` 交错切换基线／候选，完整比较根、政策和 `annotatedResult`，见[本轮证据](archive/performance/fixed-dop-20260927.md)。
 
 纯 ETC 外部生命界合同可运行 `dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll --check-early-turn-continuation-bound`，直接调用生产门禁及剪枝谓词，不建游戏状态。当前覆盖 143 条断言。普通 ETC 诊断起始行新增 `incumbent_bound=eligible_strict_hp`，已完成续搜行输出 `incumbent_hp`（`-` 表示旁路）及 `incumbent_pruned`；后者包含原有内部生命界剪枝，不能直接视为外部界的净收益。新版本另输出 `incumbent_certified_healing_bound_pruned`，只归因于根认证治疗上界的边际剪枝；根捕获行记录认证状态、首个拒绝原因和固定战后治疗量。两个计数的口径不同，前者是成员内合计，后者只统计认证上界相对完整缺血余量增加剪掉的候选节点。它不是所有阶段的总剪枝量或节省的节点数。固定根对照及实际适用范围见 [测试矩阵](archive/testing/volume-01.md#早期回合探索的外部生命界2026-10-01)。
 

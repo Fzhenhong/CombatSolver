@@ -4,7 +4,7 @@
 
 ## 采样发现
 
-17份既有 `coverage/novelty-search/{dev-*,holdout-*}.json` 开局，High、Beam48、500节点、DOP1、Evaluate、30秒软上限。观察器只跟踪自然到达转置准入的动作序列，不另行强制执行交换次序，不改变准入结果。
+17份既有 `coverage/corpora/novelty/{dev-*,holdout-*}.json` 开局，High、Beam48、500节点、DOP1、Evaluate、30秒软上限。观察器只跟踪自然到达转置准入的动作序列，不另行强制执行交换次序，不改变准入结果。
 
 累计36,524次候选分类、2,175次卡牌转置拒绝。观察到1,144组反向两步序列，其中366组状态指纹和六项转置成本标签相同。各求解器的20,000个两步索引上限均未触及。
 
@@ -41,7 +41,7 @@ OFFLINE_HARNESS_EQUIVALENCE_PROBE=1 \
 OFFLINE_HARNESS_COMBATSOLVER_DLL=<baseline-or-candidate.dll> \
 DOTNET_TieredCompilation=0 \
 dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
-  --request coverage/unattended/duplicate-choice-pruning-dense-20260929.json \
+  --request coverage/fixtures/scenarios/choices/duplicate-choice-pruning-dense-20260929.json \
   --out <out> --label equivalence-probe --profile High \
   --beam 48 --nodes 500 --dop 1 --budget-ms 30000 --search-mode Evaluate
 ```

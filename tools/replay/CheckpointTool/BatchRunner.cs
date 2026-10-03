@@ -221,7 +221,7 @@ internal static class BatchRunner
         ProcessStartInfo start = new(windows ? "pwsh" : "bash")
         { WorkingDirectory = project, UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
         if (windows) { start.ArgumentList.Add("-NoProfile"); start.ArgumentList.Add("-File"); }
-        start.ArgumentList.Add(Path.Combine(project, "tools", windows ? "run-unattended-test.ps1" : "run-unattended-test.sh"));
+        start.ArgumentList.Add(Path.Combine(project, "tools", "testing", windows ? "run-unattended-test.ps1" : "run-unattended-test.sh"));
         void Arg(string ps, string sh, string? value = null) { start.ArgumentList.Add(windows ? "-" + ps : "--" + sh); if (value != null) start.ArgumentList.Add(value); }
         if (options.TryGetValue("--game-root", out string? game)) Arg("Sts2GameRoot", "sts2-game-root", Path.GetFullPath(game));
         if (options.TryGetValue("--ritsu-root", out string? ritsu)) Arg("RitsuWorkshopRoot", "ritsu-workshop-root", Path.GetFullPath(ritsu));
@@ -311,7 +311,7 @@ internal static class BatchRunner
         JsonObject result = new()
         {
             ["tool"] = BatchInputs.HashFile(typeof(BatchRunner).Assembly.Location),
-            ["launcher"] = BatchInputs.HashFile(Path.Combine(project, "tools", OperatingSystem.IsWindows() ? "run-unattended-test.ps1" : "run-unattended-test.sh")),
+            ["launcher"] = BatchInputs.HashFile(Path.Combine(project, "tools", "testing", OperatingSystem.IsWindows() ? "run-unattended-test.ps1" : "run-unattended-test.sh")),
             ["platform"] = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
         };
         if (mode == "Preflight") return result;

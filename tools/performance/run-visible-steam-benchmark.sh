@@ -194,7 +194,7 @@ fi
 mkdir -p -- "$data_dir"
 data_dir="$(realpath -e -- "$data_dir")"
 
-run_snapshot_path="$(realpath -e -- "$repository_root/coverage/unattended/mecha-knight-memory-run-snapshot.json")"
+run_snapshot_path="$(realpath -e -- "$repository_root/coverage/fixtures/regressions/snapshots/mecha-knight-memory-run-snapshot.json")"
 request_path="$data_dir/combat_solver_test_request.json"
 result_path="$data_dir/combat_solver_test_result.json"
 
@@ -398,7 +398,7 @@ jq -n \
 if [[ "$logging_fixture" == true ]]; then
     jq --arg runId "$run_id" --argjson timeout "$timeout_seconds" \
         '. + {runId: $runId, timeoutSeconds: $timeout}' \
-        "$repository_root/coverage/unattended/logging-short-combat.json" >"$request_temp_path"
+        "$repository_root/coverage/fixtures/runtime/logging-short-combat.json" >"$request_temp_path"
 fi
 if [[ -n "$request_fixture_path" ]]; then
     jq --arg runId "$run_id" --argjson timeout "$timeout_seconds" \

@@ -7,7 +7,7 @@
 #   COMBATSOLVER_STS2_APP     游戏包路径（默认 Steam 库里的 SlayTheSpire2.app）
 #   COMBATSOLVER_RITSU_DIR    RitsuLib 工坊目录（默认 workshop/content/2868840/3747602295）
 #   COMBATSOLVER_HEADLESS_MAC 实例根（默认仓库 .local/headless-mac）
-# 请求 JSON 与 Windows/Linux 入口同形（见 coverage/unattended/*.json）；结果打印 status/error/completedChecks。
+# 请求 JSON 与 Windows/Linux 入口同形（见 coverage/**/*.json）；结果打印 status/error/completedChecks。
 set -euo pipefail
 setopt nullglob
 request_src="$1"; timeout_sec="${2:-180}"

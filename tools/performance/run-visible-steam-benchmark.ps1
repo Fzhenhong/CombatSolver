@@ -151,7 +151,7 @@ $request = [ordered]@{
 
 $gameProcess = $null
 if ($LoggingFixture) {
-    $request = Get-Content -LiteralPath (Join-Path $repositoryRoot 'coverage/unattended/logging-short-combat.json') -Raw | ConvertFrom-Json -AsHashtable
+    $request = Get-Content -LiteralPath (Join-Path $repositoryRoot 'coverage/fixtures/runtime/logging-short-combat.json') -Raw | ConvertFrom-Json -AsHashtable
     $request.runId = $runId
     $request.timeoutSeconds = $TimeoutSeconds
 }

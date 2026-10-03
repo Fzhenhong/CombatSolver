@@ -327,32 +327,32 @@ v30 SearchPolicy 与下列8项最小搜索夹具在同一 headless 进程复用�
 
 | Fixture | 主要边界 |
 | --- | --- |
-| `coverage/unattended/after-stars-gained-black-hole-glow-0111.json` | 通用星能增加 Hook 分发、黑洞单次伤害与完整状态严格差分 |
-| `coverage/unattended/generic-loop-letter-opener-hidden-phase-v0111.json` | 同牌堆形状的隐藏相位收益、DOP 等价 |
-| `coverage/unattended/generic-cross-turn-hidden-buffer-positive-v0111.json` | 晚于基础观察期兑现的精确隐藏状态、DOP 等价 |
-| `coverage/unattended/generic-cross-turn-stagnant-control-v0111.json` | 真正无收益跨回合路线有界停止 |
-| `coverage/unattended/generic-loop-cross-turn-purity-pillage-positive-v0111.json` | 先净化牌库、下一回合兑现的跨回合收益 |
-| `coverage/unattended/generic-loop-rampage-dynamic-growth-positive-v0111.json` | 动态成长循环、32 动作路线与 DOP 等价 |
-| `coverage/unattended/generic-final-quality-zero-loss-over-faster-blood-sale-v0111.json` | 低战损优先；同战损才比较结束回合 |
-| `coverage/unattended/generic-smart-potion-same-loss-faster-v0111.json` | Smart 付费药未省足战略 HP 时保留无药路线 |
-| `coverage/unattended/generic-smart-potion-three-layer-progress-v0111.json` | 零损终局不启动无收益的付费药梯度 |
-| `coverage/unattended/generic-loop-speedster-discard-draw-positive-v0111.json` | 多动作抽弃循环、洗牌与零损击杀 |
-| `coverage/unattended/generic-loop-speedster-startup-positive-v0111.json` | 先建立能力再进入循环 |
-| `coverage/unattended/generic-loop-hellraiser-pillage-bloodletting-positive-v0111.json` | 卖血/能量启动后兑现 |
-| `coverage/unattended/generic-loop-hellraiser-startup-positive-v0111.json` | 先打能力牌再启动 |
-| `coverage/unattended/generic-loop-hellraiser-pillage-defend-breaker-v0111.json` | 循环被非攻击抽牌打断并跨回合求解 |
-| `coverage/unattended/generic-loop-pale-blue-dot-threshold-cross-turn-v0111.json` | 阈值状态、药水入口与跨回合/出口收益 |
-| `coverage/unattended/generic-loop-regent-star-energy-positive-v0111.json` | 星能与能量循环 |
-| `coverage/unattended/generic-loop-regent-black-hole-startup-positive-v0111.json` | 储君能力启动与循环 |
-| `coverage/unattended/generic-loop-hellraiser-pillage-single-current-v0111.json` | 当前规则单张掠夺的自动转移内连锁；不是数学无限 |
-| `coverage/unattended/generic-loop-hellraiser-pommel-finite-current-v0111.json` | 当前规则有限链负例；不得误判为 T1 无限 |
-| `coverage/unattended/generic-loop-bloodletting-double-pommel-quality-v0111.json` | 卖血启动质量排序；低战损优先于少回合 |
-| `coverage/unattended/generic-loop-silent-prepared-tactician-current-v0111.json` | 当前规则抽弃重复链 |
-| `coverage/unattended/generic-loop-defect-all-for-one-hologram-current-v0111.json` | 当前规则取回重复链；NodeLimit 内有解 |
-| `coverage/unattended/generic-loop-regent-particle-wall-make-it-so-current-v0111.json` | 当前规则技能/格挡重复链；NodeLimit 内有解 |
-| `coverage/unattended/generic-loop-regent-sealed-throne-black-hole-current-v0111.json` | 当前规则双资源重复链 |
+| `coverage/fixtures/powers/after-stars-gained-black-hole-glow-0111.json` | 通用星能增加 Hook 分发、黑洞单次伤害与完整状态严格差分 |
+| `coverage/fixtures/search/generic-loop-letter-opener-hidden-phase-v0111.json` | 同牌堆形状的隐藏相位收益、DOP 等价 |
+| `coverage/fixtures/search/generic-cross-turn-hidden-buffer-positive-v0111.json` | 晚于基础观察期兑现的精确隐藏状态、DOP 等价 |
+| `coverage/fixtures/search/generic-cross-turn-stagnant-control-v0111.json` | 真正无收益跨回合路线有界停止 |
+| `coverage/fixtures/search/generic-loop-cross-turn-purity-pillage-positive-v0111.json` | 先净化牌库、下一回合兑现的跨回合收益 |
+| `coverage/fixtures/search/generic-loop-rampage-dynamic-growth-positive-v0111.json` | 动态成长循环、32 动作路线与 DOP 等价 |
+| `coverage/fixtures/search/generic-final-quality-zero-loss-over-faster-blood-sale-v0111.json` | 低战损优先；同战损才比较结束回合 |
+| `coverage/fixtures/search/generic-smart-potion-same-loss-faster-v0111.json` | Smart 付费药未省足战略 HP 时保留无药路线 |
+| `coverage/fixtures/search/generic-smart-potion-three-layer-progress-v0111.json` | 零损终局不启动无收益的付费药梯度 |
+| `coverage/fixtures/search/generic-loop-speedster-discard-draw-positive-v0111.json` | 多动作抽弃循环、洗牌与零损击杀 |
+| `coverage/fixtures/search/generic-loop-speedster-startup-positive-v0111.json` | 先建立能力再进入循环 |
+| `coverage/fixtures/search/generic-loop-hellraiser-pillage-bloodletting-positive-v0111.json` | 卖血/能量启动后兑现 |
+| `coverage/fixtures/search/generic-loop-hellraiser-startup-positive-v0111.json` | 先打能力牌再启动 |
+| `coverage/fixtures/search/generic-loop-hellraiser-pillage-defend-breaker-v0111.json` | 循环被非攻击抽牌打断并跨回合求解 |
+| `coverage/fixtures/search/generic-loop-pale-blue-dot-threshold-cross-turn-v0111.json` | 阈值状态、药水入口与跨回合/出口收益 |
+| `coverage/fixtures/search/generic-loop-regent-star-energy-positive-v0111.json` | 星能与能量循环 |
+| `coverage/fixtures/search/generic-loop-regent-black-hole-startup-positive-v0111.json` | 储君能力启动与循环 |
+| `coverage/fixtures/search/generic-loop-hellraiser-pillage-single-current-v0111.json` | 当前规则单张掠夺的自动转移内连锁；不是数学无限 |
+| `coverage/fixtures/search/generic-loop-hellraiser-pommel-finite-current-v0111.json` | 当前规则有限链负例；不得误判为 T1 无限 |
+| `coverage/fixtures/search/generic-loop-bloodletting-double-pommel-quality-v0111.json` | 卖血启动质量排序；低战损优先于少回合 |
+| `coverage/fixtures/search/generic-loop-silent-prepared-tactician-current-v0111.json` | 当前规则抽弃重复链 |
+| `coverage/fixtures/search/generic-loop-defect-all-for-one-hologram-current-v0111.json` | 当前规则取回重复链；NodeLimit 内有解 |
+| `coverage/fixtures/search/generic-loop-regent-particle-wall-make-it-so-current-v0111.json` | 当前规则技能/格挡重复链；NodeLimit 内有解 |
+| `coverage/fixtures/search/generic-loop-regent-sealed-throne-black-hole-current-v0111.json` | 当前规则双资源重复链 |
 
-`coverage/unattended/generic-loop-hellraiser-pillage-bloodletting-cards.json` 只是可复用牌堆输入，不是独立场景。未在上表列出 runId 的 fixture 仍须复测，不能因文件存在就宣称当前工作树通过。
+`coverage/fixtures/search/generic-loop-hellraiser-pillage-bloodletting-cards.json` 只是可复用牌堆输入，不是独立场景。未在上表列出 runId 的 fixture 仍须复测，不能因文件存在就宣称当前工作树通过。
 
 ## 0.27.2（已发布）
 

@@ -19,7 +19,7 @@
 - TraceEvent 3.1.23读取事件；`/proc/PID/task/TID/stat`每250ms记录线程用户态/内核态CPU；FlameGraph输出独立SVG。
 - 工具解压/安装到`.local/profilers/`，无系统权限调整、无生产DLL部署。
 
-沿用死灵法师药水投影输入：38张牌、20件遗物、2瓶药水，要求至少用一瓶，`AEONGLASS_BOSS`、A10/Act2、526敌HP、41/76玩家HP。可移植输入为`coverage/unattended/search-performance-necrobinder-projected-{run-cards,relics,potions}.json`。两次请求均先在独立进程做短搜预热，再运行正常极高配置；DOP8、NoGC16GB、详细诊断/增量验证关闭、120秒上限、首个结果停止。
+沿用死灵法师药水投影输入：38张牌、20件遗物、2瓶药水，要求至少用一瓶，`AEONGLASS_BOSS`、A10/Act2、526敌HP、41/76玩家HP。可移植输入为`coverage/fixtures/search/search-performance-necrobinder-projected-{run-cards,relics,potions}.json`。两次请求均先在独立进程做短搜预热，再运行正常极高配置；DOP8、NoGC16GB、详细诊断/增量验证关闭、120秒上限、首个结果停止。
 
 采样产物固定为`17abf8b`加SwordSage根值修复，不含索引原型或跳过归一化的候选。第一次CPU采集的DWARF展开和JIT时钟配置不足，仅保留其CPU叶地址作为辅助证据；同一次GC/锁/分配trace可正常解析。随后只补采CPU，使用`perf record -k 1 --call-graph fp`、`DOTNET_PerfMapEnabled=1`、`DOTNET_EnableWriteXorExecute=0`及`perf inject --jit`解析托管调用链。诊断环境不写入生产设置，两次采样耗时不作优化A/B。
 

@@ -72,22 +72,22 @@
 
 ## 复现
 
-可见原生请求：`coverage/unattended/performance-veryhigh-mecha-native.json`。它使用明确的战前牌组与固定种子，独立于旧版本的部分跑局存档。旧 `mecha-knight-memory-run-snapshot.json` 在本轮上游建局时缺少角色 ID，不能当作本轮已通过场景。
+可见原生请求：`coverage/fixtures/runtime/performance-veryhigh-mecha-native.json`。它使用明确的战前牌组与固定种子，独立于旧版本的部分跑局存档。旧 `mecha-knight-memory-run-snapshot.json` 在本轮上游建局时缺少角色 ID，不能当作本轮已通过场景。
 
 ```bash
 dotnet run --project tools/testing/checks/ReachableHandPotentialChecks -c Release
-./tools/performance/run-visible-steam-benchmark.sh --request-fixture-path coverage/unattended/performance-veryhigh-mecha-native.json --timeout-seconds 120 --evidence-directory .local/veryhigh-visible
+./tools/performance/run-visible-steam-benchmark.sh --request-fixture-path coverage/fixtures/runtime/performance-veryhigh-mecha-native.json --timeout-seconds 120 --evidence-directory .local/veryhigh-visible
 ```
 
 ```powershell
 dotnet run --project tools/testing/checks/ReachableHandPotentialChecks -c Release
-pwsh -NoProfile -File tools/performance/run-visible-steam-benchmark.ps1 -RequestFixturePath coverage/unattended/performance-veryhigh-mecha-native.json -TimeoutSeconds 120 -EvidenceDirectory .local/veryhigh-visible
+pwsh -NoProfile -File tools/performance/run-visible-steam-benchmark.ps1 -RequestFixturePath coverage/fixtures/runtime/performance-veryhigh-mecha-native.json -TimeoutSeconds 120 -EvidenceDirectory .local/veryhigh-visible
 ```
 
-费用合同使用 `coverage/unattended/hand-potential-cost-cards.json`：
+费用合同使用 `coverage/fixtures/cards/setups/hand-potential-cost-cards.json`：
 
 ```bash
-./tools/testing/run-unattended-test.sh --scenario-id HAND-POTENTIAL-COSTS --character-id REGENT --enemy-current-hp 999 --initial-player-energy 3 --initial-player-stars 3 --clear-player-piles --cards-path coverage/unattended/hand-potential-cost-cards.json --performance-preset-for-test VeryHigh --force-short-search-only --short-search-budget-override-milliseconds 100 --stop-after-initial-solver-result-assertion --headless-instance hand-costs --timeout-seconds 120
+./tools/testing/run-unattended-test.sh --scenario-id HAND-POTENTIAL-COSTS --character-id REGENT --enemy-current-hp 999 --initial-player-energy 3 --initial-player-stars 3 --clear-player-piles --cards-path coverage/fixtures/cards/setups/hand-potential-cost-cards.json --performance-preset-for-test VeryHigh --force-short-search-only --short-search-budget-override-milliseconds 100 --stop-after-initial-solver-result-assertion --headless-instance hand-costs --timeout-seconds 120
 ```
 
 第二项在同一命令增加 `--powers-json '[{"powerId":"VOID_FORM_POWER","target":"Player","amount":1}]'`。100ms仅用于合同检查后的收尾搜索，其时间不属于性能证据。PowerShell 使用同名 PascalCase 参数（`-ScenarioId`、`-CardsPath`、`-PowersJson` 等）。

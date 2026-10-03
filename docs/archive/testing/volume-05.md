@@ -282,7 +282,7 @@ dotnet run --project tools/testing/checks/ModelPredictionStateChecks/ModelPredic
 - 正常可见 Steam `COMBAT-TIMING-LIFETIME` / `5e72da97870d452c821f1b46110b0437` Passed，23.38 秒，T1 到 T2。原版 reverse patch 与生产回调对照涵盖两种特效、开关及三个动画时点，比较返回值、颜色、位移、变换和可见性；4 万次回调的 Godot 临时对象登记为 14178 → 14178，原环境字典仍可读。
 - 原生 Cmd.Wait 在战斗 Instant 下同步完成，在 FollowGame / Normal 下真实等待；执行原生结束回合动作并完成怪物回合后，战斗仍为 Instant，全局偏好保持 Normal。
 - 后续追加战斗结束后的局外等待检查，首次 fixture 直接 Kill 后缺少 CheckWinCondition，120 秒超时；已补齐胜负结算调用。用户要求停止实机测试，修正后的局外检查未执行，不将其记为通过。生产行为与已通过测试相同，最后变更仅为测试补充。
-- 最终 Release 编译通过，0 警告、0 错误。本机更新开发 DLL，未发版。未重现玩家完整两层后的长会话，不声明整体卡顿全部消失或提供 FPS 增幅。可复跑输入为 `coverage/unattended/combat-timing-lifetime.json`。
+- 最终 Release 编译通过，0 警告、0 错误。本机更新开发 DLL，未发版。未重现玩家完整两层后的长会话，不声明整体卡顿全部消失或提供 FPS 增幅。可复跑输入为 `coverage/fixtures/scenarios/state/combat-timing-lifetime.json`。
 
 ## 2026-09-10：SpeedX 横幅告知
 
@@ -299,7 +299,7 @@ dotnet run --project tools/testing/checks/ModelPredictionStateChecks/ModelPredic
 - 正常可见 Steam 短战斗：`f5cf09910c8b46548444922d768076f4` / `VISIBLE-LOGGING-CAPTURE-0300` Passed，31.75 秒，T6 结束，零计划外重算。时间线包含完整搜索/部署事件、16 个生命周期开始事件、引擎资源与主线程样本；dropped=0。抽检游戏轨迹段 63069 个采样事件、3720 个分配事件、8 个竞争事件，EventsLost=0。
 - 最终进程所有权边界：`f6a6db1e04d04bbb9bb19c9b89d0b014` / `PERFORMANCE-RECORDING-LIFETIME` Passed，37.75 秒；生产录制节点移除/重新安装仍引用同一 PerformanceSession。实际时间线只有一个 start、一个 host_reattached、一个 process_recording_end 和 writer_end，采集器 complete，dropped=0。抽检段 67889 个采样、6375 个分配、13 个竞争事件，EventsLost=0。退出后的 ZIP 导出成功。
 - 最终 Release 编译 0 警告/0 错误，结构门禁 `REFACTOR_BOUNDARIES_OK search_files=84`。本机诊断配置最终使用 300 秒分段；不重复五分钟等待验证仅时间参数变化。
-- 复跑节点边界：先在测试安装启用诊断配置，再运行 `tools/performance/run-visible-steam-benchmark.ps1 -RequestFixturePath coverage/unattended/performance-recording-lifetime.json -TimeoutSeconds 120`。这是诊断管线验证，不是对具体快速 SL Mod 的兼容承诺；未复现用户完整两局后的持续卡顿，也未建立诊断开销的完整 A/B 或正式版 FPS 结论。
+- 复跑节点边界：先在测试安装启用诊断配置，再运行 `tools/performance/run-visible-steam-benchmark.ps1 -RequestFixturePath coverage/fixtures/runtime/performance-recording-lifetime.json -TimeoutSeconds 120`。这是诊断管线验证，不是对具体快速 SL Mod 的兼容承诺；未复现用户完整两局后的持续卡顿，也未建立诊断开销的完整 A/B 或正式版 FPS 结论。
 
 ## 0.34.10：撤回新增搜索目标
 
@@ -350,10 +350,10 @@ dotnet run --project tools/testing/checks/ModelPredictionStateChecks/ModelPredic
 | TEST-SUBJECT-ORIGINAL-REPORT | `3e6e7f796ffa41fcaa6d52c859a12404` | Passed，0.34.8 天际钻头原包首回合至 T2 完整状态回归 |
 | REPORT-ROUND-DOOM-THRESHOLD-CARD | `534b875dd61c47a3a536b32fdde66f3a` | Passed，0.34.8 末日降临临界击杀与复活跨回合完整状态回归 |
 
-- 目标停止探针最初 `3b410fb57dd342a79fc9392c9bfb8950` / `09a49fc244794146be3db2a9c26d82fc` Failed。建局将故障机器人原生 75 HP 降至 70，被累计战损记录为 5 HP，违反探针的零损收益限制，实际选中无收益路线；这是夹具输入问题。固定 75/75 HP 后达标停止通过，提交夹具为 `coverage/unattended/search-objectives-target-stop.json`。没有放宽生产血量限制。
+- 目标停止探针最初 `3b410fb57dd342a79fc9392c9bfb8950` / `09a49fc244794146be3db2a9c26d82fc` Failed。建局将故障机器人原生 75 HP 降至 70，被累计战损记录为 5 HP，违反探针的零损收益限制，实际选中无收益路线；这是夹具输入问题。固定 75/75 HP 后达标停止通过，当时记录的夹具名为 `search-objectives-target-stop.json`（整理前已不在当前树中；该段是历史证据）。没有放宽生产血量限制。
 - 本轮未修改被提取功能的生产语义；仅修正缩进、剥离局外入口并新增停止回归。最后两次构建只改变测试诊断，既有成功场景不重复运行。
 - Release 构建 0 警告／0 错误；SearchObjectiveChecks 227 项、PotionInventoryChecks 21220 项通过；结构门禁 `REFACTOR_BOUNDARIES_OK search_files=86`；CoverageCatalog `--verify-effective --verify-state-fields --verify-state-writes --verify-branch-state-reads` 3035 项通过。
-- 复跑入口为 `tools/testing/run-unattended-test.ps1` / `.sh`：成长用 `SEARCH-OBJECTIVES-GROWTH` / DEFECT，手牌 GENETIC_ALGORITHM、STRIKE_DEFECT；资源用 `SEARCH-OBJECTIVES-RESOURCES` / IRONCLAD，手牌 HAND_OF_GREED、STRIKE_IRONCLAD。两者均 ClearRunDeck、ClearPlayerPiles、初始能量 1、格挡 0、敌生命 6，手牌 TreatAsDeckCard=true，120 秒。UI 用成长建局并指定 `SEARCH-OBJECTIVES-UI-LOCALE`。目标停止输入见上述新 JSON，机制和药水输入见 `coverage/unattended/profile-*.json`、`smart-potion-inventory-*.json`。原包和末日降临沿用 0.34.8 的命令。本轮没有原包整场质量 A/B、可见帧率或发布结论。
+- 复跑入口为 `tools/testing/run-unattended-test.ps1` / `.sh`：成长用 `SEARCH-OBJECTIVES-GROWTH` / DEFECT，手牌 GENETIC_ALGORITHM、STRIKE_DEFECT；资源用 `SEARCH-OBJECTIVES-RESOURCES` / IRONCLAD，手牌 HAND_OF_GREED、STRIKE_IRONCLAD。两者均 ClearRunDeck、ClearPlayerPiles、初始能量 1、格挡 0、敌生命 6，手牌 TreatAsDeckCard=true，120 秒。UI 用成长建局并指定 `SEARCH-OBJECTIVES-UI-LOCALE`。目标停止输入见上述新 JSON，机制和药水输入见 `coverage/fixtures/runtime/profile-*.json`、`smart-potion-inventory-*.json`。原包和末日降临沿用 0.34.8 的命令。本轮没有原包整场质量 A/B、可见帧率或发布结论。
 
 ## 0.34.8 发布集成
 
@@ -632,7 +632,7 @@ pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId STOCK-TH
 
 - 所有性能请求仅VeryHigh，固定DOP4/NoGC16GB，未调搜索预算，未启用增量或详细阶段诊断。Headless机甲骑士各预热一次后各取3次，中位数耗时−4.76%/分配−1.80%；大牌组压力与小啃兽各一组同工作量哨兵，非时序指标/动作完全相同。压力场景仍为死亡边界，不是胜利证明。全部runId及数值见[性能报告](../performance/veryhigh-quality-preserving-20260908.md)与其结构化记录。
 - Release编译0警告0错误；Bash/PowerShell结构门禁Passed（`search_files=78`）；两端可见脚本语法检查Passed。PowerShell本轮仅语法及结构检查，未在Windows启动Steam。
-- 费用合同的100ms收尾搜索不计性能，复现牌组为 `coverage/unattended/hand-potential-cost-cards.json`；命令见性能报告。可见基准新增 `--request-fixture-path` / `-RequestFixturePath`，完整请求为 `coverage/unattended/performance-veryhigh-mecha-native.json`，同报告记录首结果与整场部署两种断言。
+- 费用合同的100ms收尾搜索不计性能，复现牌组为 `coverage/fixtures/cards/setups/hand-potential-cost-cards.json`；命令见性能报告。可见基准新增 `--request-fixture-path` / `-RequestFixturePath`，完整请求为 `coverage/fixtures/runtime/performance-veryhigh-mecha-native.json`，同报告记录首结果与整场部署两种断言。
 - 完整Mod组合的基线在搜索前因未支持的AveMujica subscriber失败（`cd8e58d396344dec8e0b2362f216879b`，120秒超时）。成功可见结果只覆盖原版+RitsuLib+CombatSolver，未延长超时。基线整场采样器在退出时失败而缺少峰值文件，测试结果有效；其整场结束RSS已高于候选记录的VmHWM。Headless复用进程小啃兽曾有+0.07%峰值反向样本，独立可见进程对照未复现；不作全场景逐样本内存保证。
 
 ## 2026-09-09：可达手牌估值分配（开发中）

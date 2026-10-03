@@ -5,7 +5,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repository_root="$(cd -- "$script_dir/../.." && pwd)"
 search_root="$repository_root/src/Search"
 violations=()
-for corpus_input in tools/search/StrategyCorpus/run.py tools/search/StrategyCorpus/compare.py coverage/strategy-refactor-p0/corpus.json; do
+for corpus_input in tools/search/StrategyCorpus/run.py tools/search/StrategyCorpus/compare.py coverage/corpora/strategy/p0.json; do
     [[ -f "$repository_root/$corpus_input" ]] || violations+=("Strategy corpus input missing: $corpus_input")
 done
 for quality_input in src/Search/RouteQuality.cs src/Search/RouteQualityPolicy.cs; do
@@ -1534,6 +1534,13 @@ EOF
 mirror_registry_path="$repository_root/src/Engine/Common/Mirrors/MethodMirrorRegistry.cs"
 mirror_descriptor_path="$repository_root/src/Engine/Common/Mirrors/MethodMirrorRegistryDescriptor.cs"
 coverage_catalog_path="$repository_root/tools/inspection/CoverageCatalog/Program.cs"
+for text in \
+    'Path.Combine(coverageDirectory, "catalog", "generated")' \
+    'Path.Combine(coverageDirectory, "catalog", "classifications.json")' \
+    'Path.Combine(coverageDirectory, "evidence", "test-evidence.json")' \
+    'Path.Combine(repositoryRoot, ".local", "coverage-fixtures")'; do
+    require_fixed "$coverage_catalog_path" "$text" 'missing coverage material ownership'
+done
 while IFS=$'\t' read -r relative_path text; do
     require_fixed "$repository_root/$relative_path" "$text" 'missing mirror registry descriptor boundary'
 done <<'EOF'

@@ -116,7 +116,7 @@ Silent / 普通 GC / DOP4，每 solver 2,500 节点，双方各三次交替冷�
 
 生产只在已有 [MonsterMoveEffects](../../../src/Prediction/MonsterMoveEffects.cs) 的递加强度分支调整读取/写入时点：先用 `card.Preview is Wither` 判断，再对匹配者取得 `MutablePreview` 并执行 `FakeUpgrade()`。普通牌不再因只读判型发生 COW；Wither 的写入仍经过原所有权边界。没有恢复 listener slot，也没有添加新的卡牌特例。
 
-[两步 native 差分夹具](../../../coverage/unattended/gc-aeonglass-preview-ownership.json) Passed，runId `825d477edaa0456b91934583498388ba`。第一次效果生成 Wither，凋零总伤害为 6、敌方力量为 3；第二次升级既有 Wither 并生成下一张，总伤害为 18、力量为 7。完整 actual/simulated 差分继续检查实际结算。
+[两步 native 差分夹具](../../../coverage/fixtures/runtime/gc-aeonglass-preview-ownership.json) Passed，runId `825d477edaa0456b91934583498388ba`。第一次效果生成 Wither，凋零总伤害为 6、敌方力量为 3；第二次升级既有 Wither 并生成下一张，总伤害为 18、力量为 7。完整 actual/simulated 差分继续检查实际结算。
 
 同一夹具显式开启 [预览身份与 Fork 断言](../../../src/Testing/UnattendedTestRunner.AeonglassPreviewOwnership.cs)：行动前保留一个未执行的兄弟分支，行动后验证非 Wither 的原 preview 引用不变、已有 Wither 伤害增长，以及兄弟的所有 preview 身份和 Wither 伤害均不变。该检查已通过，不扩展到整场搜索或可见 Steam 验收。
 

@@ -36,22 +36,25 @@ bool generateExactCardFixture = args.Contains("--generate-exact-card-fixture", S
 bool generateSimpleMonsterMoveFixture = args.Contains("--generate-simple-monster-move-fixture", StringComparer.Ordinal);
 bool generateStateMutationFixtures = args.Contains("--generate-state-mutation-fixtures", StringComparer.Ordinal);
 string coverageDirectory = Path.Combine(repositoryRoot, "coverage");
-string overridePath = Path.Combine(coverageDirectory, "classifications.json");
-string evidencePath = Path.Combine(coverageDirectory, "test-evidence.json");
-string catalogPath = Path.Combine(coverageDirectory, "combat-hooks.json");
-string boundaryPath = Path.Combine(coverageDirectory, "search-boundaries.json");
-string runtimeGapPath = Path.Combine(coverageDirectory, "runtime-evidence-gaps.json");
-string branchStateReadRiskPath = Path.Combine(coverageDirectory, "branch-state-read-risks.json");
-string stateFieldPath = Path.Combine(coverageDirectory, "state-fields.json");
-string stateMutationPath = Path.Combine(coverageDirectory, "state-mutations.json");
-string prePlayChoiceGapPath = Path.Combine(coverageDirectory, "pre-play-choice-gaps.json");
-string combatChoiceSourcePath = Path.Combine(coverageDirectory, "combat-choice-sources.json");
-string autoPlaySourcePath = Path.Combine(coverageDirectory, "combat-autoplay-sources.json");
-string rosterSourcePath = Path.Combine(coverageDirectory, "combat-roster-sources.json");
+string generatedDirectory = Path.Combine(coverageDirectory, "catalog", "generated");
+string fixtureOutputDirectory = Path.Combine(repositoryRoot, ".local", "coverage-fixtures");
+string overridePath = Path.Combine(coverageDirectory, "catalog", "classifications.json");
+string evidencePath = Path.Combine(coverageDirectory, "evidence", "test-evidence.json");
+string catalogPath = Path.Combine(generatedDirectory, "combat-hooks.json");
+string boundaryPath = Path.Combine(generatedDirectory, "search-boundaries.json");
+string runtimeGapPath = Path.Combine(generatedDirectory, "runtime-evidence-gaps.json");
+string branchStateReadRiskPath = Path.Combine(generatedDirectory, "branch-state-read-risks.json");
+string stateFieldPath = Path.Combine(generatedDirectory, "state-fields.json");
+string stateMutationPath = Path.Combine(generatedDirectory, "state-mutations.json");
+string prePlayChoiceGapPath = Path.Combine(generatedDirectory, "pre-play-choice-gaps.json");
+string combatChoiceSourcePath = Path.Combine(generatedDirectory, "combat-choice-sources.json");
+string autoPlaySourcePath = Path.Combine(generatedDirectory, "combat-autoplay-sources.json");
+string rosterSourcePath = Path.Combine(generatedDirectory, "combat-roster-sources.json");
 string reportPath = Path.Combine(repositoryRoot, "docs", "COMBAT_HOOK_COVERAGE.md");
 string manifestPath = Path.Combine(repositoryRoot, "CombatSolver.json");
 
 Directory.CreateDirectory(coverageDirectory);
+Directory.CreateDirectory(generatedDirectory);
 Directory.CreateDirectory(Path.GetDirectoryName(reportPath)!);
 
 Dictionary<string, CoverageClassification> classifications = File.Exists(overridePath)
@@ -268,8 +271,7 @@ File.WriteAllText(
 if (generateSimpleCardFixture)
 {
     string fixturePath = Path.Combine(
-        coverageDirectory,
-        "unattended",
+        fixtureOutputDirectory,
         "generated-inferred-card-on-play-audit.json");
     Directory.CreateDirectory(Path.GetDirectoryName(fixturePath)!);
     IReadOnlyList<SimpleCardAuditCheck> checks = BuildSimpleCardAuditChecks(activeWithoutRuntimeEvidence);
@@ -282,8 +284,7 @@ if (generateSimpleCardFixture)
     for (int offset = 0, part = 1; offset < checks.Count; offset += chunkSize, part++)
     {
         string partPath = Path.Combine(
-            coverageDirectory,
-            "unattended",
+            fixtureOutputDirectory,
             $"generated-inferred-card-on-play-audit-part-{part}.json");
         File.WriteAllText(
             partPath,
@@ -295,8 +296,7 @@ if (generateSimpleCardFixture)
 if (generateExactCardFixture)
 {
     string fixturePath = Path.Combine(
-        coverageDirectory,
-        "unattended",
+        fixtureOutputDirectory,
         "generated-exact-card-on-play-audit.json");
     Directory.CreateDirectory(Path.GetDirectoryName(fixturePath)!);
     IReadOnlyList<SimpleCardAuditCheck> checks = BuildExactCardAuditChecks(activeWithoutRuntimeEvidence);
@@ -309,8 +309,7 @@ if (generateExactCardFixture)
     for (int offset = 0, part = 1; offset < checks.Count; offset += chunkSize, part++)
     {
         string partPath = Path.Combine(
-            coverageDirectory,
-            "unattended",
+            fixtureOutputDirectory,
             $"generated-exact-card-on-play-audit-part-{part}.json");
         File.WriteAllText(
             partPath,
@@ -322,8 +321,7 @@ if (generateExactCardFixture)
 if (generateSimpleMonsterMoveFixture)
 {
     string fixturePath = Path.Combine(
-        coverageDirectory,
-        "unattended",
+        fixtureOutputDirectory,
         "generated-solver-monster-move-audit.json");
     Directory.CreateDirectory(Path.GetDirectoryName(fixturePath)!);
     IReadOnlyList<SimpleMonsterMoveAuditCheck> checks = BuildSimpleMonsterMoveAuditChecks(
@@ -337,8 +335,7 @@ if (generateSimpleMonsterMoveFixture)
     for (int offset = 0, part = 1; offset < checks.Count; offset += chunkSize, part++)
     {
         string partPath = Path.Combine(
-            coverageDirectory,
-            "unattended",
+            fixtureOutputDirectory,
             $"generated-solver-monster-move-audit-part-{part}.json");
         File.WriteAllText(
             partPath,
@@ -350,7 +347,7 @@ if (generateSimpleMonsterMoveFixture)
 if (generateStateMutationFixtures)
 {
     IReadOnlyList<StateMutationCardCheck> checks = BuildCardUpgradeMutationChecks(stateMutations);
-    string fixtureDirectory = Path.Combine(coverageDirectory, "unattended");
+    string fixtureDirectory = fixtureOutputDirectory;
     Directory.CreateDirectory(fixtureDirectory);
     string fullPath = Path.Combine(fixtureDirectory, "generated-card-upgrade-state-audit.json");
     File.WriteAllText(
@@ -1832,15 +1829,16 @@ static void CollectMonsterMoveEvidence(
 
 static IEnumerable<string> EnumerateEvidenceFixturePaths(string root, string evidence)
 {
-    string fixtureDirectory = Path.Combine(root, "coverage", "unattended");
     HashSet<string> paths = new(StringComparer.OrdinalIgnoreCase);
     foreach (Match match in Regex.Matches(
                  evidence,
-                 @"(?:coverage/unattended/)?(?<file>[A-Za-z0-9._-]+\.json)",
+                 @"(?<path>coverage/fixtures/[A-Za-z0-9._/-]+\.json)",
                  RegexOptions.CultureInvariant))
     {
-        string path = Path.Combine(fixtureDirectory, match.Groups["file"].Value);
-        if (File.Exists(path) && paths.Add(path))
+        string path = Path.Combine(root, match.Groups["path"].Value);
+        if (!File.Exists(path))
+            throw new FileNotFoundException("Coverage evidence fixture is missing.", path);
+        if (paths.Add(path))
             yield return path;
     }
 }

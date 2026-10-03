@@ -111,7 +111,7 @@ class LoopBoundaryClassificationTests(unittest.TestCase):
             self.assertEqual('TimeLimited', observation_status(budget, []))
 
     def test_cap_suite_has_no_fixed_turn_requirement_and_scope_is_explicit(self):
-        path = Path(__file__).resolve().parents[3] / 'coverage/unattended/loop-boundaries-20260921/suite.json'
+        path = Path(__file__).resolve().parents[3] / 'coverage/fixtures/search/loops/loop-boundaries-20260921/suite.json'
         suite = json.loads(path.read_text())
         cap = next(case for case in suite['cases'] if case['name'] == 'letter-replay-cap')
         self.assertNotIn('CombatEndedTurn', cap['expectedMetrics'])

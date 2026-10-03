@@ -113,7 +113,7 @@ python tools/search/OfflineSearchHarness/compare_results.py --left <ws>/left/run
   −13.7% 探测、−2.7% 展开，因为多数批次本就不足 64 个。不声称普适百分比，也不外推为可见帧时间或 FPS。
 - 上限是每次 `FindBestFreshResourceStandPat` 调用的前缀长度，不是整场预算；beam 更宽或更窄时受影响的批次数
   不同，收益形状随之变化。
-- 语料只有 `coverage/equivalence` 的 60 根，`FULL-SILENT-ELITE-03` 两臂均 `TimeLimit`、
+- 语料只有 `coverage/corpora/equivalence/turn-start-60` 的 60 根，`FULL-SILENT-ELITE-03` 两臂均 `TimeLimit`、
   `FULL-DEFECT-ELITE-00` E 臂 `TimeLimit`，这 2 根不计入判决。
 - **未验证**：游戏内 `UnattendedTestRunner.StandPatProbes` 契约（双车道探测批次、注入异常传播、并行与串行
   等价）需要实机无人测试，本轮只跑了离线宿主；玩家检查点批量回放（`.local/` 无问题包）；DOP>1 与组合

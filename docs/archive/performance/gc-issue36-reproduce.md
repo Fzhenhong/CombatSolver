@@ -6,9 +6,9 @@
 
 ## 固定输入与设置
 
-使用公开 [Silent 卡表](../../../coverage/unattended/search-performance-silent-large-deck-cards.json) 和 [Necrobinder runSnapshot](../../../coverage/unattended/search-performance-necrobinder-potion-heavy-run-snapshot.json)，不需要玩家问题包或私人存档。
+使用公开 [Silent 卡表](../../../coverage/fixtures/search/search-performance-silent-large-deck-cards.json) 和 [Necrobinder runSnapshot](../../../coverage/fixtures/regressions/snapshots/search-performance-necrobinder-potion-heavy-run-snapshot.json)，不需要玩家问题包或私人存档。
 
-[基准设置 JSON](../../../coverage/unattended/gc-issue36-benchmark-settings.json) 固定 Custom、每 solver 576 节点、60 秒 solver 兜底、DOP4。长窗口只把 `shortMaxExpandedNodes`、`deepMaxExpandedNodes` 同时改为 2500。60 秒是搜索时间上限，120 秒是整个无人请求超时；达到 TimeLimit 的结果不能混入固定工作量比较。不启用 `VerifyIncrementalSearch`；详细诊断关闭，阶段测量开启，强制仅 Short，并在首个结果断言后退出。
+[基准设置 JSON](../../../coverage/fixtures/runtime/gc-issue36-benchmark-settings.json) 固定 Custom、每 solver 576 节点、60 秒 solver 兜底、DOP4。长窗口只把 `shortMaxExpandedNodes`、`deepMaxExpandedNodes` 同时改为 2500。60 秒是搜索时间上限，120 秒是整个无人请求超时；达到 TimeLimit 的结果不能混入固定工作量比较。不启用 `VerifyIncrementalSearch`；详细诊断关闭，阶段测量开启，强制仅 Short，并在首个结果断言后退出。
 
 | 配置 | 每 solver 节点 | 请求展开 / 转移 | 药水政策 |
 | --- | ---: | ---: | --- |
@@ -47,7 +47,7 @@ for gc36_case in silent necro; do
   mkdir -p "$gc36_output/$gc36_case/data/SlayTheSpire2"
   jq --argjson nodes "$gc36_nodes" \
     '.shortMaxExpandedNodes=$nodes | .deepMaxExpandedNodes=$nodes' \
-    coverage/unattended/gc-issue36-benchmark-settings.json \
+    coverage/fixtures/runtime/gc-issue36-benchmark-settings.json \
     > "$gc36_output/$gc36_case/data/SlayTheSpire2/combat_solver_settings.json"
 done
 
@@ -67,10 +67,10 @@ gc36_silent=(--character-id SILENT --seed SEARCH_PERF_SILENT_LARGE_DECK
   --enemy-current-hp 512 --initial-enemy-move-ids-json '["EBB_MOVE"]'
   --initial-player-hp 65 --initial-player-max-hp 65 --initial-player-energy 3
   --clear-player-piles
-  --cards-path coverage/unattended/search-performance-silent-large-deck-cards.json
+  --cards-path coverage/fixtures/search/search-performance-silent-large-deck-cards.json
   --potion-policy-for-test Disabled)
 gc36_necro=(--character-id NECROBINDER --seed SEARCH_PERF_NECROBINDER_POTION
-  --run-snapshot-path coverage/unattended/search-performance-necrobinder-potion-heavy-run-snapshot.json
+  --run-snapshot-path coverage/fixtures/regressions/snapshots/search-performance-necrobinder-potion-heavy-run-snapshot.json
   --encounter-id AEONGLASS_BOSS --ascension 10 --act-index-for-test 2
   --enemy-current-hp 526 --initial-player-hp 41 --cards-json '[]'
   --potion-policy-for-test Smart)
@@ -100,7 +100,7 @@ $gc36Runtime = Join-Path $gc36Output 'runtime'
 $env:COMBATSOLVER_HEADLESS_ROOT = $gc36Runtime
 $gc36Data = Join-Path $gc36Runtime 'Roaming/SlayTheSpire2'
 New-Item -ItemType Directory -Force -Path $gc36Data, $gc36Output | Out-Null
-$gc36Settings = Get-Content coverage/unattended/gc-issue36-benchmark-settings.json -Raw | ConvertFrom-Json
+$gc36Settings = Get-Content coverage/fixtures/runtime/gc-issue36-benchmark-settings.json -Raw | ConvertFrom-Json
 $gc36Settings.shortMaxExpandedNodes = $gc36Nodes
 $gc36Settings.deepMaxExpandedNodes = $gc36Nodes
 $gc36Settings | ConvertTo-Json | Set-Content (Join-Path $gc36Data 'combat_solver_settings.json') -Encoding utf8NoBOM
@@ -123,12 +123,12 @@ $gc36Silent = @{
     EnemyCurrentHp = 512; InitialEnemyMoveIdsJson = '["EBB_MOVE"]'
     InitialPlayerHp = 65; InitialPlayerMaxHp = 65; InitialPlayerEnergy = 3
     ClearPlayerPiles = $true
-    CardsPath = 'coverage/unattended/search-performance-silent-large-deck-cards.json'
+    CardsPath = 'coverage/fixtures/search/search-performance-silent-large-deck-cards.json'
     PotionPolicyForTest = 'Disabled'
 }
 $gc36Necro = @{
     CharacterId = 'NECROBINDER'; Seed = 'SEARCH_PERF_NECROBINDER_POTION'
-    RunSnapshotPath = 'coverage/unattended/search-performance-necrobinder-potion-heavy-run-snapshot.json'
+    RunSnapshotPath = 'coverage/fixtures/regressions/snapshots/search-performance-necrobinder-potion-heavy-run-snapshot.json'
     EncounterId = 'AEONGLASS_BOSS'; Ascension = 10; ActIndexForTest = 2
     EnemyCurrentHp = 526; InitialPlayerHp = 41; CardsJson = '[]'
     PotionPolicyForTest = 'Smart'
@@ -143,12 +143,12 @@ Copy-Item (Join-Path $gc36Data 'combat_solver_test_result.json') (Join-Path $gc3
 
 ## 最终行为与 native 差分
 
-最终 Fork/历史所有权和 DOP1/DOP2 等价检查使用 250 节点、30 秒兜底的 [pilot 设置](../../../coverage/unattended/gc-issue36-pilot-settings.json)，不是 576 节点性能矩阵。复用上面的 Silent fixture 与公共参数，写入该设置后，以 DOP2、普通 GC 加两个验证开关：
+最终 Fork/历史所有权和 DOP1/DOP2 等价检查使用 250 节点、30 秒兜底的 [pilot 设置](../../../coverage/fixtures/runtime/gc-issue36-pilot-settings.json)，不是 576 节点性能矩阵。复用上面的 Silent fixture 与公共参数，写入该设置后，以 DOP2、普通 GC 加两个验证开关：
 
 ```bash
 gc36_behavior="$gc36_output/behavior"
 mkdir -p "$gc36_behavior/data/SlayTheSpire2"
-cp coverage/unattended/gc-issue36-pilot-settings.json "$gc36_behavior/data/SlayTheSpire2/combat_solver_settings.json"
+cp coverage/fixtures/runtime/gc-issue36-pilot-settings.json "$gc36_behavior/data/SlayTheSpire2/combat_solver_settings.json"
 COMBATSOLVER_HEADLESS_ROOT="$gc36_behavior" \
   ./tools/testing/run-unattended-test.sh "${gc36_common[@]}" "${gc36_silent[@]}" \
   --scenario-id GC36-FINAL-BOUNDARIES --search-max-degree-of-parallelism-for-test 2 \
@@ -157,14 +157,14 @@ COMBATSOLVER_HEADLESS_ROOT="$gc36_behavior" \
 ```
 
 ```powershell
-Copy-Item coverage/unattended/gc-issue36-pilot-settings.json (Join-Path $gc36Data 'combat_solver_settings.json') -Force
+Copy-Item coverage/fixtures/runtime/gc-issue36-pilot-settings.json (Join-Path $gc36Data 'combat_solver_settings.json') -Force
 $gc36Common.SearchMaxDegreeOfParallelismForTest = 2
 $gc36Common.EnableNoGcRegionForTest = 0
 $gc36Common.NoGcRegionBudgetGigabytesForTest = 4
 & ./tools/testing/run-unattended-test.ps1 @gc36Common @gc36Silent -ScenarioId GC36-FINAL-BOUNDARIES -VerifyForkBoundaries -VerifySearchPolicySnapshot
 ```
 
-[Aeonglass 两步 native fixture](../../../coverage/unattended/gc-aeonglass-preview-ownership.json) 同时检查实际结算、普通牌 preview 身份、Wither 更新及兄弟分支隔离：
+[Aeonglass 两步 native fixture](../../../coverage/fixtures/runtime/gc-aeonglass-preview-ownership.json) 同时检查实际结算、普通牌 preview 身份、Wither 更新及兄弟分支隔离：
 
 ```bash
 COMBATSOLVER_HEADLESS_ROOT="$gc36_output/aeonglass" \
@@ -172,7 +172,7 @@ COMBATSOLVER_HEADLESS_ROOT="$gc36_output/aeonglass" \
   --ritsu-workshop-root "$GC36_RITSU_ROOT" --scenario-id GC36-AEONGLASS-PREVIEW-OWNERSHIP \
   --encounter-id LivingFogNormal --clear-player-piles \
   --cards-json '[{"cardId":"STRIKE_IRONCLAD","pile":"Hand"}]' \
-  --monster-move-checks-path coverage/unattended/gc-aeonglass-preview-ownership.json \
+  --monster-move-checks-path coverage/fixtures/runtime/gc-aeonglass-preview-ownership.json \
   --timeout-seconds 120 --exit-on-complete
 ```
 
@@ -180,7 +180,7 @@ COMBATSOLVER_HEADLESS_ROOT="$gc36_output/aeonglass" \
 & ./tools/testing/run-unattended-test.ps1 -Sts2GameRoot $env:GC36_GAME_ROOT -RitsuWorkshopRoot $env:GC36_RITSU_ROOT `
   -ScenarioId GC36-AEONGLASS-PREVIEW-OWNERSHIP -EncounterId LivingFogNormal -ClearPlayerPiles `
   -CardsJson '[{"cardId":"STRIKE_IRONCLAD","pile":"Hand"}]' `
-  -MonsterMoveChecksPath coverage/unattended/gc-aeonglass-preview-ownership.json -TimeoutSeconds 120 -ExitOnComplete
+  -MonsterMoveChecksPath coverage/fixtures/runtime/gc-aeonglass-preview-ownership.json -TimeoutSeconds 120 -ExitOnComplete
 ```
 
 ## 指标边界与实验归档

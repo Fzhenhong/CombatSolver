@@ -89,7 +89,7 @@
 - `SMOKE-001 -VerifyForkBoundaries` / `7fc97fd1a99c4b61889bc68063919952` Failed：停在既有“回合结束 Power 挂起”检查；去本批改动复跑同样失败。该场景内的生成怪生命检查未执行，T011 由专用夹具覆盖。本轮未提升版本、未发包、未部署可见 Mod。
 - `DYNAMIC-VAR-BRIDGE`（T014）`ba6168def5814f94a054ea9b73a2cd5b` Passed：`DynamicVarSetAccess` 用一次性解析的缓存委托读取 `DynamicVarSet` 内部字典（字段缺失时回退公开枚举），28 处直访全部改走桥接；夹具对牌与 Power 各比较键序列、值引用与枚举序列，强制公开回退时逐项一致，live 战斗不变。命令：`tools/testing/run-unattended-test.ps1 -ScenarioId DYNAMIC-VAR-BRIDGE -CharacterId DEFECT -EncounterId FUZZY_WURM_CRAWLER_WEAK -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。结构门禁新增 `src` 内禁止 `._vars` 直访（桥接文件除外）。编译产物 `System.Reflection.Metadata` 扫描：`_vars` 字段引用 0（基点源码直访 28 处已全部收口）。含 T015 修复的尖端复跑 `b98d4d7b` Passed。
 - T011/T012 变基后复检：`PREDICTED-MONSTER-SCALING` `96651321` Passed（HP 17、缩放调用 0）；`DISPLAY-NAME-SUMMON` `9dad3061` Passed（sneaky1 左起1/sneaky2 左起2/fat 左起1）；含 T015 修复的尖端复跑 `e266efe1`/`89abbaec` Passed。
-- B014 固定哨兵（`INITIAL-TOOLBOX-INFUSED-CORE`，与 `coverage/unattended/initial-toolbox-infused-core.json` 同配置：1500ms 固定预算、增量等价、首次准备断言后停止；同机各 3 次）：基点 `1a3d1a37` 681.91/678.10/719.58ms，均值 693.20ms（组内极差 41.48ms）；批次尖端 714.97/703.43/693.00ms，均值 703.80ms（组内极差 21.97ms）。两组展开 130、转移 1882、boundary None，`InitialPolicy` 除耗时与 GC 采样外逐字段相同（Turns=2、Shuffles=1、HpLost=0、ProjectedBattleHpLost=0、Block=5/5、Pruned=0、ChoiceBranches=16、Actions=4、CombatEndedTurn=2）；均值差 +10.6ms（+1.5%）小于基线组内极差，不构成稳定耗时增加。含 T015 修复后的同窗口复测：基点重跑 797.66/806.14ms（均值 801.90），尖端 780.56/799.93/820.84/787.96ms（均值 797.32），展开/转移/质量字段仍相同，均值差 −0.6% 小于尖端组内极差；两个窗口一致说明无稳定耗时增加。
+- B014 固定哨兵（`INITIAL-TOOLBOX-INFUSED-CORE`，与 `coverage/fixtures/scenarios/state/initial-toolbox-infused-core.json` 同配置：1500ms 固定预算、增量等价、首次准备断言后停止；同机各 3 次）：基点 `1a3d1a37` 681.91/678.10/719.58ms，均值 693.20ms（组内极差 41.48ms）；批次尖端 714.97/703.43/693.00ms，均值 703.80ms（组内极差 21.97ms）。两组展开 130、转移 1882、boundary None，`InitialPolicy` 除耗时与 GC 采样外逐字段相同（Turns=2、Shuffles=1、HpLost=0、ProjectedBattleHpLost=0、Block=5/5、Pruned=0、ChoiceBranches=16、Actions=4、CombatEndedTurn=2）；均值差 +10.6ms（+1.5%）小于基线组内极差，不构成稳定耗时增加。含 T015 修复后的同窗口复测：基点重跑 797.66/806.14ms（均值 801.90），尖端 780.56/799.93/820.84/787.96ms（均值 797.32），展开/转移/质量字段仍相同，均值差 −0.6% 小于尖端组内极差；两个窗口一致说明无稳定耗时增加。
 - T013 结论：代表包 `e7f1cf14e6ad4a60be7f4f3724929b81` 运行环境载入 `RebalancedSpire`/`AutoRebalancedSpire`（日志含 `[AutoRebalancedSpire] 未建模的结算内选择：传家宝锤`），按“不主动适配修改游戏内容的第三方 Mod”归档排除；原版 `CARD-CONTINUATION-EXPANDED` 合同通过。
 - T015 修复（Smart 审计无药基线）：旧包 `ba79d87499a4455bbba4a51baf381eea`（0.47.2）的续用戳缺 `cost-state`/`stars` 子状态，测试端在 `ReplayContinuationMatches` 增加同形态 legacy 容错（记录侧整段缺失时从重放文本剥离该子状态）后 `start` 检查点 `RestoreOnly` 恢复通过。`SearchOnly` 复现：修改前 `c1a7645235564bbba22d7406dd32e6fd` Failed（`assert_initial_solver_result`，`Smart 梯度搜索必须从仅满足强制用药的结果开始`）→ 修改后 `75d9d046e7ce4aae85a303cb03341191` Passed（`search_completed`，展开 289,973、转移 2,274,934、boundary None，约 98 秒）。根因：`OPENING_TARGET_VARIANT` 预审计块（`CombatSearchCoordinator.cs`，2026-09-27 `b277fce5` 引入）缺少 `ExplicitPotionCount == 0` 门，从带插入药的首回合前缀派生 continuation，候选 `DeterministicBlockPotionInserted=false` 且带 1 瓶 BLOCK_POTION 回到主路线，Smart 梯度断言拒绝。修复：预审计前对「插入药或 Smart 无强制指令下带药」的主路线统一按 Disabled 重派生无药基线再走补充审计。命令：`dotnet run --project tools/replay/CheckpointTool/CheckpointTool.csproj -c Release -- batch .local/issue-bundles/B014/T015/raw --mode SearchOnly --selector start --timeout 300 --output <目录> --game-root "D:\Steam\steamapps\common\Slay the Spire 2" --ritsu-root "D:\Steam\steamapps\workshop\content\2868840\3747602295"`。
 
@@ -101,21 +101,21 @@
 
 ## B015统计消费者终止隔离（2026-10-02）
 
-`B015-T016-AFTERIMAGE-ROUTE` / `coverage/unattended/b015-t016-afterimage-route.json`：同原根按日志STRANGLE→AFTERIMAGE顺序从生产PrepareCardActions取六步动作，每步完整/增量/原生状态与RNG一致；目标自然跨ID1→ID2。生产ReplayAdjustedRoute前移余像使第二张SHIV目标2失效，同输入修前Failed、修后Passed；合法两步前移、无重排控制、共享路径失效目标及原路线保留通过。120秒，0.111.0/Ritsu0.6.3/同MVID BaseLib3.4.7；不是完整Solve胜利路线发布验收。
+`B015-T016-AFTERIMAGE-ROUTE` / `coverage/fixtures/regressions/community/b015-t016-afterimage-route.json`：同原根按日志STRANGLE→AFTERIMAGE顺序从生产PrepareCardActions取六步动作，每步完整/增量/原生状态与RNG一致；目标自然跨ID1→ID2。生产ReplayAdjustedRoute前移余像使第二张SHIV目标2失效，同输入修前Failed、修后Passed；合法两步前移、无重排控制、共享路径失效目标及原路线保留通过。120秒，0.111.0/Ritsu0.6.3/同MVID BaseLib3.4.7；不是完整Solve胜利路线发布验收。
 
-`B015-FIXED-PREFIX-TARGETS` / `coverage/unattended/b015-fixed-prefix-targets.json`：直接生产候选→ApplyFixedPrefix单动作，合法目标致胜、缺失目标拒绝、原生Continuation不变，Passed（18.33秒）。既有ADJUSTED-ROUTE-INVALID-SUFFIX Passed（20.12秒）；更广FIXED-PREFIX-TURN-OUTCOMES起初在120秒无结果，未提高预算；后查明是全新隔离档案第一次洗牌时原版洗牌引导等待确认，上游同样卡住。放入只关闭引导的进度档后，上游 `c4e0b47d` 与本分支均Passed（19.42 / 23.86秒）。
+`B015-FIXED-PREFIX-TARGETS` / `coverage/fixtures/regressions/community/b015-fixed-prefix-targets.json`：直接生产候选→ApplyFixedPrefix单动作，合法目标致胜、缺失目标拒绝、原生Continuation不变，Passed（18.33秒）。既有ADJUSTED-ROUTE-INVALID-SUFFIX Passed（20.12秒）；更广FIXED-PREFIX-TURN-OUTCOMES起初在120秒无结果，未提高预算；后查明是全新隔离档案第一次洗牌时原版洗牌引导等待确认，上游同样卡住。放入只关闭引导的进度档后，上游 `c4e0b47d` 与本分支均Passed（19.42 / 23.86秒）。
 
 整合上游 `c4e0b47d` 后：`B015-T016-AFTERIMAGE-ROUTE` Passed（32.80秒），`B015-FIXED-PREFIX-TARGETS` Passed，统计存储合同通过。PR哨兵按上游→本分支→本分支→上游交替：`TURN-SETUP-FIXED-PREFIX-STAMPEDE` 四次路线（含卡牌状态键）、根续用戳、展开8549/转移17245均相同，搜索耗时8649/3213/6653/6992 ms，四次都在同一条macOS无法建立No-GC区域的断言失败（发生在搜索结果之后，上游相同）；`PROFILE-SHIV-DEPLOY` 四次Passed，路线与续用戳相同、部署后战损0。0.111.0/Ritsu0.6.3，macOS隔离无头，各120秒。
 
-`B015-T016-ORIGINAL-PREFIX` / `coverage/unattended/b015-t016-original-prefix.json` 是保留失败的诊断入口：原ZIP开战双状态、日志选牌、前五步完整/增量/原生状态与RNG均通过；生产串行兄弟及两个父节点的真实调度器/worker检查通过，2准备/4动作且实测动作并发2，同原报告MVID BaseLib3.4.7。当前生成器未产生非法目标，随后强制历史SHIV→ID2仍失败，故请求总Failed；不是当前生产RED或修复验收。真实0.111.0/Ritsu0.6.3、120秒；差异环境及复跑参数见[后续证据](../community/b015-follow-up.md)。
+`B015-T016-ORIGINAL-PREFIX` / `coverage/fixtures/regressions/community/b015-t016-original-prefix.json` 是保留失败的诊断入口：原ZIP开战双状态、日志选牌、前五步完整/增量/原生状态与RNG均通过；生产串行兄弟及两个父节点的真实调度器/worker检查通过，2准备/4动作且实测动作并发2，同原报告MVID BaseLib3.4.7。当前生成器未产生非法目标，随后强制历史SHIV→ID2仍失败，故请求总Failed；不是当前生产RED或修复验收。真实0.111.0/Ritsu0.6.3、120秒；差异环境及复跑参数见[后续证据](../community/b015-follow-up.md)。
 
-`RUN-STATISTICS-WORKER-FAILURE` / `coverage/unattended/run-statistics-worker-failure.json`：原始NUL JSON导致真实消费者构造失败后，300次入队；修改前Failed（capacity exceeded），修改后Passed（队列空、快照无效、损坏文件保留）。游戏0.111.0、RitsuLib0.6.5、macOS隔离无头，请求均120秒预算。统计聚合/持久化既有合同通过；该阶段尚未覆盖的边界见下方后续记录。命令及边界见[B015阶段证据](../community/b015-stage-one.md)。
+`RUN-STATISTICS-WORKER-FAILURE` / `coverage/fixtures/runtime/run-statistics-worker-failure.json`：原始NUL JSON导致真实消费者构造失败后，300次入队；修改前Failed（capacity exceeded），修改后Passed（队列空、快照无效、损坏文件保留）。游戏0.111.0、RitsuLib0.6.5、macOS隔离无头，请求均120秒预算。统计聚合/持久化既有合同通过；该阶段尚未覆盖的边界见下方后续记录。命令及边界见[B015阶段证据](../community/b015-stage-one.md)。
 
-`RUN-STATISTICS-SATURATION` / `coverage/unattended/run-statistics-saturation.json`：屏障暂停真实健康consumer，256业务信号、满sync合并重试、第257业务事件显式停用；已接收事件排空持久化，partial重开与原生结算保留，禁止重新上传，排空期间I/O错误不被吞。真实0.111.0/Ritsu0.6.5同输入修前Failed、修后Passed；最终故障及饱和请求均在Ritsu0.6.2复核通过；纯Store另覆盖旧full收据撤销和纠正收据不重复上传。详见[B015后续证据](../community/b015-follow-up.md)。
+`RUN-STATISTICS-SATURATION` / `coverage/fixtures/runtime/run-statistics-saturation.json`：屏障暂停真实健康consumer，256业务信号、满sync合并重试、第257业务事件显式停用；已接收事件排空持久化，partial重开与原生结算保留，禁止重新上传，排空期间I/O错误不被吞。真实0.111.0/Ritsu0.6.5同输入修前Failed、修后Passed；最终故障及饱和请求均在Ritsu0.6.2复核通过；纯Store另覆盖旧full收据撤销和纠正收据不重复上传。详见[B015后续证据](../community/b015-follow-up.md)。
 
-`B015-MAD-SCIENCE` / `coverage/unattended/b015-mad-science.json`：真实0.111.0/Ritsu0.6.2中Skill/Chaos原生升级、保存恢复、root/Fork、兄弟隔离、合法出牌完整状态/RNG差分通过；None明确拒绝。不是原包坏牌修复，也未定位战前替换调用者。
+`B015-MAD-SCIENCE` / `coverage/fixtures/regressions/community/b015-mad-science.json`：真实0.111.0/Ritsu0.6.2中Skill/Chaos原生升级、保存恢复、root/Fork、兄弟隔离、合法出牌完整状态/RNG差分通过；None明确拒绝。不是原包坏牌修复，也未定位战前替换调用者。
 
-`B015-BOUNDARIES` / `coverage/unattended/b015-boundaries.json`：真实0.111.0/Ritsu0.6.2中Stock替补CombatId/Fork/父不变/增量完整回放/两次原生SHIV状态一致；1HP原生CrimsonMantle自伤在T+1死亡，模拟终局/Fork与原生ProcessPendingLoss安全点完整状态一致。另用T016原报告Ritsu0.6.3复核通过；主线最小边界通过。T016原包开战双状态对账通过；cursor0后的自动Hook触发recorded_action_mismatch，整个RestoreOnly失败；原包另缺选牌录制；T019已定位f1461c7多人实验分支的Last(predicate)无人存活异常，详见后续证据中的构建身份更正。
+`B015-BOUNDARIES` / `coverage/fixtures/regressions/community/b015-boundaries.json`：真实0.111.0/Ritsu0.6.2中Stock替补CombatId/Fork/父不变/增量完整回放/两次原生SHIV状态一致；1HP原生CrimsonMantle自伤在T+1死亡，模拟终局/Fork与原生ProcessPendingLoss安全点完整状态一致。另用T016原报告Ritsu0.6.3复核通过；主线最小边界通过。T016原包开战双状态对账通过；cursor0后的自动Hook触发recorded_action_mismatch，整个RestoreOnly失败；原包另缺选牌录制；T019已定位f1461c7多人实验分支的Last(predicate)无人存活异常，详见后续证据中的构建身份更正。
 
 ## 0.47.3 版本与发布登记（2026-10-01）
 
@@ -264,7 +264,7 @@ Release 0/0、Windows 结构门禁 238；GA-SILENT-BOSS-00 与本轮重构基线
 
 ## 合并审计：并行失败作业记账（2026-09-28）
 
-- 最终源码 `StrategyCorpus/run.py --manifest coverage/strategy-refactor-p2/corpus.json --case ga-silent-boss --out .local/audit-20260928/refactor-sentinel` 为 comparable；与 `.local/strategy-refactor-p6/final-sentinel` 比较逐位相同。最终 Windows 结构门禁 238 通过。
+- 最终源码 `StrategyCorpus/run.py --manifest coverage/corpora/strategy/p2.json --case ga-silent-boss --out .local/audit-20260928/refactor-sentinel` 为 comparable；与 `.local/strategy-refactor-p6/final-sentinel` 比较逐位相同。最终 Windows 结构门禁 238 通过。
 
 - `pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId ADMITTED-JOB-FAILURE-ACCOUNTING -EnemyCurrentHp 999 -VerifyPredictionFailureBoundaries -StopAfterCombatRootSnapshotAssertion -TimeoutSeconds 120 -HeadlessInstance <独立实例> -EvidenceDirectory <证据目录> -CleanupInstanceOnExit`。
 - 未修复生产代码时 `8a6d697c8a404adeb39e6ac12c9a2018` Failed：worker 分配 67,108,888 字节，请求仅记录 116,856。修复后 `747fc356ae864a31b69459e1627ef400` Passed，覆盖取消、原异常、已发生分配记账、排空及同根后续 DOP2；普通预测失败边界也通过。实例均已删除。原始证据 `.local/audit-20260928/refactor-red`、`refactor-green`。
@@ -277,7 +277,7 @@ Release 0/0、Windows 结构门禁 238；GA-SILENT-BOSS-00 与本轮重构基线
 ## 策略重构 P6 收口对照（2026-09-28）
 
 - #90、#100、#101 均用 `pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -CheckpointArchivePath <对应原包> -CheckpointSelector start -ReplayMode SearchOnly -FixedSearchBudget -PerformancePresetForTest VeryHigh -SearchBudgetOverrideMilliseconds 180000 -SearchMaxDegreeOfParallelismForTest 8 -EnableNoGcRegionForTest 0 -TimeoutSeconds 240 -EvidenceDirectory <对应目录> -CleanupInstanceOnExit` 顺序运行，均 Passed、实例清理。证据为 `.local/strategy-refactor-p6/potion-plan-90`、`final-100`、`final-101`。#90 对 P7b 原结果的动作、质量、续用、剪枝和请求展开／转移／选择分支全同，0 战损／最终 49 HP；#100、#101 对先前 P6 同根结果的这些字段全同，分别 22 战损／2 药、58 战损／1 药。对 P6 前同根同政策基线，#100 为 41→22 战损，#101 为死亡→胜利。跨回合计划类型改动后单独重跑 #100，证据 `.local/strategy-refactor-p6/cross-turn-100`，动作、质量、续用、剪枝与工作量继续全同。
-- `python tools/search/StrategyCorpus/run.py --manifest coverage/strategy-refactor-p0/corpus.json --out .local/strategy-refactor-p6/final-sentinel --case ga-silent-boss` 为 `comparable`；`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p5/final-shared-scheduler-dop1 --right .local/strategy-refactor-p6/final-sentinel --out .local/strategy-refactor-p6/final-sentinel-comparison` 对 GA-SILENT-BOSS-00 判定“逐位相同”。左侧另外五根未在右侧运行，比较器标注“缺少一侧”，不参与本轮哨兵判定。最终源码 Release 编译 0 警告、0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=238`；Linux 门禁未运行。
+- `python tools/search/StrategyCorpus/run.py --manifest coverage/corpora/strategy/p0.json --out .local/strategy-refactor-p6/final-sentinel --case ga-silent-boss` 为 `comparable`；`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p5/final-shared-scheduler-dop1 --right .local/strategy-refactor-p6/final-sentinel --out .local/strategy-refactor-p6/final-sentinel-comparison` 对 GA-SILENT-BOSS-00 判定“逐位相同”。左侧另外五根未在右侧运行，比较器标注“缺少一侧”，不参与本轮哨兵判定。最终源码 Release 编译 0 警告、0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=238`；Linux 门禁未运行。
 
 ## 策略重构 P6 免费药计划证据（2026-09-28）
 
@@ -301,7 +301,7 @@ Release 0/0、Windows 结构门禁 238；GA-SILENT-BOSS-00 与本轮重构基线
 
 ## 策略重构 P5 共享调度收口（2026-09-28）
 
-- `dotnet build CombatSolver.csproj -c Release --no-restore` 成功，0 警告、0 错误；Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=237`。`python tools/search/StrategyCorpus/run.py --manifest coverage/strategy-refactor-p0/corpus.json --out .local/strategy-refactor-p5/final-shared-scheduler-dop1 --case report-24 --case report-37 --case report-81 --case report-89 --case ga-ironclad-elite --case ga-silent-boss` 六根均 `comparable`。对 `.local/strategy-refactor-p4/after-p4-20260928` 同政策基线，排除后加的 P8a `searchWorkAttributions` 后，六根完整动作、续用、终局、工作量及剪枝逐位相同；原始比较证据 `.local/strategy-refactor-p5/final-shared-scheduler-comparison`。GA-SILENT-BOSS-00 的 DOP8 对 `.local/strategy-refactor-p5/executor-after-dop8` 的 122 个非时序字段、动作和续用全同；搜索耗时 24,053.0502→24,091.1489 ms，worker 分配 11,885,994,992→11,879,940,960 字节，均仅作单样本观测。DOP8 证据 `.local/strategy-refactor-p5/final-shared-scheduler-dop8`；无头实例已清理。Linux 门禁依用户要求未运行。
+- `dotnet build CombatSolver.csproj -c Release --no-restore` 成功，0 警告、0 错误；Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=237`。`python tools/search/StrategyCorpus/run.py --manifest coverage/corpora/strategy/p0.json --out .local/strategy-refactor-p5/final-shared-scheduler-dop1 --case report-24 --case report-37 --case report-81 --case report-89 --case ga-ironclad-elite --case ga-silent-boss` 六根均 `comparable`。对 `.local/strategy-refactor-p4/after-p4-20260928` 同政策基线，排除后加的 P8a `searchWorkAttributions` 后，六根完整动作、续用、终局、工作量及剪枝逐位相同；原始比较证据 `.local/strategy-refactor-p5/final-shared-scheduler-comparison`。GA-SILENT-BOSS-00 的 DOP8 对 `.local/strategy-refactor-p5/executor-after-dop8` 的 122 个非时序字段、动作和续用全同；搜索耗时 24,053.0502→24,091.1489 ms，worker 分配 11,885,994,992→11,879,940,960 字节，均仅作单样本观测。DOP8 证据 `.local/strategy-refactor-p5/final-shared-scheduler-dop8`；无头实例已清理。Linux 门禁依用户要求未运行。
 
 ## 策略重构 P5 回合尾部作业（2026-09-28）
 
@@ -325,7 +325,7 @@ Release 0/0、Windows 结构门禁 238；GA-SILENT-BOSS-00 与本轮重构基线
 
 ## 策略重构 P5 卡牌回放入口（2026-09-28）
 
-- `dotnet build CombatSolver.csproj -c Release --no-restore` 通过，0 警告、0 错误；Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=237`。`python tools/search/StrategyCorpus/run.py --manifest coverage/strategy-refactor-p0/corpus.json --out .local/strategy-refactor-p5/choice-dispatch-after-dop1 --case ga-silent-boss` 为 comparable。对 `.local/strategy-refactor-p4/after-p4-20260928` 同根 DOP1 基线比较时，新增的 P8a 归因数组是唯一协议字段差异；排除该后加字段后，质量、完整动作、续用、全部其余非时序指标和剪枝逐位相同。证据 `.local/strategy-refactor-p5/choice-dispatch-compare-dop1`。未跑其余五根、DOP8 或 Linux 门禁；P5 尚未收口。
+- `dotnet build CombatSolver.csproj -c Release --no-restore` 通过，0 警告、0 错误；Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=237`。`python tools/search/StrategyCorpus/run.py --manifest coverage/corpora/strategy/p0.json --out .local/strategy-refactor-p5/choice-dispatch-after-dop1 --case ga-silent-boss` 为 comparable。对 `.local/strategy-refactor-p4/after-p4-20260928` 同根 DOP1 基线比较时，新增的 P8a 归因数组是唯一协议字段差异；排除该后加字段后，质量、完整动作、续用、全部其余非时序指标和剪枝逐位相同。证据 `.local/strategy-refactor-p5/choice-dispatch-compare-dop1`。未跑其余五根、DOP8 或 Linux 门禁；P5 尚未收口。
 
 ## 策略重构 P8c 同根路线首分歧（2026-09-28）
 
@@ -396,14 +396,14 @@ Release 0/0、Windows 结构门禁 238；GA-SILENT-BOSS-00 与本轮重构基线
 - 离线 GA-SILENT-BOSS-00：当前 DOP8 与临时 P4 提交 `e248b6e3` 的 DOP8，同政策、25,000 节点、110 秒，`compare_results.py` 的 121 个非时序字段全同，战损 44，expanded 69,257，transitions 222,131。当前 DOP1 对 P4 DOP1 的早期边界对照也全同；但此后共享选择分派发生源码变化，DOP1 最终对照仍待运行。P4 自身的 DOP1／DOP8 已有动作次序与计数差异，两边战损同为 44。Linux 门禁未运行。
 - 父节点入场准入合并后，Release 编译 0 警告、0 错误，Windows 门禁 `REFACTOR_BOUNDARIES_OK search_files=232`；仍待最终源码的固定根对照。Linux 门禁不运行。
 - 卡牌候选准入与快照所有权合并：Release 编译 0 警告、0 错误，Windows 门禁 `REFACTOR_BOUNDARIES_OK search_files=232`；GA-SILENT-BOSS-00 当前 DOP8 对 P4 同 DOP 基线使用 `compare_results.py` 比较 121 字段全同，战损 44、expanded 69,257、transitions 222,131。其余根和 DOP1 最终源码对照尚未运行。
-- P5 候选语义阶段对照：`python tools/search/StrategyCorpus/run.py --manifest coverage/strategy-refactor-p2/corpus.json --out .local/strategy-refactor-p5/after-p5-20260928` 的四个玩家根和两个生成场景均 `comparable`；`compare.py --left .local/strategy-refactor-p4/after-p4-20260928 --right .local/strategy-refactor-p5/after-p5-20260928 --out .local/strategy-refactor-p5/compare-p5-20260928` 六根逐位相同。P5 执行器接口和串行／并行调度统一尚未实施，不以该对照宣称 P5 全部完成。
+- P5 候选语义阶段对照：`python tools/search/StrategyCorpus/run.py --manifest coverage/corpora/strategy/p2.json --out .local/strategy-refactor-p5/after-p5-20260928` 的四个玩家根和两个生成场景均 `comparable`；`compare.py --left .local/strategy-refactor-p4/after-p4-20260928 --right .local/strategy-refactor-p5/after-p5-20260928 --out .local/strategy-refactor-p5/compare-p5-20260928` 六根逐位相同。P5 执行器接口和串行／并行调度统一尚未实施，不以该对照宣称 P5 全部完成。
 
 ## 策略重构 P4 登记表（2026-09-28）
 
 - 药水成本档位及开局使用类型移至 `PotionValuationRegistry`：`dotnet build CombatSolver.csproj -c Release -p:CopyModOnBuild=false --no-restore` 成功，0 警告、0 错误；`pwsh -NoProfile -File tools/inspection/verify-refactor-boundaries.ps1` 返回 `REFACTOR_BOUNDARIES_OK search_files=229`。未运行无头语料；语义逐位对照留到 P4 收口。Linux 门禁按用户要求不运行。
 - 白噪声、夜魇与复制药水的开局身份匹配移至 `OpeningActionRegistry`：Release 编译 0 警告、0 错误，Windows 门禁返回 `REFACTOR_BOUNDARIES_OK search_files=230`。未运行无头语料；Linux 门禁按用户要求不运行。
 - 开局目标变体与每目标进攻代表移至 `TargetPlanRegistry`：Release 编译 0 警告、0 错误，Windows 门禁返回 `REFACTOR_BOUNDARIES_OK search_files=231`。原始 3 目标、前 3 次目标动作、最多 2 次改目标以及目标排序保持原值；语料对照尚未运行。Linux 门禁按用户要求不运行。
-- P4 收口：`python tools/search/StrategyCorpus/run.py --manifest coverage/strategy-refactor-p2/corpus.json --out .local/strategy-refactor-p4/after-p4-20260928` 单次采集四个玩家根和两个生成场景，全部 `comparable`；`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p3/after-p3-20260928 --right .local/strategy-refactor-p4/after-p4-20260928 --out .local/strategy-refactor-p4/compare-p4-20260928` 六根均逐位相同。无头实例由运行器清理；未运行 Linux 门禁。
+- P4 收口：`python tools/search/StrategyCorpus/run.py --manifest coverage/corpora/strategy/p2.json --out .local/strategy-refactor-p4/after-p4-20260928` 单次采集四个玩家根和两个生成场景，全部 `comparable`；`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p3/after-p3-20260928 --right .local/strategy-refactor-p4/after-p4-20260928 --out .local/strategy-refactor-p4/compare-p4-20260928` 六根均逐位相同。无头实例由运行器清理；未运行 Linux 门禁。
 
 ## 策略重构 P2 外层补搜迁移（2026-09-28）
 
@@ -414,7 +414,7 @@ Release 0/0、Windows 结构门禁 238；GA-SILENT-BOSS-00 与本轮重构基线
 - 请求管线现统一派发后处理 Pass。只检查 Release 编译、Windows 结构门禁和原调用顺序；游戏实例未启动，完整结果、接管时机与工作量的逐位对照仍待执行。
 - 主 Pass 六处固定前缀成员预算切片改走账本窗口，保留原采样顺序与常数；仅做 Release 编译及 Windows 结构门禁，实际成员派发与结果对照合并到 P2 收口。
 - 夜魇开局成员改走 `ProfileWindow`，仍使用配置时间帽和请求剩余节点；仅做 Release 编译及 Windows 结构门禁，实际路线对照留到 P2 收口。
-- P2 收口：`python tools/search/StrategyCorpus/run.py --manifest coverage/strategy-refactor-p2/corpus.json --out .local/strategy-refactor-p2/after-p2-20260928` 运行一次，#24、#37、#81、#89 与两个生成场景均为 `comparable`，无头实例已清理。`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p2/baseline-0471 --right .local/strategy-refactor-p2/after-p2-20260928 --out .local/strategy-refactor-p2/compare-p2-20260928` 报告六根逐位相同。最终行为源码的 Release 编译 0 警告、0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=219`；Linux 门禁按用户要求未运行。
+- P2 收口：`python tools/search/StrategyCorpus/run.py --manifest coverage/corpora/strategy/p2.json --out .local/strategy-refactor-p2/after-p2-20260928` 运行一次，#24、#37、#81、#89 与两个生成场景均为 `comparable`，无头实例已清理。`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p2/baseline-0471 --right .local/strategy-refactor-p2/after-p2-20260928 --out .local/strategy-refactor-p2/compare-p2-20260928` 报告六根逐位相同。最终行为源码的 Release 编译 0 警告、0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=219`；Linux 门禁按用户要求未运行。
 - P3 双药开局来源迁移：本边界只执行 Release 编译与 Windows 结构门禁；#17 两种顺序和六根语料的行为对照保留至 P3 收口一次运行，未把 P2 的旧证据算作新源码通过。
 - P3 提前复制药水来源迁移：用药数仍在逐候选派发时读取，静态检查其捕获时机；行为对照留到 P3 收口，不额外启动一个游戏实例。
 - P3 零费开局来源迁移：调度器按来源声明保留重复前缀，八次实际尝试上限仍在模式中；仅做 Release 编译与 Windows 结构门禁，行为对照留到 P3 收口。
@@ -433,4 +433,4 @@ Release 0/0、Windows 结构门禁 238；GA-SILENT-BOSS-00 与本轮重构基线
 - P3 前两回合实验续搜迁移：静态核对独立时间/追加节点额度与 `EARLY_TURN_CONTINUATION` 的可选用药诊断；仅执行 Release 编译与 Windows 门禁，默认关闭模式不纳入普通语料质量结论。
 - P3 宽度组合纯移动：`RunBeamWidthPortfolioPass`、单成员结果包装与成员遥测整段迁入独立 partial 文件；只执行 Release 编译及 Windows 结构门禁，动作与工作量逐位对照并入 P3 收口。
 - P3 补充审计纯移动：三种审计、Smart 梯度及内存检查整段迁入独立 partial 文件；只执行 Release 编译与 Windows 结构门禁，动作、诊断和工作量逐位对照并入 P3 收口。
-- P3 收口：`python tools/search/StrategyCorpus/run.py --manifest coverage/strategy-refactor-p2/corpus.json --out .local/strategy-refactor-p3/after-p3-20260928` 的四个玩家根和两个生成场景均为 `comparable`。`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p2/after-p2-20260928 --right .local/strategy-refactor-p3/after-p3-20260928 --out .local/strategy-refactor-p3/compare-p3-20260928` 报告六根逐位相同；无头实例已清理。最终 Release 编译 0 警告、0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=228`；Linux 门禁按用户要求未运行。
+- P3 收口：`python tools/search/StrategyCorpus/run.py --manifest coverage/corpora/strategy/p2.json --out .local/strategy-refactor-p3/after-p3-20260928` 的四个玩家根和两个生成场景均为 `comparable`。`python tools/search/StrategyCorpus/compare.py --left .local/strategy-refactor-p2/after-p2-20260928 --right .local/strategy-refactor-p3/after-p3-20260928 --out .local/strategy-refactor-p3/compare-p3-20260928` 报告六根逐位相同；无头实例已清理。最终 Release 编译 0 警告、0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=228`；Linux 门禁按用户要求未运行。

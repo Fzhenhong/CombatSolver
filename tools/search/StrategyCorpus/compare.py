@@ -105,7 +105,7 @@ def classify(left, right, budget_ms=None):
 
 def compare(left_directory, right_directory, budget_ms=None):
     if budget_ms is None:
-        manifest = Path(__file__).resolve().parents[3] / "coverage/strategy-refactor-p0/corpus.json"
+        manifest = Path(__file__).resolve().parents[3] / "coverage/corpora/strategy/p0.json"
         budget_ms = json.loads(manifest.read_text(encoding="utf-8"))["searchBudgetMilliseconds"]
     left = read_cases(left_directory)
     right = read_cases(right_directory)

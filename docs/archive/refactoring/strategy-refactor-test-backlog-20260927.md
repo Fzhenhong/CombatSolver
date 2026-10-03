@@ -31,7 +31,7 @@
 
 ## P2 收口证据
 
-`coverage/strategy-refactor-p2/corpus.json` 中的 #24、#37、#81、#89 和两个生成场景均可比较；相对于 `baseline-0471`，动作、续用、结果、工作量和剪枝计数逐位相同。对照文件为 `.local/strategy-refactor-p2/compare-p2-20260928/comparison.md`，无头实例已清理。#79、#85 的限时基线继续不参与逐位门槛。
+`coverage/corpora/strategy/p2.json` 中的 #24、#37、#81、#89 和两个生成场景均可比较；相对于 `baseline-0471`，动作、续用、结果、工作量和剪枝计数逐位相同。对照文件为 `.local/strategy-refactor-p2/compare-p2-20260928/comparison.md`，无头实例已清理。#79、#85 的限时基线继续不参与逐位门槛。
 
 本地 Mod 尚未部署；在最终源码完成后覆盖已确认的五个 Mod 文件。Linux 门禁按用户要求不运行。
 

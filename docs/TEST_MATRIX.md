@@ -24,7 +24,7 @@
 | AXEBOT-TRANSFORM-FINAL | `8512e36aecd74d93a15f3adb34502190` | 原力与SEANCE两项原生完整差分 |
 | AXEBOT-JOSS-DEFERRED-FORK | `e7c0363924e74211b043ebfaca50ac0c` | 根冻结、live推进、指纹/续用、父子/兄弟及逐分支消费 |
 
-复跑在仓库根目录使用 `tools/testing/run-unattended-test.ps1`：前三项分别传 `coverage/unattended/axebot-joss-late-ethereal.json`（IRONCLAD）、`axebot-compact-order.json`（DEFECT）、`axebot-folly-star-cleanup.json`（SILENT）至 `-MonsterMoveChecksPath`；变牌哨兵使用 `axebot-transform-sentinel.json`（IRONCLAD）。均为 `-EncounterId MockMonsterEncounter -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。Fork 合同使用精确 `-ScenarioId AXEBOT-JOSS-DEFERRED-FORK -RelicsPath coverage/unattended/axebot-joss-deferred-relics.json`，其他参数相同。没有运行搜索，因此不带增量搜索开关。
+复跑在仓库根目录使用 `tools/testing/run-unattended-test.ps1`：前三项分别传 `coverage/fixtures/regressions/axebot/axebot-joss-late-ethereal.json`（IRONCLAD）、`axebot-compact-order.json`（DEFECT）、`axebot-folly-star-cleanup.json`（SILENT）至 `-MonsterMoveChecksPath`；变牌哨兵使用 `axebot-transform-sentinel.json`（IRONCLAD）。均为 `-EncounterId MockMonsterEncounter -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。Fork 合同使用精确 `-ScenarioId AXEBOT-JOSS-DEFERRED-FORK -RelicsPath coverage/fixtures/regressions/axebot/axebot-joss-deferred-relics.json`，其他参数相同。没有运行搜索，因此不带增量搜索开关。
 
 Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。该战斗修复阶段的覆盖工具曾拒绝既有 `PassedWithDocumentedBoundaries` / `PassedWithDocumentedPerformanceRegression` 状态，临时补足解析后又遇 `InfusedCore` 重复构造；当时临时修改已撤回。后续覆盖工具修复结果见下节。完整问题包部署、全场零重算和性能未验证；首轮倾泻包中途缺历史 applier ID 1、原生录制恢复停在输入26，最小重建请求120秒超时，未扩大时间帽；后续单动作修复见上节。详细失败基线及材料边界见 [报告记录](issues/axebot-reports-20261003.md)。本轮创建的无头实例均按清理开关删除。
 
@@ -53,3 +53,11 @@ pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId EFFECT-S
 工具按九类职责归并，35 个保留项目全部完成 Release 编译。首次全量编译的六处旧源码路径、排除路径和 RitsuLib 引用问题已修正，仅重编失败项目。主项目 Release 零警告/错误；Windows 与 Git Bash 结构门禁通过（246 个 Search 文件）。CheckpointTool self-test 35 项断言、GC 检查 26 项及 Windows `test-headless-runtime.ps1 -ProfileOnly` 通过。Windows 矩阵替身检查通过实例复用、参数转发、异主/旧标记拒绝及取消适配；没有启动游戏或跑战斗/性能场景，未验证原生 Linux/macOS 启动。
 
 在线监控迁至独立私有仓库。Node 23.9.0 下服务测试 22 项、日活 3 项、Edge 浏览器 10 项通过；文档链接检查通过。线上 17 个业务文件与新仓库一致，只同步文档、测试入口和来源记录，未重启、未修改数据库或客户端最新版本提示。
+
+## coverage 目录归并验证（2026-10-03）
+
+覆盖材料分为 catalog、evidence、fixtures、corpora 和 archive。15 份旧临时问题输入归档，4 个已结束等价批次的专用脚本退役；912 份输入逐项与整理前 JSON 对比，只改变路径，语义内容一致。两组历史对照的数字和原始哈希保留为当时证据。
+
+CoverageCatalog 与 CheckpointTool Release 编译零警告/错误。覆盖目录从新入口实际生成，`--verify-state-fields --verify-branch-state-reads` 通过；十份生成快照与整理前对账，除材料路径外一致。3035 个 Hook 的分类与验证等级保持原样，仍有一个主动 Exact Hook 和一个必需写状态 Hook 缺运行证据；本轮没有修复或补跑该缺口。
+
+覆盖结构/引用检查通过（932 份 JSON/save、747 份现行 fixture），文档链接与工具语法检查通过，Windows 结构门禁通过（246 个 Search 文件）。批量回放的空输入 Preflight 验证启动器定位与环境采集，不代表包恢复或战斗通过。未启动游戏，未重新跑历史等价批次或原生 Linux/macOS 启动。

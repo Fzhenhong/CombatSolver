@@ -23,6 +23,7 @@ pwsh -NoProfile -File tools/build/build-local-stack.ps1 -Configuration Release
 python tools/inspection/verify-tools.py
 python tools/inspection/verify-tools.py --build
 python tools/inspection/verify-documentation.py
+python -B tools/inspection/verify-coverage.py
 pwsh -NoProfile -File tools/inspection/verify-refactor-boundaries.ps1
 pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 <fixture参数> -CleanupInstanceOnExit
 pwsh -NoProfile -File tools/replay/run-checkpoint-batch.ps1 -InputPath <问题包> -ReplayMode Preflight

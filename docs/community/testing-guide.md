@@ -30,16 +30,16 @@ pwsh -NoProfile -File tools/replay/run-checkpoint-batch.ps1 -InputPath .local/is
 
 ## 最小差分夹具
 
-`coverage/unattended/` 包含多种 JSON：卡牌列表、怪物动作检查、药水检查、生成配置、完整请求。先核对消费者。`MonsterMoveChecksPath` 接受怪物动作检查数组，`CardsPath` 接受牌组注入数组；协议在 [UnattendedTestProtocol.cs](../../src/Testing/UnattendedTestProtocol.cs)。
+`coverage/fixtures/` 包含多种 JSON：卡牌列表、怪物动作检查、药水检查、生成配置、完整请求。先核对消费者。`MonsterMoveChecksPath` 接受怪物动作检查数组，`CardsPath` 接受牌组注入数组；协议在 [UnattendedTestProtocol.cs](../../src/Testing/UnattendedTestProtocol.cs)。
 
-已有[尖啸生命周期夹具](../../coverage/unattended/card-on-play-batch-035-piercing-wail-lifecycle.json)设置招式、插入一张牌、执行并检查力量恢复与能力移除，通过 `RunMonsterMoveDifferentialAsync` 比较实际与模拟状态：
+已有[尖啸生命周期夹具](../../coverage/fixtures/cards/card-on-play-batch-035-piercing-wail-lifecycle.json)设置招式、插入一张牌、执行并检查力量恢复与能力移除，通过 `RunMonsterMoveDifferentialAsync` 比较实际与模拟状态：
 
 ```powershell
-pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId CARD-ON-PLAY-BATCH-035-PIERCING-WAIL -CharacterId IRONCLAD -EnemyCurrentHp 50 -MonsterMoveChecksPath coverage/unattended/card-on-play-batch-035-piercing-wail-lifecycle.json -Sts2GameRoot '<游戏目录>' -RitsuWorkshopRoot '<RitsuLib工坊目录>' -EvidenceDirectory .local/community-check/wail -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId CARD-ON-PLAY-BATCH-035-PIERCING-WAIL -CharacterId IRONCLAD -EnemyCurrentHp 50 -MonsterMoveChecksPath coverage/fixtures/cards/card-on-play-batch-035-piercing-wail-lifecycle.json -Sts2GameRoot '<游戏目录>' -RitsuWorkshopRoot '<RitsuLib工坊目录>' -EvidenceDirectory .local/community-check/wail -TimeoutSeconds 120 -CleanupInstanceOnExit
 ```
 
 ```bash
-./tools/testing/run-unattended-test.sh --scenario-id CARD-ON-PLAY-BATCH-035-PIERCING-WAIL --character-id IRONCLAD --enemy-current-hp 50 --monster-move-checks-path coverage/unattended/card-on-play-batch-035-piercing-wail-lifecycle.json --sts2-game-root '<游戏目录>' --ritsu-workshop-root '<RitsuLib工坊目录>' --evidence-directory .local/community-check/wail --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id CARD-ON-PLAY-BATCH-035-PIERCING-WAIL --character-id IRONCLAD --enemy-current-hp 50 --monster-move-checks-path coverage/fixtures/cards/card-on-play-batch-035-piercing-wail-lifecycle.json --sts2-game-root '<游戏目录>' --ritsu-workshop-root '<RitsuLib工坊目录>' --evidence-directory .local/community-check/wail --timeout-seconds 120 --cleanup-instance-on-exit
 ```
 
 复制已有夹具到自己的忽略目录，缩小到首个错误动作，固定状态与断言。修改前实际失败、修改后同输入通过，再提交有价值的最小 JSON。核对 `EncounterId`（遭遇）与 `MonsterId`（单怪模型）。同 ID 多实例、目标、牌堆顺序、私有状态和 RNG 一并保留；只有实际启动搜索的夹具才启用增量搜索等价验证。

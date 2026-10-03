@@ -67,7 +67,7 @@ def main(repo, data):
         if p.startswith('coverage/') and p.endswith('.json'):
             payload = json.loads(t)
             walk(payload)
-            if p.startswith('coverage/unattended/'):
+            if p.startswith('coverage/fixtures/'):
                 sid = payload.get('scenarioId') if isinstance(payload,dict) else None
                 fixtures.append(dict(file=p, scenarioId=sid, executorSpecialBranch=sid in scenario_ids,
                                      otherTestingMentions=[q for q,s in texts.items() if sid and q.startswith('src/Testing/') and q != 'src/Testing/UnattendedTestProtocol.cs' and sid in s]))

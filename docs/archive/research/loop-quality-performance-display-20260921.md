@@ -97,7 +97,7 @@
 
 ### 2.6 现有夹具已经覆盖了「防御价值饱和」这个场景
 
-`coverage/unattended/generic-loop-stagnant-block-draw-v0111.json` 的描述就是：
+`coverage/fixtures/search/generic-loop-stagnant-block-draw-v0111.json` 的描述就是：
 
 > A zero-cost draw/block recurrence keeps changing exact pile, history, and block state **after its defensive value is saturated**. Bounded planning must sample the recurrence and then stop without relying on a card-specific rule.
 
@@ -223,12 +223,12 @@
 
 | 夹具 | 覆盖什么 | 关键期望 |
 |---|---|---|
-| `coverage/unattended/generic-loop-stagnant-block-draw-v0111.json` | **问题 1 的停滞型格挡循环**：防御价值饱和后仍在改变状态 | `CycleContinuationsStopped ≥ 1`、展开 ≤ 80 |
-| `coverage/unattended/generic-loop-bloodletting-double-pommel-quality-v0111.json` | **卖血＋有限重复链**：立即斩杀要付 6 HP，等一回合只需 3 HP | 战损 3、T2、敌方 HP ≤ 0 |
-| `coverage/unattended/generic-loop-long-damage-hidden-phase-v0111.json` | **问题 2 的核心**：2×急躁 + 信封开启者，3 张技能 3 点伤害打 2000 HP | 可执行动作 ≥ 1200、洗牌 ≥ 1200、T1 击杀 |
-| `coverage/unattended/generic-loop-long-growing-damage-v0111.json` | 50 万 HP、>256 次周期、每周期伤害不同 | 可执行动作 ≥ 800、T1 击杀；已记录 892 动作/1784 展开/0.766 s（`docs/TEST_MATRIX.md:2088`） |
-| `coverage/unattended/generic-loop-letter-opener-hidden-phase-v0111.json` | 隐藏相位（第三次技能才兑现） | T1 击杀、`CycleShapesDetected ≥ 1` |
-| `coverage/unattended/generic-loop-rampage-dynamic-growth-positive-v0111.json` | 动态成长循环、DOP 等价 | 32 动作、T1、DOP1/DOP2 工作量和动作一致 |
+| `coverage/fixtures/search/generic-loop-stagnant-block-draw-v0111.json` | **问题 1 的停滞型格挡循环**：防御价值饱和后仍在改变状态 | `CycleContinuationsStopped ≥ 1`、展开 ≤ 80 |
+| `coverage/fixtures/search/generic-loop-bloodletting-double-pommel-quality-v0111.json` | **卖血＋有限重复链**：立即斩杀要付 6 HP，等一回合只需 3 HP | 战损 3、T2、敌方 HP ≤ 0 |
+| `coverage/fixtures/search/generic-loop-long-damage-hidden-phase-v0111.json` | **问题 2 的核心**：2×急躁 + 信封开启者，3 张技能 3 点伤害打 2000 HP | 可执行动作 ≥ 1200、洗牌 ≥ 1200、T1 击杀 |
+| `coverage/fixtures/search/generic-loop-long-growing-damage-v0111.json` | 50 万 HP、>256 次周期、每周期伤害不同 | 可执行动作 ≥ 800、T1 击杀；已记录 892 动作/1784 展开/0.766 s（`docs/TEST_MATRIX.md:2088`） |
+| `coverage/fixtures/search/generic-loop-letter-opener-hidden-phase-v0111.json` | 隐藏相位（第三次技能才兑现） | T1 击杀、`CycleShapesDetected ≥ 1` |
+| `coverage/fixtures/search/generic-loop-rampage-dynamic-growth-positive-v0111.json` | 动态成长循环、DOP 等价 | 32 动作、T1、DOP1/DOP2 工作量和动作一致 |
 
 复跑（Linux，本机已具备游戏与 RitsuLib）：
 

@@ -75,4 +75,4 @@ Release 构建通过，Linux 结构门禁通过。生产行为在性能 A/B 之�
 python3 tools/testing/checks/BeamRankSortChecks/run.py
 ```
 
-性能夹具分别来自 `coverage/unattended/performance-veryhigh-mecha-native.json` 的原生牌组，以及 `search-performance-necrobinder-projected-*` 的牌组、遗物、药水输入。亡灵档位被明确固定为 Low，不能把结果外推到 VeryHigh；完整请求还固定角色、种子、敌人 HP、玩家 HP、药水政策和 DOP，单独复制牌组并不能复现本轮工作量。
+性能夹具分别来自 `coverage/fixtures/runtime/performance-veryhigh-mecha-native.json` 的原生牌组，以及 `search-performance-necrobinder-projected-*` 的牌组、遗物、药水输入。亡灵档位被明确固定为 Low，不能把结果外推到 VeryHigh；完整请求还固定角色、种子、敌人 HP、玩家 HP、药水政策和 DOP，单独复制牌组并不能复现本轮工作量。

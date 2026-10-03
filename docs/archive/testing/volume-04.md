@@ -58,9 +58,9 @@ Windows等价入口：
 
 - 游戏 0.111.0 的 Release 构建通过，零警告、零错误；Bash 结构门禁通过。
 - `AdaptedOnPlayChecks`：35 项合同、2 项空登记检查通过。使用 Harmony 2.4.2，覆盖完整组合、来源、重载、类别、顺序、冻结及拒绝规则；游戏实体和模拟器外壳使用替身。命令见[工具说明](../../../tools/testing/checks/AdaptedOnPlayChecks/README.md)。
-- [原生替换](../../../coverage/unattended/adapted-card-integration.json)：真实防御 OnPlay 替换执行恰好一次，完整快照、增量回放、Fork 与 T1→T2 对账通过；额外补丁改变 continuation，旧根保持冻结，新根拒绝未登记组合。
-- [缓存路线](../../../coverage/unattended/adapted-stale-integration.json)：补丁变化使控制器执行资格失效，移除补丁后恢复。
-- [跨回合续用](../../../coverage/unattended/adapted-reuse-integration.json)：第 2 回合精确续用通过，计划外重算为 0。
+- [原生替换](../../../coverage/fixtures/third-party/adapted-card-integration.json)：真实防御 OnPlay 替换执行恰好一次，完整快照、增量回放、Fork 与 T1→T2 对账通过；额外补丁改变 continuation，旧根保持冻结，新根拒绝未登记组合。
+- [缓存路线](../../../coverage/fixtures/third-party/adapted-stale-integration.json)：补丁变化使控制器执行资格失效，移除补丁后恢复。
+- [跨回合续用](../../../coverage/fixtures/third-party/adapted-reuse-integration.json)：第 2 回合精确续用通过，计划外重算为 0。
 - 游戏验证使用回合阶段、卡牌引用和 OnPlay 适配的组合构建；续用场景同时登记模型状态与 OnPlay，独立场景只登记 OnPlay。注册场景须使用独立新进程。
 - 执行中热换补丁、完整长局和任意第三方 Mod 未覆盖；未作性能验证。
 
@@ -68,8 +68,8 @@ Windows等价入口：
 
 - 游戏 0.111.0 的 Release 构建通过，零警告、零错误；Bash 结构门禁通过。
 - `ModelPredictionStateChecks`：卡牌引用合同 28 项、模型状态合同 32 项、空登记合同 3 项通过。覆盖实例身份、父子兄弟隔离、Fork、两侧描述、空值、重复、顺序及失效引用；游戏对象和模拟器外壳使用替身。
-- [模型状态集成](../../../coverage/unattended/model-state-integration.json)：完整模拟器 Fork、Preview COW、子状态变更隔离、引用列表参与指纹和 continuation，以及 T1→T2 原生完整快照对账通过。
-- [模型状态续用](../../../coverage/unattended/model-state-reuse-integration.json)：控制器第 2 回合精确续用通过，计划外重算为 0。
+- [模型状态集成](../../../coverage/fixtures/scenarios/state/model-state-integration.json)：完整模拟器 Fork、Preview COW、子状态变更隔离、引用列表参与指纹和 continuation，以及 T1→T2 原生完整快照对账通过。
+- [模型状态续用](../../../coverage/fixtures/scenarios/state/model-state-reuse-integration.json)：控制器第 2 回合精确续用通过，计划外重算为 0。
 - 游戏验证使用回合阶段、卡牌引用和 OnPlay 适配的组合构建。任意外部 Mod 的状态语义未覆盖；未作性能验证。注册场景须使用独立新进程。
 
 ## 0.38.2：回合末晚期镜像
@@ -77,8 +77,8 @@ Windows等价入口：
 - 游戏 0.111.0 的 Release 构建通过，零警告、零错误；Bash 结构门禁通过。
 - `TurnPhaseMirrorChecks`：25 项合同、1 项冻结检查及分配回归通过。覆盖精确登记、两侧参数与顺序、空参与者、异常传播、选择暂停、成员快照、COW 和 Disintegration 调用次数。模型与命令使用替身。
 - CoverageCatalog 校验通过，新增镜像识别为 `Registered / Exact / EngineMirror`。
-- [玩家晚期伤害](../../../coverage/unattended/monster-moves-batch-033-disintegration.json)：原生差分通过，2 格挡承受 5 点伤害后掉血 3。
-- [双方晚期伤害](../../../coverage/unattended/late-both-sides.json)：原生 T1→T2 完整快照、Fork 与 continuation 对账通过。
+- [玩家晚期伤害](../../../coverage/fixtures/monsters/monster-moves-batch-033-disintegration.json)：原生差分通过，2 格挡承受 5 点伤害后掉血 3。
+- [双方晚期伤害](../../../coverage/fixtures/scenarios/state/late-both-sides.json)：原生 T1→T2 完整快照、Fork 与 continuation 对账通过。
 - 游戏验证使用回合阶段、卡牌引用和 OnPlay 适配的组合构建。末击、多监听器原生顺序和任意第三方晚期 Hook 未覆盖；未作性能验证。
 
 ## 在线 DAU（2026-09-14）

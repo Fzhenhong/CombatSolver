@@ -94,6 +94,7 @@ description: 重构 CombatSolver 的 Search、Runtime 会话、UI snapshot、无
 - `src/Replay` 只依赖标准库：包校验、顺序事件临时文件；Runtime 冻结原生输入，Testing 重放和对账，CheckpointTool 负责批量调度与结果口径。跨平台脚本只承担本平台启动与进程所有权。
 - headless 实例目录、完整游戏/Mod 内容快照和主机资源预约属于 `tools/testing/headless-runtime.ps1/.sh`；默认实例根固定为当前仓库 `.local/headless-instances/<实例>`，不得回到 `%LOCALAPPDATA%` 或 XDG state。用户目录只保留跨任务互斥所需的小型主机租约。启动器保留请求协议、精确 PID/出生身份终止、结果与静稳 ACK。不得把测试协调放入游戏 Search/Runtime，或只删全局进程检查而继续共享 DLL/协议。并行只作正确性/吞吐验证，性能对照使用独占模式。
 - CoverageCatalog 只消费 `IMethodMirrorRegistryDescriptorProvider`，不反射 registry 私有字段。
+- 覆盖材料按 `coverage/README.md` 收纳；CoverageCatalog 从 catalog/evidence 读取登记，按完整路径消费 fixtures，替换 catalog/generated 快照，候选输入生成到 .local。移动目录保持证据等级与语义输入，运行器继续由 tools 持有。
 
 ## 3. 实现方式
 

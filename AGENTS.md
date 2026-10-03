@@ -49,7 +49,7 @@ CombatSolver 是《杀戮尖塔 2》的单人战斗路线求解器 Mod，使用 
 - [文档总目录](docs/README.md)：当前指南与专题索引；玩家更新日志统一位于 `docs/releases/`，专题资料按目录维护。新增或移动文档时同步索引与引用。
 - [架构与职责地图](docs/ARCHITECTURE.md)：当前源码入口、所有权和禁止依赖的单一维护入口。
 - [滚动重构路线](docs/refactoring/refactor-roadmap.md)：当前状态、待证据项与历史入口。
-- [测试矩阵](docs/TEST_MATRIX.md) 与 `coverage/test-evidence.json`：可重跑场景和结构化证据。
+- [测试矩阵](docs/TEST_MATRIX.md) 与 `coverage/evidence/test-evidence.json`：可重跑场景和结构化证据。
 - [开发笔记](docs/DEVELOPMENT_NOTES.md)：当前未发布行为变化与历史入口。
 - [第三方 Mod 适配手册](docs/third-party/README.md)：面向外部 Mod 作者的登记点总表、登记纪律与验收标准；同时是「哪些位置还是封闭开关」的单一维护入口。
 - `tools/inspection/verify-refactor-boundaries.ps1`（Windows / PowerShell 7）与 `tools/inspection/verify-refactor-boundaries.sh`（Linux / Bash）：当前架构边界的等价可执行门禁。
@@ -178,6 +178,12 @@ Windows `.ps1` 与 Linux `.sh` 都是受维护的平台原生入口：PowerShell
 - .NET 工具统一使用 tools/Directory.Build.props，产物和中间文件写入 .local/tool-build/；问题包、日志、trace、测量结果和生成代码写入 .local/。Python 检查使用 -B，避免在源码目录堆字节码缓存。
 - 移动工具时同步项目引用、平台脚本、CI、skills、文档和结构化证据；删除工具时一并删除废弃依赖和专属模式，现行入口只引用仍可执行的实现，历史证据链接到保存源码的提交。
 - 提交前运行 python tools/inspection/verify-tools.py；涉及项目、启动或路径迁移时编译受影响工具，并运行穿过该入口的最小合同。验证结构与路径时不自动启动游戏、发布版本或维护归档分支。
+
+### 覆盖材料维护规则
+
+- coverage 按 [覆盖材料入口](coverage/README.md) 的职责目录维护分类、证据、可复用输入和固定语料；新材料先复用已有主题，相关配置一起收纳，证据引用完整仓库相对路径。
+- 单次输入、待验证生成材料和完整运行产物写入 .local，完成后清理；运行器放 tools。历史摘要归档，仍有当前消费者的原始语料继续维护。整理目录保持历史结果与验证等级，生成快照由 CoverageCatalog 替换。
+- 迁移同步证据、请求、工具、skills 和文档；提交前运行 python -B tools/inspection/verify-coverage.py。改变覆盖目录读取或生成路径时运行 CoverageCatalog 的相应门禁，不将目录生成当作战斗复测。
 
 
 - 改动职责边界：更新 `docs/ARCHITECTURE.md`、相关 skill、结构门禁及必要的重构路线/核验记录。

@@ -19,7 +19,7 @@ GC 检查点、后台回收和区域退出的诊断可能抛错。旧代码可�
 
 Windows 11 / .NET 9.0.19，独立静音无头进程；每场两份基线、两份候选，交错运行。固定 DOP 8、配置 No-GC 12,000,000,000 bytes、搜索 60 秒和既定节点/Beam，单请求上限 120 秒。未扩大预算，也未开启增量验证。
 
-花园使用原问题包的 start 检查点（私有归档仅记录 SHA-256），另外两场使用仓库固定生成场景 `coverage/novelty-search/dev-02-defect-elite.json` 和 `sentinel-discard.json`。对比请求总展开/转移、非时序搜索指标、完整记录路线、开局/配置/牌组与回放政策。工作集采用操作系统进程峰值；Private Bytes 约 500 ms 采样，包含启动/建局/搜索/清理，不等于搜索独占内存或分配量。
+花园使用原问题包的 start 检查点（私有归档仅记录 SHA-256），另外两场使用仓库固定生成场景 `coverage/corpora/novelty/dev-02-defect-elite.json` 和 `sentinel-discard.json`。对比请求总展开/转移、非时序搜索指标、完整记录路线、开局/配置/牌组与回放政策。工作集采用操作系统进程峰值；Private Bytes 约 500 ms 采样，包含启动/建局/搜索/清理，不等于搜索独占内存或分配量。
 
 ### 撤掉组合候选
 

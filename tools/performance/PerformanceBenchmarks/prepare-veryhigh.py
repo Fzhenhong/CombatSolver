@@ -17,7 +17,7 @@ def prepare(output, dll):
     requests = output / 'requests'
     requests.mkdir()
     cases = []
-    for source in sorted((REPO / 'coverage/novelty-search').glob('*.json')):
+    for source in sorted((REPO / 'coverage/corpora/novelty').glob('*.json')):
         if not (source.stem.startswith('dev-') or source.stem.startswith('holdout-')):
             continue
         options = json.loads(source.read_text())
@@ -28,7 +28,7 @@ def prepare(output, dll):
             'characterId': options['characterId'], 'cards': [],
             'generatedScenarioPath': str(source),
         }, str(source.relative_to(REPO)), 'Smart'))
-    queen = REPO / 'coverage/runtime-gc-profile/pressure-queen-ironclad-boss.json'
+    queen = REPO / 'coverage/corpora/runtime-gc/pressure-queen-ironclad-boss.json'
     cases.append(('pressure-queen', {
         'schemaVersion': 1, 'scenarioId': 'VH16-PRESSURE-QUEEN',
         'characterId': 'IRONCLAD', 'cards': [], 'generatedScenarioPath': str(queen),
@@ -61,7 +61,7 @@ def prepare(output, dll):
         '--preserve-native-combat-state-for-test': 'preserveNativeCombatStateForTest',
         '--mark-encounter-as-second-boss-for-test': 'markEncounterAsSecondBossForTest',
     }
-    native_cards = json.loads((REPO / 'coverage/unattended/performance-veryhigh-mecha-native.json').read_text())['runCards']
+    native_cards = json.loads((REPO / 'coverage/fixtures/runtime/performance-veryhigh-mecha-native.json').read_text())['runCards']
     for row in rows:
         if row['label'].startswith('full-'):
             continue  # same input already represented by the screening row
@@ -92,7 +92,7 @@ def prepare(output, dll):
         'enemyCurrentHp': 512, 'initialEnemyMoveIds': ['EBB_MOVE'],
         'initialPlayerHp': 65, 'initialPlayerMaxHp': 65, 'initialPlayerEnergy': 3,
         'clearPlayerPiles': True,
-        'cards': json.loads((REPO / 'coverage/unattended/search-performance-silent-large-deck-cards.json').read_text()),
+        'cards': json.loads((REPO / 'coverage/fixtures/search/search-performance-silent-large-deck-cards.json').read_text()),
     }, 'docs/performance/PERFORMANCE_FIXTURES.md', 'Smart'))
     plan, manifest = [], []
     for label, request, source, potion in cases:

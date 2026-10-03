@@ -193,7 +193,7 @@ def report_exit_code(cases):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--suite', type=Path, default=REPO / 'coverage/unattended/loop-boundaries-20260921/suite.json')
+    parser.add_argument('--suite', type=Path, default=REPO / 'coverage/fixtures/search/loops/loop-boundaries-20260921/suite.json')
     parser.add_argument('--baseline-dll', type=Path, required=True)
     parser.add_argument('--candidate-dll', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)

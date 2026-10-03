@@ -84,7 +84,7 @@ pwsh -NoProfile -File tools/testing/test-runtime-profile-launchers.ps1
 
 本轮使用 Windows／i7-14700KF（28 个逻辑处理器）／32 GB 内存的实际 Godot 游戏宿主，CLR 为游戏内置 **9.0.7**。两种模式使用同一份 Release DLL，算法基线为上游 `3d45d78f`；没有混入旧研究分支改动，也不将旧 `b41e533d` 离线结果计作本次收益。显卡不参与搜索。
 
-预先选定五角色、两个精英根和三个首领根，其中女王场景包含初始牌组加 32 张角色牌、2 张无色牌、十余件遗物（含沙漏）、三个药水槽。定义位于 `coverage/runtime-gc-profile/`。运行独立冷进程，按根交替 AB／BA；VeryHigh、300 秒／500,000 节点，DOP 分别为 8、16、8、16、8，普通完整协调器及原有药水策略保持一致，性能样本不开严格增量检查。每个场景仅测一个 DOP，本轮不评价同场景从 8 到 16 并行的扩展性。
+预先选定五角色、两个精英根和三个首领根，其中女王场景包含初始牌组加 32 张角色牌、2 张无色牌、十余件遗物（含沙漏）、三个药水槽。定义位于 `coverage/corpora/runtime-gc/`。运行独立冷进程，按根交替 AB／BA；VeryHigh、300 秒／500,000 节点，DOP 分别为 8、16、8、16、8，普通完整协调器及原有药水策略保持一致，性能样本不开严格增量检查。每个场景仅测一个 DOP，本轮不评价同场景从 8 到 16 并行的扩展性。
 
 A 为实际 WorkstationGC＋启用 NoGC（配置预算 16 GB，实际区域可按余量缩小）；B 为实际 ServerGC＋本次有效 NoGC 关闭，保存的 NoGC 仍为 true。每次均核对实际 CLR／模式、正常退出、设置文件字节不变、同 DLL／输入／并行度；严格比较器要求完整 actions、snapshot、policy、作用域、边界、生成开局／牌组／遗物／药水、总展开／转移／选择以及每个成员的身份、预算、工作与选择状态相等，才输出同工作量比率。时间边界或不一致会使比较器退出失败。下表仍保留所有预选场景的观测耗时；被拒绝的两对明确标注，不从总体中删除，也不改写为等价通过。
 
@@ -117,7 +117,7 @@ pwsh -NoProfile -File tools/performance/PerformanceBenchmarks/run-windows.ps1 `
   -GameRoot "C:/Games/Slay the Spire 2" `
   -RitsuWorkshopRoot "C:/Steam/steamapps/workshop/content/2868840/3747602295" `
   -Build "C:/Build/CombatSolver" `
-  -Scenario coverage/runtime-gc-profile/dev-08-regent-boss.json `
+  -Scenario coverage/corpora/runtime-gc/dev-08-regent-boss.json `
   -Output .local/gc-ab/regent-A -RuntimeProfile default -Dop 8
 # 换为新输出 regent-B 和 -RuntimeProfile server-generational，保持其它参数相同。
 python tools/performance/PerformanceBenchmarks/compare-runtime-profile.py .local/gc-ab/regent-A .local/gc-ab/regent-B

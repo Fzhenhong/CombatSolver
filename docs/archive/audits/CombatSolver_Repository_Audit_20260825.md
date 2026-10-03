@@ -14,7 +14,7 @@ ZIP 注释：`d56f8bd461f928d59ade6ccbcbcc06e79d32e604`，仅记录为“压缩�
 本轮没有游戏安装、`sts2.dll`、RitsuLib DLL、反编译源码、玩家问题包、发布 ZIP，也没有可用的 .NET / PowerShell / Steam 游戏环境。因此：
 
 - 没有执行 `dotnet build`、CoverageCatalog、headless fixture、整战或 Steam 可见基准；
-- `coverage/*.json`、`coverage/test-evidence.json`、`docs/TEST_MATRIX.md` 中的“通过”只被当作仓库内历史证据索引，不被当作本工作树本轮已通过的证明；
+- `coverage/*.json`、`coverage/evidence/test-evidence.json`、`docs/TEST_MATRIX.md` 中的“通过”只被当作仓库内历史证据索引，不被当作本工作树本轮已通过的证明；
 - 对原版方法是否纯读取、模型工厂是否有隐藏副作用、`NetFullCombatState` 是否能跨版本恢复等结论，在没有游戏程序集/源码和实机差分时标为不确定；
 - 本报告不提交战斗语义或搜索代码补丁，只交付职责地图、开发流程、仓库指令和分阶段重构建议。
 
@@ -554,7 +554,7 @@ dotnet run --project tools\inspection\CoverageCatalog\CoverageCatalog.csproj -c 
 
 ## 17. 文档、版本、证据和发布规范
 
-每个用户可见修复至少同时更新：`CombatSolver.csproj`、`CombatSolver.json`、`docs/DEVELOPMENT_NOTES.md`、`docs/TEST_MATRIX.md`、`coverage/test-evidence.json`，必要时重生成所有 coverage 文件和 `docs/COMBAT_HOOK_COVERAGE.md`。测试矩阵应记录命令、fixture/run ID、日期、结果文件位置和目标 DLL hash，而不只写“通过”。
+每个用户可见修复至少同时更新：`CombatSolver.csproj`、`CombatSolver.json`、`docs/DEVELOPMENT_NOTES.md`、`docs/TEST_MATRIX.md`、`coverage/evidence/test-evidence.json`，必要时重生成所有 coverage 文件和 `docs/COMBAT_HOOK_COVERAGE.md`。测试矩阵应记录命令、fixture/run ID、日期、结果文件位置和目标 DLL hash，而不只写“通过”。
 
 已发现的文档/实现不一致：
 
@@ -563,7 +563,7 @@ dotnet run --project tools\inspection\CoverageCatalog\CoverageCatalog.csproj -c 
 - README/UI/`CombatPlan.Format` 仍出现洗牌边界/停止洗牌分支，而当前搜索无固定洗牌上限，相关计数未见递增；
 - `SearchBoundaryReason.DynamicResolution` 仍被历史 docs/fixtures 大量引用，但当前生产路径未见赋值，`PolicyBoundaryRank` 也未覆盖它；
 - 根目录 `STS2_UNADAPTED_FEATURES_AUDIT.md` 是 v0.6.0 历史快照，不能代表 0.13.23；
-- `coverage/classifications.json` 中仍大量以 RandomForeseer 历史实现作为来源说明。它可保留溯源，但必须明确“来源参考”不等于运行时依赖或当前已验证事实。
+- `coverage/catalog/classifications.json` 中仍大量以 RandomForeseer 历史实现作为来源说明。它可保留溯源，但必须明确“来源参考”不等于运行时依赖或当前已验证事实。
 
 ## 18. 大文件和生成物治理
 
@@ -931,7 +931,7 @@ CombatSolver 是《杀戮尖塔 2》单人战斗路线求解器 Mod，使用 C# 
 
 ### 8.1 改动前
 
-- 找到相关既有 fixture、`coverage/test-evidence.json` 条目和 `docs/TEST_MATRIX.md` 场景。历史“通过”只用于回归选择，不等于当前工作树已通过。
+- 找到相关既有 fixture、`coverage/evidence/test-evidence.json` 条目和 `docs/TEST_MATRIX.md` 场景。历史“通过”只用于回归选择，不等于当前工作树已通过。
 - 保存基线命令、结果 JSON、日志和必要性能指标。
 
 ### 8.2 改动后最低门禁
@@ -996,7 +996,7 @@ pwsh -NoProfile -File tools\performance\run-visible-steam-benchmark.ps1 <固定�
 - `CombatSolver.json` 的 `version`；
 - `docs/DEVELOPMENT_NOTES.md` 的版本记录；
 - `docs/TEST_MATRIX.md` 的场景、命令、结果日期和证据位置；
-- `coverage/test-evidence.json` 的结构化证据；必要时更新 classification/fixture；
+- `coverage/evidence/test-evidence.json` 的结构化证据；必要时更新 classification/fixture；
 - 重新生成的 `coverage/*.json` 与 `docs/COMBAT_HOOK_COVERAGE.md`。
 
 发布前：
@@ -1327,7 +1327,7 @@ description: 对 CombatSolver 发布候选执行版本、覆盖、headless、Ste
    - 构建后 DLL assembly/file/informational version；
    - `docs/DEVELOPMENT_NOTES.md`；
    - `docs/TEST_MATRIX.md`；
-   - `coverage/test-evidence.json`。
+   - `coverage/evidence/test-evidence.json`。
 3. 游戏最低版本、RitsuLib 最低版本只有在兼容性证据支持时才调整。
 
 ### 2. 干净 Release 构建

@@ -84,4 +84,6 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 tools/Directory.Build.props 统一工具项目的仓库根与构建产物路径，生成内容放在 .local/。`tools/inspection/verify-refactor-boundaries.ps1` 和 `.sh` 维护同一职责边界。CoverageCatalog 从公开描述与结构化证据生成覆盖报告，报告的生成版本与测试来源分别说明。
 
+[coverage](../coverage/README.md) 持有手工分类、证据、复用输入、固定语料和归档摘要。CoverageCatalog 读取 catalog/classifications.json 与 evidence/test-evidence.json，替换 catalog/generated 的现行快照；候选 fixture 写入 .local/coverage-fixtures。证据按完整仓库相对路径读取，缺失材料显式失败。脚本与完整运行产物分别属于 tools 和 .local。
+
 修改职责时在同一提交替换本文对应章节，并同步相关 skill 与结构门禁。开发进度写入当前开发记录，测试细节写入证据，历史报告冻结归档。

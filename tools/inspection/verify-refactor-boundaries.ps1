@@ -28,7 +28,7 @@ $forbiddenSearchReferences = @(
 )
 
 $violations = [System.Collections.Generic.List[string]]::new()
-foreach ($relative in @('tools/search/StrategyCorpus/run.py', 'tools/search/StrategyCorpus/compare.py', 'coverage/strategy-refactor-p0/corpus.json')) {
+foreach ($relative in @('tools/search/StrategyCorpus/run.py', 'tools/search/StrategyCorpus/compare.py', 'coverage/corpora/strategy/p0.json')) {
     if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot $relative) -PathType Leaf)) {
         $violations.Add("Strategy corpus input missing: $relative")
     }
@@ -1937,6 +1937,15 @@ if (Select-String -LiteralPath $dynamicVarMetadataPath -SimpleMatch '.Clear()' -
 }
 $mirrorDescriptorPath = Join-Path $repositoryRoot "src\Engine\Common\Mirrors\MethodMirrorRegistryDescriptor.cs"
 $coverageCatalogPath = Join-Path $repositoryRoot "tools\inspection\CoverageCatalog\Program.cs"
+foreach ($text in @(
+    'Path.Combine(coverageDirectory, "catalog", "generated")',
+    'Path.Combine(coverageDirectory, "catalog", "classifications.json")',
+    'Path.Combine(coverageDirectory, "evidence", "test-evidence.json")',
+    'Path.Combine(repositoryRoot, ".local", "coverage-fixtures")')) {
+    if (-not (Select-String -LiteralPath $coverageCatalogPath -SimpleMatch $text -Quiet)) {
+        $violations.Add("CoverageCatalog: missing material ownership '$text'")
+    }
+}
 foreach ($check in @(
     @{ Path = $mirrorDescriptorPath; Text = "public interface IMethodMirrorRegistryDescriptorProvider" },
     @{ Path = $mirrorDescriptorPath; Text = "public sealed record MethodMirrorRegistryDescriptor(" },

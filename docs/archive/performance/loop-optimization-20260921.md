@@ -62,7 +62,7 @@ DOP 对照的并行调度计数以及 worker 局部 ThreatProjectionCache 条目
 dotnet build CombatSolver.csproj -c Release -p:CopyModOnBuild=false
 dotnet build tools/search/OfflineSearchHarness/OfflineSearchHarness.csproj -c Release
 dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
-  --request coverage/unattended/generic-loop-long-damage-hidden-phase-v0111.json \
+  --request coverage/fixtures/search/generic-loop-long-damage-hidden-phase-v0111.json \
   --label loop --out .local/loop-check --profile Low --nodes 6000 \
   --budget-ms 20000 --dop 1 --stop-at-zero-loss
 dotnet run --project tools/testing/checks/LoopDisplayChecks -c Release
