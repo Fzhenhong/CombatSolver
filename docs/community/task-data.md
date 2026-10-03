@@ -59,9 +59,9 @@ python tools/community/classify-community-reports.py --reports .local/community-
 - [B015：T016～T020](https://github.com/Torch1230/CombatSolver/issues/174)，5 个代表包。
 - [B016：T021～T025](https://github.com/Torch1230/CombatSolver/issues/182)，5 个代表包。
 - [Q002：O001～O005](https://github.com/Torch1230/CombatSolver/issues/150)，5 个代表包。
-- [Q003：O006～O010](https://github.com/Torch1230/CombatSolver/issues/183)，5 个代表包。
-- [Q006：O021～O025](https://github.com/Torch1230/CombatSolver/issues/186)，5 个代表包。
-- [Q007：O026～O030](https://github.com/Torch1230/CombatSolver/issues/187)，5 个代表包。
+- [Q003：O006～O010](https://github.com/Torch1230/CombatSolver/issues/183)，5 个代表包，总折算改善 69 HP。
+- [Q006：O021～O025](https://github.com/Torch1230/CombatSolver/issues/186)，5 个代表包，总折算改善 24 HP。
+- [Q007：O026～O030](https://github.com/Torch1230/CombatSolver/issues/187)，5 个代表包，总折算改善 10 HP。
 - [Q008：O031～O035](https://github.com/Torch1230/CombatSolver/issues/208)，5 个代表包，总折算改善 34 HP。
 - [Q009：O036～O040](https://github.com/Torch1230/CombatSolver/issues/209)，5 个代表包，总折算改善 25 HP。
 - [Q010：O041～O045](https://github.com/Torch1230/CombatSolver/issues/210)，5 个代表包，总折算改善 19 HP。
