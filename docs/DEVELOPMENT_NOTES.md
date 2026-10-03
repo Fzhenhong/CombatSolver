@@ -6,7 +6,9 @@
 
 0.48.2的战斗状态与路线执行修复见[历史卷11](archive/development/volume-11.md)；日志站逐包处理及两份保留首因见[排查记录](issues/0.48.0-hardbugs-20261003.md)。
 
-## 下一版本（开发中）
+## 0.48.2（开发中）
+
+本批玩家更新日志见 [0.48.2 更新日志](releases/0.48.2-RELEASE_NOTES.md)，以已发布 0.48.1 为比较基线，汇总战斗执行修复和 PR #203、#204 的玩家可见变化。
 
 感谢 [ltlly](https://github.com/ltlly) 的 [PR #203](https://github.com/Torch1230/CombatSolver/pull/203)：补全金币修改、修改后通知与获得后回调，贪婪之手记录实际所得；狂宴与果汁共用实际最大生命增量及回复入口。DragonFruit、ChosenCheese 和 DarkstonePeriapt 的回复来源未封闭时保留完整回复余量。根冻结跑局监听成员，分支独占资源与遗物状态；金纸仅在有待结算计数时增加指纹字段。主搜索前计划仍只准入严格认证根，保留其他根的阶段顺序。
 
