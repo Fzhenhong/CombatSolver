@@ -92,6 +92,8 @@ internal static partial class StrategicHpRecoveryBound
         if (player.Character.GetType() == typeof(MegaCrit.Sts2.Core.Models.Characters.Defect))
             return CanCertifyDefectPrismHealingEnvironment(simulator, player);
         SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
+        if (IsNativeRegentDecimillipedeEnvironment(combat, player))
+            return CanCertifyRegentDecimillipedeHealingEnvironment(simulator, player);
         bool nativeLouse = IsNativeRegentLouseEnvironment(combat, player);
         bool copiesExhaustedSkills = combat.RelicsOf(player)
             .Any(relic => relic.GetType() == typeof(BurningSticks));
@@ -130,13 +132,17 @@ internal static partial class StrategicHpRecoveryBound
     }
 
     internal static int RemainingHealingUpperBound(
-        CombatPredictionSimulator simulator, Player player, int postCombatHeal)
+        CombatPredictionSimulator simulator, Player player, int postCombatHeal,
+        bool includePotionHealing = true, int? maximumExplicitPotionUses = null)
     {
         if (player.Character.GetType() == typeof(MegaCrit.Sts2.Core.Models.Characters.Defect))
             return DefectPrismHealingUpperBound(simulator, player, postCombatHeal);
         if (simulator.HasPendingChoice)
             return int.MaxValue;
         SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
+        if (IsNativeRegentDecimillipedeEnvironment(combat, player))
+            return RegentDecimillipedeHealingUpperBound(simulator, player, postCombatHeal,
+                includePotionHealing, maximumExplicitPotionUses);
         bool nativeLouse = IsNativeRegentLouseEnvironment(combat, player);
         if (combat.PendingReturningCards.Any(card => !IsRemainingSafeCard(card.Preview.GetType(), nativeLouse)
                 || !HasCertifiedRemainingAttachments(card.Preview)))

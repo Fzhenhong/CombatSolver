@@ -1,5 +1,7 @@
 # CombatSolver 文档导航
 
+- [储君巨型千足虫搜索阶段优化 C58](performance/regent-potion-cap-bound-research-20261003.md)：完整请求保守提速32.91倍、原生0战损；29根回归及峰值复核完成，全部原始波动样本保留。
+
 - [社区贡献指南](../CONTRIBUTING.md)：整批自动认领、环境与 PR 验收。
 - [夹具与开发脚手架](community/testing-guide.md)：最小差分、问题包回放、生成场景、策略脚本与离线宿主。
 - [社区任务资料](community/task-data.md)：报告范围、分类去重、公开材料与后续批次。
