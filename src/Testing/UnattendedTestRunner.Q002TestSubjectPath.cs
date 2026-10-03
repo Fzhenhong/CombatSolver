@@ -56,6 +56,7 @@ internal sealed partial class UnattendedTestRunner
             "BULLY", "FIEND_FIRE", "ENTHRALLED", "CRUELTY", ""];
         List<PlanAction> actions = [];
         List<KnownRoutePrefix> prefixes = [];
+        List<object> valuation = [];
         List<SimulationSnapshot> owned = [];
         ContinuationStamp predicted;
         try
@@ -113,6 +114,15 @@ internal sealed partial class UnattendedTestRunner
                     }
                     actions.Add(action);
                     SimulationSnapshot next = ReplayKnownCustom(driver, [action], parent, 1, index, owned);
+                    valuation.Add(new { step = index + 1, action.CardId,
+                        next.ReachableHandValue, next.RetainedAttackValue, next.ReplayPotentialValue });
+                    if (index == 2)
+                    {
+                        if (next.ReplayPotentialValue <= parent.ReplayPotentialValue
+                            || next.RetainedAttackValue <= parent.RetainedAttackValue)
+                            throw new InvalidOperationException("O005 upgraded calculated attack lost its branch-local replay/setup value.");
+                        _completedChecks.Add("Q002O005:ArmamentsCalculatedReplayPotentialAndRetainedAttackIncreased");
+                    }
                     SimulationSnapshot full = ReplayKnownCustom(driver, actions, null, 0, 0, owned);
                     _ = InvokeKnownCustomMethod(driver, "AssertIncrementalEquivalent",
                         [action, actions.ToArray(), next, full]);
@@ -134,6 +144,8 @@ internal sealed partial class UnattendedTestRunner
                 if (snapshot.HasSimulator)
                     snapshot.ReleaseSimulator();
         }
+
+        _writer.WriteGeneratedArtifact("O005-branch-valuation.json", valuation);
 
         SetStage("q002_o005_native_opening");
         using (NativeReplayDriver native = new(this, events, events.Length, player))
@@ -165,6 +177,7 @@ internal sealed partial class UnattendedTestRunner
         }
         _completedChecks.Add("Q002O005:FreshWorkerAfterNativeT2:ExactOriginalT1Continuation");
         await RunKnownRoutePathTraceAsync(combat, player, prefixes, "Q002O005Opening",
-            "q002_o005_opening_path", requiredRetentionStep: 4, frozenSearchContext: context);
+            "q002_o005_opening_path", requiredRetentionStep: 4,
+            frozenSearchContext: context);
     }
 }

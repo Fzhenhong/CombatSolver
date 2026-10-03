@@ -4,6 +4,18 @@
 
 历史记录见 [归档索引](archive/testing/README.md)。
 
+## Q002 O005 计算攻击估值验收（2026-10-03）
+
+原始 O005 ZIP start、5,000 ms成员预算、完整原政策的正常搜索 `d79063a566e348a9a0bc01ed39cbd23a` 预测战损8；原生完整部署 `eb16ab8d1a1c414a965edb7283abd8f6` Passed，实际战损8、自伤8、无药水、计划外重算0。修改前同输入原生战损22。完整录制/模拟T2、增量/完整首回合、冻结T1根与升级估值合同 `2aae841f4879480c8e68fb25d55841c8` Passed；记录真实重放价值6→7及保留攻击56→63，不按推算层数写死数值。
+
+最终正常搜索成对验收 `1e971860a69e4d35b33d9e81772e56b2` / `457f8cc2fab54e6996a74a59012c01f3` 均 Passed：完整根、完整政策相同；总搜索13,333.21/12,430.01 ms，展开48,497/53,243、转移207,318/198,199，完整战损22/8、无药水。使用独立冷启动游戏、DOP16、无路径观察器/增量诊断；不外推帧率或所有输入性能。
+
+训练外 [计算攻击哨兵](../coverage/unattended/calculated-attack-routing-sentinel.json) 在同根、同政策、同预算的正常离线协调器中，两侧完整路线相同，T1零损、无药水、无时间截断；总搜索551.68/534.77 ms，展开107/104、转移431/444。原生 `4bffc6ef7448474988e4adef480b179c` 启用 `VerifyIncrementalSearch` Passed：T1、HP60、计划外重算0，时间只作正确性证据。无战后回血卖血相邻哨兵保持3损/T2、工作量103/268。
+
+哨兵正常对照：保存修改前DLL，分别设置 `OFFLINE_HARNESS_COMBATSOLVER_DLL`，运行 `tools/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll --request coverage/unattended/calculated-attack-routing-sentinel.json --search-mode Coordinator --use-portfolio --beam 60 --nodes 120000 --card-branches 32 --pile-branches 18 --hand-branches 24 --dop 1 --budget-ms 5000 --potion-policy Disabled --out <独立目录>`。原生入口从同一JSON读取角色、种子、遭遇、初始状态和cards，传至 `run-unattended-test.ps1` 的对应参数，带 `ClearRunDeck/ClearPlayerPiles/ClearAllPowers`、显式相同搜索配置及预期零损/无药/零重算；正确性请求另带 `VerifyIncrementalSearch`，部署固定 `Instant/0秒`，请求120秒且自动清理。Linux可用同一输入及GNU参数，未运行Linux游戏。
+
+证据及失败夹具记录见 [Q002 验收](issues/q002-route-quality.md#o005-分支攻击估值与原生验收)。不宣称原报告600,000 ms配置、其余主题或全部计算攻击牌通过；观察器结果不纳入路线质量和性能对照。
+
 ## Q002 O005 原生前缀及搜索观察（2026-10-03）
 
 `Q002-O005-OPENING-PATH` 使用原始 O005 ZIP、`CheckpointSelector=start`、`ReplayMode=RestoreOnly`、显式同预算政策及 EvidenceDirectory，请求上限 120 s。先按原 payload 绑定首回合选择，验证每步完整/增量回放及影子回放不改 live；随后原生录制推进到 T2，与影子完整 ContinuationStamp 严格相等，才观察冻结的原始 T1 搜索。`O005-opening-state.json` 保存双方戳和完整动作；`Q002O005Opening-path-trace.json` 保存观察事件、准确动作匹配及状态别名。后者不把状态别名自动视作已知动作生成/保留，也不证明完整胜利。
