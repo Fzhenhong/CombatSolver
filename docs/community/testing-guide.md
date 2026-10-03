@@ -30,7 +30,7 @@ pwsh -NoProfile -File tools/replay/run-checkpoint-batch.ps1 -InputPath .local/is
 
 ## 最小差分夹具
 
-`coverage/fixtures/` 包含多种 JSON：卡牌列表、怪物动作检查、药水检查、生成配置、完整请求。先核对消费者。`MonsterMoveChecksPath` 接受怪物动作检查数组，`CardsPath` 接受牌组注入数组；协议在 [UnattendedTestProtocol.cs](../../src/Testing/UnattendedTestProtocol.cs)。
+`coverage/fixtures/` 包含多种 JSON：卡牌列表、怪物动作检查、药水检查、生成配置、完整请求。先核对消费者。`MonsterMoveChecksPath` 接受怪物动作检查数组，`CardsPath` 接受牌组注入数组；协议在 [UnattendedTestProtocol.cs](../../src/Testing/Host/UnattendedTestProtocol.cs)。
 
 已有[尖啸生命周期夹具](../../coverage/fixtures/cards/card-on-play-batch-035-piercing-wail-lifecycle.json)设置招式、插入一张牌、执行并检查力量恢复与能力移除，通过 `RunMonsterMoveDifferentialAsync` 比较实际与模拟状态：
 

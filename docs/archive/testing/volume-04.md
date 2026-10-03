@@ -77,7 +77,7 @@ Windows等价入口：
 - 游戏 0.111.0 的 Release 构建通过，零警告、零错误；Bash 结构门禁通过。
 - `TurnPhaseMirrorChecks`：25 项合同、1 项冻结检查及分配回归通过。覆盖精确登记、两侧参数与顺序、空参与者、异常传播、选择暂停、成员快照、COW 和 Disintegration 调用次数。模型与命令使用替身。
 - CoverageCatalog 校验通过，新增镜像识别为 `Registered / Exact / EngineMirror`。
-- [玩家晚期伤害](../../../coverage/fixtures/monsters/monster-moves-batch-033-disintegration.json)：原生差分通过，2 格挡承受 5 点伤害后掉血 3。
+- [玩家晚期伤害](https://github.com/Torch1230/CombatSolver/blob/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/monsters/monster-moves-batch-033-disintegration.json)：原生差分通过，2 格挡承受 5 点伤害后掉血 3。
 - [双方晚期伤害](../../../coverage/fixtures/scenarios/state/late-both-sides.json)：原生 T1→T2 完整快照、Fork 与 continuation 对账通过。
 - 游戏验证使用回合阶段、卡牌引用和 OnPlay 适配的组合构建。末击、多监听器原生顺序和任意第三方晚期 Hook 未覆盖；未作性能验证。
 

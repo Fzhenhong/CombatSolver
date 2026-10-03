@@ -60,7 +60,7 @@
 
 ### 通用 COW 与 typed buckets 的取舍
 
-通用 COW 无法只在 Store 的 `Get` 入口加一层 `Materialize()` 后安全完成。调用者已经能持有可变 state 并直接修改其属性。现有 [ForkBoundaries](../../../src/Testing/UnattendedTestRunner.ForkBoundaries.cs) 中，`VambracePredictionState` 在 Fork 前取得，Fork 后仍通过原引用修改 `TriggeringCard` 和 `BlockGainedThisCombat`。这种写入不会重新进入 Store，无法由延迟物化拦截。多种 prediction state 还暴露普通可写属性和事务字段。
+通用 COW 无法只在 Store 的 `Get` 入口加一层 `Materialize()` 后安全完成。调用者已经能持有可变 state 并直接修改其属性。现有 [ForkBoundaries](../../../src/Testing/Contracts/Runtime/UnattendedTestRunner.ForkBoundaries.cs) 中，`VambracePredictionState` 在 Fork 前取得，Fork 后仍通过原引用修改 `TriggeringCard` 和 `BlockGainedThisCombat`。这种写入不会重新进入 Store，无法由延迟物化拦截。多种 prediction state 还暴露普通可写属性和事务字段。
 
 此外，[CombatPredictionSimulator.Fork](../../../src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs) 用 `using PredictionForkContext` 在一次完整 Fork 内统一 remap，返回后就 Dispose。延迟到动作执行时才克隆 state，必须重新解决原映射生命周期、引用一致性和跨对象依赖；不能借用已归还数组的 context。
 
@@ -118,7 +118,7 @@ Silent / 普通 GC / DOP4，每 solver 2,500 节点，双方各三次交替冷�
 
 [两步 native 差分夹具](../../../coverage/fixtures/runtime/gc-aeonglass-preview-ownership.json) Passed，runId `825d477edaa0456b91934583498388ba`。第一次效果生成 Wither，凋零总伤害为 6、敌方力量为 3；第二次升级既有 Wither 并生成下一张，总伤害为 18、力量为 7。完整 actual/simulated 差分继续检查实际结算。
 
-同一夹具显式开启 [预览身份与 Fork 断言](../../../src/Testing/UnattendedTestRunner.AeonglassPreviewOwnership.cs)：行动前保留一个未执行的兄弟分支，行动后验证非 Wither 的原 preview 引用不变、已有 Wither 伤害增长，以及兄弟的所有 preview 身份和 Wither 伤害均不变。该检查已通过，不扩展到整场搜索或可见 Steam 验收。
+同一夹具显式开启 [预览身份与 Fork 断言](../../../src/Testing/Contracts/Combat/UnattendedTestRunner.AeonglassPreviewOwnership.cs)：行动前保留一个未执行的兄弟分支，行动后验证非 Wither 的原 preview 引用不变、已有 Wither 伤害增长，以及兄弟的所有 preview 身份和 Wither 伤害均不变。该检查已通过，不扩展到整场搜索或可见 Steam 验收。
 
 ## 3. 空 PowerAmount 同步：复用已有 dirty 集合
 
@@ -154,7 +154,7 @@ Smart 层间使用 [SmartLayerMemoryForecast](../../../src/Search/SmartLayerMemo
 
 [OwnedExpansionBatch](../../../src/Search/OwnedExpansionBatch.cs) 仅复用三个 List 和两个所有权 HashSet；每个 `_run` 的池最多留两个 storage，每个容器真实容量不得超过 4096，checkpoint 清空闲池。批次使用独立 lease 和原子 Dispose，先清引用再归还，旧批次的重复释放不能接触新租户。没有池化 simulator、node 或 model。[实际源码工具检查](../../../tools/testing/checks/ExpansionBatchChecks/README.md) 的 7 组所有权、部分失败、并发与 WeakReference 检查通过。
 
-历史 Started/Finished 的卡牌及 DamageReceived 的卡牌来源改用既有不可变快照，保留原生 `CardPlay` 身份；当前动作是否开始改用精确 trace-frame 身份，不能只凭同一个 Original 认定兄弟 Fork 是同一动作。[历史检查](../../../src/Testing/UnattendedTestRunner.HistoryRetention.cs) 覆盖嵌套/重复动作、共享历史 prefix、deferred 事务、快照升级字段，以及仅保留 forkHistory 时祖先 wrapper/分支的 WeakReference 回收。
+历史 Started/Finished 的卡牌及 DamageReceived 的卡牌来源改用既有不可变快照，保留原生 `CardPlay` 身份；当前动作是否开始改用精确 trace-frame 身份，不能只凭同一个 Original 认定兄弟 Fork 是同一动作。[历史检查](../../../src/Testing/Contracts/Combat/UnattendedTestRunner.HistoryRetention.cs) 覆盖嵌套/重复动作、共享历史 prefix、deferred 事务、快照升级字段，以及仅保留 forkHistory 时祖先 wrapper/分支的 WeakReference 回收。
 
 这解除了一条明确的历史到 PredictedCard observer 的持有路径；召唤 Creature、原生目标和伤害来源仍有合法模型引用，完整图去引用需要稳定实体 ID 与统一重映射，不能靠删除这几个历史字段完成。
 

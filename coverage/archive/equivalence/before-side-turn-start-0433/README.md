@@ -6,7 +6,7 @@
 
 两侧固定 High、beam 90、nodes 250000、分支 48/28/36、Coordinator、Smart、DOP 1、600 秒软预算。每侧一个进程；运行前拒绝已有游戏/宿主，期间不构建，结束后核对 DLL 哈希。时间截断或任一根失败会中止验收，不计为相同。
 
-旧批次专用脚本已退出当前目录，精确复现源码见 [历史提交](https://github.com/Torch1230/CombatSolver/tree/556e72994303e45ca2b2833aa09ba793d1b096cb/coverage/equivalence/before-side-turn-start-0433)。原始输入归并到 [固定语料](../../../corpora/equivalence/turn-start-60/)，当前复用已有离线运行器与比较器。
+旧批次专用脚本已退出当前目录，精确复现源码见 [历史提交](https://github.com/Torch1230/CombatSolver/tree/556e72994303e45ca2b2833aa09ba793d1b096cb/coverage/equivalence/before-side-turn-start-0433)。原始完整输入由 [固定提交](https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/corpora/equivalence/turn-start-60) 保存；当前只维护策略对照实际使用的代表根。
 
 运行器调用仓库的 `run_plan.py`，最后调用 `compare_results.py`，前缀为 `base`、`new`，均不带末尾短横。批次目录保存完整双侧 result、route、search-policy 与比较明细。`metadata.json`、`results-summary.json` 保存各组字段数及原始产物 SHA256；摘要器验证完整 60 对和零差异后才写入。比较范围沿用仓库比较器：非时序 solverMetrics、路线动作、根 continuation、生成目录指纹及两侧都有的续用戳。
 

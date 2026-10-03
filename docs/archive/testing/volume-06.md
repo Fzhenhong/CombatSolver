@@ -252,7 +252,7 @@
 - `ROOT-CAPTURE-ACTION-BARRIER`：基线 `d01150ef49014dc8ba1931a8802992e6` Failed，真实 `BeforeActionExecuted` 期间调用搜索立即建立了搜索会话。修复后 `00f8c4d6237944dbb95061f695edc44c` Passed，队列执行期间不捕获，原生防御结算后延迟请求完成搜索。命令：`tools/testing/run-unattended-test.ps1 -ScenarioId ROOT-CAPTURE-ACTION-BARRIER -HeadlessInstance logic0907 -CharacterId SILENT -CardId DEFEND_SILENT -ClearPlayerPiles -ForceShortSearchOnly -ShortSearchBudgetOverrideMilliseconds 1500 -TimeoutSeconds 120 -ExitOnComplete`。该最小合同没有重建原报告的全部 Mod、后台回收和帕尔军团动画时序。
 - 材料预检：`95e19fb8` 报告为 `materials_valid`。原生 `RestoreOnly` 请求 `4f52cb972f4447c5b87dcd4b1b3a9f2e` 因 `environment_mismatch:mods` 失败；本机与原报告 Mod 集合不同，保持严格拦截，未宣称原包恢复成功。
 - `SURROUNDED-STATE-IDENTITY` 基线 `bfa9cc597f6647929f193c9aac98f163` Failed：左右朝向产生相同指纹。修复后 `e25cc4a6d62841ed97bcc3b179e1361a` Passed：状态指纹与 continuation 区分朝向、Fork 修改不回写父分支、背击预测为 10/15。命令：`tools/testing/run-unattended-test.ps1 -ScenarioId SURROUNDED-STATE-IDENTITY -HeadlessInstance logic0907 -EncounterId KAISER_CRAB_BOSS -CharacterId SILENT -StopAfterCombatRootSnapshotAssertion -TimeoutSeconds 120`。
-- `SURROUNDED-POTION-DIFFERENTIAL` Passed，`99ee091bfceb42509e49cc62b78c3d7d`：虚弱药水转向左侧的 actual/simulated 严格差分与明确朝向断言通过。命令：`tools/testing/run-unattended-test.ps1 -ScenarioId SURROUNDED-POTION-DIFFERENTIAL -HeadlessInstance logic0907 -EncounterId KAISER_CRAB_BOSS -CharacterId SILENT -PotionCheckPath coverage/fixtures/powers/power-lifecycle-batch-051-surrounded-potion.json -TimeoutSeconds 120 -ExitOnComplete`。
+- `SURROUNDED-POTION-DIFFERENTIAL` Passed，`99ee091bfceb42509e49cc62b78c3d7d`：虚弱药水转向左侧的 actual/simulated 严格差分与明确朝向断言通过。命令：`tools/testing/run-unattended-test.ps1 -ScenarioId SURROUNDED-POTION-DIFFERENTIAL -HeadlessInstance logic0907 -EncounterId KAISER_CRAB_BOSS -CharacterId SILENT -PotionCheckPath https://github.com/Torch1230/CombatSolver/blob/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/powers/power-lifecycle-batch-051-surrounded-potion.json -TimeoutSeconds 120 -ExitOnComplete`。
 - Release 编译零警告/错误，Windows 结构门禁通过，默认构建同步本地 mods。该合同与单步差分不替代完整蟹皇战斗或整批报告验收。
 
 ## 0.32.0 定版
@@ -299,7 +299,7 @@ L0 文档检查：64 份资料归类移动，增加 8 份导航；整理后共 1
 ## 2026-09-07：PR #56 合并验证（未发布）
 
 - Release 编译 `-p:CopyModOnBuild=false` 零警告/错误；Windows 结构门禁通过，`search_files=73`。
-- `PR56-CARD-CHOICE-REGRESSION` Passed，runId `efc7007a3dc44012b65dafcb0a3e2ff3`：原版两种可选选牌的空选严格差分通过。命令：`tools/testing/run-unattended-test.ps1 -ScenarioId PR56-CARD-CHOICE-REGRESSION -HeadlessInstance pr56 -MonsterMoveChecksPath coverage/fixtures/cards/card-on-play-batch-042-choice-zero-optional.json -EnemyCurrentHp 100 -TimeoutSeconds 120 -ExitOnComplete`。
+- `PR56-CARD-CHOICE-REGRESSION` Passed，runId `efc7007a3dc44012b65dafcb0a3e2ff3`：原版两种可选选牌的空选严格差分通过。命令：`tools/testing/run-unattended-test.ps1 -ScenarioId PR56-CARD-CHOICE-REGRESSION -HeadlessInstance pr56 -MonsterMoveChecksPath https://github.com/Torch1230/CombatSolver/blob/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards/card-on-play-batch-042-choice-zero-optional.json -EnemyCurrentHp 100 -TimeoutSeconds 120 -ExitOnComplete`。
 - 未运行第三方许愿的登记委托、三选一实际结算或原生页面部署；原版回归不等于第三方效果验收。本次仅合并源码，保持已发布 `0.31.3` 的产物与标签。
 
 ## 0.31.3 定版
@@ -313,7 +313,7 @@ PR #49 直接合同在本机 RitsuLib `0.5.19` 上通过全部 10 项：当前�
 
 ```powershell
 ./tools/testing/run-unattended-test.ps1 -ScenarioId PR49-FIRE-POTION-0313 -HeadlessInstance release0313 -CardId DEFEND_IRONCLAD -ClearPlayerPiles -InitialPlayerEnergy 0 -EnemyCurrentHp 20 -PotionId FIRE_POTION -PotionPolicyForTest RequireAtLeastOne -ForceShortSearchOnly -ShortSearchBudgetOverrideMilliseconds 1500 -VerifyIncrementalSearch -ExpectedInitialFirstActionPotionId FIRE_POTION -ExpectedInitialPotionCount 1 -ExpectedInitialFinalEnemyHpAtMost 0 -ExpectedInitialUnmirroredCount 0 -StopAfterInitialSolverResultAssertion -TimeoutSeconds 120
-./tools/testing/run-unattended-test.ps1 -ScenarioId PR49-POTION-DIFF-0313 -HeadlessInstance release0313 -PotionCheckPath coverage/fixtures/potions/potion-batch-044-fire.json -TimeoutSeconds 120 -ExitOnComplete
+./tools/testing/run-unattended-test.ps1 -ScenarioId PR49-POTION-DIFF-0313 -HeadlessInstance release0313 -PotionCheckPath https://github.com/Torch1230/CombatSolver/blob/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/potions/potion-batch-044-fire.json -TimeoutSeconds 120 -ExitOnComplete
 ```
 
 ## 2026-09-07：PR #50–#55 合并验证
@@ -322,8 +322,8 @@ PR #49 直接合同在本机 RitsuLib `0.5.19` 上通过全部 10 项：当前�
 
 | 场景 | 结果与证据 | 复跑参数（共同使用 `tools/testing/run-unattended-test.ps1 -HeadlessInstance pr50-55 -TimeoutSeconds 120`） |
 |---|---|---|
-| `PR50-55-GAMBLERS-REGRESSION` | Passed，runId `3fc6e575501d4b9596576c5167466cdb`；赌博药水弃牌与补抽严格差分 | `-ScenarioId PR50-55-GAMBLERS-REGRESSION -PotionCheckPath coverage/fixtures/potions/potion-batch-045-gamblers.json` |
-| `PR50-55-OPTIONAL-CHOICE` | Passed，runId `28167ce3490c41d2bf04bc603732c637`；两种可选选牌空选的严格差分 | `-ScenarioId PR50-55-OPTIONAL-CHOICE -MonsterMoveChecksPath coverage/fixtures/cards/card-on-play-batch-042-choice-zero-optional.json -EnemyCurrentHp 100` |
+| `PR50-55-GAMBLERS-REGRESSION` | Passed，runId `3fc6e575501d4b9596576c5167466cdb`；赌博药水弃牌与补抽严格差分 | `-ScenarioId PR50-55-GAMBLERS-REGRESSION -PotionCheckPath https://github.com/Torch1230/CombatSolver/blob/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/potions/potion-batch-045-gamblers.json` |
+| `PR50-55-OPTIONAL-CHOICE` | Passed，runId `28167ce3490c41d2bf04bc603732c637`；两种可选选牌空选的严格差分 | `-ScenarioId PR50-55-OPTIONAL-CHOICE -MonsterMoveChecksPath https://github.com/Torch1230/CombatSolver/blob/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards/card-on-play-batch-042-choice-zero-optional.json -EnemyCurrentHp 100` |
 | `PR50-55-CLASH-PLAYABILITY` | Passed，runId `376b830cdecb499aa4a9c0fe9a7a527e`；先出防御再出 Clash，2 动作、2 节点/4 转移、T1 零战损、未镜像项为 0，增量回放通过 | 见下方完整参数 |
 
 ```powershell

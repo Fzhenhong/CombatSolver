@@ -23,7 +23,7 @@ constants = [re.search(r'    public const int '+name+r' = [^;]+;', weights)[0] f
     ['NoVictoryEscalationFactor','MaximumNoVictoryEscalations','MaximumEscalatedBeamWidth','MaximumEscalatedBranchesPerAction']]
 (out/'Production.cs').write_text('using System.Diagnostics;\nnamespace CombatSolver;\ninternal static partial class CombatSearchCoordinator {\n'+'\n'.join(methods)+'\n}\ninternal static class SolverWeights {\n'+'\n'.join(constants)+'\n}', encoding='utf-8')
 (out/'SolverSearchProfile.cs').write_text((root/'src/Search/SolverSearchProfile.cs').read_text(encoding='utf-8'),encoding='utf-8')
-original = method(root/'src/Testing/UnattendedTestRunner.NoVictoryEscalation.cs', '    private static void AssertNoVictoryEscalationPolicy(')
+original = method(root/'src/Testing/Contracts/Search/UnattendedTestRunner.NoVictoryEscalation.cs', '    private static void AssertNoVictoryEscalationPolicy(')
 (out/'OriginalChecks.cs').write_text('namespace CombatSolver; internal static class OriginalChecks { public static void Run() => AssertNoVictoryEscalationPolicy();\n'+original+'\n}',encoding='utf-8')
 (out/'Program.cs').write_text((Path(__file__).parent/'Program.cs').read_text(encoding='utf-8'),encoding='utf-8')
 (out/'Checks.csproj').write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup></Project>',encoding='utf-8')

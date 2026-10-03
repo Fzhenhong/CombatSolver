@@ -19,7 +19,7 @@ def main():
     checkout, output = args.checkout.resolve(), args.output.resolve()
     if checkout == Path(__file__).resolve().parents[3]:
         parser.error("Use a separate disposable checkout, not this tool's source checkout")
-    writer = checkout / "src/Testing/UnattendedTestRunner.Writer.cs"
+    writer = checkout / "src/Testing/Host/UnattendedTestRunner.Writer.cs"
     saved = writer.read_bytes()
     source = saved.decode()
     anchor = "        public void CaptureSolverResult(SolverResult result)\n        {"

@@ -44,7 +44,7 @@ def main(repo, data):
                     reachability='constant value' if item['constant'] else 'runtime dependent; static references do not prove both branches executed')
         switches.append(item)
     write('switch-audit', switches)
-    executor = texts['src/Testing/UnattendedTestRunner.Executor.cs']
+    executor = texts['src/Testing/Host/UnattendedTestRunner.Executor.cs']
     scenario_ids = set()
     branches = []
     for match in re.finditer(r'if\s*\((.*?)(?=\n\s*\{)', executor, re.S):
@@ -70,7 +70,7 @@ def main(repo, data):
             if p.startswith('coverage/fixtures/'):
                 sid = payload.get('scenarioId') if isinstance(payload,dict) else None
                 fixtures.append(dict(file=p, scenarioId=sid, executorSpecialBranch=sid in scenario_ids,
-                                     otherTestingMentions=[q for q,s in texts.items() if sid and q.startswith('src/Testing/') and q != 'src/Testing/UnattendedTestProtocol.cs' and sid in s]))
+                                     otherTestingMentions=[q for q,s in texts.items() if sid and q.startswith('src/Testing/') and q != 'src/Testing/Host/UnattendedTestProtocol.cs' and sid in s]))
     scenarios = []
     for sid in sorted(scenario_ids):
         scenarios.append(dict(id=sid, coverage=[p for p,t in texts.items() if p.startswith('coverage/') and sid in t],

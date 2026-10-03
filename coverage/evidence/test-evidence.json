@@ -5,7 +5,7 @@
     "procedure": "倾泻+、无尽陀螺、报告d9c106第6回合倾泻前有序牌堆与Shuffle状态；单动作、Instant、120秒上限，不运行Solve。",
     "expected": "外层卡牌效果结束后触发手空，嵌套坚毅候选与原生一致；完整回放、执行检查点、完成后Fork及原生continuation/RNG一致。",
     "observed": "e3bac4a083574686b1e9d018ccc23f80复现计划消耗BASH+1、原生仅STRIKE_IRONCLAD的NativeChoicePlanMismatchException；修复后53ba69afa54544f3a1322b42367d5e90 Passed。未恢复原包整场路线。",
-    "evidence": "src/Testing/UnattendedTestRunner.CascadeEmptyHand.cs; docs/issues/axebot-reports-20261003.md"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CascadeEmptyHand.cs; docs/issues/axebot-reports-20261003.md"
   },
   "EFFECT-SCOPE-ADJACENT-CONTRACT": {
     "status": "Passed",
@@ -13,7 +13,7 @@
     "procedure": "同请求复用进程：无尽陀螺的Havoc/普通/重放出牌，五种嵌套续执行，手动自身选牌及九种选牌药水合同；Instant、120秒上限。",
     "expected": "外层结果牌堆与手空边界正确；作用域事务拒绝普通Fork，完成后Fork正常；原生状态/RNG、兄弟/父根隔离、重捕获、DOP2和取消/异常保持。",
     "observed": "260511f79ef34d9393ef2d5f6b07f672 Passed，请求37.4秒；全部上述合同及原生完整continuation对账通过，实例由启动器删除。性能未验收。",
-    "evidence": "src/Testing/UnattendedTestRunner.CascadeEmptyHand.cs; docs/TEST_MATRIX.md"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CascadeEmptyHand.cs; docs/TEST_MATRIX.md"
   },
   "AXEBOT-JOSS-LATE-ETHEREAL": {
     "status": "Passed",
@@ -45,7 +45,7 @@
     "procedure": "金纸根含1次已计数与2次延迟消耗，捕获后推进live，核对父子/兄弟、指纹与续用文本。",
     "expected": "延迟计数从主线程根冻结，在StateStore按值Fork；各分支只消费自身计数一次，live保持。",
     "observed": "e7c0363924e74211b043ebfaca50ac0c Passed；根计数、live推进隔离、父子/兄弟Fork、指纹/续用文本及逐分支消费通过。初次e3faadd893c74974af6060628bbf13ec在测试自身的隔离域内捕获根，触发Power显示变量保护；修正测试捕获时点后通过。",
-    "evidence": "coverage/fixtures/regressions/axebot/axebot-joss-deferred-relics.json; src/Testing/UnattendedTestRunner.JossPaperDeferred.cs; docs/issues/axebot-reports-20261003.md"
+    "evidence": "coverage/fixtures/regressions/axebot/axebot-joss-deferred-relics.json; src/Testing/Contracts/Combat/UnattendedTestRunner.JossPaperDeferred.cs; docs/issues/axebot-reports-20261003.md"
   },
   "AXEBOT-TRANSFORM-SENTINEL": {
     "status": "Passed",
@@ -61,7 +61,7 @@
     "procedure": "同原ZIP原根、日志指定紧勒先于余像顺序，逐步生产PrepareCardActions取动作；0.111.0/Ritsu0.6.3/同MVID BaseLib3.4.7，120秒。",
     "expected": "原六步完整/增量/原生状态和RNG一致；余像前移后缺失目标拒绝调整、保留原路线；合法前移继续成功。",
     "observed": "t016-afterimage-red-063在生产ReplayAdjustedRoute精确Failed target2缺失；相同输入t016-afterimage-green-063 Passed。六步合法生产目标1→2、无重排原生全状态、安全短前移、非法前移返回null、共享路径缺失目标及原路线/native不变均通过。不同于此前强制非法动作；没有验收完整Solve胜利路线发布或整场部署。 既有失效后缀合同Passed；宽固定前缀回合合同起初120秒无result，查明为全新档案洗牌引导阻塞，关闭引导后上游与本分支均Passed；缩小直接ApplyFixedPrefix目标合同Passed（合法致胜/缺失拒绝/native不变）。变基到c4e0b47d后t016-afterimage-rebase-c4e0-063 Passed；STAMPEDE与SHIV部署哨兵交替对照路线、续用戳和工作量一致。",
-    "evidence": "docs/archive/community/b015-follow-up.md; coverage/fixtures/regressions/community/b015-t016-afterimage-route.json; src/Testing/B015AdjustedRouteChecks.cs"
+    "evidence": "docs/archive/community/b015-follow-up.md; coverage/fixtures/regressions/community/b015-t016-afterimage-route.json; src/Testing/Regressions/Community/B015AdjustedRouteChecks.cs"
   },
   "B015-T016-ORIGINAL-PREFIX-20261002": {
     "status": "Pending",
@@ -69,7 +69,7 @@
     "procedure": "真实0.111.0/Ritsu0.6.3/原报告同MVID BaseLib3.4.7；原ZIP原生根与失败日志选牌/动作前缀，120秒；生产准备、串行兄弟及DOP2两父节点2准备/4动作。",
     "expected": "区别强制历史无效动作与当前生成器自然生成；严格状态/RNG及原生/父节点不变，正确目标/派发/结果归属。",
     "observed": "t016-parallel-baselib-063总Failed：开战双状态、选牌、前五步完整/增量/原生、生产兄弟及并发归属分项通过，maximumActiveActionReplayWorkers=2。currentGeneratorProducedInvalidTarget=false。强制历史第六步SHIV→ID2精确报目标不存在，实际父节点ID1仍4HP。非生产RED或已修复；未验原DOP16全前沿、原历史Solver及完整Mod环境。",
-    "evidence": "docs/archive/community/b015-follow-up.md; coverage/fixtures/regressions/community/b015-t016-original-prefix.json; src/Testing/B015OriginalPrefixChecks.cs; src/Testing/B015ParallelOwnershipChecks.cs"
+    "evidence": "docs/archive/community/b015-follow-up.md; coverage/fixtures/regressions/community/b015-t016-original-prefix.json; src/Testing/Regressions/Community/B015OriginalPrefixChecks.cs; src/Testing/Regressions/Community/B015ParallelOwnershipChecks.cs"
   },
   "B015-T018-STATISTICS-20261002": {
     "status": "PassedWithDocumentedBoundaries",
@@ -85,7 +85,7 @@
     "procedure": "真实0.111.0/Ritsu0.6.2和0.6.3，B015-BOUNDARIES，120秒。",
     "expected": "Stock替补目标ID/Fork/增量完整回放及两步原生SHIV状态一致；1HP CrimsonMantle下一回合死亡，原生败局安全点与预测完整状态一致。",
     "observed": "b015-boundaries-loss-062和b015-boundaries-063 Passed。T016原包开战ContinuationStamp/native-state均匹配，RestoreOnly在cursor0后自动Hook触发recorded_action_mismatch，另缺选牌录制；后续原日志前五步及生产候选专项见B015-T016-ORIGINAL-PREFIX-20261002，当前生产非法目标未复现。更正：构建身份已在checkpoint.json.build；T019来自f1461c7多人分支的Last(predicate)无人存活异常，非官方0.47.2，冻结main没有此逻辑。 仅重建历史Last守卫的同输入负对照精确复现异常；并非实际历史DLL或完整T5链回放，实验分支补丁未验收。",
-    "evidence": "docs/archive/community/b015-follow-up.md; src/Testing/B015BoundaryChecks.cs; coverage/fixtures/regressions/community/b015-boundaries.json"
+    "evidence": "docs/archive/community/b015-follow-up.md; src/Testing/Regressions/Community/B015BoundaryChecks.cs; coverage/fixtures/regressions/community/b015-boundaries.json"
   },
   "B015-T020-MADSCIENCE-20261002": {
     "status": "Pending",
@@ -93,7 +93,7 @@
     "procedure": "真实0.111.0/Ritsu0.6.2，B015-MAD-SCIENCE，120秒；原包战前存档与原版源码核对。",
     "expected": "合法Skill/Chaos升级、保存、root/Fork及原生出牌全状态/RNG一致；无效None仍明确拒绝。",
     "observed": "b015-madscience-062-retry Passed。原包TinkerTime事件后的战前牌已为None/None+1，无证据为求解器克隆丢字段；具体替换调用者仍未确定。 最早origin.save已有坏牌；战中永久牌组删除后战斗实例仍在。原包含FreeLoadout/Rewind的MVID，但未取得匹配实现或战前替换操作记录。 独立核实FreeLoadout108分支目录CreateCard→入Deck前Upgrade→Add可产生同形坏牌，且原包另一牌fl_edit=1；仅为机制可行，未匹配历史DLL或证明本局调用，不排除同进程恢复。",
-    "evidence": "docs/archive/community/b015-follow-up.md; src/Testing/B015MadScienceChecks.cs; coverage/fixtures/regressions/community/b015-mad-science.json"
+    "evidence": "docs/archive/community/b015-follow-up.md; src/Testing/Regressions/Community/B015MadScienceChecks.cs; coverage/fixtures/regressions/community/b015-mad-science.json"
   },
   "INFUSED-CORE-INITIAL-SETUP-20260927": {
     "status": "Pending",
@@ -109,7 +109,7 @@
     "procedure": "Release；UI-LOCALIZATION 中英文简繁原生宽窄往返、折叠部署；ROUTE-ROW-REUSE",
     "expected": "循环次数及周期内全部操作共用外框，内部换行且不溢出，实际动作索引与末击后缀保持，复用及语言订阅不退化",
     "observed": "UI=ffaa5652dcfe42e89eea9e7cbd10e789；row=254c96d24a6d45eb9031971398696611，均Passed、实例已清理。41动作显示2个外层控件，6个原始索引高亮及宽窄宽包围检查通过。非循环16动作行两组64次复用0.2099/0.1784ms、各48B；不代表循环构造或可见性能。每循环比旧标签多2容器，无逐帧轮询，未做可见Steam验收。",
-    "evidence": "docs/TEST_MATRIX.md; src/Testing/UnattendedTestRunner.UiLocalization.cs; src/Testing/UnattendedTestRunner.RouteRowReuse.cs"
+    "evidence": "docs/TEST_MATRIX.md; src/Testing/Contracts/UI/UnattendedTestRunner.UiLocalization.cs; src/Testing/Contracts/UI/UnattendedTestRunner.RouteRowReuse.cs"
   },
   "LOOP-FINAL-20260921": {
     "status": "PassedWithDocumentedBoundaries",
@@ -158,7 +158,7 @@
     "procedure": "环绕轨道消费 GainEnergy 修正；禁止返能、移除限制、独立实例继续触发",
     "expected": "被禁止的返能仍消耗本次四费触发，解除后两个实例正常返能；完整状态与RNG一致",
     "observed": "baseline=1e0277417f9d457d8aea1d4205a5869c Failed energy 1/0; passed=2bec4ffb9a164481b5ace1a668f78906, eight native card plays, suppression removed after fourth play, two Orbit instances 1/2, 26.44 seconds",
-    "evidence": "src/Testing/UnattendedTestRunner.ReportCardSequence.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.ReportCardSequence.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "REPORT-CARDS-RESOURCE-DRAW-ORDER": {
     "status": "Passed",
@@ -166,7 +166,7 @@
     "procedure": "战利品铸造与抽牌顺序；Adrenaline/Offering/Neurosurge 返能先于虚空抽牌",
     "expected": "有序牌堆、能量、HP、能力、卡牌状态与RNG匹配原版；满手时剑先占位",
     "observed": "Spoils 7f9020a9cdc4412da48e30607c9335c0 Failed -> 1be7ac540f9a4ebcab455c7b77e48457 Passed; full-hand edee5895c8cc4ea195cc16d651926827; Adrenaline 7c55fe83182f4596b29ccbf357c0883d -> 8bf7b3754ad74e24af9e47ccf43afbd0; Offering b501384837294a6abbfdb8aed873dfa4 -> 2f6ed6da25e646d3aa584a47982842ef; Neurosurge 7e01d53cce3a49f6ba193558402ba0ea -> 0ae3660ccf914e7f9d55c6fc0dfa738b",
-    "evidence": "src/Testing/UnattendedTestRunner.ReportCardSequence.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.ReportCardSequence.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "AUTO-DEPLOYMENT-REQUEST-OWNERSHIP": {
     "status": "Passed",
@@ -174,7 +174,7 @@
     "procedure": "迟到自动请求丢失部署回合归属",
     "expected": "复用后同回合自动回调；最小原生两张牌部署验证，非436包全量重跑。",
     "observed": "baseline=7378bb2aa3af43219daa7dd48f4a2712, passed=8870e33fd0b344b6ae9c2393b59e902e",
-    "evidence": "src/Testing/UnattendedTestRunner.AutoTurnOwnership.cs; src/Testing/UnattendedTestRunner.Executor.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Contracts/Runtime/UnattendedTestRunner.AutoTurnOwnership.cs; src/Testing/Host/UnattendedTestRunner.Executor.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "SPAWN-POWER-ORDER": {
     "status": "Passed",
@@ -190,7 +190,7 @@
     "procedure": "通用能力施加合并独立实例",
     "expected": "自动化、滚石、定向偷窃属于一个实例身份机制。",
     "observed": "baseline=55983c477ab849169dd1c0c36aca5152, passed=3502fcbd0a1a45ce8714bac2bb87a4a0; passed=4ca7a4ee808244f6896c0b921952505b; passed=bb2ac2b460e44c1b867361e5a033cd15",
-    "evidence": "src/Testing/UnattendedTestRunner.Executor.cs; src/Testing/UnattendedTestRunner.InstancedPower.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Host/UnattendedTestRunner.Executor.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.InstancedPower.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "SIGNED-GOLD-LOSS": {
     "status": "Passed",
@@ -198,7 +198,7 @@
     "procedure": "金币扣减拒绝原版带符号参数",
     "expected": "负值黄金印代表吻合；其他金币首差仅候选。",
     "observed": "baseline=0dd6c25a8f1c4f98ae7e96d8c7180481, passed=7877327a996f475db12dede147ffad5d",
-    "evidence": "src/Testing/UnattendedTestRunner.Executor.cs; src/Testing/UnattendedTestRunner.GoldLoss.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Host/UnattendedTestRunner.Executor.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.GoldLoss.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "EMOTION-CHIP-PREVENTED-DAMAGE": {
     "status": "Passed",
@@ -206,7 +206,7 @@
     "procedure": "受伤历史与原版未完全格挡判据不同",
     "expected": "缓冲不扣血也能触发情感芯片；未将全部能量差异归入本类。",
     "observed": "baseline=b865f0b9a3c64989a3050622c32dea55, passed=66c62e28bf1f4833bf15d2fce60681d5",
-    "evidence": "src/Testing/UnattendedTestRunner.EmotionChipDamage.cs; src/Testing/UnattendedTestRunner.Executor.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.EmotionChipDamage.cs; src/Testing/Host/UnattendedTestRunner.Executor.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "SETUP-CAPTURED-HISTORY": {
     "status": "Passed",
@@ -214,7 +214,7 @@
     "procedure": "同回合准备重放重复清空历史",
     "expected": "已获得星能在准备重放中丢失，辐射少算攻击次数。",
     "observed": "baseline=8b05f81f0b9648d5b35ba8d476f0cc04, passed=7c729478f0d14270a5cf8ff4e0d000db",
-    "evidence": "src/Testing/UnattendedTestRunner.Executor.cs; src/Testing/UnattendedTestRunner.SetupHistory.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Host/UnattendedTestRunner.Executor.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.SetupHistory.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "BLOCK-EVENT-HISTORY": {
     "status": "Passed",
@@ -222,7 +222,7 @@
     "procedure": "用净格挡增量代替卡牌格挡事件",
     "expected": "代码缺陷已复现修复；原包额外4格挡的来源未定位，日志关联未闭环。",
     "observed": "baseline=cb0e848069e04c8283eabcbf29d2e4c7, passed=0f404dbcbe3b4e568e6c89579158774b",
-    "evidence": "src/Testing/UnattendedTestRunner.BlockEventHistory.cs; src/Testing/UnattendedTestRunner.Executor.cs; src/Testing/UnattendedTestRunner.ForkBoundaries.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.BlockEventHistory.cs; src/Testing/Host/UnattendedTestRunner.Executor.cs; src/Testing/Contracts/Runtime/UnattendedTestRunner.ForkBoundaries.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "ZERO-BASE-BLOCK": {
     "status": "Passed",
@@ -230,7 +230,7 @@
     "procedure": "基础零格挡跳过修正链",
     "expected": "无中毒目标的蜃景仍应获得敏捷加成。",
     "observed": "baseline=22dccf98c4c74e528bfdfb117a970515, passed=e825941c7fcf4fc4aea55c9e90950def",
-    "evidence": "src/Testing/UnattendedTestRunner.Executor.cs; src/Testing/UnattendedTestRunner.ZeroBaseBlock.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Host/UnattendedTestRunner.Executor.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.ZeroBaseBlock.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "LAMP-INDIRECT-TEMPORARY-STRENGTH": {
     "status": "Passed",
@@ -238,7 +238,7 @@
     "procedure": "间接减益继承了外层卡牌来源",
     "expected": "君王凝视间接减力量保留空来源，不消耗不安灯笼。",
     "observed": "baseline=8ef8bc5c0a834483a0dad70b06766b5f, passed=5e6a572ec826440790e071cb2e931736",
-    "evidence": "src/Testing/UnattendedTestRunner.Executor.cs; src/Testing/UnattendedTestRunner.LampIndirectPoison.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Host/UnattendedTestRunner.Executor.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.LampIndirectPoison.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "ORBIT-CAPTURED-ROOT": {
     "status": "Passed",
@@ -246,7 +246,7 @@
     "procedure": "轨道根捕获丢失实例花费余数",
     "expected": "5场存在轨道且部署能量不足为候选；最小根捕获返能差分完成。",
     "observed": "baseline=e218076e263c4f8f85153a848a7e75dd, passed=656deacd5dbc4afebe71929d6161d94a",
-    "evidence": "src/Testing/UnattendedTestRunner.Executor.cs; src/Testing/UnattendedTestRunner.OrbitRoot.cs; docs/archive/issues/report-replans-20260913.md"
+    "evidence": "src/Testing/Host/UnattendedTestRunner.Executor.cs; src/Testing/Contracts/Combat/UnattendedTestRunner.OrbitRoot.cs; docs/archive/issues/report-replans-20260913.md"
   },
   "GHOST-SEED-KEYWORD-LIFECYCLE": {
     "status": "Passed",
@@ -254,7 +254,7 @@
     "procedure": "幽灵种子作用于升级防御，抑制降级后检查关键词；再生成普通卡和克隆，推进下一回合，比较完整状态/RNG及仅关键词变化的续用不等。",
     "expected": "原有卡牌遵循降级重置，新进场卡牌正常获得虚无，本地关键词进入续用字段。",
     "observed": "失败d2b7fffc0c8641a9b13e36958e1302eb中实际关键词不同但旧续用首差为none；ac64922583814c0690378914b6630b4d Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.GhostSeedKeywords.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.GhostSeedKeywords.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "DAMPEN-DEATH-GROWTH": {
     "status": "Passed",
@@ -262,7 +262,7 @@
     "procedure": "升级爪击/巨镰被抑制降级，击杀1HP施法者后继续结算同一张牌的成长，比较完整状态/RNG。",
     "expected": "施法者死亡立即解除抑制，随后使用恢复升级后的成长值。",
     "observed": "爪击失败dbfd298906b4409a9f0b31c0aae60380为成长2/3；14ec10028e27418eb345a1d9a404e248与巨镰c5305c1973b94c14b75f960eed8faec3 Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.DampenDeath.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.DampenDeath.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "PHANTOM-RETAIN-LIFECYCLE": {
     "status": "Passed",
@@ -270,7 +270,7 @@
     "procedure": "幻影之刃作用于升级小刀，再抑制降级、叠加能力、克隆入场及移除后重新施加，比较完整状态/RNG。",
     "expected": "保留只在首次施加和入场时赋予，降级的关键词重置保持原版结果。",
     "observed": "失败91737ac0e4bf4c1a81284168d0d44be7；153756412f0640438927d4cf37b70fb5 Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.PhantomRetain.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.PhantomRetain.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "ATTACK-START-HISTORY": {
     "status": "Passed",
@@ -278,7 +278,7 @@
     "procedure": "致死性75下痛殴先攻击再吸收打击，复用痛殴再次攻击并进入下一回合，比较完整状态/RNG及根捕获、Fork隔离。",
     "expected": "另一张手牌的伤害查询消耗已经发生的首攻窗口，下一回合重新开始计数。",
     "observed": "失败a9b2864bbb3b46febb3332ccbd38f1b8为痛殴14.50/10；8d36d575f6854aaf815a240d28186263 Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.AttackStartHistory.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.AttackStartHistory.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "IMPLICIT-HAND-CHOICE-ORDER": {
     "status": "Passed",
@@ -286,7 +286,7 @@
     "procedure": "隐秘匕首要求弃2张，剩余打击/防御恰好2张；使用正常候选生成器与自动策略，比较原版隐式全弃和生成牌后的完整状态/RNG。",
     "expected": "省略选牌界面时保持原候选顺序。",
     "observed": "失败a486b3292369471085a61799fcc30eeb，预测防御在先；修复809f6943021d4578b339b71e3bd53955 Passed，打击/防御与原版一致。",
-    "evidence": "src/Testing/UnattendedTestRunner.ImplicitChoiceOrder.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.ImplicitChoiceOrder.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "RECURRING-ENERGY-VALUATION": {
     "status": "Passed",
@@ -294,7 +294,7 @@
     "procedure": "环绕轨道250HP、自动化180HP的6000节点固定预算对照，14HP零损斩杀哨兵、600节点增量等价及Instant/0秒原版整场部署。",
     "expected": "中间保路计入可消费的返能，长战获胜，短战保留斩杀，部署计划外重算0。",
     "observed": "两项目标由死亡变为获胜；ef36ab823040497d807b192c6fa8fcec与7f8098525c3f4cbebddb3959fa2fc211实战HP10/6、重算0。自动化250HP探索对照仍死亡，未宣称全场景改善。",
-    "evidence": "src/Testing/UnattendedTestRunner.RecurringEnergyQuality.cs; docs/archive/issues/recurring-energy-valuation-20260913.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Search/UnattendedTestRunner.RecurringEnergyQuality.cs; docs/archive/issues/recurring-energy-valuation-20260913.md; 2026-09-13"
   },
   "AUTOMATION-DRAW-LIFECYCLE": {
     "status": "Passed",
@@ -302,7 +302,7 @@
     "procedure": "捕获剩1张抽牌的返能计数；原版抽牌与分支同步比较；另外只靠每回合自然抽5张推进两回合。",
     "expected": "10张抽牌返能一次并复位，父分支隔离，自然抽牌同样触发。",
     "observed": "a3152fff299c4db9bb1445c2076c3f9f与600c0898f3ca4b23a8d73fdc476bdb77 Passed，完整状态/RNG一致。",
-    "evidence": "src/Testing/UnattendedTestRunner.AutomationRoot.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.AutomationRoot.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "NIGHTMARE-TURN-ORDER-AND-ROOT": {
     "status": "Passed",
@@ -310,7 +310,7 @@
     "procedure": "无限刀刃先于梦魇，完整两回合比较生成顺序；活动梦魇重新捕获、Fork/live隔离、状态键及续用比较。",
     "expected": "按能力取得顺序生成副本，所选牌完整状态由分支独占。",
     "observed": "顺序失败e3e990169f6a48dc8ec78d26df15d45a；通过fba8186242f44a93835b9f01955d8003与3649d93b13254fe88f34d0f3c5b842b4。",
-    "evidence": "src/Testing/UnattendedTestRunner.NightmareSnapshot.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.NightmareSnapshot.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "RELIC-DAMAGE-WAKE": {
     "status": "Passed",
@@ -318,7 +318,7 @@
     "procedure": "招架盾对熟睡甲虫或乐加维林族母造成伤害，比较完整单效果状态与RNG。",
     "expected": "伤害发生时立即处理熟睡计数或睡眠唤醒。",
     "observed": "失败3ccdcacbe9aa473e8a777b34ea99391e；通过252a8f9dc76e4610ac455f05388eebcf与1012870880214ac79bbc646c5e5d46a2。",
-    "evidence": "src/Testing/UnattendedTestRunner.WakeDamage.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.WakeDamage.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "CRAB-RAGE-DEATH-TIMING": {
     "status": "Passed",
@@ -326,7 +326,7 @@
     "procedure": "蟹皇一只先死亡，再对存活个体施加下一次伤害；完成死亡清理后比较完整状态与RNG。",
     "expected": "另一只的格挡在下一击前生效。",
     "observed": "失败94557ad1b38945b297365a0228455829；通过cccecc62cf9d4c15891f02a218d59573。",
-    "evidence": "src/Testing/UnattendedTestRunner.DeathHookTiming.cs; docs/TEST_MATRIX.md; 2026-09-13"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.DeathHookTiming.cs; docs/TEST_MATRIX.md; 2026-09-13"
   },
   "TEST-SUBJECT-ORIGINAL-REPORT": {
     "status": "Passed",
@@ -334,7 +334,7 @@
     "procedure": "恢复5cc95原包首个可操作根，重走三药水、SpectrumShift、Tyranny、HeavenlyDrill、Bulwark、结束回合及原Tyranny选择；逐动作和T2完整状态对账。",
     "expected": "天钻按修正后的X值达到4时翻倍攻击次数，Boss在玩家回合倒地、敌方回合复活。",
     "observed": "ebbcbc7c3e8d4f688944b20b87024b66复现原T2玩家HP97/103；9516db27445a487ea2cecad9d34e185c首错定位天钻后Boss8/0。最终2139e56df0aa41f5940ad6bca1cee627 Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.TestSubjectReport.cs；docs/TEST_MATRIX.md；2026-09-10。"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.TestSubjectReport.cs；docs/TEST_MATRIX.md；2026-09-10。"
   },
   "REPORT-ROUND-DOOM-THRESHOLD-CARD": {
     "status": "Passed",
@@ -342,7 +342,7 @@
     "procedure": "报告e476临界条件：Boss134HP、Doom34、SleightOfFlesh13、Duplication1，打出升级EndOfDays再跨回合；完整状态和增量/Fork对账。",
     "expected": "施加Doom后先结算触发伤害再判断处决，第二次施放在108HP/108Doom时击杀，Boss按时复活。",
     "observed": "基线d4ffe973627244df921d003d529bdf52预测玩家HP46/原生66；最终339f3bf702874325bf13a36ea0b9c37f Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.ReportRound.cs；docs/TEST_MATRIX.md；2026-09-10。"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.ReportRound.cs；docs/TEST_MATRIX.md；2026-09-10。"
   },
   "REPLAY-BOUNDARY-CONTRACT": {
     "status": "Passed",
@@ -350,7 +350,7 @@
     "procedure": "比较旧两项/三项与当前四项历史，反例覆盖已记录计数和其他状态字段；边界观察器抛出异常后等待原生回放驱动。",
     "expected": "只迁移旧格式缺失的派生字段，实际已记录差异均拒绝；观察器原异常使回放失败。",
     "observed": "2ed7ea141baa48748df3b3fcaea69cb7 Passed。另两份原包开战/首个可操作状态对账通过，其中5cc95原生二进制也通过，e476旧编号表缺失明确未核验。",
-    "evidence": "src/Testing/UnattendedTestRunner.ReplayBoundary.cs；docs/TEST_MATRIX.md；2026-09-10。"
+    "evidence": "src/Testing/Replay/UnattendedTestRunner.ReplayBoundary.cs；docs/TEST_MATRIX.md；2026-09-10。"
   },
   "REPORT-ROUND-NOSTALGIA-STRIKE": {
     "status": "Passed",
@@ -358,7 +358,7 @@
     "procedure": "Nostalgia1，T1 出攻击并结束回合，T2 再出攻击，比较完整状态与 Fork。",
     "expected": "每回合第一张攻击/技能放回抽牌堆顶，分支计数隔离并清零。",
     "observed": "基线 e1d57aa82cc54fd5890d8628508890a8 第二回合攻击进入弃牌堆；最终 fa776392afa3413b93ee93ce4e931550 Passed。增加四项检查点历史解析与篡改计数拒绝后，2bff954cd0a246c4abd406220823b202 Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.ReportRound.cs；docs/TEST_MATRIX.md；2026-09-10。"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.ReportRound.cs；docs/TEST_MATRIX.md；2026-09-10。"
   },
   "REPORT-CARDS-PALE-BLUE-ROOT": {
     "status": "Passed",
@@ -366,7 +366,7 @@
     "procedure": "原生先出五张牌触发苍蓝星球，捕获根后预测和原生分别打第六张。",
     "expected": "根保留已经触发标志，第六张不重复增加下回合抽牌。",
     "observed": "基线12498ff2098a424eb7f9037a1f2ff5c4抽牌Power预测2/原生1；最终733ed99ebed048e1b9d2933512fd6899 Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.ReportCardSequence.cs；docs/TEST_MATRIX.md；2026-09-10。"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.ReportCardSequence.cs；docs/TEST_MATRIX.md；2026-09-10。"
   },
   "REPORT-ROUND-HOWL-MUSIC-BOX": {
     "status": "Passed",
@@ -374,7 +374,7 @@
     "procedure": "MusicBox、DarkEmbrace1、消耗堆 HowlFromBeyond，八张手牌结束回合，比较生成复制牌的虚无消耗及下回合抽牌。",
     "expected": "黑暗之拥按实际虚无消耗次数延迟抽牌，包含自动打牌期间新生成的牌。",
     "observed": "基线5dc660636a54439c9ae036755c11e582下一回合手牌预测5/原生6；最终88166b32b56541479cb7fa666adeee09 Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.ReportRound.cs；docs/TEST_MATRIX.md；2026-09-10。"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.ReportRound.cs；docs/TEST_MATRIX.md；2026-09-10。"
   },
   "COMBAT-HISTORY-COUNTER-KEY": {
     "status": "Passed",
@@ -382,7 +382,7 @@
     "procedure": "根手牌含金斧与防御，同根子分支额外记录一次完整出牌；比较金斧计算值与搜索 Snapshot 状态键，再 Fork 并复核父分支。",
     "expected": "计算值差一且状态键不同；子分支 Fork 后键不变，父分支保持原键。",
     "observed": "2026-09-19 Windows 无人实例 Passed，completedChecks=CombatHistoryCounterKey:GoldAxe:DifferentFinishedPlaysDistinctKeys:ForkStable:ParentUnchanged；UNATTENDED_INSTANCE_REMOVED。",
-    "evidence": "src/Testing/UnattendedTestRunner.CombatHistoryCounterKey.cs；docs/TEST_MATRIX.md。"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CombatHistoryCounterKey.cs；docs/TEST_MATRIX.md。"
   },
   "MURDER-ROOT-HISTORY": {
     "status": "Passed",
@@ -390,7 +390,7 @@
     "procedure": "冻结根后只在子分支抽一张牌，推进原生相同抽牌，再打出谋杀并进入第二回合；检查父分支与子分支计算值。",
     "expected": "原生抽牌只影响 live 历史，谋杀读取冻结根与分支事件之和；出牌和跨回合完整状态符合原版。",
     "observed": "基线40301c95dd4b4bfba22aa1abb4e3fa96在实机抽牌后父分支8变9、子分支9变10；最终11ea828e2e69419fa522008201fb5e5e Passed，28.14秒，实际伤害、完整状态、Fork隔离及两回合边界一致。",
-    "evidence": "src/Testing/UnattendedTestRunner.MurderHistory.cs；docs/TEST_MATRIX.md；2026-09-09。"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.MurderHistory.cs；docs/TEST_MATRIX.md；2026-09-09。"
   },
   "TENDER-DISCARD-ALL-SLY": {
     "status": "Passed",
@@ -398,7 +398,7 @@
     "procedure": "温柔状态下精密计算弃掉 FLICK_FLACK 并自动打出，比较行动结束与下一玩家回合；准备手动选择 UNTOUCHABLE 作为相邻对照。",
     "expected": "外层与内层各扣一次力量和敏捷，回合末按相同计数恢复，Fork 保持完整状态。",
     "observed": "基线289cb0270eeb48d7b4ac81e3247c85e3力量预测-3/原生-2；最终94c01fe41a564329a15f54ae62d66dc4 Passed，16.63秒。手动选牌相邻对照45bf88eef731446cbe7d11d279b2a792 Passed，16.25秒。",
-    "evidence": "src/Testing/UnattendedTestRunner.TenderNested.cs；docs/TEST_MATRIX.md；2026-09-09。"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.TenderNested.cs；docs/TEST_MATRIX.md；2026-09-09。"
   },
   "STOCK-REPORT-RESPAWN-HP": {
     "status": "Passed",
@@ -406,7 +406,7 @@
     "procedure": "注入报告 835b630a T9 的 Niche 完整状态，旧巨斧机器人 3/96、补货1，被荆棘反伤击杀后进入第二回合。",
     "expected": "替补生命、阵容、行动、有序牌堆、Power、卡牌实例、RNG、ContinuationStamp 与原版一致。",
     "observed": "失败基线 416f94d9708746018de96cb3a37efb26 预测103/原生104；最终70aa5edb08e34137b61fc3d2c75d7978 Passed，27.71秒。直接击杀相邻路径403c3b881b8c45f2a4168ced84cdf54a Passed。",
-    "evidence": "src/Testing/UnattendedTestRunner.StockRespawn.cs；docs/TEST_MATRIX.md；2026-09-09，代表包日志加等价最小夹具，未整场回放。"
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.StockRespawn.cs；docs/TEST_MATRIX.md；2026-09-09，代表包日志加等价最小夹具，未整场回放。"
   },
   "NORMALITY-AUTOPLAY": {
     "status": "Passed",
@@ -414,7 +414,7 @@
     "procedure": "凡庸在手，先出两张防御，再以 2 能量出倾泻；另用回响形态让第一张牌重复打出，再出倾泻。",
     "expected": "倾泻自身开始时达到三次出牌，自动打出的牌被阻止并进入结果牌堆；诅咒离手后恢复自动打牌。",
     "observed": "失败基线 b331a29d04dc4587a797ad2c5074eb78 模拟格挡27、实机10。修复后 5df3975b9e874fb1a34f5f966dc7f54d 与重复牌 21766a0d3d3149d485d09baf36885cf3 Passed；完整状态、根重捕获、Fork隔离、回合清零、阻止后的牌堆和诅咒离手均通过。",
-    "evidence": "src/Testing/UnattendedTestRunner.Normality.cs；docs/TEST_MATRIX.md；2026-09-08。"
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.Normality.cs；docs/TEST_MATRIX.md；2026-09-08。"
   },
   "SLOW-TURN-RESET-FORK": {
     "status": "Passed",
@@ -422,7 +422,7 @@
     "procedure": "旧日雕像战斗注入三张打击，先出两张，执行敌方回合开始并分叉，再出第三张。",
     "expected": "缓慢清零保持能力身份、获得顺序和分支所有权，清零后分叉与再次攻击符合原版。",
     "observed": "基线 21070eeed4b84c628ae7ac7f6ebe1cdf 在 Fork 抛出 SlowPower has no fork mapping；最终 2602bde5ac1c45f7af0344dc7cd6153a Passed，完整状态差分、身份、指纹和父子隔离通过。",
-    "evidence": "coverage/fixtures/cards/setups/slow-turn-reset-fork-0339-cards.json；src/Testing/UnattendedTestRunner.SlowTurnReset.cs；docs/TEST_MATRIX.md；2026-09-08。"
+    "evidence": "coverage/fixtures/cards/setups/slow-turn-reset-fork-0339-cards.json；src/Testing/Contracts/Combat/UnattendedTestRunner.SlowTurnReset.cs；docs/TEST_MATRIX.md；2026-09-08。"
   },
   "FIX-141700-TURN-START-CHOICE-ONCE": {
     "status": "Passed",
@@ -446,7 +446,7 @@
     "procedure": "在最小活动战斗中运行控制器分类断言，连续记录检查点并立即导出问题包；导出等待后台 FIFO 排空后检查取证结构、控制模式与自动描述版本号。",
     "expected": "实机状态只在主线程冻结；后台按顺序整理、序列化和写盘；导出不会早于检查点完成；在线问题描述始终包含当前 CombatSolver 版本。",
     "observed": "runId 7065e4ebabd64bc69700ebf70d323e27 Passed；活动战斗问题包成功生成，结构化状态、完整 RNG、五个牌堆、原生状态、即时跑局存档和 solver_only 控制模式断言全部通过。",
-    "evidence": "src/Runtime/CombatBugReportExporter.cs；src/Runtime/CombatBugReportDescription.cs；src/Testing/UnattendedTestRunner.ControllerSessions.cs；上述 runId；验证日期 2026-08-30。"
+    "evidence": "src/Runtime/CombatBugReportExporter.cs；src/Runtime/CombatBugReportDescription.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.ControllerSessions.cs；上述 runId；验证日期 2026-08-30。"
   },
   "SEARCH-PERF-SILENT-SANITIZED": {
     "status": "Passed",
@@ -494,7 +494,7 @@
     "procedure": "打出升级烙印，在原生手牌页面消耗打击并获得力量；选牌后立即断言模拟状态可 Fork，再完成原生/预测差分。",
     "expected": "卡牌选牌后的力量变化在卡牌完成边界内结算，下一搜索动作可以从父状态分叉。",
     "observed": "runId 7ea11c09cf614e28922104cf10875697 Passed；千足虫旧包根的当前搜索没有再抛出待结算力量导致的 Fork 异常。",
-    "evidence": "src/Testing/UnattendedTestProtocol.cs；src/Testing/UnattendedTestRunner.cs；coverage/fixtures/scenarios/choices/brand-post-choice-power-fork-0201.json；上述 runId；验证日期 2026-08-30。"
+    "evidence": "src/Testing/Host/UnattendedTestProtocol.cs；src/Testing/Host/UnattendedTestRunner.cs；coverage/fixtures/scenarios/choices/brand-post-choice-power-fork-0201.json；上述 runId；验证日期 2026-08-30。"
   },
   "POST0201-TYRANNY-PLAYER-TURN-START-BOUNDARY": {
     "status": "Passed",
@@ -526,7 +526,7 @@
     "procedure": "从问题包回放状态导入有序牌堆、升级、附魔、苦难与疯狂科学枚举状态；分别恢复多尼斯异鸟和实验体的开战根。另在中档预设上覆盖出牌分支与 No-GC 预算，断言实际自定义值。",
     "expected": "复现器不再依赖手写牌表；导入后得到包内精确首手与有序抽牌堆。性能覆盖将设置标记为自定义，并按实际覆盖值断言。质量基线只记录，不改变搜索策略。",
     "observed": "多尼斯异鸟 runId b4e2837cecc04cb59dad6a4e4be6cb37 Passed，预计战损 55；实验体 runId cad36ba7007d40e392ee882c49be2308 Passed，预计战损 20；自定义覆盖 runId 011e9c0e7daa4564867e8195a6299a11 Passed，Branches=23/37、NoGC=7000000000。",
-    "evidence": "tools/run-unattended-test.ps1；src/Testing/UnattendedTestRunner.Executor.cs；src/Testing/UnattendedTestRunner.SolverPolicy.cs；三个上述 runId；验证日期 2026-08-30。"
+    "evidence": "tools/run-unattended-test.ps1；src/Testing/Host/UnattendedTestRunner.Executor.cs；src/Testing/Contracts/Search/UnattendedTestRunner.SolverPolicy.cs；三个上述 runId；验证日期 2026-08-30。"
   },
   "POST018-DETAILED-PLAN-REPLAY-STATE": {
     "status": "Passed",
@@ -590,7 +590,7 @@
     "procedure": "分别注入工具盒、选择悖论、烘焙手套、赌博筹码、助能生存者、必备工具第 2 回合、出牌手牌选择、全息影像牌堆选择和横祸嵌套选择；记录原版页面 Requested/Visible/SearchStarted/Selected，并比较 Play 状态或跨回合续用。另复跑推断选牌严格差分与 CardSelectCmd 调用点门禁。",
     "expected": "首回合准备必须先显示原版页面再启动 Start 根搜索；后续回合必须消费上一轮 EndTurn 已规划选择，只播放原生动画且页面期间搜索次数为 0，状态戳一致后直接复用路线；出牌和药水选牌必须在动作事务内显示并按路线操作；原版明确自动选择保持自动。",
     "observed": "首回合工具盒 048911e87ca4464b937bffb2cb9e585c 按 Visible→SearchStarted→Selected 完成并搜索三个候选；第 2 回合必备工具 b855f6a745e54d52b274a1f45164f2dc 为 visible=1、selected=1、search=0，随后 Reuse:Turn=2、UnexpectedReplans=0。Steam 可见机甲 a070eac1fbd548c09b2cc398a4a5b176 第 7 回合结束，手牌页 visible=6、selected=6、search=0，第 3 回合复用及零计划外重算通过。最终动作内生存者 8645b55377b84fdfafc02337512c97a6 显示并完成手牌页；武装 1b29c76ee5314baab8494ce8427f88b0 显示并完成 HandUpgrade，二者均零重算。全息影像牌堆 1d95be0050c14e789125546f25ee2297 Passed；烘焙手套、助能生存者、赌博筹码、选择悖论分别由 4985879303dc463dbfe7bfc0be629c89、21ece41eec1449f4a5dfaf59239c51bf、a398a55f2e984e75bf5db8342ea7078e、8bca513ff5dc42e7b3e47888eb8de830 验证；横祸嵌套选择 2396a24f57024153a583ef8d2620770a Passed；最终推断选牌 34a5308106d34553a28822e287c4f53c 为 12/12；选择调用点 85 个、0 未解析。",
-    "evidence": "src/Runtime/NativeChoiceRuntime.cs；src/Runtime/PlayerTurnSetupPatches.cs；src/Runtime/SolverController.cs；src/Testing/PlannedCardSelector.cs；coverage/catalog/generated/combat-choice-sources.json；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Runtime/NativeChoiceRuntime.cs；src/Runtime/PlayerTurnSetupPatches.cs；src/Runtime/SolverController.cs；src/Testing/Host/PlannedCardSelector.cs；coverage/catalog/generated/combat-choice-sources.json；上述 runId；验证日期 2026-08-26。"
   },
   "BEAM-RETENTION-POLICY-538": {
     "status": "Passed",
@@ -622,7 +622,7 @@
     "procedure": "分段枚举并核对 ModHelper run/combat subscriber；捕获 Loadout 最大手牌；BaseLib CardModifier 随预测卡牌复制、重绑 Owner 并从分支卡牌恢复 listener。运行基础根隔离、双小啃兽增量整战及 Steam 完整 Mod 栈机甲基准。",
     "expected": "worker 不保留任意 gameplay subscriber 的 live 可变模型；已适配 subscriber 消费根/分支状态；未知来源明确失败；完整 Mod 栈搜索语义和可见性能门槛均通过。",
     "observed": "基础根快照与双小啃兽增量整战 Passed。完整栈初始样本因小对象分配触发 InducedLowMemory；Ritsu 空 capability 快通道及 Fork listener 缓存继承后，相同机甲连续两次独立进程首搜约 3.57 GB、GC 0 ms、最大帧 8.6/16.5 ms并第 5 回合胜利。Ritsu contributor 反向夹具确认 capability 非空时保留原属性贡献。最终实际 BaseLib CardModifier 夹具验证独立克隆、Amount 保留、Owner 重绑和写时复制；带夹具整战 11.87 s / 3.57 GB / 0 ms GC / 13.5 ms 最大帧并 Passed。",
-    "evidence": "src/Prediction/PredictionModHookSubscriberCapture.cs；src/Engine/Common/PredictionModModelSupport.cs；src/Runtime/RitsuEmptyCapabilityFastPathPatches.cs；src/Search/SimulatedCombatState.Fork.cs；src/Testing/UnattendedTestRunner.ForkBoundaries.cs；src/Testing/UnattendedTestRunner.BaseLibCardModifier.cs；Steam 完整 Mod 栈可见基准；验证日期 2026-08-26。"
+    "evidence": "src/Prediction/PredictionModHookSubscriberCapture.cs；src/Engine/Common/PredictionModModelSupport.cs；src/Runtime/RitsuEmptyCapabilityFastPathPatches.cs；src/Search/SimulatedCombatState.Fork.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.ForkBoundaries.cs；src/Testing/Contracts/ThirdParty/UnattendedTestRunner.BaseLibCardModifier.cs；Steam 完整 Mod 栈可见基准；验证日期 2026-08-26。"
   },
   "CARD-POWER-NESTED-534": {
     "status": "Passed",
@@ -638,7 +638,7 @@
     "procedure": "主线程根复制两个原版 Badge listener；复制 MultiplayerScalingModel 后清空其 RunState/CombatState 字段，单人格挡倍率由专用 mirror 返回。根隔离断言检查 Badge 非同一引用和缩放模型完全脱离 live 状态，再运行双小啃兽 VerifyIncrementalSearch 整战。另静态核对本机 Loadout/BaseLib 的 ModHelper 订阅来源，作为未完成的第三方适配清单。",
     "expected": "worker 不通过原版 Badge 或多人缩放 listener 保留可变 live 状态；单人格挡、根投影、增量等价、跨回合复用和路线质量不退化；第三方 subscriber 不冒充已支持。",
     "observed": "最终 0.13.43 DLL 的 runId 8e380d6cdb0c4f54abb312f3afdb8393 Passed，完成 CombatRootSnapshot 断言；双小啃兽第 5 回合、两次洗牌、0 药、0 战损，UnexpectedReplans=0，增量/完整回放无差异。CoverageCatalog 3035 项全门禁与结构检查通过。",
-    "evidence": "src/Search/SimulatedCombatState.cs；src/Engine/InCombat/Mirrors/Hooks/Block/ModifyBlockMultiplicativeMirrors.cs；src/Testing/UnattendedTestRunner.CombatRootSnapshot.cs；本机安装的 Loadout 0.4.7 与 BaseLib 3.4.5 程序集静态反编译；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Search/SimulatedCombatState.cs；src/Engine/InCombat/Mirrors/Hooks/Block/ModifyBlockMultiplicativeMirrors.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.CombatRootSnapshot.cs；本机安装的 Loadout 0.4.7 与 BaseLib 3.4.5 程序集静态反编译；上述 runId；验证日期 2026-08-26。"
   },
   "MONSTER-MODIFIER-IDENTITY-532": {
     "status": "Passed",
@@ -646,7 +646,7 @@
     "procedure": "逐类核对 16 个原版 Modifier 及已登记 Monster Hook；根复制 Modifier listener，永世沙漏生成凋零读取分支 Wither 升级计数，Murderous 在预测召唤时施加力量，召唤遗物读取根清单。运行永世沙漏两步差分、根隔离、Murderous Fabricator 召唤差分与双小啃兽 VerifyIncrementalSearch 整战。",
     "expected": "worker 不读取 live Monster 可变计数、Modifier 或 Relic 清单；直接构造与生产构造都得到完整根；Monster/Modifier Hook 语义、召唤、增量等价和路线质量不退化。",
     "observed": "首次永世沙漏 runId 2f2928b9533f445e9cb8bcfa340ecf02 在第二步失败，预测力量 4、实机 7；原因是直接构造的测试模拟器未物化 Power 根。模拟器统一自动物化后，最终 0.13.42 DLL 的永世沙漏两步差分 7360f01e3e3f427a9373df736192c646 Passed；Murderous 根 Modifier 克隆与 Fabricator 召唤 a80224403eea47e48375581ed34fe376 Passed。双小啃兽增量 bbebff8bc2314752aa4d3502bf7f8bcf 第 5 回合、两次洗牌、0 药、0 战损，UnexpectedReplans=0；CoverageCatalog 3035 项全门禁与结构检查通过。",
-    "evidence": "src/Search/SimulatedCombatState.cs；src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs；src/Engine/InCombat/Mirrors/Hooks/Card/AfterCardGeneratedForCombatMirrors.cs；src/Prediction/MonsterSpawnSupport.cs；src/Testing/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/scenarios/state/murderous-fabricator-spawn-532.json；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Search/SimulatedCombatState.cs；src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs；src/Engine/InCombat/Mirrors/Hooks/Card/AfterCardGeneratedForCombatMirrors.cs；src/Prediction/MonsterSpawnSupport.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/scenarios/state/murderous-fabricator-spawn-532.json；上述 runId；验证日期 2026-08-26。"
   },
   "RUN-SNAPSHOT-HOOK-PREFIX-531": {
     "status": "Passed",
@@ -654,7 +654,7 @@
     "procedure": "逐点迁移 worker 的 RunState 读取；主线程捕获当前幕、房间、地图、多人约束、起始回合、Run RNG 与运行级 Hook 前缀，复制牌组 Card/Enchantment listener。运行根隔离断言、攻击药生成选择差分和双小啃兽 VerifyIncrementalSearch 整战。",
     "expected": "worker 的 Hook 枚举、卡池筛选、RNG 和回合修正只消费根/分支状态；运行级监听顺序不变；生成牌、跨回合复用、两次洗牌和路线质量不退化。",
     "observed": "根快照 runId a8b69594be7d4066a21e46a4f4849ec4 Passed，运行级标量/RNG/监听器前缀数量一致且牌组 Card/Enchantment 不保留实机身份；攻击药差分 a3b2629aef3b4459b417a8af38c76939 Passed；双小啃兽增量 a12d3a1d4d8b466a8b1652eee23a85b8 第 5 回合、两次洗牌、0 药、0 战损，UnexpectedReplans=0。CoverageCatalog 3035 项全门禁与结构检查通过。",
-    "evidence": "src/Search/SimulatedCombatState.cs；src/Engine/InCombat/Mirrors/HookMirrors.cs；src/Engine/InCombat/Extensions/CombatCardGenerationExtensions.cs；src/Testing/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/potions/attack-potion-choice-exact-249.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Search/SimulatedCombatState.cs；src/Engine/InCombat/Mirrors/HookMirrors.cs；src/Engine/InCombat/Extensions/CombatCardGenerationExtensions.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/potions/attack-potion-choice-exact-249.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述 runId；验证日期 2026-08-26。"
   },
   "ROOT-MODEL-INVENTORY-530": {
     "status": "Passed",
@@ -662,7 +662,7 @@
     "procedure": "将玩家回合/金币、Relic/Potion 清单、卡牌注册、Osty、Power、Run RNG 与怪物私有字段移入主线程根；Relic/Potion/Card listener 使用克隆。先运行根隔离，再执行 11 项遗物卡牌 Hook 严格差分、钢笔尖增量路线、Knowledge Demon 搜索选择、Smart 救命药和双小啃兽 VerifyIncrementalSearch 整战。",
     "expected": "worker 不得重新读取已捕获的玩家/库存/Power/卡牌注册或已知怪物私有状态；listener 克隆保持全部原始私有计数；卡牌注册、药水策略、分支选择、增量等价和跨回合复用不退化。",
     "observed": "首次遗物差分 d2bbbd4e0aee4df8a4a15671911f14a4 在第 1 项准确暴露钢笔尖克隆把 AttacksPlayed 9 重置为 0，未登记为通过。统一迁移 25 类跟踪 Relic 根状态后，根隔离 9f1a11e8be0749268419d73eb500c41d、遗物 Hook 11/11 f642afb8250c44ab8b2f8399714b5b06、钢笔尖 d7f95d11b2934c7399658d0932a6c992、Knowledge Demon 0526ed3711604287a692d035c20f11e6、Smart 救命药 ee3907732ea147088387209c1fa178ae 均 Passed。双小啃兽增量 bfb8b3fa03ca4c39a2b8902857f10da1 第 5 回合、两次洗牌、0 药、0 战损，UnexpectedReplans=0。",
-    "evidence": "src/Search/SimulatedCombatState.cs；src/Prediction/RelicPredictionStateSupport.cs；src/Runtime/CombatRootSnapshot.cs；src/Testing/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/relics/relic-card-hooks-audit-part-2-329.json；coverage/fixtures/cards/setups/pen-nib-route-148-cards.json；coverage/fixtures/search/smart-potion-lethal-463.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Search/SimulatedCombatState.cs；src/Prediction/RelicPredictionStateSupport.cs；src/Runtime/CombatRootSnapshot.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/relics/relic-card-hooks-audit-part-2-329.json；coverage/fixtures/cards/setups/pen-nib-route-148-cards.json；coverage/fixtures/search/smart-potion-lethal-463.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述 runId；验证日期 2026-08-26。"
   },
   "COMBAT-ROOT-SNAPSHOT-529": {
     "status": "Passed",
@@ -670,7 +670,7 @@
     "procedure": "在主线程捕获 CombatRootSnapshot，比较捕获前后 live/continuation 文本和 live/根投影；断言 worker 不能捕获根。捕获后修改实机能量，再由 worker Fork，要求预测能量和完整 continuation 仍等于捕获值。复跑钢笔尖增量路线与双小啃兽普通/VerifyIncrementalSearch 整战。",
     "expected": "Beam 和反事实审计只消费同一主线程根；捕获后的 live 变化不得渗入 worker Fork；根投影、增量等价、路线质量和跨回合复用不退化。",
     "observed": "定向 runId 091c600ef65b47d79dac265d1bd7054d Passed；钢笔尖 589a0ec232044d6996c268a7a64c881a 第 1 回合结束并保留双倍攻击标注；双小啃兽普通 f5ccd0953e9c4fabb277aaa4cc2f5334 与最终增量 695323f49a9f4b2d94312db1faa6fb3e 均第 5 回合、两次洗牌、0 药、0 战损并成功复用。",
-    "evidence": "src/Runtime/CombatRootSnapshot.cs；src/Search/CombatBeamSolver.cs；src/Search/RootCombatHistorySnapshot.cs；src/Search/SimulatedCombatState.cs；src/Testing/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；coverage/fixtures/cards/setups/pen-nib-route-148-cards.json；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Runtime/CombatRootSnapshot.cs；src/Search/CombatBeamSolver.cs；src/Search/RootCombatHistorySnapshot.cs；src/Search/SimulatedCombatState.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.CombatRootSnapshot.cs；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；coverage/fixtures/cards/setups/pen-nib-route-148-cards.json；上述 runId；验证日期 2026-08-26。"
   },
   "FORK-BOUNDARIES-528": {
     "status": "Passed",
@@ -678,7 +678,7 @@
     "procedure": "在独立模拟器中逐项打开 trace、动作选择、出牌执行、遗物记录、钢笔尖、臂铠、蜷身和延迟历史事务，断言 Fork 在克隆前拒绝；清理事务后分叉并修改能量，断言父状态隔离。复跑配对出牌中途死亡、钢笔尖增量路线、遗物/Power 卡牌 Hook 严格差分和双小啃兽增量整战。",
     "expected": "所有瞬时事务必须由统一预检识别；稳定状态可以分叉且父子独立；正常动作间 Fork、配对清理、遗物/Power 语义、增量等价和跨回合复用不退化。",
     "observed": "定向 runId c2eaca32dedc4280ac94c8b7dee6cc6a Passed；配对出牌中途死亡 2fc6f92950f14078b7cef48d5d5d767c Passed 且死亡回合暂停、零重算；钢笔尖 c835e618bf9d49c9860efac6392b22c4 Passed，双倍攻击标注、Instant 部署设置恢复且零重算；臂铠所属遗物批次 e38faf739afc49ffb787de83ecb26a70 为 11/11，蜷身所属 Power 卡牌 Hook 批次 9ef90837a332410fa0811801c13d9ab1 为 12/12。双小啃兽增量 f72e7839614e46b098c3ea7ccad20527 第 5 回合、两次洗牌、0 药、0 战损，UnexpectedReplans=0。",
-    "evidence": "src/Engine/Common/PredictionForking.cs；src/Engine/Common/PredictionStateStore.cs；src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs；src/Search/SimulatedCombatState.Fork.cs；src/Testing/UnattendedTestRunner.ForkBoundaries.cs；coverage/fixtures/scenarios/lifecycle/paired-card-play-thorns-death-fork-466.json；coverage/fixtures/cards/setups/pen-nib-route-148-cards.json；coverage/fixtures/relics/relic-card-hooks-audit-part-2-329.json；coverage/fixtures/powers/power-card-hooks-audit-part-2-322.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Engine/Common/PredictionForking.cs；src/Engine/Common/PredictionStateStore.cs；src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs；src/Search/SimulatedCombatState.Fork.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.ForkBoundaries.cs；coverage/fixtures/scenarios/lifecycle/paired-card-play-thorns-death-fork-466.json；coverage/fixtures/cards/setups/pen-nib-route-148-cards.json；coverage/fixtures/relics/relic-card-hooks-audit-part-2-329.json；coverage/fixtures/powers/power-card-hooks-audit-part-2-322.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述 runId；验证日期 2026-08-26。"
   },
   "CONTROLLER-SESSIONS-527": {
     "status": "Passed",
@@ -686,7 +686,7 @@
     "procedure": "把控制器字段按战斗、搜索和部署生命周期实例化；在已注入状态中启动真实后台搜索并立即取消，等待旧 callback 返回后断言其不能恢复搜索或写入结果，再执行策略快照与完整自动部署。另恢复固定双小啃兽跑局，分别执行普通和 VerifyIncrementalSearch 完整战斗并要求零非预期重算。",
     "expected": "取消或替换会话后旧 worker/callback 不得修改当前状态；部署完成只关闭自身会话；战斗结束 GC 回收未完成时下一搜索应等待回收完成；路线、跨回合复用和增量等价不变。",
     "observed": "开发组合 runId b1b43ede363c41059fc63f7f91b6e1f2 与 2281fbf9ea4f4c149bed8da04e2d910d 均在会话断言通过后暴露 GC 回收竞态，第二次搜索抛出 Cannot start search while combat-end GC reclaim is active。加入回收完成同步后，最终 runId 128c54b5da8b4c61973524ed222d253a 通过策略快照、ControllerSessionLifecycle、回收后重搜和完整部署，UnexpectedReplans=0。双小啃兽普通 21b29399fc294d28bd721378248b167c 与增量 0f85f6bd05ce484b83691eec0787a74f 均第 5 回合、两次洗牌、0 药、0 战损并成功复用，UnexpectedReplans=0。",
-    "evidence": "src/Runtime/SolverController.cs；src/Runtime/SolverControllerSessions.cs；src/Runtime/SearchGcPolicy.cs；src/Testing/UnattendedTestRunner.ControllerSessions.cs；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述最终通过 runId；验证日期 2026-08-26。"
+    "evidence": "src/Runtime/SolverController.cs；src/Runtime/SolverControllerSessions.cs；src/Runtime/SearchGcPolicy.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.ControllerSessions.cs；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；上述最终通过 runId；验证日期 2026-08-26。"
   },
   "REFACTOR-BOUNDARIES-526": {
     "status": "Passed",
@@ -694,7 +694,7 @@
     "procedure": "定向验证未镜像 IComputedDynamicVar 不调用原生 Calculate、推断 OnPlay 异常不被吞掉、卡牌和药水搜索转移失败携带父状态与动作上下文，并验证取消和无效选牌保持原异常；随后在搜索期间修改全局设置，确认已捕获策略和结果不变。复跑药水、推断选牌、推断卡分片，并以固定双小啃兽跑局执行普通和 VerifyIncrementalSearch 完整战斗。",
     "expected": "预测失败必须到达统一搜索故障边界；Search 工作线程不得读取控制器、设置、测试运行器或入口日志；策略快照在单次搜索内保持稳定；普通和增量搜索路线质量及跨回合复用不退化。",
     "observed": "失败边界 runId 94933ce7cbe44f71879440fb1c48ed7d Passed；失败边界与策略快照联合 runId e39073d7512d4b9694382be2dd410b5d Passed。药水 a1051fadc2d54c96a853afc2bc3d6723 为 17/17，推断选牌 3d4dda4333b544f8bd1cbb5acc6ce695 为 12/12，推断卡三分片 fd1f51a8932b4a8ea569ae7ba10e2473、f9e9c26f46b447b6813c9e3c4d1ba3d0、3fe019a148314528b24e6cc36317fa25 为 43/43，CalculatedVar 08588e03b2d2439aa633809a5364ae3b 为 25/25。双小啃兽普通 efa79edb7e48447c81c3840dfc7be60d 与增量 f03343e6be8b4561890dae0ae930d7f6 均第 5 回合、两次洗牌、0 药、0 战损并成功复用。Smart 4c8dc991752d46aab8b5a54ed0c28c15 为 0 药 0 战损，RequireAtLeastOne 7ee8ba1941554531b9b289120980597d 在两瓶药中只用一瓶；两项均 UnexpectedReplans=0。原 X 费夹具会在战斗清场后比较状态，提交前基线 4117eb0 的 6a1f3b4d6c804321b43e79c1a4370039 同位失败；降低自动生成 X 费能量并给 HELIX_DRILL 前置打击场景增加敌方格挡后，完整批次通过。",
-    "evidence": "src/Engine/Common/PredictionUnsupportedException.cs；src/Search/SearchTransitionException.cs；src/Search/SearchPolicySnapshot.cs；src/Testing/UnattendedTestRunner.FailureBoundaries.cs；src/Testing/UnattendedTestRunner.SearchPolicy.cs；tools/inspection/CoverageCatalog/Program.cs；coverage/fixtures/potions/potion-engine-exact-audit-316.json；coverage/fixtures/scenarios/choices/inferred-choice-card-on-play-audit-301.json；coverage/fixtures/cards/audits/generated-inferred-card-on-play-audit-part-1.json；coverage/fixtures/cards/audits/generated-inferred-card-on-play-audit-part-2.json；coverage/fixtures/cards/audits/generated-inferred-card-on-play-audit-part-3.json；coverage/fixtures/scenarios/state/calculated-card-batch-125.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；coverage/fixtures/search/smart-potion-low-loss-461.json；上述 runId；验证日期 2026-08-26。"
+    "evidence": "src/Engine/Common/PredictionUnsupportedException.cs；src/Search/SearchTransitionException.cs；src/Search/SearchPolicySnapshot.cs；src/Testing/Contracts/Combat/UnattendedTestRunner.FailureBoundaries.cs；src/Testing/Contracts/Search/UnattendedTestRunner.SearchPolicy.cs；tools/inspection/CoverageCatalog/Program.cs；coverage/fixtures/potions/potion-engine-exact-audit-316.json；coverage/fixtures/scenarios/choices/inferred-choice-card-on-play-audit-301.json；coverage/fixtures/cards/audits/generated-inferred-card-on-play-audit-part-1.json；coverage/fixtures/cards/audits/generated-inferred-card-on-play-audit-part-2.json；coverage/fixtures/cards/audits/generated-inferred-card-on-play-audit-part-3.json；coverage/fixtures/scenarios/state/calculated-card-batch-125.json；coverage/fixtures/regressions/snapshots/solver-longline-run-snapshot.json；coverage/fixtures/search/smart-potion-low-loss-461.json；上述 runId；验证日期 2026-08-26。"
   },
   "SOLVER-DISABLE-525": {
     "status": "Pending",
@@ -710,7 +710,7 @@
     "procedure": "分诊 0.13.27 亡灵契约师千足虫问题包，先以当前源码按包内开战前存档、VMK8066YG8ZD、A10、第二幕、46/66 HP、三节 50/52/48 HP 和 BULK/CONSTRICT/WRITHE 完整复现三次状态失配；再严格构造肢节执行正常行动后死亡并滚下一行动，比较完整原版/模拟状态。最终以 Medium、Smart、Instant/0 秒复跑用户整战，并复跑上一份千足虫、双小啃兽普通搜索和 VerifyIncrementalSearch。",
     "expected": "DEAD_MOVE 未要求必须执行一次时须在下一玩家阶段直接进入 REATTACH_MOVE；死亡但仍在阵容中的 ReattachPower 必须参与严格状态比较；结束回合产生的复活窗口必须进入通用 Beam 保留；两份千足虫整战均须零计划外重算，普通非复活路线不得退化。",
     "observed": "修复前用户存档 runId d7fa340f82674cb0847f4a80d301f9af 第 7 回合结束但出现 3 次计划外重算；严格基线 ff6e485281404dcd8f0113ddb23e9745 为 predicted DEAD_MOVE、actual REATTACH_MOVE。最终 0.13.34 严格差分 b481833954f741a68faf86c45584755f Passed；用户整战 40de641e3af44100a83c63734ffd3544 第 6 回合两药胜利、预计/实测掉 43、第 2-6 回合精确复用、UnexpectedReplans=0。上一份千足虫 e4039058025849c893710f917770550e 第 4 回合零重算；双小啃兽 07285eb2edf340a8bb3b6347e7722466 与增量 2b1b50c7a668463a905af6b04e49c654 均第 5 回合、0 药、0 战损、零重算。",
-    "evidence": ".local/issue-bundles/decimillipede-161841-585；coverage/fixtures/scenarios/lifecycle/death-reattach-exact-193.json；src/Search/SimulatedCombatState.MonsterAi.cs；src/Search/CombatBeamSolver.cs；src/Testing/UnattendedTestRunner.StateDiff.cs；上述 runId；验证日期 2026-08-25。"
+    "evidence": ".local/issue-bundles/decimillipede-161841-585；coverage/fixtures/scenarios/lifecycle/death-reattach-exact-193.json；src/Search/SimulatedCombatState.MonsterAi.cs；src/Search/CombatBeamSolver.cs；src/Testing/Support/UnattendedTestRunner.StateDiff.cs；上述 runId；验证日期 2026-08-25。"
   },
   "POTION-PROJECTED-UI-522": {
     "status": "Pending",
@@ -822,7 +822,7 @@
     "procedure": "同一场 1 回合战斗先在活动状态导出，再在返回主菜单后导出；逐项打开 current/recent ZIP 检查点的 metadata、replay-state、native-state 与 run-state。另以两回合救命药路线验证结果分别记录实际用药和未来计划用药，全部使用 Instant/0 秒。",
     "expected": "错误时机导出仍须包含问题战斗的完整 RNG、当时设置、有序五牌堆、逐牌动态状态、Power/遗物/Orb/怪物状态、行动历史、原生战斗包和即时存档；结果须分别保留已经发生和路线未来计划的用药数量。",
     "observed": "runId b6266146d6094db39846e5cbe08c8216 Passed：活动包和战后包四类检查点全部存在并可解析，原生包非空。runId a5a3148d2c71484f808bdc4cc7ccd597 Passed：第 2 回合精确复用，RESULT 为 battle_potions_used_so_far=1、potion_count=0，零非预期重算。",
-    "evidence": "src/Runtime/CombatBugReportExporter.cs；src/Testing/UnattendedTestRunner.cs；src/UI/SolverOverlay.cs；上述 runId 与实际 ZIP；验证日期 2026-08-24。"
+    "evidence": "src/Runtime/CombatBugReportExporter.cs；src/Testing/Host/UnattendedTestRunner.cs；src/UI/SolverOverlay.cs；上述 runId 与实际 ZIP；验证日期 2026-08-24。"
   },
   "RADIATE-AND-REQUIRE-ONE-472-477": {
     "status": "Passed",
@@ -1526,7 +1526,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏进程中连续运行死亡边界和状态差分夹具。正式后台搜索分别注入或使用原生宿主的适者生存、幻象、寄生物、爪牙、减幅、库存、意外、接续、疼痛戳刺、抢夺速度、抢夺力量和遭到包围；蟹之怒与饥饿用另一只同阵营怪物真实死亡做模拟/实机差分；自成型黏土和坚韧之环在敌方回合开始清空 12 格挡后逐字段比较。所有注入、原生死亡 Hook、回合钩子和快照采集在主线程，正式搜索断言运行于工作线程。",
     "expected": "复活、换怪、分裂、尸体保留、隐藏属性退款及朝向修正类死亡效果在击杀动作处返回 DynamicResolution，不获得错误胜利分；蟹之怒获得 6 力量和 99 格挡后移除；饥饿获得 4 力量并跳过下一行动；自成型黏土获得 7 格挡后移除，坚韧之环获得动态值 5 格挡并由 2 层减至 1 层。",
     "observed": "最终 runId 0a67df3fe26340f58a191cb189ba5c93、eab19f523636458a8a581481d91fccbd、d35d0b3f8d184206b23c6785a8d01abe、b789c160e07444b185c273f249fc094e、4579cee620964cb1b8ea902585a9cdb6、23f0d8d6d1274320a91c599d3c088ea1、a6c4564a0e4c4f87836061286e26965a、a9ac01723aef42eaa16b0e105439d0d9、5b941a8e3bb8460ea38226e81a64a724、86756fb45f0544b483db0b63ce1609d7、546f686703634fab98064dfcf284dc91、1948f8ca5dd740a398eafe5977f71537、f8ec75e062fe4b4ab8851158548e3edf、a1d3dbb77d614f4ea5a7c9097fa4d74b、a9235e456d9442b58ef2f0c6b212e992、d6dd06a0fc2d47f895a5ca23e73a6a40 全部 Passed、mainThread=true；动态边界日志均为 worker_thread=True。开发期 runId 0beadc1f492146eabe43bf0f0d0c7d68 把幻象注入唯一主敌人，原生 AfterApplied 将其变成次要敌人而未形成合法场景，改用原生 Parafright 后通过；runId 2966441c68654cd1bb99f68a4f024c47 把饥饿注入大型假人，原生回调按设计强转 CorpseSlug 失败，改用原生尸蛞蝓后通过。",
-    "evidence": "coverage/fixtures/powers/power-death-batch-050-*.json；上述最终 runId 的 SEARCH_BOUNDARY/MOVE_DIFF/RESULT；游戏 0.111.0 对应 Power、Creature 死亡和 Hook 源码；验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/powers (power-death-batch-050-*.json)；上述最终 runId 的 SEARCH_BOUNDARY/MOVE_DIFF/RESULT；游戏 0.111.0 对应 Power、Creature 死亡和 Hook 源码；验证日期 2026-08-20。"
   },
   "STATIC-POWER-DEATH-BATCH-050": {
     "status": "StaticPassed",
@@ -1542,7 +1542,7 @@
     "procedure": "首轮 Release DLL 在同一真实可见游戏进程中连续运行固定生成、死灵绑定者生命周期、充能球、狱火、三个 RF 私有计数器、倒数计时、沙坑递减/致死和七种动态边界夹具；另复跑夜魇跨回合复制及第 047 批绯红披风/野性。修正动态边界后的状态污染与懒惰初始计数后，在重新构建的最终 Release DLL、同一可见游戏进程复跑熵、好勇斗狠、懒惰及第 047 批回归。所有实际注入、真实 Hook、动作队列和快照采集均在主线程执行，搜索边界断言求解器运行于工作线程。",
     "expected": "BeforeSideTurnStart、能量重置、BeforeHandDraw、AfterPlayerTurnStart、AfterSideTurnStart 与 Late 顺序和游戏 0.111.0 一致；固定牌生成、Power 递减/伤害/召唤、充能球被动、随机目标 RNG、RF 私有计数及沙坑致死与真实状态逐字段相同；随机生成、选牌、变形和侵略只停在 DynamicResolution，不猜实际结果。",
     "observed": "最终 runId a411a920b771496490092ce53654aff4、428db40266b548b795bcbad602ea58eb、9e2a2522f33c4efeaa0be9f9b4bd2eda、27eb5c2da43446b980670ab406a739a4、27620418da5744d89ebb9d0454ee9bbc、37b0cc9841964987aea81396b1a7e343、37a29bdd86974b7180a809bf0325ff9f、cd6f8db2b8b54caa92206f31a61e4c38、191002c14bba4b8f8460945a90ae3505、1295370e90b2440e8415c629359904c2、5019c03debec46a7924ab25b9fe97a51、c27584ed15e14fdfb4f8fd289da27785、c06381528b4640ed9edff7e56b673b02、e8fd65f83987431fab6e95e1f015898a、2cc852cde0eb4ae68da2e2977a594027、540ee848006f4c3ea3b94d1e5b6f5b4d、679ee1274f4348f884b0d311b6e539d6、2fbc2455063f4b35a7384b6bd5324cbe、e66f48a68fad4562aa73d13dcf52d96d 全部 Passed、mainThread=true。开发期 runId 788defce1a464638a2a5fb7cd960680b 暴露铁甲战士不存在奥斯蒂，切换死灵绑定者；cc9dee6eec104a8c878f8feb7acc580a 和 287b0bb9333e4c0b9781d7522cb3dada 先后定位到原生 AfterEnergyResetLate 还会触发缚魂命匣；c1736b9060514974ad4644390baeab27 证明 Loop 正确触发队首闪电球而测试误把后注入冰霜球当队首；5aa823c57ef44166a8d8a879db4b7008 暴露同一战斗多检查间的懒惰残留，拆成独立请求；d5f37e9b3d5d4d7785cb311a5a67433a 暴露动态边界登记器错误地只看搜索前弃牌堆；d933517b46624294b70c34fa1872a444 沿用脚本默认敌人 1 HP，搜索当回合斩杀后返回 None，改为 999 HP 后通过。",
-    "evidence": "coverage/fixtures/powers/power-turn-start-batch-049-*.json、coverage/fixtures/cards/card-on-play-batch-043-nightmare-lifecycle.json、coverage/fixtures/powers/power-trigger-batch-047.json；上述最终 runId 的 MOVE_DIFF/SEARCH_BOUNDARY/RESULT；游戏 0.111.0 对应 Power、Hook 与 CombatManager 源码；验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/powers (power-turn-start-batch-049-*.json)、coverage/fixtures/cards/card-on-play-batch-043-nightmare-lifecycle.json、coverage/fixtures/powers/power-trigger-batch-047.json；上述最终 runId 的 MOVE_DIFF/SEARCH_BOUNDARY/RESULT；游戏 0.111.0 对应 Power、Hook 与 CombatManager 源码；验证日期 2026-08-20。"
   },
   "STATIC-POWER-TURN-START-BATCH-049": {
     "status": "StaticPassed",
@@ -1558,7 +1558,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏 PID 中连续运行四份夹具。玩家侧验证真实打出独白后的两次力量增长与回收、魔法炸弹回合末伤害/移除、幽冥之界敌方回合末移除及魔法炸弹施加者正常死亡移除；敌方侧验证摧残递减、紧追不放/紧勒移除及湮灭每次出牌施加灾厄并在玩家回合末移除；另外用跨回合继续出牌验证神气制胜和胆小的私有计数重置。",
     "expected": "所有 Power 按游戏 0.111.0 的所属阵营与参与者条件触发；实例型 Power 精确移除当前实例，独白回收本回合实际施加的力量，湮灭按施加者出牌施加灾厄，RF 私有计数与可见动态变量跨回合一致。",
     "observed": "最终 runId 9bed94608c52421ba1bb03e728a7fe6b、c8d0c19a9c6a40c19ecde04ff5f451b9、c75dcdd692774e9e8dee6c99bf63554b、ceae52c5def1440db23676401f9f1140 均 Passed、mainThread=true，共 10 项差分。旧独白、湮灭和神气制胜卡牌入口回归 runId 16febfd9abf7419d8e4f971774868e51、8d1e7b61eb8c4495bfdb457dc3fd5740、cb69a3a5b29842ca8833566fc8460778 也全部 Passed。开发期首次 runId b06e37343e154629a419db85185fc80e 暴露测试助手未分派新 Power；补白名单后，runId d2af58e156cc43ea82f8559ba02bc8ee 暴露直接注入独白缺少合法动态变量来源，改为真实打牌；runId 42d7660ebf02469a90d6eba08aa0cc5d 随后定位到新增实例未被类型状态表移除，补齐精确实例可变副本后通过。魔法炸弹死亡用例最初两次使用强制删除或错误施加者选择器，改为 CheckedEnemy 被真实打击致死后通过。",
-    "evidence": "coverage/fixtures/powers/power-end-turn-batch-048-*.json，以及第 040/043 批独白、湮灭、神气制胜旧夹具；七个最终 runId 的 MOVE_DIFF/RESULT；游戏 0.111.0 对应 Power 源码；验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/powers (power-end-turn-batch-048-*.json)，以及第 040/043 批独白、湮灭、神气制胜旧夹具；七个最终 runId 的 MOVE_DIFF/RESULT；游戏 0.111.0 对应 Power 源码；验证日期 2026-08-20。"
   },
   "STATIC-POWER-BATCH-048": {
     "status": "StaticPassed",
@@ -1630,7 +1630,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏中逐项从同一初始快照执行生产药水模拟与游戏原生结算；选牌药水由原生选择器执行相同候选，精确比较生命、最大生命、格挡、能量、星能、Orb、Power、四个牌堆、逐牌费用/升级/实例状态、药水槽和相关 RNG。瓶中精灵通过真实致死伤害触发，重生药水另执行完整玩家回合结束。最后以狡诈药水执行搜索边界、原生生成、旧路线作废、同回合重搜、全自动继续打出三张升级小刀并结束战斗的闭环。",
     "expected": "关闭剩余 19 个药水 OnUse：确定性数值精确推进；灰水、预知之滴、赌徒特酿、液态记忆和癫狂之触展开有界选择并部署同一牌实例；随机或无法在 RF 状态中完整保存的结果执行后立即从原生状态重搜；瓶中精灵只在首次致死时自动触发；再生每回合先治疗当前层数再递减。",
     "observed": "19 个药水即时、选牌、自动复活或生命周期场景全部 Passed 且 mainThread=true。最终 runId 依次包括龙涎香 3a192f05113f42b496991fc2e7170f32、灰水 23826e1ac1e04d2096f352fe32276042、狡诈药水 98cb18a9d14547b9a0e0d0d722a20312、预知之滴 2f0b686b3967475e913cfb2070fc1437、瓶中精灵 384b6856ec904d0c836cafc13b914fd2、污浊药水 90bb6c16f23442349e39d9f9e1393613、果汁 798fa434781c47d68c97ecbd1ae0ee8e、异鱼之油 90eeab5f2eaa4fa89eb365b7d5ee0b3c、赌徒特酿 0576f1ed2c5b4296bd5d849b50b11dfb、超巨化药水 fe2331473e894ff0ae4d10eedc8da37b、王之勇气 12c4daa73fb747f7ab80597e99181468、液态记忆 6817010a3e9142528da3e31da6b70f78、尸鬼瓮 a17dd61bb08f4689a03184bf78dedc14、缚魂药水 e3c60aee1e3f4f3c840d7c727fe8fccd、药水形状的石头 6a69eaba2144416889e53e1f9a33c420、再生药水 ead6eeabd1ca477c99031c4bbd13302b、瓶中船 2f1a6007cd794a66a60549227ea80bfe、士兵炖汤 422740d7de504eb7b90c6e6a21478e3e、癫狂之触 75a8e534ea88442490848b0f40031e18。再生首次有效差分发现 RF 0.13.8 只治疗而漏递减，补偿后复测通过。最终狡诈药水全自动 runId 0663fe0d7335400f8fb81bf8317c95e5 Passed、mainThread=true、combatEnded=true、finishedTurn=1；日志明确出现 DEPLOY_DYNAMIC_RESOLVED、reason=DynamicResolution、同回合重新搜索和三张升级小刀。",
-    "evidence": "coverage/fixtures/potions/potion-batch-045-*.json；上述 20 个最终 runId 的结果、POTION_DIFF、DEPLOY_DYNAMIC_RESOLVED、SEARCH_REQUEST、ACTION 与 DEPLOY_ACTION；游戏 0.111.0 药水与 RegenPower 源码、RandomForeseer 0.13.8 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/potions (potion-batch-045-*.json)；上述 20 个最终 runId 的结果、POTION_DIFF、DEPLOY_DYNAMIC_RESOLVED、SEARCH_REQUEST、ACTION 与 DEPLOY_ACTION；游戏 0.111.0 药水与 RegenPower 源码、RandomForeseer 0.13.8 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "POTION-ON-USE-BATCH-044": {
     "status": "Passed",
@@ -1638,7 +1638,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏中逐项从同一初始快照执行生产药水模拟和原生 EnqueueManualUse，比较玩家与全部敌人的生命、格挡、能量、星能、Orb、Power、四个牌堆、逐牌升级与药水槽；临时力量、临时敏捷和临时降力另执行对应方真实回合结束差分；能量药水与明耀酊剂另在玩家拥有无法获得能量时复用同一进程做交互差分。最后以火焰药水运行完整搜索、全自动部署、原生槽位消耗和战斗结束闭环。",
     "expected": "30 种无选择、无随机生成的确定性药水可作为搜索动作，精确结算即时数值和临时状态生命周期；已使用槽位进入状态指纹与跨回合续用校验；全自动按路线通过游戏原生药水队列执行。",
     "observed": "30 条即时差分、肌肉药水/速度药水/镣铐药水 3 条回合结束生命周期差分均 Passed 且 mainThread=true。无法获得能量交互的最终 runId 01293289952f4c58a661963bbc2939d6、0a08b1ef99804edf856849a08afe2ca2 也均 Passed 且 mainThread=true。开发期首次格挡药水失败来自静默注入没有创建原生药水节点；固化药水首次有效差分暴露真实效果为在现有格挡上再增加两倍、即总格挡变为三倍，修正后通过。第一次能量阻断测试把 Power 注入了敌人，模拟与实机均加能量，修正脚本的显式目标后通过。最终全自动 runId 9e702986623b40ea99d6663f6503d005 Passed，日志同时记录 UsePotion、FIRE_POTION 原生 DEPLOY_ACTION、槽位消耗、击杀和第 1 回合战斗结束。",
-    "evidence": "coverage/fixtures/potions/potion-batch-044-*.json；最终即时差分及生命周期 runId；全自动 runId 9e702986623b40ea99d6663f6503d005；游戏 0.111.0 药水源码、RandomForeseer 0.13.7 源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/potions (potion-batch-044-*.json)；最终即时差分及生命周期 runId；全自动 runId 9e702986623b40ea99d6663f6503d005；游戏 0.111.0 药水源码、RandomForeseer 0.13.7 源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "CARD-ON-PLAY-BATCH-043": {
     "status": "Passed",
@@ -1646,7 +1646,7 @@
     "procedure": "同一真实可见游戏 PID 8404 使用生产模拟和原生出牌连续完成 10 个场景、12 条完整状态差分，中间只返回主菜单；覆盖普通/升级召唤、X 费与随机插牌、选牌、消耗堆自动出牌、实例化 Power、出牌限制、回合结束、下一回合抽牌前与自动预出牌阶段。测试脚手架最后一次改动只修正全自动出牌记录的锁存时机；随后最终 Release DLL 另以 PID 23060 完成虚空形态全自动强制换回合闭环。",
     "expected": "18 个战斗条目精确还原奥斯蒂当前/最大生命与复活、生成牌与 RNG、牌堆选牌、梦魇次回合复制、消耗堆连锁、独白实例触发、执迷/凡庸限制、流星锤/无休手斧返回、轰击自动打出，以及虚空形态打出后立即推进回合。",
     "observed": "差分 runId 5ffea1a325844ccd94d694da40664980、8e8f85c867d445379b7c940e5c45c931、96e799e96046427ba626806ba03b683c、6fe20a35eec84dd28e516ae2a4766693、2808d05c669549bb951090d869815651、c1b7e667b3404414a955963149e70e56、e9c6c94a380a42b9a82e6e576e8ca46e、40ea05495d9d4d1caecbea88cb591a7e、d0aad5c94e044fbfb8d95dfc38fa5c66、f3aa213e66e74e0c95d3ddbd4e4e911a 全部 Passed 且 mainThread=true；升级组合包含 3 条差分。虚空形态 runId 195e2829b76b46f79f70c4eb9f2a0b Passed、mainThread=true，日志确认第 1 回合路线与自动部署均实际打出 VOID_FORM，原生立即结束回合，并在第 2 回合结束战斗。开发期失败分别来自洁净牌去向、动态变量键名、测试回合数未推进和战后历史检查过晚；其中独白首次差分确实暴露模拟漏触发下一张牌，修复后通过。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-043-*.json；上述 runId 的 MOVE_DIFF、RESULT、ACTION 与 DEPLOY_ACTION；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-043-*.json)；上述 runId 的 MOVE_DIFF、RESULT、ACTION 与 DEPLOY_ACTION；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-CARD-BATCH-043-NATIVE-STATE": {
     "status": "StaticPassed",
@@ -1670,7 +1670,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏 PID 46700 中连续执行 21 个隔离场景；每个场景从同一初始状态分别运行生产模拟和原生出牌/原生选牌，逐字段比较玩家与全部敌人的生命、格挡、Power、能量、星能、Orb、四个牌堆、逐牌费用/升级/实例状态以及 6 组战斗 RNG 计数，最后一组通过后退出游戏。",
     "expected": "24 个确定性 OnPlay 钩子精确还原随机目标、随机插牌、击杀递归、毒触发、群体伤害、私有计数、选牌、可选空选择、跨牌堆移动、变形、复制、局部费用和重复次数；所有影响后续路线的新增实例状态进入状态指纹。",
     "observed": "最终 runId b708591c829949a7aeb8e166d77a324c、6b6f1f1c07604b30b7c44ba034ef897a、0ac02a13a7f640a9860b1ee34221665a、254bc3baa4084dbdb7083216de60151c、cb232bf2aa5c4e5f8a86c3241dae37df、935ea72538ae420fad1aca2a2ca2eac0、8a394712a1d141279452d06113aa1f11、bc840fe7776b4724a610b9d39b1060e7、62b319d249e943f886970c8aee67186f、4c4f9b9d8be94a149bfe963e345db22c、665645e248494d27b0e142d23b8c31cb、a23179fa853d4e738cda4f196c846ec9、2a6b4277e1864750a4c1faed929a8e9d、9581e0b11b924e5bb5cff46cd8d90c83、70387de60b984f05a3bdfe29bd9da8c3、27c9d6309a3c40348319f2fedcb58ed1、d4ec65d269124a8d879f798af78a1dd8、bad0c03bae814f3785a7cd49a8f1bedb、b8dfc769e08743df8ebcd876f6a5a11d、a2aeffc8fe8a40ea8ef28fd45a05bcb0、29683490e49d417882c288ca3af5ab6b 全部 Passed 且 mainThread=true。开发期万向斩和选牌手牌夹具的预期常量有误，但模拟与原生快照已经一致；末日降临首次暴露测试快照仍保留原生已移除的死亡敌人，修正规范化后整批使用最终 DLL 从头复跑。一次批量启动命令因 PowerShell 数组参数绑定写法错误而未启动游戏、未执行任何场景，不计入语义失败。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-042-*.json；上述 runId 的 MOVE_DIFF 与完整状态/RNG 快照；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-042-*.json)；上述 runId 的 MOVE_DIFF 与完整状态/RNG 快照；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "CARD-ON-PLAY-BATCH-041": {
     "status": "Passed",
@@ -1678,7 +1678,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏 PID 39540 中连续执行 6 个场景、7 条生产模拟/原生出牌与生命周期差分，中间只返回主菜单：两组确定性 Power/资源牌，同步的即时与玩家回合末两条检查，以及内核加速与袖里乾坤、征召上前、暗影步三个隔离场景。逐字段比较生命、格挡、能量、星能、Orb、Power、四个牌堆、逐牌状态、局部费用、附魔和升级等级，最后一组通过后退出游戏。",
     "expected": "24 个确定性 OnPlay 钩子按原版顺序施加 Power、能量、星能、临时集中，处理跨牌堆君王之剑、锻造、虚无、小刀和整手弃牌；运行时将这些 RF 不支持的 OnPlay 风险标为求解器已补偿。",
     "observed": "runId b5dc4a2455fb4c0b82c244bc3e147374、f5bd97ad8cfa4db39c16587751254d98、c7057cab1aa04411b5e1f6c12b4f90cc、196f9ec87b4c45b9828646aabe2792b9、ec80992a3e9b467a808a368738c4b905、1b68f49e6a1e4204b945551206b071e6 均为 Passed 且 mainThread=true。同步在闪电/冰霜两种球下同时获得 2 层同步和 2 集中，并在玩家回合末完整移除；征召上前把两张君王之剑从抽牌堆/弃牌堆移入手牌并锻造 8；内核加速先获得 2 能量再把虚无放入弃牌堆；袖里乾坤生成 3 张小刀并把自身本场费用减 1；暗影步弃掉剩余整手牌后获得对应 Power。开发期第一次同步请求因旧式 Orb JSON 不能反序列化而超时；改正后差分发现模拟漏施加集中；增加生命周期检查后又发现无人脚手架实机回合末白名单缺少 SynchronizePower。修复两处代码后整批从头复测。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-041-*.json；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-041-*.json)；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-CARD-BATCH-041-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -1694,7 +1694,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏 PID 31288 中连续执行 6 组生产模拟/原生出牌差分，中间只返回主菜单：两组各 10 张确定性 Power/技能牌，以及暗淡蓝点、资源与目标效果、追踪之刃、信号增强四个隔离场景。逐字段比较生命、格挡、能量、星能、Power、四个牌堆、逐牌状态、局部费用、附魔和升级等级；最后一组通过后退出游戏。",
     "expected": "28 个确定性 OnPlay 钩子按原版数值施加 Power、能量、星能、延迟格挡、目标中毒与湮灭，并由追踪之刃生成和锻造君王之剑；运行时将这些 RF 不支持的 OnPlay 风险标为求解器已补偿。",
     "observed": "runId 3b8d5baa3de84244bf9df72ac16c58e7、da2d28d62e274b67a3947e381c5ba487、8d788c3c70e94d54982b232e28d34eaf、bf343dcfd295471cb2758b0a5f64e9e2、7122d0a774f04ba59f71594c5fe6b888、4f02f317b31345959ac2abf238084d99 均为 Passed 且 mainThread=true。延伸把当前 7 格挡写入 7 层下回合格挡；胜券在王支付 5 星能后获得 9，最终为 9；蛇咬施加 7 中毒，湮灭施加 3 层对应 Power；追踪之刃生成君王之剑并锻造 7，同时保留 1 层追踪之刃。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-040-*.json；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-040-*.json)；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-CARD-BATCH-040-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -1710,7 +1710,7 @@
     "procedure": "最终 Release DLL 先在同一真实可见游戏 PID 46908 中连续执行 11 组生产模拟/原生出牌差分，中间只返回主菜单；再以 PID 3704 补充暴露移除两层人工制品和迷雾双敌全体目标两组隔离差分。覆盖自施加 Power、目标效果、临时力量回收、资源/空效果、小刀生成、墨染附魔、神化全牌堆升级、开悟及其升级版费用持续时间、钢铁风暴弃牌替换和热修复临时集中力回收。逐字段比较生命、格挡、能量、星能、Power、四个牌堆、逐牌状态、局部费用、附魔和升级等级；每个进程最后一组完成后退出游戏。",
     "expected": "23 个确定性 OnPlay 钩子按原版顺序处理自伤与能量、星能、目标 Power、临时属性、清除格挡/人工制品、生成小刀、墨染附魔、全牌堆升级、局部费用持续时间和整手弃牌替换；临时力量与集中力在对应方回合结束后精确回收。",
     "observed": "runId 5da8769b36a64281b1358de9f8d35fbd、761a273777e84fa69dc182003f40ec52、11b637e38bfc4b07ab1526e37a7fe111、503ddfbaebfa4c6aae5c715c4bff0e72、507afdb12a0d489e8b09210de82a9b40、641a48d855ca4033a7c2598fbbacb772、6b7747e179f44ed5873c459c25372ca6、0462766ce4c245b08d08eef3a50596e6、3880e88487a0410d888128131f49ff07、9b0ab6d0d70e46cb912a18e8912be7a3、06e73833e940404fb9dbc9957355b1d2、da45c7ac994b49129b9dfd3fdeb7035b、4e45568da9594103847e186bc74051f3 均为 Passed 且 mainThread=true。墨之刃生成 2 张带墨染附魔的小刀；刀刃之舞与刀扇合计生成 7 张小刀；神化的整套牌堆升级状态一致；开悟升级版费用在回合结束后仍为 1；钢铁风暴+把 3 张剩余手牌弃掉并生成 3 张升级小刀；黑暗镣铐和弱化之触回收后保留怪物原有 7 力量；热修复回收后热修复与集中力均消失；暴露完整移除 2 层人工制品后施加 2 层易伤；迷雾同时给盛碗虫与潮湿邪教徒施加 4 中毒和 1 虚弱。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-039-*.json；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-039-*.json)；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-CARD-BATCH-039-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -1726,7 +1726,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏 PID 43080 中连续执行 7 组生产模拟/原生出牌差分：两组各 10 张确定性能力/技能牌，以及死亡之舞、谋划专家、群蛇形态、雷暴和无处可逃五个隔离场景。逐字段比较生命、格挡、能量、星能、Power、四个牌堆和逐牌状态；时候未到额外把玩家初始生命设为 50 并独立断言最终生命，最后一组结束后才退出游戏。",
     "expected": "25 个确定性 OnPlay 钩子按原版数值施加 Power、治疗、能量与星能消耗；疯狂进食同时施加强壮与临时回收 Power；无处可逃按目标已有灾厄的完整 10 层档位计算新增灾厄。",
     "observed": "runId 31af0d1412ca4d8aa2a3902c6b93c021、7642ba141b5d4666943166178fb1ca2f、7ab57990fa7845d3addd770432dda7fc、7cf4786d39074c488bd4bd7995afb6ed、d1dbb711b0394ec3826660831578fae7、22d2d6617e3f41a28f5638c9bd75f3cb、38a99c4422fb4694a183e48f7f98e79f 全部 Passed 且 mainThread=true。时候未到将 50 生命恢复至 60；中子护盾消耗 5 星能并施加 8 层多层护甲；被遗忘的仪式、燃料、冷光合计获得 6 能量；已有 20 灾厄时无处可逃再施加 20，最终为 40。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-038-*.json；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-038-*.json)；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-CARD-BATCH-038-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -1742,7 +1742,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏 PID 39500 中连续执行 6 组生产模拟/原生出牌差分：两组各 10 张 Power/技能牌、4 张资源与条件牌、子弹时间零费化、野性中途施加计数和杂耍中途施加计数。逐字段比较生命、格挡、能量、星能、Power、四个牌堆、逐牌状态、锻造牌伤害和敌方状态；最后一组结束后才退出游戏。",
     "expected": "26 个确定性 OnPlay 钩子精确施加 Power、能量、星能、手牌本回合费用、条件中毒、全体减益与锻造；野性和杂耍在本回合中途获得时必须继承此前攻击计数。",
     "observed": "runId 855bb63be63542d3b50b9827edf13c1a、d4cc4398e23842969a89ea8a5f969389、9f975159b50948bda8e3818435476459、a8870038dfe64637b81d8b7c89a9be3c、f531e46e7cc44342add0a044dd7b536c、1be531d71546498b9658f4e5cc9dce12 全部 Passed 且 mainThread=true。子弹时间在 0 能量下继续打出势不可当与爆发；已有中毒 1 层时咕嘟冒泡增至 10；征服者生成君王之剑。先打两张愤怒再施加野性时最终弃牌堆 6 张、手牌 0 张愤怒；同样顺序施加杂耍时弃牌堆 6 张且手牌额外 1 张愤怒，与原版一致。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-037-*.json；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-037-*.json)；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-CARD-BATCH-037-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -1758,7 +1758,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏 PID 42280 中连续执行 3 组生产模拟/原生出牌差分：10 张能力/技能牌、9 张持续能力牌，以及预判的玩家回合结束恢复。逐字段比较生命、格挡、能量、Power、充能球容量与球体、四个牌堆和逐牌状态。",
     "expected": "19 个 RF 未镜像的 OnPlay 钩子精确施加原版 Power 或充能球槽位；预判同步获得临时敏捷并在玩家回合结束移除两者。",
     "observed": "runId 681cb14be8694f7aa8441e17246f35db、dff5e622f8594b0098b55971f94b7407、68218349022c4d91b08d03d97ceb8d37 全部 Passed 且 mainThread=true。扩容将缺陷机器人的槽位 3→5；预判施加 2 层及 2 敏捷后在玩家回合结束同时清零；其余 18 张牌的 Power 数量、资源和牌去向均与实机一致。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-036-*.json；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-036-*.json)；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-CARD-BATCH-036-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -1774,7 +1774,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏 PID 15664 中连续执行 5 组生产模拟/原生出牌差分：8 张自我状态牌、8 张目标减益牌、暴涨槽位、淬炼刀刃/共鸣/侧步，以及尖啸的敌方回合结束恢复。逐字段比较生命、格挡、能量、星能、Power、充能球容量与球体、四个牌堆、逐牌状态和伤害。",
     "expected": "20 个 RF 未镜像的 OnPlay 钩子精确还原 Power 施加顺序、X 费用、星能、充能球槽位、锻造生成与成长、下回合能量，以及临时力量的施加和回收。",
     "observed": "最终 runId 436668e0d382440a80c596603ebf6ace、bf9ea527f9874eb096d91c9c76e39b0b、8decfa5ed85a4c5aa6c06380b15d14e6、d29edfde00ca41498a77b8d205a2cf6f、d82d75269663451ea638b68db5db1238 全部 Passed 且 mainThread=true。暴涨将缺陷机器人的槽位 3→2；淬炼刀刃生成 18 伤害君王之剑；共鸣消耗 2 星能；尖啸施加 6 层后在敌方回合结束移除并恢复力量。第 031 批跨回合资源夹具又以 runId 07f7575c78cb4ab88264cc5aa2c475e4 完整回归通过，确认下回合能量改用原生 Power 后仍正确消费和移除。开发期测试还定位并修复萎靡在模拟副本调用实机 CombatState 的空引用，以及真实回合结束测试白名单漏掉尖啸的问题。",
-    "evidence": "coverage/fixtures/cards/card-on-play-batch-035-*.json；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/cards (card-on-play-batch-035-*.json)；上述 runId 的 MOVE_DIFF；游戏 0.111.0 反编译源码、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "MONSTER-MOVES-BATCH-034": {
     "status": "Passed",
@@ -1782,7 +1782,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏中执行 13 组 Power 差分；除 DLL 更新所需重启外，同一进程连续返回主菜单并接收下一请求。每项从同一实机状态分别运行生产模拟和原生行动/出牌，比较生命、格挡、能量、Power、四个牌堆、逐牌状态及 Orb。为你而死另以 20 HP 与 1 HP 奥斯蒂验证单段正常承伤和致死溢出，再以幽灵船践踏验证奥斯蒂在多段攻击中死亡后的后续段，并比较奥斯蒂生命、可选中状态、是否仍在战斗和死后 Power。",
     "expected": "22 个单人钩子精确处理小刀/奥斯蒂/同阵营攻击加成、伤害倍率与上限、费用和消耗去向、首次攻击/小刀/格挡计数、保留关键词，以及奥斯蒂对单段和多段攻击的承伤、溢出、死亡保留和不可选中生命周期。",
     "observed": "完整 13 组 runId d3f190370ee84da7b65133145710a545、32c5c644ada84234bee128ee7d8cd76c、f161fd5f51ff4787928ecd1d98ac7e99、b0b186f5f8264f259d5c385fff84a964、ac678fe6f1ea4d5194f8503e17298617、35d94625ea79498b8fe5be100cd6f475、66255be43e7448bf929f29b757b7848a、4d73e46d92f14818b15d3b18bf00064a、d071f319b3704c7792347cf9515d1f4a、17becc3f9f6d4e8e8d162c42229cfcb5、5a15ef29b4214f31b728ff7ed4b55a0c、90976c4678ae4179b948a9ac3d3aa7b5、63fbb2f3e9c340f2b2f423d28094c81d 全部 Passed 且 mainThread=true。拆分历史计数职责并重新部署后的代表性回归也全部通过。最终 runId efd0c6227a4d487db98d7df120013e1a 同时通过三条为你而死路径：20 HP 奥斯蒂承受 9 点后为 11；1 HP 奥斯蒂死亡并把 8 点溢出交给玩家；幽灵船多段践踏中奥斯蒂首段死亡后，后续段继续伤害玩家。死亡奥斯蒂仍在战斗、不可选中且保留 DIE_FOR_YOU_POWER。开发期 efdf91ed0a7644f382ffd2a95fb8514e 的模拟/真实快照已一致，但测试常量误写为 12；随后一次请求暴露脚本写入与游戏读取竞争，改为同目录临时文件原子发布后连续复用通过。",
-    "evidence": "coverage/fixtures/monsters/monster-moves-batch-034-*.json；上述最终 runId 的结果与 MOVE_DIFF；游戏 0.111.0、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/monsters (monster-moves-batch-034-*.json)；上述最终 runId 的结果与 MOVE_DIFF；游戏 0.111.0、RandomForeseer 0.13.7 对应源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-POWER-BATCH-034-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -1806,7 +1806,7 @@
     "procedure": "最终 Release DLL 先单独验证巨像取整修复，再在同一真实可见游戏 PID 5084 内连续投递污染、调制、腐蚀波、消亡、瓦解、复合生命周期、Orb/天罚、柔嫩和杂耍九场差分，最后一场退出。每项从同一实机状态分别执行生产一步模拟和原生回调，比较生命、格挡、能量、Power、Power 私有计数、Orb 队列、四个牌堆及逐牌状态。",
     "expected": "20 个单人 Power 钩子按原版时序修正伤害、施加中毒、自伤、递减或移除状态、累积力量、唤起最后一个 Orb、交替无实体，并维护柔嫩与杂耍的本回合计数。巨像在奇数基础伤害取整后于行动前移除时必须恢复精确原值。",
     "observed": "最终 runId 3ecba632cafa4e7fab34234c02d62b7e、210806f2f52c4965953ffd6d93c2e785、bfd24de28b13479b8d51ae426d771888、2780c33002524d798a44b2d354efa2b8、ede74e0e6d1544e1a587d9eb81ce9373、86afde15819641fcbf1c4ad0c09d2414、d24e10850df643cd9332c0d8ae479a68、29615a9a97a14ac7a0bacc21f6559113、1d30e09a1f18459fbebc622272ad6800、300dc86b83c74dceb65972cf818d4785 全部 Passed 且 mainThread=true。新增行动前移除场首次有效差分 runId 9651a127d9154076a2663314369cde55 发现巨像把原始 7 点错误反解为 6 点；攻击快照增加未修正基础伤害后最终两项均通过。另一次 runId aac12111d23f4d0c98980b73c217af3c 在 start_run 阶段退出、没有执行差分，未计为语义结果。",
-    "evidence": "coverage/fixtures/monsters/monster-moves-batch-033-*.json；上述最终 runId 的结果与 MOVE_DIFF；游戏 0.111.0 对应 Power 源码；PCK 官方简中本地化，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/monsters (monster-moves-batch-033-*.json)；上述最终 runId 的结果与 MOVE_DIFF；游戏 0.111.0 对应 Power 源码；PCK 官方简中本地化，验证日期 2026-08-20。"
   },
   "STATIC-POWER-BATCH-033-MULTIPLAYER": {
     "status": "StaticPassed",
@@ -2110,7 +2110,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏中分组执行 Power 数值变化、星能/能量、卡牌入场附魔、出牌限制、回合结束、受伤/破甲唤醒、额外回合、回合开始选牌、集中变化和包围药水朝向差分。31 项从同一实机状态分别执行生产模拟、原生动作或正式后台边界搜索，比较生命、格挡、资源、Power、私有状态和逐牌状态；另 6 项仅完成源码与 Release 构建静态闭环。杂耍 AfterApplied 复用 CARD-ON-PLAY-BATCH-037 已通过的中途施加私有计数闭环。",
     "expected": "补齐 31 个未分析 Power 钩子并纠正 6 个 RF 忽略或空处理造成的假精确分类。确定性资源、附魔、抽牌、格挡、灾厄和朝向必须与原生结算一致；唤醒、逃跑、额外回合、自动出牌及选择界面必须停在 DynamicResolution 后读取真实状态。",
     "observed": "31 项实机闭环的最终 runId：de517160fc324bcdb04bd1415cabf0c6、70d0117d9bc744f294a20ad805d6171d、3e471e2538da473ba3beb6be4211c30b、b4a42e6fabb64836827b7639734a9a9c、170bb531b7984d47ada722781a5fa88f、a2fadab49c4c460fa7a4cf5fd4380e47、c1b61bba52364fa98ea922687bf58cb1、cc11a2c0965647528ef528597d805cbe、cc37c0e298d842bbbfaf2083f6beef9d、7933c97a623845ddb49ef8bed077213f、a8e5183178a94ed5be609804ab7a5d57、a2a96633b4d24eafa7a653fe78ebed06、6a45f3865c8b4c8bbfb210dae06b36ec、16ff70adcb664ca3b6b45bb83dcdc543、19678b232f9f4a0fa46731ab30fd73f6、1593c116de2743bc8df9c9ae701dbdc6、65e22743e93f4ec885842cf6c828e4d8、57ee60626f4a4a24945fd82044b320f4、98b2530c17824506990fee587153b957、4179188c9ec9479496fefbf9bc9d4f2c、7bb6556b962e4500bf66697374292ff7、15f40ee3e62847cba73f557b60995f05 均 Passed。6 项静态钩子没有借用同场景结果标记实机通过。开发中夹具错误曾暴露星能格挡预期、组合附魔污染、卡牌 ID、测试怪物类型、Doom 原生帮助器和正式搜索路线不保证触发等问题；均修正后用最终 DLL 重跑，未把失败 run 计入通过。",
-    "evidence": "coverage/fixtures/powers/power-lifecycle-batch-051-*.json；上述最终 runId 的 MOVE_DIFF、POTION_DIFF、SEARCH_BOUNDARY 与结果文件；CARD-ON-PLAY-BATCH-037 杂耍证据；游戏 0.111.0 与 RF 0.13.8 对应源码；PCK 官方简中本地化；Release build，验证日期 2026-08-20。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/powers (power-lifecycle-batch-051-*.json)；上述最终 runId 的 MOVE_DIFF、POTION_DIFF、SEARCH_BOUNDARY 与结果文件；CARD-ON-PLAY-BATCH-037 杂耍证据；游戏 0.111.0 与 RF 0.13.8 对应源码；PCK 官方简中本地化；Release build，验证日期 2026-08-20。"
   },
   "RELIC-PURE-HOOKS-BATCH-052": {
     "status": "Passed",
@@ -2118,7 +2118,7 @@
     "procedure": "在真实可见游戏中于战斗建立后注入抽牌和最大能量遗物，分别对真实 CombatState 与生产模拟态调用原生 Hook；随后把准备背包、大蘑菇、长蛇戒指、蛇之戒指、面包和佩尔之肉连续推进到第 2、3 回合，再次比较纯 Hook 和完整回合建立状态。",
     "expected": "当前回合无条件抽牌与能量遗物按动态值叠加；搜索推进后不得继续读取现实中的第 1 回合。第 2 回合应抽 7、最大能量 4，第 3 回合应抽 7、最大能量 5，模拟与实机一致。",
     "observed": "最终 DLL 使用仓库固定夹具复跑：组合抽牌 runId ae6eb92e6fce4d6b8a6e00442ec3989a、组合最大能量 runId 6bb57c84387a45fd8670dd2fb985ace2、连续第 2/3 回合 runId 3bafb759027b40a7b67f473d35e500a8、精英房轰鸣海螺 runId 9273bf4c915b473ca7765a064949a9b2，全部 Passed。最后一项使用原生 KnightsElite 遭遇，且最终测试接口已移除无效的房间类型覆盖参数。开发期未来回合差分曾暴露模拟回合初始化错误；最终第 2 回合抽牌 7、最大能量 4，第 3 回合抽牌 7、最大能量 5。",
-    "evidence": "coverage/fixtures/relics/relic-pure-batch-052-*.json；上述四个最终 runId 的结果及 DERIVED_HOOK/MOVE_DIFF 日志；游戏 0.111.0 对应遗物源码；src/Prediction/PersistentPowerSupport.cs；Release build，验证日期 2026-08-21。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/relics (relic-pure-batch-052-*.json)；上述四个最终 runId 的结果及 DERIVED_HOOK/MOVE_DIFF 日志；游戏 0.111.0 对应遗物源码；src/Prediction/PersistentPowerSupport.cs；Release build，验证日期 2026-08-21。"
   },
   "STATIC-RELIC-SCOPE-BATCH-052": {
     "status": "StaticPassed",
@@ -2134,7 +2134,7 @@
     "procedure": "最终 Release DLL 在真实可见游戏中运行三份固定夹具。摆动球与花粉核心从指定 TurnsSeen 连续推进六次完整玩家回合建立；怀表分别在一回合打出 4、0、3 张牌后建立下一回合；赐福鹿角、葬礼面具、忍术卷轴和发光珍珠在跑局建立后原生获得，再比较下一回合模拟/实机完整状态。每一步均比较生命、格挡、能量、四牌堆逐牌状态、相关 RNG、实际抽牌数，并直接比较原生私有计数与预测跨回合复用文本。",
     "expected": "摆动球每 3 回合额外抽 1 张；花粉核心累计到第 4 回合额外抽 2 张并清零；怀表上回合打牌数不超过 3 时额外抽 3 张，4 张时不触发，且 3 张边界必须触发。四件首回合生成遗物的实际首回合结果由初始快照继承，后续回合不得重复生成。",
     "observed": "最终周期 runId 84ac48d9e35549488eb0483f4e6411a8 从第 1 回合连续完成到第 7 回合，六次检查全部 Passed；最终怀表 runId 021ad7eceed44665b99e5e1c145d6fc4 的 4/0/3 张三条检查全部 Passed；最终首回合快照 runId 16cde608f4a541fa90fe1f5834ebe50f Passed。所有请求 mainThread=true，模拟与原生完整状态、抽牌数及显式遗物计数文本一致。怀表 AfterCardPlayed 在 RF 0.13.8 中为 RegisterIgnored，已由求解器补偿并纠正目录原有假精确分类。",
-    "evidence": "coverage/fixtures/relics/relic-draw-state-batch-053-*.json；上述最终 runId 的 MOVE_DIFF、DERIVED_HOOK 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 AfterCardPlayedMirrors；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/relics (relic-draw-state-batch-053-*.json)；上述最终 runId 的 MOVE_DIFF、DERIVED_HOOK 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 AfterCardPlayedMirrors；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
   },
   "STATIC-RELIC-DRAW-BATCH-053": {
     "status": "StaticPassed",
@@ -2150,7 +2150,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏进程中连续运行七份固定夹具。跨回合组验证能量重置、手牌清空、格挡保留封顶、X 值、中毒层数和能力牌实际支付费用；注能核心组验证首回合原生充能球快照及未来回合不重复；其余组实际打出普通/升级/附魔攻击、低伤攻击和两张仆从牌，并让石甲碗虫真实攻击玩家。每项从同一状态执行生产模拟与原生动作队列，比较完整状态与固定数值预期。",
     "expected": "冰淇淋第 2 回合保留剩余能量再增加最大能量；三角铃鼓只保留第 1 回合手牌；符文金字塔持续保留；坚固钳子最多保留 10 格挡；化学物X增加 2 点 X 值；异蛇头骨增加 1 层中毒；带刺手甲令能力牌多耗 1 能量；纯伤害、失血、充能球与仆从牌修正严格按游戏 0.111.0 数值和条件执行。",
     "observed": "最终 runId 8fa141b1f6f7471f8c05d0e9edc5a458、9e184e60cfcd47aa861d693f78490336、8f7123af83214bcfaf565efac1015832、9a829e65fef14168a7df6d0d9edab982、e3a022e42b164cec983d76e3a2bc2a5f、f2ba3444069749878232adc0004038ca、fc1bd1b112f249c281e9beceaaa9b1d5 均为 Passed、mainThread=true；风险分类改动后的最终程序集另以新进程 runId 12388ca5a3ef443184b391f1e7b7e0bc 复跑跨回合组合并通过。跨回合组完成两条连续检查；攻击组合总伤害 42，发条靴把 4 点未格挡攻击提高到 5，钨合金棍把 1 点生命损失降为 0，维特鲁威仆从令仆从牌造成 26 伤害并获得 14 格挡。开发期首次 runId e91eb91ac2254ed1941bc9a96fd4b2d9 的完整模拟/实际快照已一致，只因夹具把局部费用 1 误写成最终费用 2 而失败；改为真实打出能力牌并断言总能量后通过。",
-    "evidence": "coverage/fixtures/relics/relic-*-batch-054-*.json；上述七个最终 runId 的 MOVE_DIFF、DERIVED_HOOK 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 伤害、格挡、生命损失和费用镜像回退；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/relics (relic-*-batch-054-*.json)；上述七个最终 runId 的 MOVE_DIFF、DERIVED_HOOK 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 伤害、格挡、生命损失和费用镜像回退；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
   },
   "STATIC-RELIC-HOOKS-BATCH-054": {
     "status": "StaticPassed",
@@ -2166,7 +2166,7 @@
     "procedure": "最终 Release DLL 在同一真实可见游戏进程中连续运行五份固定夹具。首回合组合同时触发治疗、自伤、群体伤害、格挡、星能、能量、手牌升级和双方 Power；周期组连续推进至第 3 回合并分别走未打攻击/打出攻击路径；茶具组比较一次性保存状态；破损核心组比较充能球；轰鸣海螺组进入原生精英房。每步执行生产模拟和原生动作队列，并比较完整状态、私有遗物计数文本和固定数值。",
     "expected": "首回合 14 个确定性钩子按原生顺序叠加；孙子兵法的出牌回调记录攻击，且只在上回合未打攻击时补 1 能量；烛台和吊灯只在第 2/3 回合触发；真假开心小花分别按 3/5 回合循环；真假古茶具套装只消费一次；破损核心每件首回合生成 1 个闪电球；轰鸣海螺仅在精英战首回合补 1 能量。",
     "observed": "最终 runId 15e3ad8361bc4e74abc8711682f5d6f9、9a6553d7aa12403ca3e066e04d260372、5e73586e1f3147e5bc22f3b1b561378e、0ed8b0da9b93491eb67f5c2adcaa3de5、47d61ee94cde464da188e2fdc77ad83f 全部 Passed、mainThread=true，共完成 6 条完整状态差分并从第 1 回合推进到第 3 回合。代码拆分后的最终程序集另以新进程 runId 2e26c0f7951043d480875c082234fe27、626fe9138738421480937ce7ba4dd29b 复跑首回合组合与跨回合周期，三条差分全部通过。开发期 runId 6e657f200dfd446ea0ff6af28b5216fb 的预测/实机快照已经一致，失败原因是夹具漏注入红面具却断言虚弱；runId 6715175b61a4488197df6d83b1d695c5 同样快照一致，失败原因是忽略缺陷机器人原有破损核心及初始闪电球，修正期望为 3 个后通过。",
-    "evidence": "coverage/fixtures/relics/relic-turn-start-batch-055-*.json；上述五个最终 runId 的 MOVE_DIFF、DERIVED_HOOK 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 AfterCardPlayedMirrors；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/relics (relic-turn-start-batch-055-*.json)；上述五个最终 runId 的 MOVE_DIFF、DERIVED_HOOK 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 AfterCardPlayedMirrors；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
   },
   "STATIC-RELIC-TURN-START-BATCH-055": {
     "status": "StaticPassed",
@@ -2182,7 +2182,7 @@
     "procedure": "最终 Release DLL 在两个真实可见游戏进程中运行八份固定夹具，连续比较生产模拟与原生动作队列。场景覆盖首回合锻造、充能球槽、格挡、能量、金币、暗球、奥斯蒂召唤，迷你摄政王与佩尔之泪跨回合状态，苦无/手里剑/彩虹戒指/精致折扇/华丽围巾/天鹅绒项圈计数，开信刀技能计数，佩尔军团三回合冷却，音乐盒与镀银石每回合一次，以及跳动残片和恶魔之舌的单回合承伤/治疗重置。",
     "expected": "所有 RF 分支内私有状态在正确回合阶段清零并进入状态指纹；苦无、手里剑和彩虹戒指补上 RF 0.13.8 缺失的实际 Power；金币消耗作为分支资源延续；佩尔之泪仅在上回合留有能量时获得 2 能量；佩尔的士兵按 2 回合冷却恢复双倍格挡；律动残余每回合最多承受 20 点生命损失，恶魔之舌每回合首次主动受伤后治疗等量生命。",
     "observed": "最终 runId bc4743ac739149eebba6604b7eba1e57、af792f83a8534b24a2e1491700876aa2、c7c5bd00e24448028c38ec14a4b8efa0、d4bfa86467324c24b3c4f33bbe4f027f、865b327f179c49c18ec8c91e5f37995a、6f6821e7f23c4465818ef2fddca36757、da0ff580d0a54509b020e332c0a6c161、0247efea9e0540fba1697ca783b926c9 全部 Passed、mainThread=true，共完成 15 条完整状态差分并推进到第 3 回合。开发期 c3f7e89059a942899e2a932489edf5aa 只因夹具沿用旧版君王之剑基础伤害而失败；842f6b3fd79747e29898a35521e3aae3 在进入差分前被测试助手拒绝批量注入；d3c70c54c7604febb13c7c8fc6f8d845 忽略了下一回合正常抽到的第二张打击；94a9a1e521b44e6aa8707421a0a1656f 的第一条差分已通过，第二条只因忽略检查间自动回满生命而失败。修正夹具后均通过。",
-    "evidence": "coverage/fixtures/relics/relic-turn-lifecycle-batch-056-*.json；上述八个最终 runId 的 MOVE_DIFF 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 PredictionStateStore 与遗物镜像；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/relics (relic-turn-lifecycle-batch-056-*.json)；上述八个最终 runId 的 MOVE_DIFF 与结果文件；游戏 0.111.0 对应遗物源码；RF 0.13.8 PredictionStateStore 与遗物镜像；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
   },
   "STATIC-RELIC-TURN-LIFECYCLE-BATCH-056": {
     "status": "StaticPassed",
@@ -2198,7 +2198,7 @@
     "procedure": "最终 Release DLL 在同一个真实可见游戏进程中连续运行十一份固定夹具。测试通过游戏原生 PotionCmd 建立药水状态，分别覆盖药水使用、回合开始、格挡清空、回合结束、技能计数、星能消耗、充能球生命周期、空手抽牌、低生命伤害倍率，以及佩尔之眼、历史课本和烤面包手套三个动态结算边界。每项从同一状态执行生产模拟与原生动作队列，比较完整玩家、敌人、Power、牌堆、充能球、遗物私有状态和 RNG；最后一个场景才退出游戏。",
     "expected": "腰带扣和爬行动物饰品按最后一瓶药水状态生效；书签、舵盘、船夹板、闪亮口红、金纸、锁镰、月亮糕点、招架盾、星系尘埃、幽灵种子、不休陀螺和不死符文按原生顺序及 RNG 结算；情感芯片同时包含正常回合末充能球被动和次回合额外被动，镀金缆线使队首被动次数翻倍；三个选择或额外回合遗物在未知原生结果前进入 DynamicResolution。",
     "observed": "最终 runId 42bc155f89db4cdaa06a1291de69740a、7e6396ce4a9e4561bd7bda7d36cda63e、4042f176abeb41c792b950487acb2d6f、ad8fc278c46240149714499181bd6689、1632269c11084308908ee8a53abfd797、a1e0cfc71cda41af835f461e2d654c66、f3c0431c762b43cf871c44ba0ea66ffb、4ad51475db574a31b68672c8ff640cf5、abf43a46ef9e45cc8a7ad088806c497a、c86cb30c6ddb494aabf2345fb13c8d7a、32b6996e20ad41bca87ad0a7824e01ac 对应的十一份最终场景全部 Passed、mainThread=true。情感芯片最终场景准确产生四次目标 RNG 触发：正常充能球回合末与次回合情感芯片各触发一次，二者均被镀金缆线加倍。开发期差分先后发现测试夹具遗漏原生格挡清空回调、生产搜索遗漏正常充能球 BeforeTurnEnd、金纸触发时点早于手牌清空、情感芯片跨回合历史未滚动、佩尔之眼夹具手牌非空，以及烘焙手套原生选择与动态登记问题；修正生产路径或夹具后以最终 DLL 全量复跑通过。",
-    "evidence": "coverage/fixtures/relics/relic-reactive-batch-057-*.json；上述十一份最终场景的 MOVE_DIFF、SEARCH_BOUNDARY 与 RESULT 日志；游戏 0.111.0 对应遗物、CombatManager 和充能球源码；RF 0.13.8 SimOrbQueue；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/relics (relic-reactive-batch-057-*.json)；上述十一份最终场景的 MOVE_DIFF、SEARCH_BOUNDARY 与 RESULT 日志；游戏 0.111.0 对应遗物、CombatManager 和充能球源码；RF 0.13.8 SimOrbQueue；PCK 官方简中本地化；Release build，验证日期 2026-08-21。"
   },
   "STATIC-RELIC-REACTIVE-BATCH-057": {
     "status": "StaticPassed",
@@ -2214,7 +2214,7 @@
     "procedure": "最终 Release DLL 在同一个真实可见游戏 PID 中连续执行两份固定夹具。第一场依次真实打出两张燃烧和两张上勾拳，同时验证损毁头盔首次正力量翻倍、不安油灯整张触发牌的两种减益翻倍，以及两件遗物的一场一次私有状态；第二场重新建立不安油灯后连续打出两张穿透哀嚎，专门比较临时 Power 与其内部力量 Power，最后才退出游戏。每场均从同一状态执行生产模拟与原生动作队列并比较完整状态。",
     "expected": "损毁头盔只把第一次 `2` 点力量翻为 `4`，第二次仍为 `2`，最终力量为 `6`；不安油灯把第一张上勾拳的虚弱和易伤各从 `1` 翻为 `2`，第二张不再翻倍，最终均为 `3`；穿透哀嚎第一次从 `6` 翻为 `12`，内部力量只应用 `-12` 而非再次翻倍，第二张正常叠加后两种 Power 均为 `18`。",
     "observed": "runId 8762193507b84e7384ce5911ea706607 与 db72367cc141437f94e3cff41e9ff22c 均为 Passed、mainThread=true；第二场 `reused_process=True` 并复用 PID 46872。两场的 Power 数值、牌堆、遗物私有状态文本及生产模拟/原生完整快照完全一致。",
-    "evidence": "coverage/fixtures/relics/relic-power-batch-058*.json；上述两个 runId 的 MOVE_DIFF 与 RESULT 日志；游戏 0.111.0 RuinedHelmet、UnsettlingLamp、PowerCmd 源码；Release build，验证日期 2026-08-21。"
+    "evidence": "https://github.com/Torch1230/CombatSolver/tree/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/fixtures/relics (relic-power-batch-058*.json)；上述两个 runId 的 MOVE_DIFF 与 RESULT 日志；游戏 0.111.0 RuinedHelmet、UnsettlingLamp、PowerCmd 源码；Release build，验证日期 2026-08-21。"
   },
   "STATIC-RELIC-DECK-BATCH-058": {
     "status": "StaticPassed",
@@ -2358,7 +2358,7 @@
     "procedure": "用缩小甲虫固定搜索根和 250 节点分别运行 DOP1/DOP2，比较动作、选择、评分、快照与回合标注；同时在 CardPlay 完成和中止边界检查 PAELS_LEGION 瞬时状态与 Fork。",
     "expected": "并行搜索与串行搜索政策等价，BaseLib 克隆不发生共享弱表异常；CardPlay 无论完成或中止都不把临时出牌引用带入后续分支。",
     "observed": "runId 9678ee908aac427e9fbc5a6d7b17e4cf Passed，DOP1/DOP2 完整政策一致并形成真实并发，两个 CardPlay 边界均稳定 Fork。",
-    "evidence": "src/Engine/Common/BaseLibCloneConcurrency.cs；src/Testing/UnattendedTestRunner.ForkBoundaries.cs；runId 9678ee908aac427e9fbc5a6d7b17e4cf；验证日期 2026-08-30。"
+    "evidence": "src/Engine/Common/BaseLibCloneConcurrency.cs；src/Testing/Contracts/Runtime/UnattendedTestRunner.ForkBoundaries.cs；runId 9678ee908aac427e9fbc5a6d7b17e4cf；验证日期 2026-08-30。"
   },
   "BATCH-193556-RNG-IDENTITY": {
     "status": "Passed",

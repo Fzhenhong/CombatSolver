@@ -419,8 +419,8 @@ require_fixed() {
 }
 
 strategy_search="$search_root/DevelopmentSearchStrategy.cs"
-strategy_loader="$repository_root/src/Testing/DevelopmentStrategyLoader.cs"
-monitor_publisher="$repository_root/src/Testing/DevelopmentMonitorPublisher.cs"
+strategy_loader="$repository_root/src/Testing/Host/DevelopmentStrategyLoader.cs"
+monitor_publisher="$repository_root/src/Testing/Host/DevelopmentMonitorPublisher.cs"
 require_fixed "$monitor_publisher" "PeriodicTimer" "Monitor update cadence missing"
 require_fixed "$monitor_publisher" "CurrentBestResult" "Monitor scalar result projection missing"
 require_fixed "$monitor_publisher" "File.Move(temp, path, true)" "Monitor atomic publication missing"
@@ -519,8 +519,8 @@ for relative_path in \
     src/Search/CombatBeamSolver.Expansion.Opening.cs \
     src/Search/CombatBeamSolver.Expansion.Replay.cs \
     src/Runtime/LiveEndTurnRiskEvaluator.cs \
-    src/Testing/UnattendedTestRunner.cs \
-    src/Testing/UnattendedTestRunner.Potions.cs; do
+    src/Testing/Host/UnattendedTestRunner.cs \
+    src/Testing/Support/UnattendedTestRunner.Potions.cs; do
     for reference in \
         'CorePowerSupport.TriggerPlayerRegularSideTurnEndEffects(' \
         'TurnStartRelicSupport.TriggerAfterSideTurnEnd(' \
@@ -817,9 +817,9 @@ src/Api/PreCombatForecastWorker.cs	COMBATSOLVER_PRECOMBAT_WORKER
 src/Api/PreCombatForecastWorker.cs	ExpectedLoadedMods = expectedMods
 src/Api/PreCombatForecastWorker.cs	EnableNoGcRegionForTest = false
 src/Api/PreCombatForecastWorker.cs	PreCombatInterveningMapPoints = options.InterveningMapPoints
-src/Testing/UnattendedTestRunner.ScenarioBuilder.cs	EnterMapCoordDebug
-src/Testing/UnattendedTestRunner.ScenarioBuilder.cs	PreCombatPlayerHp:
-src/Testing/UnattendedTestRunner.ScenarioBuilder.cs	DirectRunSnapshot:ExactStateRestored
+src/Testing/Host/UnattendedTestRunner.ScenarioBuilder.cs	EnterMapCoordDebug
+src/Testing/Host/UnattendedTestRunner.ScenarioBuilder.cs	PreCombatPlayerHp:
+src/Testing/Host/UnattendedTestRunner.ScenarioBuilder.cs	DirectRunSnapshot:ExactStateRestored
 EOF
 
 while IFS= read -r -d '' api_file; do
@@ -859,7 +859,7 @@ src/Search/CombatBeamSolver.ParallelExpansion.cs	new(_run.ExpansionBatchPool)
 src/Search/CombatBeamSolver.Phases.cs	SearchWaveMemoryPolicy.ParentWaveCapacity(
 src/Engine/InCombat/Simulation/CombatPredictionRngSet.cs	private sealed class FrozenStream(PredictionRngState state)
 src/Engine/InCombat/Simulation/CombatPredictionRngSet.cs	new FrozenStream(_mutable.CaptureState())
-src/Testing/UnattendedTestRunner.Assertions.cs	AssertLazyRngFork(scenario.CombatState.RunState.Rng)
+src/Testing/Host/UnattendedTestRunner.Assertions.cs	AssertLazyRngFork(scenario.CombatState.RunState.Rng)
 src/Search/CombatBeamSolver.StateEvaluation.cs	AppendRngState(ref key, simulator.Rng.ShuffleState);
 src/Runtime/ContinuationStamp.cs	simulator.Rng.ShuffleState
 src/Search/CombatBeamSolver.StateEvaluation.cs	AppendRngState(ref key, simulator.Rng.CombatCardGenerationState);
@@ -883,7 +883,7 @@ src/Engine/Common/PredictedCard.cs	HasCheckedPowerAfflictionEntry = HasCheckedPo
 src/Search/SimulatedCombatState.PowerLifecycle.cs	private HashSet<CardModel>? _liveCardsAtSnapshot;
 src/Search/SimulatedCombatState.Fork.cs	_liveCardsAtSnapshot = _liveCardsAtSnapshot,
 src/Search/SimulatedCombatState.Fork.cs	ReferenceEquals(view.Prefix, _rootRunHookListeners)
-src/Testing/UnattendedTestRunner.Assertions.cs	AssertFrozenRootRunListeners(scenario.CombatState, scenario.Player);
+src/Testing/Host/UnattendedTestRunner.Assertions.cs	AssertFrozenRootRunListeners(scenario.CombatState, scenario.Player);
 src/Search/CombatBeamSolver.Models.cs	SnapshotListBuffer<PredictedCard> SnapshotLiveCards = new()
 src/Search/CombatBeamSolver.StateEvaluation.cs	_run.SnapshotLiveCards.Rent()
 EOF
@@ -1185,21 +1185,11 @@ require_fixed \
 path_diagnostics_path="$search_root/CombatBeamSolver.PathDiagnostics.cs"
 require_fixed "$search_root/CombatBeamSolver.BeamRetentionPolicy.cs" 'HasRetainedRoutingChoice: RetainedRoutingChoice(node) != null' 'ordinary tactical ties must use the existing retained routing semantics:'
 require_fixed "$search_root/CombatBeamSolver.BeamRetentionPolicy.cs" 'if (values.HasRetainedRoutingChoice)' 'ordinary tactical ties must leave routing positions unchanged:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.SearchPolicy.cs" 'seven, [], [0, 7, 1, 4, 2, 5, 6], useTacticalOrder: true);' 'ordinary tactical ties lost the interleaved routing-position contract:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-SOUL-GENERATION-CONTEXT-V0111' 'generation context replay lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-SOUL-GENERATION-SUFFIX-V0111' 'generation context frozen suffix replay lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-SOUL-VARIANT-PATH-TRACE-V0111' 'proved variant path trace lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-SOUL-RETAINED-PATH-TRACE-V0111' 'retained variant alias proof lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.KnownSoulVariantPathTrace.cs" 'requiredRetentionStep: 18, proveRetentionAliases: true' 'retained variant must strictly prove the actual observed prefix suffix:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.KnownSoulVariantPathTrace.cs" 'RunKnownSoulGenerationContext(combat, player, fullKnownSuffix: true, frozenVariants: variants);' 'variant trace must prove the complete alternative suffixes before search:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.KnownRoutePathTrace.cs" 'watched.UnionWith(variants.Values.SelectMany(variant => variant.Prefixes)' 'variant trace must watch all proved prefix states:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.KnownRoutePathTrace.cs" 'exact.GroupBy(item => new { item.PolicyLabel, item.ParentPolicyLabel })' 'variant trace must report separate observed current and parent policy buckets:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-EXOSKELETONS-ROUTE-REPLAY-V0111' 'multi-enemy known route lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-EXOSKELETONS-PATH-TRACE-V0111' 'multi-enemy path trace lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-EXOSKELETONS-CONTINUATION-PATH-TRACE-V0111' 'multi-enemy post-generation path trace lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.Executor.cs" 'KNOWN-EXOSKELETONS-ROUTE-NATIVE-V0111' 'multi-enemy native replay lost its executor entry:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.KnownRoutePathTrace.cs" 'CaptureKnownRouteRootStates(root, player, enemies)' 'path trace must guard all original enemy identities:'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.KnownExoskeletonsPathTrace.cs" 'RunKnownExoskeletonsRouteReplay(combat, player, freeze: frozen);' 'multi-enemy path trace must first prove and freeze the real route:'
+require_fixed "$repository_root/src/Testing/Contracts/Search/UnattendedTestRunner.SearchPolicy.cs" 'seven, [], [0, 7, 1, 4, 2, 5, 6], useTacticalOrder: true);' 'ordinary tactical ties lost the interleaved routing-position contract:'
+require_fixed "$repository_root/src/Testing/Host/UnattendedTestRunner.Executor.cs" 'KNOWN-SOUL-GENERATION-CONTEXT-V0111' 'generation context replay lost its executor entry:'
+require_fixed "$repository_root/src/Testing/Host/UnattendedTestRunner.Executor.cs" 'KNOWN-SOUL-GENERATION-SUFFIX-V0111' 'generation context frozen suffix replay lost its executor entry:'
+require_fixed "$repository_root/src/Testing/Host/UnattendedTestRunner.Executor.cs" 'KNOWN-EXOSKELETONS-ROUTE-REPLAY-V0111' 'multi-enemy known route lost its executor entry:'
+require_fixed "$repository_root/src/Testing/Host/UnattendedTestRunner.Executor.cs" 'KNOWN-EXOSKELETONS-ROUTE-NATIVE-V0111' 'multi-enemy native replay lost its executor entry:'
 require_fixed "$path_diagnostics_path" 'observer.WantsState(node.StateKey)' 'path observer no longer filters before copying:'
 require_fixed "$path_diagnostics_path" 'observer.WantsRetentionPool(node.StateKey)' 'retention pool observer no longer requires an explicit match:'
 require_fixed "$path_diagnostics_path" 'SearchPathObservationStage.RetentionPoolInput' 'retention pool input observation is missing:'
@@ -1281,7 +1271,7 @@ src/Search/SimulatedCombatState.cs	RunRngSet.FromSave(_runRngSnapshot)
 src/Prediction/RelicPredictionStateSupport.cs	CaptureRootState(
 src/Prediction/PowerPredictionStateSupport.cs	HardenedShellPredictionState(original)
 src/Search/SimulatedCombatState.cs	PowerPredictionStateSupport.CaptureRootState(simulator, mutable, power)
-src/Testing/UnattendedTestRunner.CombatRootSnapshot.cs	workerLiveConstructorRejected
+src/Testing/Contracts/Runtime/UnattendedTestRunner.CombatRootSnapshot.cs	workerLiveConstructorRejected
 src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs	ICombatPredictionRootMaterializable materializable
 src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs	public CombatTerminalStamp? TerminalStamp { get; private set; }
 src/Search/CombatPlan.cs	public CombatTerminalStamp? TerminalStamp { get; } = terminalStamp;
@@ -1350,7 +1340,7 @@ src/Search/SimulatedCombatState.cs	IReadOnlyList<string> slots = Encounter?.Slot
 src/Prediction/MonsterMoveEffects.cs	MonsterValueReader.ReadInt(monster
 EOF
 
-unattended_entry_path="$repository_root/src/Testing/UnattendedTestRunner.cs"
+unattended_entry_path="$repository_root/src/Testing/Host/UnattendedTestRunner.cs"
 while IFS=$'\t' read -r relative_path text; do
     require_fixed "$repository_root/$relative_path" "$text" 'missing headless infrastructure ownership boundary'
 done <<'EOF'
@@ -1398,28 +1388,28 @@ done
 while IFS=$'\t' read -r relative_path text; do
     require_fixed "$repository_root/$relative_path" "$text" 'missing unattended protocol boundary'
 done <<'EOF'
-src/Testing/UnattendedTestRunner.cs	private static readonly ProtocolHost Host = new();
-src/Testing/UnattendedTestRunner.ProtocolHost.cs	private sealed partial class ProtocolHost
-src/Testing/UnattendedTestRunner.ProtocolHost.cs	private async Task RunRequestLoopAsync(NGame host)
-src/Testing/UnattendedTestRunner.ProtocolHost.cs	private void Activate(UnattendedTestRequest request)
-src/Testing/UnattendedTestRunner.ProtocolHost.cs	private void Reset()
-src/Testing/UnattendedTestRunner.Writer.cs	private sealed partial class Writer(
-src/Testing/UnattendedTestRunner.Writer.cs	public RuntimeMemorySnapshot Write(
-src/Testing/UnattendedTestRunner.Writer.cs	private static void WriteResult(UnattendedTestResult result, UnattendedTestRequest request)
-src/Testing/UnattendedTestRunner.ScenarioBuilder.cs	private sealed partial class ScenarioBuilder(
-src/Testing/GeneratedCombatScenario.cs	internal static ResolvedGeneratedCombatScenario Resolve(
-src/Testing/UnattendedTestRunner.GeneratedScenario.cs	private void PrepareGeneratedScenario()
-src/Testing/UnattendedTestRunner.GeneratedScenario.cs	private void CaptureGeneratedOpening(
-src/Testing/UnattendedTestRunner.Writer.cs	public void WriteGeneratedArtifact(
-src/Testing/UnattendedTestRunner.ScenarioBuilder.cs	public async Task<ScenarioContext> BuildAsync()
-src/Testing/UnattendedTestRunner.ScenarioBuilder.cs	public CombatState? CombatState { get; private set; }
-src/Testing/UnattendedTestRunner.Assertions.cs	private sealed class Assertions(
-src/Testing/UnattendedTestRunner.Assertions.cs	public async Task RunBeforeExecutionAsync(ScenarioContext scenario)
-src/Testing/UnattendedTestRunner.Assertions.cs	public void AssertAfterExecution(ScenarioContext scenario, ExecutionOutcome outcome)
-src/Testing/UnattendedTestRunner.Executor.cs	private sealed class Executor(
-src/Testing/UnattendedTestRunner.Executor.cs	public async Task<ExecutionOutcome> ExecuteAsync(ScenarioContext scenario)
-src/Testing/UnattendedTestRunner.Executor.cs	private FastModeType? ApplySettingsOverrides()
-src/Testing/UnattendedTestRunner.Executor.cs	public void RestoreSettings()
+src/Testing/Host/UnattendedTestRunner.cs	private static readonly ProtocolHost Host = new();
+src/Testing/Host/UnattendedTestRunner.ProtocolHost.cs	private sealed partial class ProtocolHost
+src/Testing/Host/UnattendedTestRunner.ProtocolHost.cs	private async Task RunRequestLoopAsync(NGame host)
+src/Testing/Host/UnattendedTestRunner.ProtocolHost.cs	private void Activate(UnattendedTestRequest request)
+src/Testing/Host/UnattendedTestRunner.ProtocolHost.cs	private void Reset()
+src/Testing/Host/UnattendedTestRunner.Writer.cs	private sealed partial class Writer(
+src/Testing/Host/UnattendedTestRunner.Writer.cs	public RuntimeMemorySnapshot Write(
+src/Testing/Host/UnattendedTestRunner.Writer.cs	private static void WriteResult(UnattendedTestResult result, UnattendedTestRequest request)
+src/Testing/Host/UnattendedTestRunner.ScenarioBuilder.cs	private sealed partial class ScenarioBuilder(
+src/Testing/Host/GeneratedCombatScenario.cs	internal static ResolvedGeneratedCombatScenario Resolve(
+src/Testing/Host/UnattendedTestRunner.GeneratedScenario.cs	private void PrepareGeneratedScenario()
+src/Testing/Host/UnattendedTestRunner.GeneratedScenario.cs	private void CaptureGeneratedOpening(
+src/Testing/Host/UnattendedTestRunner.Writer.cs	public void WriteGeneratedArtifact(
+src/Testing/Host/UnattendedTestRunner.ScenarioBuilder.cs	public async Task<ScenarioContext> BuildAsync()
+src/Testing/Host/UnattendedTestRunner.ScenarioBuilder.cs	public CombatState? CombatState { get; private set; }
+src/Testing/Host/UnattendedTestRunner.Assertions.cs	private sealed class Assertions(
+src/Testing/Host/UnattendedTestRunner.Assertions.cs	public async Task RunBeforeExecutionAsync(ScenarioContext scenario)
+src/Testing/Host/UnattendedTestRunner.Assertions.cs	public void AssertAfterExecution(ScenarioContext scenario, ExecutionOutcome outcome)
+src/Testing/Host/UnattendedTestRunner.Executor.cs	private sealed class Executor(
+src/Testing/Host/UnattendedTestRunner.Executor.cs	public async Task<ExecutionOutcome> ExecuteAsync(ScenarioContext scenario)
+src/Testing/Host/UnattendedTestRunner.Executor.cs	private FastModeType? ApplySettingsOverrides()
+src/Testing/Host/UnattendedTestRunner.Executor.cs	public void RestoreSettings()
 EOF
 
 for retired_protocol_host_member in \
@@ -1705,11 +1695,11 @@ require_fixed "$repository_root/tools/search/ContextualOrdering/first_loss.py" "
 require_fixed "$search_root/FrontierContinuationScheduler.cs" 'attributionPurpose: request.Purpose' 'missing request work attribution boundary'
 require_fixed "$search_root/SearchRequestWorkTotals.cs" 'AttributionSnapshot()' 'missing request work attribution boundary'
 require_fixed "$repository_root/tools/replay/CheckpointTool/StrategySessionRunner.cs" 'timeout-progress.json' 'strategy session timeout must preserve its last progress snapshot'
-require_fixed "$repository_root/src/Testing/DevelopmentMonitorPublisher.cs" '["memberMaxNodes"] = progress?.MaxNodes' 'timeout progress must include the active member node limit'
+require_fixed "$repository_root/src/Testing/Host/DevelopmentMonitorPublisher.cs" '["memberMaxNodes"] = progress?.MaxNodes' 'timeout progress must include the active member node limit'
 require_fixed "$repository_root/src/Search/CombatSearchCoordinator.PotionChain.cs" 'FrontierContinuationScheduler' 'missing generated potion chain boundary'
 require_fixed "$repository_root/src/Search/CombatBeamSolver.Expansion.Opening.cs" 'BuildFreeEntropicPotionActionsAfterPrefix' 'missing generated potion chain boundary'
 require_fixed "$repository_root/src/Search/SimulatedCombatState.Potions.cs" 'IsFreeEntropicPotionAtSlot' 'missing generated potion chain boundary'
-require_fixed "$repository_root/src/Testing/UnattendedTestRunner.ProtocolHost.cs" 'new BeamWeightPerturbation(' 'missing frozen Beam weight probe boundary'
+require_fixed "$repository_root/src/Testing/Host/UnattendedTestRunner.ProtocolHost.cs" 'new BeamWeightPerturbation(' 'missing frozen Beam weight probe boundary'
 require_fixed "$repository_root/src/Runtime/SolverController.cs" 'UnattendedTestRunner.BeamWeightPerturbationOverride' 'missing frozen Beam weight probe boundary'
 require_fixed "$search_root/ContextualRankingModel.cs" 'stackalloc double[FeatureCount]' 'contextual ranking must keep its feature buffer local'
 require_fixed "$search_root/ContextualRankingModel.cs" 'ModuleVersionId' 'contextual model must validate assembly identity'
@@ -1726,6 +1716,23 @@ if rg -q -F '._vars' "$repository_root/src" --glob '!**/DynamicVarSetAccess.cs';
     violations+=("DynamicVarSet._vars direct field access must go through DynamicVarSetAccess")
 fi
 
+maintained_testing_root="$repository_root/src/Testing"
+for file in "$maintained_testing_root"/*.cs; do
+    if [[ -f "$file" ]]; then
+        violations+=("Testing source belongs in its responsibility directory; keep the root for navigation.")
+    fi
+done
+for directory in "$maintained_testing_root"/*/; do
+    case "$(basename "$directory")" in
+        Host|Support|Replay|Contracts|Regressions) ;;
+        *) violations+=("Unexpected Testing responsibility directory: $directory") ;;
+    esac
+done
+require_fixed "$repository_root/CombatSolver.csproj" '<Compile Remove=".local/**/*.cs" />' 'normal builds must exclude temporary test source'
+for member in 'private sealed record KnownRoutePrefix(' 'private static MoveStateSnapshot[] CaptureKnownRouteRootStates(' 'private static KnownRoutePrefix FreezeKnownRoutePrefix(' 'private void AssertKnownRouteAliasSnapshot('; do
+    require_fixed "$maintained_testing_root/Support/UnattendedTestRunner.RouteSnapshots.cs" "$member" 'missing shared route snapshot helper'
+done
+
 if ((${#violations[@]} > 0)); then
     printf '%s\n' "${violations[@]}" >&2
     printf 'Refactor boundary verification failed with %d violation(s).\n' "${#violations[@]}" >&2
@@ -1736,7 +1743,7 @@ if grep -Eq '\b(Godot|SolverController|RunManager)\b' "$repository_root/src/Repl
     echo 'Checkpoint archive contract must remain independent of the game runtime.' >&2
     exit 1
 fi
-if grep -Fq 'ApplyReplayStateAsync(' "$repository_root/src/Testing/UnattendedTestRunner.NativeReplay.cs"; then
+if grep -Fq 'ApplyReplayStateAsync(' "$repository_root/src/Testing/Replay/UnattendedTestRunner.NativeReplay.cs"; then
     echo 'Native recorded replay must reconstruct state through native actions.' >&2
     exit 1
 fi

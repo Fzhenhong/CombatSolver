@@ -69,3 +69,13 @@ pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId EFFECT-S
 CoverageCatalog 与 CheckpointTool Release 编译零警告/错误。覆盖目录从新入口实际生成，`--verify-state-fields --verify-branch-state-reads` 通过；十份生成快照与整理前对账，除材料路径外一致。3035 个 Hook 的分类与验证等级保持原样，仍有一个主动 Exact Hook 和一个必需写状态 Hook 缺运行证据；本轮没有修复或补跑该缺口。
 
 覆盖结构/引用检查通过（932 份 JSON/save、747 份现行 fixture），文档链接与工具语法检查通过，Windows 结构门禁通过（246 个 Search 文件）。批量回放的空输入 Preflight 验证启动器定位与环境采集，不代表包恢复或战斗通过。未启动游戏，未重新跑历史等价批次或原生 Linux/macOS 启动。
+
+## coverage 精简与 Testing 整理（2026-10-03）
+
+删除410份数据：275份结束批次或重复fixture、116份不再使用的完整等价池请求/规格、15份旧临时配置、4份旧GC开发输入。当前522份数据含472份fixture与30份语料；归档保存摘要，原材料改用固定提交。502份保留输入的JSON语义与整理前一致；十份生成快照只改变路径与随独立任务更新的当前版本，3035个Hook分类及证据等级一致，仍有一个active exact Hook和一个必需写状态Hook缺运行证据。CoverageCatalog的状态字段与分支读取门禁通过。
+
+Testing从218份C#归类为213份：删除6份旧调查分片，提取1份仍被调用的共享快照辅助，退役11个专用调查入口，减少约千行调查代码；公共框架、原生已知路线及机制合同保留。210份移动源码仅改变路径或保持原文，另外两份只删除调查方法/派发；并行任务的药水比较修改按其独立提交保留。主项目、CoverageCatalog、OfflineSearchHarness Release零警告/错误；Windows和Git Bash结构门禁、工具与文档检查通过。
+
+`CASCADE-EMPTY-HAND-NATIVE` 的 `78c67f0b7c9641a4bf8a91948d982030` Passed（21.35秒）：原生完整状态/RNG、完整回放与执行续接、完成后Fork。协议批次先完成根合同 `4a8ad989965f45b6948d65fc854ab0bf`，坏ZIP的 `41c45d454ecc4cb796f19f644bdd6a1b` 按预期Failed且收到可复用ACK，随后 `PROCESS-DIAGNOSTICS` 的 `99194f27ffd048b0991c8f9cdd606730` Passed；三项同PID41896。独立Held请求 `17bd3d7dfff34f56907f50efcb86a927` 收到暂停ACK，释放后启动器正常退出。全部实例由启动器清理，临时验证代码与输入退出工作区。
+
+首次从冷启动实例直接提交坏包 `e4df47031894476ea56b954fbac32c9e` 返回Failed但就绪ACK超时；另一次 `0aa2952965894323b707494340eb2987` 因并行任务改变manifest重启实例，不能算同进程恢复证据，也遇冷启动ACK超时。该边界未修复。Held临时请求最初使用低于启动器下限的16节点，参数校验拒绝后改为合法100节点；未扩大120秒请求上限。没有重跑完整战斗、历史60根池、可见游戏或原生Linux/macOS启动。

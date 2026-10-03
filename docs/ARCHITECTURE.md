@@ -67,6 +67,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 ## 6. Testing
 
+源码按 [Testing 入口](../src/Testing/README.md) 收纳：Host 持有编排与协议，Support 持有共享差分辅助，Replay 持有恢复；Contracts 按 Combat/Search/Runtime/UI/ThirdParty 分组，Regressions 保存社区和报告回归。各目录沿用原程序集与 partial 类型。
+
 | 入口 | 所有权 |
 | --- | --- |
 | `UnattendedTestRunner` | 请求级编排与共享 fixture helper |
@@ -77,6 +79,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 | `Writer` | 结果协议和原子写入 |
 
 原生与模拟核对完整状态、顺序、引用、RNG 和续用合同。离线宿主只产搜索指标；headless 不证明真实可见布局或帧时间。入口见 [无人测试](HEADLESS_TESTING.md)、[离线宿主](OFFLINE_SEARCH_HARNESS.md)、[测试证据](TEST_MATRIX.md)。
+
+旧批次的硬编码路径调查退出当前树，仍被原生回归、生成上下文与搜索合同调用的快照辅助保留在 Support。一次性验证代码由 .local/tool-tasks 持有并在任务结束清理，普通构建显式排除 .local 源码。
 
 ## 7. 工具与维护
 

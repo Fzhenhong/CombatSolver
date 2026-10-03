@@ -323,7 +323,7 @@ Steam 可见性能路径由 `tools/performance/run-visible-steam-benchmark.ps1` 
 7. `src/Engine/Common/PredictionForking.cs`、`PredictedCard.cs`、`PredictionStateStore.cs`、`SimCardPile.cs`。
 8. `src/Engine/InCombat/Simulation/CombatPredictionSimulator.cs` 与 `CombatPredictionState` / `SimPlayerCombatState`。
 9. `src/Search/SimulatedCombatState.cs`、`.Fork.cs`、`.PowerLifecycle.cs`、`.MonsterAi.cs`、`.DeathLifecycle.cs`。
-10. `src/Runtime/ContinuationStamp.cs`、`LiveCombatStamp.cs`、`src/Testing/UnattendedTestRunner.StateDiff.cs`：理解“相等”的三套定义。
+10. `src/Runtime/ContinuationStamp.cs`、`LiveCombatStamp.cs`、`src/Testing/Support/UnattendedTestRunner.StateDiff.cs`：理解“相等”的三套定义。
 
 ### 第二阶段：追一条具体语义
 

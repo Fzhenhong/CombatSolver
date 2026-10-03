@@ -52,6 +52,7 @@ def main():
             errors.append('Required coverage registration is missing: '+name)
     for name, value in materials.items():
         for text in strings(value):
+            text = re.sub(r'https?://[^\s)<>"`]+', '', text)
             for match in REFERENCES.finditer(text):
                 if not (ROOT/match[0]).is_file():
                     errors.append(name+': missing material '+match[0])

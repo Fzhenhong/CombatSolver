@@ -117,7 +117,7 @@ pwsh -NoProfile -File tools/performance/PerformanceBenchmarks/run-windows.ps1 `
   -GameRoot "C:/Games/Slay the Spire 2" `
   -RitsuWorkshopRoot "C:/Steam/steamapps/workshop/content/2868840/3747602295" `
   -Build "C:/Build/CombatSolver" `
-  -Scenario coverage/corpora/runtime-gc/dev-08-regent-boss.json `
+  -Scenario https://github.com/Torch1230/CombatSolver/blob/fe3edd2f7b4f3a92b266e6b13293810d31ce2e1b/coverage/corpora/runtime-gc/dev-08-regent-boss.json `
   -Output .local/gc-ab/regent-A -RuntimeProfile default -Dop 8
 # 换为新输出 regent-B 和 -RuntimeProfile server-generational，保持其它参数相同。
 python tools/performance/PerformanceBenchmarks/compare-runtime-profile.py .local/gc-ab/regent-A .local/gc-ab/regent-B

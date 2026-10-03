@@ -453,8 +453,8 @@ foreach ($relative in $qualityConsumers.Keys) {
     }
 }
 $strategySearch = Join-Path $searchRoot 'DevelopmentSearchStrategy.cs'
-$strategyLoader = Join-Path $repositoryRoot 'src/Testing/DevelopmentStrategyLoader.cs'
-$monitorPublisher = Join-Path $repositoryRoot 'src/Testing/DevelopmentMonitorPublisher.cs'
+$strategyLoader = Join-Path $repositoryRoot 'src/Testing/Host/DevelopmentStrategyLoader.cs'
+$monitorPublisher = Join-Path $repositoryRoot 'src/Testing/Host/DevelopmentMonitorPublisher.cs'
 foreach ($required in @('PeriodicTimer', 'CurrentBestResult', 'File.Move(temp, path, true)')) {
     if (-not (Select-String -LiteralPath $monitorPublisher -SimpleMatch $required -Quiet)) {
         $violations.Add("Development monitor publisher missing: $required")
@@ -521,8 +521,8 @@ $playerTurnEndCallers = @(
     "src/Search/CombatBeamSolver.Expansion.Opening.cs",
     "src/Search/CombatBeamSolver.Expansion.Replay.cs",
     "src/Runtime/LiveEndTurnRiskEvaluator.cs",
-    "src/Testing/UnattendedTestRunner.cs",
-    "src/Testing/UnattendedTestRunner.Potions.cs"
+    "src/Testing/Host/UnattendedTestRunner.cs",
+    "src/Testing/Support/UnattendedTestRunner.Potions.cs"
 )
 foreach ($relativePath in $playerTurnEndCallers) {
     $callerPath = Join-Path $repositoryRoot $relativePath
@@ -870,7 +870,7 @@ foreach ($check in @(
     @{ RelativePath = "src/Search/CombatBeamSolver.ParallelExpansion.cs"; Text = "new(_run.ExpansionBatchPool)" },
     @{ RelativePath = "src/Engine/InCombat/Simulation/CombatPredictionRngSet.cs"; Text = "private sealed class FrozenStream(PredictionRngState state)" },
     @{ RelativePath = "src/Engine/InCombat/Simulation/CombatPredictionRngSet.cs"; Text = "new FrozenStream(_mutable.CaptureState())" },
-    @{ RelativePath = "src/Testing/UnattendedTestRunner.Assertions.cs"; Text = "AssertLazyRngFork(scenario.CombatState.RunState.Rng)" },
+    @{ RelativePath = "src/Testing/Host/UnattendedTestRunner.Assertions.cs"; Text = "AssertLazyRngFork(scenario.CombatState.RunState.Rng)" },
     @{ RelativePath = "src/Search/CombatBeamSolver.StateEvaluation.cs"; Text = "AppendRngState(ref key, simulator.Rng.ShuffleState);" },
     @{ RelativePath = "src/Runtime/ContinuationStamp.cs"; Text = "simulator.Rng.ShuffleState" },
     @{ RelativePath = "src/Search/CombatBeamSolver.StateEvaluation.cs"; Text = "AppendRngState(ref key, simulator.Rng.CombatCardGenerationState);" },
@@ -894,7 +894,7 @@ foreach ($check in @(
     @{ RelativePath = "src/Search/SimulatedCombatState.PowerLifecycle.cs"; Text = "private HashSet<CardModel>? _liveCardsAtSnapshot;" },
     @{ RelativePath = "src/Search/SimulatedCombatState.Fork.cs"; Text = "_liveCardsAtSnapshot = _liveCardsAtSnapshot," },
     @{ RelativePath = "src/Search/SimulatedCombatState.Fork.cs"; Text = "ReferenceEquals(view.Prefix, _rootRunHookListeners)" },
-    @{ RelativePath = "src/Testing/UnattendedTestRunner.Assertions.cs"; Text = "AssertFrozenRootRunListeners(scenario.CombatState, scenario.Player);" },
+    @{ RelativePath = "src/Testing/Host/UnattendedTestRunner.Assertions.cs"; Text = "AssertFrozenRootRunListeners(scenario.CombatState, scenario.Player);" },
     @{ RelativePath = "src/Search/CombatBeamSolver.Models.cs"; Text = "SnapshotListBuffer<PredictedCard> SnapshotLiveCards = new()" },
     @{ RelativePath = "src/Search/CombatBeamSolver.StateEvaluation.cs"; Text = "_run.SnapshotLiveCards.Rent()" },
     @{ RelativePath = "src/Search/CombatBeamSolver.Phases.cs"; Text = "SearchWaveMemoryPolicy.ParentWaveCapacity(" })) {
@@ -995,15 +995,15 @@ $preCombatApiChecks = @(
         Text = "PreCombatInterveningMapPoints = options.InterveningMapPoints"
     },
     @{
-        Path = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.ScenarioBuilder.cs"
+        Path = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.ScenarioBuilder.cs"
         Text = "EnterMapCoordDebug"
     },
     @{
-        Path = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.ScenarioBuilder.cs"
+        Path = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.ScenarioBuilder.cs"
         Text = "PreCombatPlayerHp:"
     },
     @{
-        Path = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.ScenarioBuilder.cs"
+        Path = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.ScenarioBuilder.cs"
         Text = "DirectRunSnapshot:ExactStateRestored"
     }
 )
@@ -1110,21 +1110,11 @@ $pathDiagnosticsPath = Join-Path $searchRoot "CombatBeamSolver.PathDiagnostics.c
 foreach ($required in @(
     @{ Path = (Join-Path $searchRoot "CombatBeamSolver.BeamRetentionPolicy.cs"); Text = 'HasRetainedRoutingChoice: RetainedRoutingChoice(node) != null' },
     @{ Path = (Join-Path $searchRoot "CombatBeamSolver.BeamRetentionPolicy.cs"); Text = 'if (values.HasRetainedRoutingChoice)' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.SearchPolicy.cs"); Text = 'seven, [], [0, 7, 1, 4, 2, 5, 6], useTacticalOrder: true);' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-SOUL-GENERATION-CONTEXT-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-SOUL-GENERATION-SUFFIX-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-SOUL-VARIANT-PATH-TRACE-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-SOUL-RETAINED-PATH-TRACE-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.KnownSoulVariantPathTrace.cs"); Text = 'requiredRetentionStep: 18, proveRetentionAliases: true' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.KnownSoulVariantPathTrace.cs"); Text = 'RunKnownSoulGenerationContext(combat, player, fullKnownSuffix: true, frozenVariants: variants);' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.KnownRoutePathTrace.cs"); Text = 'watched.UnionWith(variants.Values.SelectMany(variant => variant.Prefixes)' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.KnownRoutePathTrace.cs"); Text = 'exact.GroupBy(item => new { item.PolicyLabel, item.ParentPolicyLabel })' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-EXOSKELETONS-ROUTE-REPLAY-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-EXOSKELETONS-PATH-TRACE-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-EXOSKELETONS-CONTINUATION-PATH-TRACE-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-EXOSKELETONS-ROUTE-NATIVE-V0111' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.KnownRoutePathTrace.cs"); Text = 'CaptureKnownRouteRootStates(root, player, enemies)' },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.KnownExoskeletonsPathTrace.cs"); Text = 'RunKnownExoskeletonsRouteReplay(combat, player, freeze: frozen);' },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Contracts/Search/UnattendedTestRunner.SearchPolicy.cs"); Text = 'seven, [], [0, 7, 1, 4, 2, 5, 6], useTacticalOrder: true);' },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Host/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-SOUL-GENERATION-CONTEXT-V0111' },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Host/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-SOUL-GENERATION-SUFFIX-V0111' },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Host/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-EXOSKELETONS-ROUTE-REPLAY-V0111' },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Host/UnattendedTestRunner.Executor.cs"); Text = 'KNOWN-EXOSKELETONS-ROUTE-NATIVE-V0111' },
     @{ Path = $pathDiagnosticsPath; Text = 'observer.WantsState(node.StateKey)' },
     @{ Path = $pathDiagnosticsPath; Text = 'observer.WantsRetentionPool(node.StateKey)' },
     @{ Path = $pathDiagnosticsPath; Text = 'SearchPathObservationStage.RetentionPoolInput' },
@@ -1449,7 +1439,7 @@ $rootModelBoundaryChecks = @(
         Text = "PowerPredictionStateSupport.CaptureRootState(simulator, mutable, power)"
     },
     @{
-        Path = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.CombatRootSnapshot.cs"
+        Path = Join-Path $repositoryRoot "src\Testing\Contracts\Runtime\UnattendedTestRunner.CombatRootSnapshot.cs"
         Text = "workerLiveConstructorRejected"
     },
     @{
@@ -1699,7 +1689,7 @@ foreach ($removedWorkerRead in $removedWorkerReads) {
     }
 }
 
-$unattendedEntryPath = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.cs"
+$unattendedEntryPath = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.cs"
 foreach ($check in @(
     @{ Path = 'tools/testing/run-unattended-test.sh'; Text = 'source "$script_dir/headless-runtime.sh"' },
     @{ Path = 'tools/testing/run-unattended-test.sh'; Text = 'hr_acquire "$process_pid" "$process_identity_start_time"' },
@@ -1755,11 +1745,11 @@ foreach ($helper in @('tools/testing/headless-runtime.sh', 'tools/testing/headle
         }
     }
 }
-$unattendedProtocolHostPath = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.ProtocolHost.cs"
-$unattendedWriterPath = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.Writer.cs"
-$unattendedScenarioBuilderPath = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.ScenarioBuilder.cs"
-$unattendedAssertionsPath = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.Assertions.cs"
-$unattendedExecutorPath = Join-Path $repositoryRoot "src\Testing\UnattendedTestRunner.Executor.cs"
+$unattendedProtocolHostPath = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.ProtocolHost.cs"
+$unattendedWriterPath = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.Writer.cs"
+$unattendedScenarioBuilderPath = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.ScenarioBuilder.cs"
+$unattendedAssertionsPath = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.Assertions.cs"
+$unattendedExecutorPath = Join-Path $repositoryRoot "src\Testing\Host\UnattendedTestRunner.Executor.cs"
 foreach ($check in @(
     @{ Path = $unattendedEntryPath; Text = "private static readonly ProtocolHost Host = new();" },
     @{ Path = $unattendedProtocolHostPath; Text = "private sealed partial class ProtocolHost" },
@@ -1770,9 +1760,9 @@ foreach ($check in @(
     @{ Path = $unattendedWriterPath; Text = "public RuntimeMemorySnapshot Write(" },
     @{ Path = $unattendedWriterPath; Text = "private static void WriteResult(UnattendedTestResult result, UnattendedTestRequest request)" },
     @{ Path = $unattendedScenarioBuilderPath; Text = "private sealed partial class ScenarioBuilder(" },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/GeneratedCombatScenario.cs"); Text = "internal static ResolvedGeneratedCombatScenario Resolve(" },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.GeneratedScenario.cs"); Text = "private void PrepareGeneratedScenario()" },
-    @{ Path = (Join-Path $repositoryRoot "src/Testing/UnattendedTestRunner.GeneratedScenario.cs"); Text = "private void CaptureGeneratedOpening(" },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Host/GeneratedCombatScenario.cs"); Text = "internal static ResolvedGeneratedCombatScenario Resolve(" },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Host/UnattendedTestRunner.GeneratedScenario.cs"); Text = "private void PrepareGeneratedScenario()" },
+    @{ Path = (Join-Path $repositoryRoot "src/Testing/Host/UnattendedTestRunner.GeneratedScenario.cs"); Text = "private void CaptureGeneratedOpening(" },
     @{ Path = $unattendedWriterPath; Text = "public void WriteGeneratedArtifact(" },
     @{ Path = $unattendedScenarioBuilderPath; Text = "public async Task<ScenarioContext> BuildAsync()" },
     @{ Path = $unattendedScenarioBuilderPath; Text = "public CombatState? CombatState { get; private set; }" },
@@ -2163,7 +2153,7 @@ foreach ($boundary in @(
 if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot 'tools/replay/CheckpointTool/StrategySessionRunner.cs') -SimpleMatch 'timeout-progress.json' -Quiet)) {
     $violations.Add('Strategy session timeout must preserve its last progress snapshot')
 }
-if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot 'src/Testing/DevelopmentMonitorPublisher.cs') -SimpleMatch '["memberMaxNodes"] = progress?.MaxNodes' -Quiet)) {
+if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot 'src/Testing/Host/DevelopmentMonitorPublisher.cs') -SimpleMatch '["memberMaxNodes"] = progress?.MaxNodes' -Quiet)) {
     $violations.Add('Timeout progress must include the active member node limit')
 }
 foreach ($boundary in @(
@@ -2176,7 +2166,7 @@ foreach ($boundary in @(
     }
 }
 foreach ($boundary in @(
-    @('src/Testing/UnattendedTestRunner.ProtocolHost.cs', 'new BeamWeightPerturbation('),
+    @('src/Testing/Host/UnattendedTestRunner.ProtocolHost.cs', 'new BeamWeightPerturbation('),
     @('src/Runtime/SolverController.cs', 'UnattendedTestRunner.BeamWeightPerturbationOverride')
 )) {
     if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot $boundary[0]) -SimpleMatch $boundary[1] -Quiet)) {
@@ -2219,8 +2209,25 @@ $archiveContract = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'src/Replay
 if ($archiveContract -match '\b(Godot|SolverController|RunManager)\b') {
     throw 'Checkpoint archive contract must remain independent of the game runtime.'
 }
-$nativeReplay = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'src/Testing/UnattendedTestRunner.NativeReplay.cs'))
+$nativeReplay = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'src/Testing/Replay/UnattendedTestRunner.NativeReplay.cs'))
 if ($nativeReplay.Contains('ApplyReplayStateAsync(')) {
     throw 'Native recorded replay must reconstruct state through native actions.'
+}
+$maintainedTestingRoot = Join-Path $repositoryRoot 'src/Testing'
+if (Get-ChildItem -LiteralPath $maintainedTestingRoot -File -Filter '*.cs') {
+    throw 'Testing source belongs in its responsibility directory; keep the root for navigation.'
+}
+foreach ($directory in Get-ChildItem -LiteralPath $maintainedTestingRoot -Directory) {
+    if ($directory.Name -notin @('Host', 'Support', 'Replay', 'Contracts', 'Regressions')) {
+        throw "Unexpected Testing responsibility directory: $($directory.Name)"
+    }
+}
+if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot 'CombatSolver.csproj') -SimpleMatch '<Compile Remove=".local/**/*.cs" />' -Quiet)) {
+    throw 'Normal builds must exclude temporary test source.'
+}
+foreach ($member in @('private sealed record KnownRoutePrefix(', 'private static MoveStateSnapshot[] CaptureKnownRouteRootStates(', 'private static KnownRoutePrefix FreezeKnownRoutePrefix(', 'private void AssertKnownRouteAliasSnapshot(')) {
+    if (-not (Select-String -LiteralPath (Join-Path $maintainedTestingRoot 'Support/UnattendedTestRunner.RouteSnapshots.cs') -SimpleMatch $member -Quiet)) {
+        throw "Missing shared route snapshot helper: $member"
+    }
 }
 Write-Output "REFACTOR_BOUNDARIES_OK search_files=$($searchFiles.Count)"
