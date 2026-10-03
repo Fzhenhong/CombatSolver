@@ -281,13 +281,34 @@ internal static partial class CombatSearchCoordinator
                         "opening_power_route_member");
                 }
 
+                PlanAction[] continuationPrefix = prefix;
+                bool continueSelectedTurn = false;
+                if (!upgradedPower && configuredVariant.BaseScoreOnly
+                    && memberIndex == variants.Length - 1
+                    && IsCompleteVictory(selected) && !selected.Snapshot.HasRisk
+                    && selected.ExplicitPotionCount == 0
+                    && !policy.PotionStrategy.HasForcedDirectives
+                    && selected.ProjectedBattleHpLost >= SolverWeights.PotionMinimumHpSaved)
+                {
+                    PlanAction[] opening = selected.BestNode.Actions
+                        .TakeWhile(action => action.Turn == root.StartTurnNumber).ToArray();
+                    if (opening.LastOrDefault()?.Kind == PlanActionKind.EndTurn
+                        && opening.Any(action => action.Kind == PlanActionKind.PlayCard
+                            && PowerCardValuationModels.Registry.ContainsCardId(action.CardId)))
+                    {
+                        // Reuse this existing member's allowance for the selected turn boundary.
+                        // The scheduler resets heuristic history while replaying exact combat state.
+                        continuationPrefix = opening;
+                        continueSelectedTurn = true;
+                    }
+                }
                 SolverSearchProfile routeProfile = profile with
                 {
                     // 前缀已经保证能力真实在场；后续不再用激进承诺干扰普通剪枝。
                     AggressivePowerCommitment = false,
                     BeamWidth = variant.BeamWidth,
                     SecondRankBand = variant.SecondRankBand,
-                    BaseScoreOnly = variant.BaseScoreOnly,
+                    BaseScoreOnly = continueSelectedTurn ? false : variant.BaseScoreOnly,
                     MaxExpandedNodes = perRouteNodes,
                     SoftTimeBudgetMilliseconds = perRouteMilliseconds,
                 };
@@ -297,7 +318,7 @@ internal static partial class CombatSearchCoordinator
                 SolverResult candidate = continuationScheduler.Dispatch(
                     new ContinuationSearchRequest(context,
                         ContinuationPurpose.OpeningPowerRouteMember,
-                        prefix, routeProfile, potionPolicyOverride, null, null)
+                        continuationPrefix, routeProfile, potionPolicyOverride, null, null)
                     {
                         // A known potion-free victory remains available to the caller.
                         // Only seed the existing bound where it is eligible in this member's
@@ -327,7 +348,7 @@ internal static partial class CombatSearchCoordinator
                 long allocated = Math.Max(
                     0,
                     GC.GetTotalAllocatedBytes(precise: false) - allocatedBefore);
-                string prefixText = string.Join('+', prefix.Select(action =>
+                string prefixText = string.Join('+', continuationPrefix.Select(action =>
                     action.Kind == PlanActionKind.UsePotion
                         ? $"POTION:{action.PotionId}@{action.PotionSlot}"
                         : action.CardId));
@@ -335,7 +356,7 @@ internal static partial class CombatSearchCoordinator
                     prefixText,
                     variant.BeamWidth,
                     variant.SecondRankBand,
-                    variant.BaseScoreOnly,
+                    routeProfile.BaseScoreOnly,
                     perRouteNodes,
                     perRouteMilliseconds,
                     after.ExpandedNodes - before.ExpandedNodes,
@@ -350,7 +371,7 @@ internal static partial class CombatSearchCoordinator
                 policy.Diagnostics.Info(
                     $"[CombatSolver/Test] POWER_ROUTE_PORTFOLIO_MEMBER index={memberIndex++} " +
                     $"prefix={prefixText} beam={variant.BeamWidth} " +
-                    $"second_rank_band={variant.SecondRankBand} base_score_only={variant.BaseScoreOnly} " +
+                    $"second_rank_band={variant.SecondRankBand} base_score_only={routeProfile.BaseScoreOnly} " +
                     $"won={won} boundary={candidate.BoundaryReason} " +
                     $"expanded={candidate.ExpandedNodes} " +
                     $"battle_hp_lost={(won ? candidate.ProjectedBattleHpLost.ToString() : "-")} " +

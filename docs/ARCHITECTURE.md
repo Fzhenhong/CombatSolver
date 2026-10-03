@@ -86,6 +86,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 `UnattendedTestRunner.Q002BoundaryMembers`复用Testing的原生T3/T4边界证明，对固定准确前缀的搜索进展基线重建做对照；完整根、实机不变和成员profile写入测试产物，不向生产提供报告牌序。
 
+能力路线组合的候选与名额选择仍归`CombatSearchCoordinator.PowerRoutes`：安全且有明显损血的无新增用药胜利可将一个已有变体名额用于自身首回合结束处续搜，动作来自当前搜索结果；既有调度器负责严格前缀回放与启发式基线重建，最终整场政策比较不变。
+
 ## 7. 工具与维护
 
 `tools/verify-refactor-boundaries.ps1` 和 `.sh` 维护同一职责边界。CoverageCatalog 从公开描述与结构化证据生成覆盖报告，报告的生成版本与测试来源分别说明。
