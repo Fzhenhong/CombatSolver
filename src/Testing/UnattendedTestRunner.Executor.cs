@@ -40,11 +40,16 @@ internal sealed partial class UnattendedTestRunner
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
             if (request.ScenarioId is "Q002-O004-OPENING-POTION-POSTERIOR" or "Q002-O004-OPENING-POTION-RANK"
-                or "Q002-O004-OPENING-POTION-PATH")
+                or "Q002-O004-OPENING-POTION-PATH" or "Q002-O004-TURN-BOUNDARY-MEMBER"
+                or "Q002-O004-POSTERIOR-FRONTIER" or "Q002-O004-FRONTIER-CONTINUATION")
             {
                 await runner.RunQ002OpeningPotionPosteriorAsync(combatState, player,
                     baseScoreOnly: request.ScenarioId == "Q002-O004-OPENING-POTION-POSTERIOR",
-                    tracePath: request.ScenarioId == "Q002-O004-OPENING-POTION-PATH");
+                    tracePath: request.ScenarioId == "Q002-O004-OPENING-POTION-PATH",
+                    boundaryMember: request.ScenarioId == "Q002-O004-TURN-BOUNDARY-MEMBER",
+                    frontierMember: request.ScenarioId is "Q002-O004-POSTERIOR-FRONTIER"
+                        or "Q002-O004-FRONTIER-CONTINUATION",
+                    continueFrontier: request.ScenarioId == "Q002-O004-FRONTIER-CONTINUATION");
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId == "CHECKPOINT-PROFILE-CONTRACT")

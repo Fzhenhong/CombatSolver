@@ -9,7 +9,8 @@ internal sealed partial class UnattendedTestRunner
 {
     // Isolate one existing posterior member, not an autonomous coordinator result.
     private async Task RunQ002OpeningPotionPosteriorAsync(CombatState combat, Player player,
-        bool baseScoreOnly, bool tracePath = false)
+        bool baseScoreOnly, bool tracePath = false, bool boundaryMember = false,
+        bool frontierMember = false, bool continueFrontier = false)
     {
         if (_checkpointImport == null || _checkpointImportDirectory == null
             || _request.ReplayMode != "RestoreOnly"
@@ -66,6 +67,22 @@ internal sealed partial class UnattendedTestRunner
                 throw new InvalidOperationException("O004 frozen opening changed after native advancement.");
         }
         finally { frozen.ReleaseSimulator(); }
+        PlanAction[] memberPrefix = boundaryMember
+            ? [.. prefix, .. suffix.TakeWhile(action => action.Turn == 1)] : prefix;
+        if (boundaryMember && memberPrefix.LastOrDefault()?.Kind != PlanActionKind.EndTurn)
+            throw new InvalidOperationException("O004 boundary member requires the complete saved first turn.");
+        if (boundaryMember)
+        {
+            SimulationSnapshot boundary = builder.ReplayDiagnosticPrefix(memberPrefix);
+            try
+            {
+                if (boundary.Turn != 2 || boundary.PlayerDead || boundary.AllEnemiesDead)
+                    throw new InvalidOperationException("O004 saved first turn did not reach a searchable T2.");
+                _writer.WriteGeneratedArtifact("O004-boundary-root.json", new
+                { memberPrefix, boundary = builder.CaptureDiagnosticContinuation(boundary).StateText });
+            }
+            finally { boundary.ReleaseSimulator(); }
+        }
         StateFingerprint[] watchedSteps = new StateFingerprint[8];
         PlanAction[] witnessPrefix = [.. prefix, .. suffix.Take(6)];
         if (tracePath)
@@ -110,18 +127,57 @@ internal sealed partial class UnattendedTestRunner
                 memberPolicy = policy with
                 { Diagnostics = new SearchDiagnosticsSink(policy.Diagnostics.Info, policy.Diagnostics.Debug, observer) };
             }
+            List<SolverCurrentTurnPreview> previews = [];
+            HashSet<string> previewKeys = [];
+            bool captureLimitReached = false;
+            void ObserveFrontier(SolverProgress progress)
+            {
+                if (progress.CurrentTurnPreview is not { } preview) return;
+                if (previews.Count >= 64) { captureLimitReached = true; return; }
+                if (previewKeys.Add(JsonSerializer.Serialize(preview.Actions, UnattendedTestFiles.JsonOptions)))
+                    previews.Add(preview with { Actions = preview.Actions.ToArray(), FrontierTurns = null });
+            }
             SolverResult candidate = await Task.Run(() => new CombatBeamSolver(root, names, damage,
-                memberPolicy, searchProfile: profile, potionPolicyOverride: SolverPotionPolicy.RequireAtLeastOne,
-                maximumPotionUses: maximum, fixedPrefixActions: prefix,
-                resetFixedPrefixSchedulingBaseline: false).Solve());
+                memberPolicy, progressCallback: frontierMember ? ObserveFrontier : null,
+                searchProfile: profile, potionPolicyOverride: SolverPotionPolicy.RequireAtLeastOne,
+                maximumPotionUses: maximum, fixedPrefixActions: memberPrefix,
+                resetFixedPrefixSchedulingBaseline: boundaryMember).Solve());
             _writer.WriteGeneratedArtifact($"O004-posterior-{maximum}.json", new
             {
-                profile, maximum, candidate.OnlyDeathRoutesFound, candidate.ProjectedBattleHpLost,
+                profile, maximum, memberPrefix, resetFixedPrefixSchedulingBaseline = boundaryMember,
+                candidate.OnlyDeathRoutesFound, candidate.ProjectedBattleHpLost,
                 candidate.CombatEndedTurn, candidate.ExpandedNodes, candidate.TransitionCount,
                 elapsedMilliseconds = candidate.Elapsed.TotalMilliseconds,
                 candidate.Snapshot.AllEnemiesDead, candidate.Snapshot.EnemyHp,
                 candidate.PotionCount, actions = candidate.BestNode.Actions,
             });
+            if (frontierMember)
+                _writer.WriteGeneratedArtifact("O004-posterior-frontier.json", new
+                { captureLimitReached, previews });
+            if (continueFrontier)
+            {
+                EnsureWithinDeadline();
+                if (captureLimitReached || previews.Count == 0)
+                    throw new InvalidOperationException("O004 continuation lacks a complete frontier capture.");
+                PlanAction[] frontierPrefix = previews.Last().Actions.ToArray();
+                if (frontierPrefix.LastOrDefault()?.Kind != PlanActionKind.EndTurn)
+                    throw new InvalidOperationException("O004 frontier did not end its first turn.");
+                SetStage("q002_o004_frontier_continuation");
+                SolverResult continuation = await Task.Run(() => new CombatBeamSolver(
+                    root, names, damage, policy, searchProfile: profile,
+                    potionPolicyOverride: SolverPotionPolicy.RequireAtLeastOne,
+                    maximumPotionUses: maximum, fixedPrefixActions: frontierPrefix,
+                    resetFixedPrefixSchedulingBaseline: true).Solve());
+                _writer.WriteGeneratedArtifact("O004-frontier-continuation.json", new
+                {
+                    profile, maximum, frontierPrefix,
+                    continuation.OnlyDeathRoutesFound, continuation.ProjectedBattleHpLost,
+                    continuation.CombatEndedTurn, continuation.ExpandedNodes, continuation.TransitionCount,
+                    elapsedMilliseconds = continuation.Elapsed.TotalMilliseconds,
+                    continuation.Snapshot.AllEnemiesDead, continuation.PotionCount,
+                    actions = continuation.BestNode.Actions,
+                });
+            }
             if (tracePath)
             {
                 _writer.WriteGeneratedArtifact("O004-posterior-path.json", new
