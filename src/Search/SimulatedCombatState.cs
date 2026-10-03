@@ -251,6 +251,11 @@ internal sealed partial class SimulatedCombatState
         _cardMultiplayerConstraint = inner.RunState.CardMultiplayerConstraint;
         _playerCreatures = inner.PlayerCreatures.ToArray();
         _players = inner.Players.ToArray();
+        // 实机卡牌集合在根捕获窗口内必须保持不动：#182/T021 的裸 Collection was modified
+        // 来自写者在枚举 _allCards 期间改写该列表，导致搜索初始化无法归因地失败。
+        List<CardModel> liveCombatCards = (List<CardModel>)AllCombatCardsField.GetValue(inner)!;
+        LiveCollectionGuard.Window rootLiveCollectionWindow = LiveCollectionGuard.BeginWindow(
+            ("CombatState._allCards", liveCombatCards));
         _madScienceUpgradeCapacity = MadScienceGrowth.CaptureRemainingCapacity(inner);
         _rootCardGenerationPools = RootCombatCardGenerationPoolSnapshot.Capture(
             _players,
@@ -332,7 +337,8 @@ internal sealed partial class SimulatedCombatState
             .Where(player => player.PlayerCombatState != null)
             .SelectMany(player => player.PlayerCombatState!.AllCards)
             .ToHashSet();
-        _rootFloatingCards = ((List<CardModel>)AllCombatCardsField.GetValue(inner)!)
+        _rootFloatingCards = LiveCollectionGuard
+            .SnapshotStable(liveCombatCards, "CombatState._allCards")
             .Where(card => !piledCards.Contains(card))
             .ToHashSet();
         _potionSlots = [];
@@ -424,6 +430,7 @@ internal sealed partial class SimulatedCombatState
             _playerTurnNumbers.Add(player, playerState.TurnNumber);
             _simulatedPlayerGold.Add(player, player.Gold);
         }
+        rootLiveCollectionWindow.Verify();
     }
 
     private SimulatedCombatState(
@@ -1084,19 +1091,41 @@ internal sealed partial class SimulatedCombatState
         Apply<DexterityPower>(creature, applied, applier);
     }
 
+    /// <summary>
+    /// 原版 <c>TemporaryStrengthPower</c> / <c>TemporaryDexterityPower</c> / <c>TemporaryFocusPower</c> 的
+    /// AfterSideTurnEnd：移除该能力，并按 <c>-Sign * Amount</c> 反向回收对应的永久属性。
+    /// 原版在 <c>Hook.AfterSideTurnEnd</c> 里逐个监听器分发，回收必须发生在该能力自己的监听位置，
+    /// 而不是集中提前执行——否则排在它后面的监听器（例如 ConsumingShadowPower 的末球激发）会读到
+    /// 已经被回收的 Focus。
+    /// </summary>
+    public void RetireTemporaryStat(PowerModel power)
+    {
+        int delta = power.TypeForCurrentAmount == PowerType.Buff ? -power.Amount : power.Amount;
+        SetPowerAmount(power, 0);
+        if (delta == 0)
+            return;
+        switch (power)
+        {
+            case TemporaryFocusPower:
+                Apply<FocusPower>(power.Owner, delta, power.Owner);
+                break;
+            case TemporaryDexterityPower:
+                Apply<DexterityPower>(power.Owner, delta, power.Owner);
+                break;
+            default:
+                Apply<StrengthPower>(power.Owner, delta, power.Owner);
+                break;
+        }
+    }
+
     public void RestoreTemporaryDexterity()
     {
-        foreach (IGrouping<Creature, TemporaryDexterityPower> group in EffectivePowers()
+        foreach (TemporaryDexterityPower power in EffectivePowers()
                      .OfType<TemporaryDexterityPower>()
                      .Where(static power => power.Amount > 0)
-                     .GroupBy(static power => power.Owner)
                      .ToArray())
         {
-            Creature creature = group.Key;
-            int amount = group.Sum(static power => power.Amount);
-            Apply<DexterityPower>(creature, -amount);
-            foreach (TemporaryDexterityPower power in group)
-                SetPowerAmount(power, 0);
+            RetireTemporaryStat(power);
         }
     }
 
@@ -1108,34 +1137,18 @@ internal sealed partial class SimulatedCombatState
                      .Where(power => participantSet.Contains(power.Owner) && power.Amount > 0)
                      .ToArray())
         {
-            int strengthDelta = power.TypeForCurrentAmount == PowerType.Buff
-                ? -power.Amount
-                : power.Amount;
-            SetPowerAmount(power, 0);
-            Apply<StrengthPower>(power.Owner, strengthDelta, power.Owner);
+            RetireTemporaryStat(power);
         }
     }
 
     public void RestoreTemporaryFocus()
     {
-        foreach (Creature creature in Creatures)
+        foreach (TemporaryFocusPower power in EffectivePowers()
+                     .OfType<TemporaryFocusPower>()
+                     .Where(static power => power.Amount > 0)
+                     .ToArray())
         {
-            int amount = GetAmount<HotfixPower>(creature)
-                + GetAmount<SynchronizePower>(creature)
-                + GetAmount<FocusedStrikePower>(creature);
-            if (amount > 0)
-            {
-                Apply<FocusPower>(creature, -amount);
-                SetAmount<HotfixPower>(creature, 0);
-                SetAmount<SynchronizePower>(creature, 0);
-                SetAmount<FocusedStrikePower>(creature, 0);
-            }
-            int focusLoss = GetAmount<HyperbeamFocusDownPower>(creature);
-            if (focusLoss > 0)
-            {
-                Apply<FocusPower>(creature, focusLoss);
-                SetAmount<HyperbeamFocusDownPower>(creature, 0);
-            }
+            RetireTemporaryStat(power);
         }
     }
 

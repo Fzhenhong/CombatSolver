@@ -184,6 +184,7 @@ Entry / turn hooks
 | `src/Runtime/SolverController.cs` | 主线程搜索/续用/部署/全自动编排，结果过期与重算审计 | Beam 内部算法和 UI 布局 |
 | `src/Runtime/SolverControllerSessions.cs` | combat/search/deployment 三类会话的状态与取消所有权 | 跨会话全局静态字段堆积 |
 | `src/Runtime/CombatRootSnapshot.cs` | 主线程捕获完整预测根，比较捕获前后 live 状态，并向 worker 提供 Fork 根 | worker 惰性读取 live 战斗 |
+| `src/Runtime/LiveCollectionGuard.cs` | 拷贝实机列表时核对窗口起止的版本与数量，并在根捕获窗口内登记实机集合；窗口内被写过的集合抛出具名拒绝，替代裸枚举异常并保持实机状态 | 搜索期读取 live 状态、用快照静默掩盖差异 |
 | `src/Runtime/ContinuationStamp.cs` | 跨回合 live/predicted 状态文本、首个差异与完整差异；九条战斗 RNG 使用计数器与四段内部状态共同核对 | Beam 状态去重 |
 | `src/Runtime/SolvedRouteCache.cs` | 主线程捕获路线记录键；后台按完整根与策略读写本地路线副本，独立于战斗会话和 SL 入口；Forecast 使用新根对象 | 搜索策略、原生存档修改、保留旧战斗对象 |
 | `src/Runtime/DynamicVarCloneMetadataPatches.cs` | 模拟域精确复制 BaseLib 提示/升级及 Ritsu 提示元数据，只为已有值建立弱表项；保留 live 行为 | 通用 SpireField 工厂替换、丢弃升级值、清空全局弱表 |
