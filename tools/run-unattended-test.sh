@@ -683,8 +683,11 @@ if ! is_blank "${option_value[initial-enemy-move-ids-json]}"; then
 fi
 initial_enemy_state_logs='[]'
 if ! is_blank "${option_value[initial-enemy-state-logs-json]}"; then
-    initial_enemy_state_logs="$(jq -ce '[.]' <<<"${option_value[initial-enemy-state-logs-json]}")" || \
-        runtime_error "--initial-enemy-state-logs-json is not valid JSON"
+    initial_enemy_state_logs="$(jq -ce '
+        if type == "array" and all(.[]; type == "array" and all(.[]; type == "string"))
+        then . else error("expected an array of string arrays") end
+        ' <<<"${option_value[initial-enemy-state-logs-json]}")" || \
+        runtime_error "--initial-enemy-state-logs-json must be a JSON array of string arrays"
 fi
 orbs='[]'
 if ! is_blank "${option_value[orbs-json]}"; then

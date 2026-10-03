@@ -4561,3 +4561,19 @@ pwsh -NoProfile -File tools\run-unattended-test.ps1 -ScenarioId MONSTER-MOVES-BA
 | 本地五文件部署 | 通过 | 已验证C52构建及manifest、Windows MemoryCleaner、两份许可精确复制；源码未再变化，不重做构建或行为测试，无版本/发布动作。 |
 
 [源码与逐次范围](performance/heavy-combat-followup-20261003.json)。
+
+### 2026-10-03：储君用药次数上界 C58
+
+| 检查 | 状态 | 范围 |
+|---|---|---|
+| Release及Linux脚本语法 | Passed | 最终夹具DLL13.11秒、0警告/错误；bash -n通过。 |
+| REGENT-POTION-CAP-BOUND | Passed | 0/1/2/无限额度、显式/自动计数、活动再生保留、两个原生用药完整状态、父分支/live/Fork/RNG。 |
+| REGENT-FROZEN-POTION-CAP-DEPLOY | Passed | run7dc7b9490fde481ebdbe7466d7bcfd17；根文本与默认解锁进度冻结，原生实际0战损/0治疗/1瓶钢铁之心/T7，无意外重算。 |
+| 完整极高DOP16 A/B/B/A | 目标通过 | 原始302.16/305.63秒、候选9.15/9.18秒；保守32.910倍、RSS比0.29797，28→0战损，0→1瓶钢铁之心符合Smart16/9门槛。 |
+| 其余28个冻结根回归 | Completed | 加目标B2共29根可比且战损未高于原始控制；三处RSS首样超10%，亡灵首领9对既有C524，全部保留。 |
+| 16进程哨兵A/B/B/A | Completed | 亡灵首领候选0/0、C52控制4/0；所有有效重复峰值最大/最大在10%内，最大/最低存在1.55与1.70，不保证每次运行。 |
+
+| 最终来源与本地部署 | Passed | 从C58最终研究提交31c1cc37精确移植行为/夹具到PR199之上；复用最终Release DLL，五个自有文件复制成功，不提升版本。 |
+| Search结构门禁 | Passed | 最终交付分支REFACTOR_BOUNDARIES_OK search_files=243。 |
+
+[逐次范围与失败尝试](performance/regent-potion-cap-bound-research-20261003.json)。

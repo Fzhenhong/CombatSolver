@@ -403,7 +403,9 @@ internal sealed partial class CombatBeamSolver
             return int.MaxValue;
         return StrategicHpRecoveryBound.RemainingHealingUpperBound(
             (CombatPredictionSimulator)snapshot.Simulator, _player,
-            root.PostCombatRelicHeal.UnconditionalHeal);
+            root.PostCombatRelicHeal.UnconditionalHeal,
+            includePotionHealing: !_forceAllPotionsDisabled,
+            maximumExplicitPotionUses: _maximumPotionUses);
     }
 
     private static int StrategicHpLowerBound(

@@ -5,6 +5,7 @@
 - [静默猎手基础根的生命界认证](performance/silent-recovery-bound-20261001.md)：窄范围来源证明、原生治疗旁路及两个固定根的工作量和评分尾键取舍。
 
 - [早期回合探索实机复核与后续候选](performance/early-turn-log-review-20261001.md)：19 场日志保留、外部生命界命中、达标停止与候选预算研究切口。
+- [储君巨型千足虫搜索阶段优化 C58](performance/regent-potion-cap-bound-research-20261003.md)：完整请求保守提速32.91倍、原生0战损；29根回归及峰值复核完成，全部原始波动样本保留。
 
 - [社区贡献指南](../CONTRIBUTING.md)：整批自动认领、环境与 PR 验收。
 - [夹具与开发脚手架](community/testing-guide.md)：最小差分、问题包回放、生成场景、策略脚本与离线宿主。

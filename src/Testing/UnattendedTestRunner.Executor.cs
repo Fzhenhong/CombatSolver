@@ -796,6 +796,20 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "REGENT-POTION-CAP-BOUND")
+            {
+                runner.SetStage("regent_potion_cap_bound");
+                await runner.AssertRegentPotionCapBoundAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "REGENT-REMAINING-HEALING")
+            {
+                runner.SetStage("regent_remaining_healing");
+                await runner.AssertRegentRemainingHealingAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "OPENING-POWER-BOUNDARY")
             {
                 runner.SetStage("opening_power_boundary");
@@ -1154,6 +1168,9 @@ internal sealed partial class UnattendedTestRunner
                 runner._completedChecks.Add("InitialSetupChoices");
                 return Observation(combatEnded: false);
             }
+
+            if (request.ScenarioId == "REGENT-FROZEN-POTION-CAP-DEPLOY")
+                await runner.PrepareRegentFrozenPotionCapDeploymentAsync(combatState, player);
 
             runner.SetStage("full_auto");
             FastModeType? fastModeBeforeDeployment = ApplySettingsOverrides();
