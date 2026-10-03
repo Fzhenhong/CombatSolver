@@ -921,6 +921,13 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "B013-DEFAULT-GC-LIMIT")
+            {
+                runner.SetStage("b013_default_gc_limit");
+                await runner.AssertB013DefaultGcAllocationLimitAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "FIXED-PREFIX-TURN-OUTCOMES")
             {
                 runner.SetStage("fixed_prefix_turn_outcomes");
