@@ -2187,6 +2187,16 @@ internal sealed partial class SimulatedCombatState
     internal HookListenerSegmentStatistics HookListenerSegmentStatistics
         => _modHookSubscribers.MirroredHookFilter.ListenerSegmentStatistics;
     internal int RootRunHookListenerCount => _rootRunHookListeners.Length;
+    // Root-owned cloned listeners only. Called during main-thread certificate capture.
+    internal string? FirstRejectedHealingRootSource(Func<AbstractModel, bool> accepts)
+    {
+        foreach (AbstractModel source in _rootHookListeners.Concat(_rootRunHookListeners)
+                     .Concat(_goldRunHookSnapshot.Globals))
+            if (!accepts(source))
+                return source.GetType().FullName;
+        return null;
+    }
+
     internal int RootRunModSubscriberCount => _modHookSubscribers.RunSubscribers.Length;
     internal int RootCombatModSubscriberCount => _modHookSubscribers.CombatSubscribers.Length;
     internal bool RootHasBaseLibCardModifiers => _modHookSubscribers.HasBaseLibCardModifiers;

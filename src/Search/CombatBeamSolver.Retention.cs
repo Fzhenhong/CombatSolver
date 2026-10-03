@@ -400,6 +400,12 @@ internal sealed partial class CombatBeamSolver
     {
         if (!snapshot.HasSimulator || snapshot.HasRisk)
             return int.MaxValue;
+        if (root.UsesComponentHealingCertificate)
+            return StrategicHpRecoveryBound.ComponentHealingUpperBound(
+                (CombatPredictionSimulator)snapshot.Simulator, _player,
+                root.PostCombatRelicHeal.UnconditionalHeal + root.PostCombatRelicHeal.WoundedHeal,
+                includePotionHealing: !_forceAllPotionsDisabled,
+                maximumExplicitPotionUses: _maximumPotionUses);
         int certifiedPotential = root.CanCertifyRemainingHealing
             ? StrategicHpRecoveryBound.RemainingHealingUpperBound(
                 (CombatPredictionSimulator)snapshot.Simulator, _player,

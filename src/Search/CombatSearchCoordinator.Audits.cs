@@ -758,8 +758,17 @@ internal static partial class CombatSearchCoordinator
                         prefix[0].PotionId == "BLOCK_POTION"
                             ? Math.Min(2, MaximumSmartPotionUses(root, policy,
                                 potionFreeWon: false, potionFreeHpDeficit: 0))
-                            : 1, null)
-                    { ResetFixedPrefixSchedulingBaseline = false },
+                            : 1, CombatBeamSolver.CanUseComponentSmartPotionEligibility(root, policy) ? 1 : null)
+                    {
+                        ResetFixedPrefixSchedulingBaseline = false,
+                        PotionFreePolicyBaseline = CombatBeamSolver.CanUseComponentSmartPotionEligibility(root, policy)
+                            && IsCompleteVictory(primary) && !primary.Snapshot.HasRisk
+                            && primary.ExplicitPotionCount == 0
+                            && primary.Snapshot.ProjectedDeathSaveUseCount == 0
+                                ? new(true, StrategicHpDeficit(root, policy, primary),
+                                    primary.Snapshot.PlayerHp, primary.CombatEndedTurn)
+                                : null,
+                    },
                     $"SMART_OPENING_POTION_POSTERIOR prefix={prefixText}");
                 if (candidate == null)
                     continue;

@@ -56,6 +56,8 @@ internal sealed class CombatRootSnapshot
     public string HealingBoundCertificationReason { get; }
     public string? HealingBoundCertificationSourceId { get; }
     public bool CanCertifyRemainingHealing { get; }
+    internal bool UsesComponentHealingCertificate { get; }
+    internal string? ComponentHealingRejection { get; }
     public bool UsesKnownNativeHealingPolicy { get; }
     /// <summary>Root card/power/potion healing bound, excluding fixed post-combat healing.</summary>
     public int InitialRemainingHealingUpperBound { get; }
@@ -140,12 +142,16 @@ internal sealed class CombatRootSnapshot
         HasOnlyPostCombatHealing = healingBoundAssessment.IsCertified;
         HealingBoundCertificationReason = healingBoundAssessment.Reason;
         HealingBoundCertificationSourceId = healingBoundAssessment.BlockingSourceId;
-        CanCertifyRemainingHealing = StrategicHpRecoveryBound.CanCertifyRemainingHealingEnvironment(
-            rootSimulator, playerIdentity);
+        ComponentHealingRejection = StrategicHpRecoveryBound.ComponentHealingRejection(rootSimulator, playerIdentity);
+        UsesComponentHealingCertificate = ComponentHealingRejection is null;
+        CanCertifyRemainingHealing = UsesComponentHealingCertificate
+            || StrategicHpRecoveryBound.CanCertifyRemainingHealingEnvironment(rootSimulator, playerIdentity);
         UsesKnownNativeHealingPolicy = StrategicHpRecoveryBound.CanUseKnownNativeHealingPolicy(
             rootSimulator, playerIdentity);
         InitialRemainingHealingUpperBound = CanCertifyRemainingHealing
-            ? StrategicHpRecoveryBound.RemainingHealingUpperBound(rootSimulator, playerIdentity, postCombatHeal: 0)
+            ? UsesComponentHealingCertificate
+                ? StrategicHpRecoveryBound.ComponentHealingUpperBound(rootSimulator, playerIdentity, postCombatHeal: 0)
+                : StrategicHpRecoveryBound.RemainingHealingUpperBound(rootSimulator, playerIdentity, postCombatHeal: 0)
             : int.MaxValue;
         HistoryDependencies = historyDependencies;
         CapturedPowerCount = capturedPowerCount;

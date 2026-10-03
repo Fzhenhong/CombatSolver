@@ -8,4 +8,5 @@
 - [0.48.0 合入与搜索回归](upstream-0480-merge-check-20261003.md)：阶段基线、前置计划修复及未验证项。
 - [金币与最大生命回复链](gold-max-hp-healing-20261003.md)：原生差分、完整回调与保守边界。
 - [当前原生回复来源审计](native-health-source-audit-20261003.md) / [组件与间接回调](native-healing-component-audit-20261003.md)：版本锁定的命令、生命写入、生成和回调证据及未审范围。
+- [组合回复上界](component-healing-bound-20261003.md)：组件证书、Smart 后续搜索、原生合同与最终验收状态。
 - [历史实验](../archive/performance/README.md)：已完成、撤回和旧基线报告；指标只适用于报告列出的源码和输入。

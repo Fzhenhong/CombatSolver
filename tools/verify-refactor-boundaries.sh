@@ -1220,6 +1220,14 @@ forbid_fixed "$beam_entry_path" 'public SolverResult Solve()' 'Solve returned to
 beam_retention_facade_path="$search_root/CombatBeamSolver.Retention.cs"
 forbid_fixed "$beam_retention_facade_path" 'private List<SearchNode> RankBest(' 'RankBest returned outside BeamRetentionPolicy:'
 remaining_healing_bound_path="$search_root/StrategicHpRecoveryBound.Remaining.cs"
+require_fixed "$repository_root/src/Runtime/CombatRootSnapshot.cs" 'ComponentHealingRejection(rootSimulator, playerIdentity)' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.Components.cs" 'Module.ModuleVersionId != ComponentAuditMvid' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.Components.cs" 'state.AllCards.Concat(combat.PendingReturningCards)' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.Components.cs" '!use.Automatic' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/SimulatedCombatState.cs" 'FirstRejectedHealingRootSource(' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/CombatBeamSolver.Retention.cs" 'if (root.UsesComponentHealingCertificate)' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/CombatBeamSolver.SmartPotionBound.cs" 'healing == int.MaxValue' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/CombatSearchCoordinator.Audits.cs" 'PotionFreePolicyBaseline = CombatBeamSolver.CanUseComponentSmartPotionEligibility(root, policy)' 'component healing certificate ownership changed:'
 require_fixed "$repository_root/src/Runtime/CombatRootSnapshot.cs" 'CanCertifyRemainingHealingEnvironment(' 'remaining-healing environment proof is not frozen at the root:'
 require_fixed "$beam_retention_facade_path" 'root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy' 'healing pruning requires a frozen certificate or native-source policy:'
 require_fixed "$repository_root/src/Runtime/CombatRootSnapshot.cs" 'CanUseKnownNativeHealingPolicy(' 'native healing policy eligibility must be frozen at the root:'
