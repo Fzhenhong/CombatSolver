@@ -917,6 +917,41 @@
       "exitCode": 0,
       "sourceSha256": "01e13b66dc18a7a6f24d85ceefa5eba1aa62d038ecee6d319e6ffd6ad78acd04",
       "bytes": 100383
+    },
+    {
+      "type": "MegaCrit.Sts2.Core.Models.Cards.HandOfGreed",
+      "exitCode": 0,
+      "bytes": 2500,
+      "sourceSha256": "abc8986483f42c078ad3bb181f187c79470513afdfee8638983514a6f7cec47a",
+      "batch": "gold-source-audit/provenance.json"
+    },
+    {
+      "type": "MegaCrit.Sts2.Core.Models.Relics.BowlerHat",
+      "exitCode": 0,
+      "bytes": 1208,
+      "sourceSha256": "6d9c86f3f2591f5711142ac32dd262d66c52d9aad71cb30bbb38f5ee87349e8c",
+      "batch": "gold-source-audit/provenance.json"
+    },
+    {
+      "type": "MegaCrit.Sts2.Core.Models.Relics.Ectoplasm",
+      "exitCode": 0,
+      "bytes": 1262,
+      "sourceSha256": "15a3fca3059f5128a30fc81ceb29e1f428934b62354ebd05bb8a6683b2b5612f",
+      "batch": "gold-source-audit/provenance.json"
+    },
+    {
+      "type": "MegaCrit.Sts2.Core.Runs.RunState",
+      "exitCode": 0,
+      "bytes": 24576,
+      "sourceSha256": "cb27d007ef1fff57394fe7805fb51a8e7abfeec7a8854374f59deced3e85f043",
+      "batch": "gold-source-audit/provenance.json"
+    },
+    {
+      "type": "MegaCrit.Sts2.Core.Runs.IRunState",
+      "exitCode": 0,
+      "bytes": 10888,
+      "sourceSha256": "0b295b40548ddbb4901e7c35bb7c0edee05349c8f415984555503c8b78aac49f",
+      "batch": "gold-source-audit/provenance.json"
     }
   ],
   "directSources": [
@@ -1983,7 +2018,7 @@
     "AfterCurrentHpChanged": "All IterateHookListeners(runState,combatState), then InvokeExecutionFinished",
     "AfterCombatEnd": "All IterateHookListeners(runState,combatState), then InvokeExecutionFinished",
     "AfterGoldGained": "IterateHookListeners(runState,null); run-listener closure required",
-    "dispatchEnumeration": "IterateHookListeners implementation and extension dispatch still pending"
+    "dispatchEnumeration": "RunState.IterateHookListeners: active-player permanent Deck cards/enchantments; null child adds unmelted Relics, held Potions, Modifiers, Badges and multiplayer scaling, with Contains checks; appends ModHelper subscribers. Non-null child appends combat listeners instead. Root capture and branch mapping must preserve this distinction."
   },
   "reviewedPotionFactory": {
     "pools": "Character and shared GetUnlockedPotions(player.UnlockState)",
@@ -1991,5 +2026,42 @@
     "outOfCombat": "Does not apply CanBeGeneratedInCombat; blacklist optional",
     "random": "Select rarity and NextItem, remove selected item within a multi-selection call",
     "EntropicBrew": "Repeated single out-of-combat calls; no cross-call exclusion proof"
+  },
+  "goldHealingDifferential": {
+    "runId": "88843d10d5b94471ad61d36d0efd20f4",
+    "status": "Failed",
+    "fixture": "GOLD-HEALING-CALLBACK; IRONCLAD; FUZZY_WURM_CRAWLER_WEAK; HEALING_AUDIT_GOLD_20261003; held DRAGON_FRUIT; player 50/80; initial gold 137; GainGold20",
+    "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+    "build": "Release Passed 0 warnings 0 errors; Testing-only extension on 4fe876cf",
+    "elapsedMilliseconds": 27039.0618,
+    "native": {
+      "hp": 51,
+      "maxHp": 81,
+      "gold": 157
+    },
+    "predicted": {
+      "hp": 50,
+      "maxHp": 80,
+      "gold": 157
+    },
+    "strictCertifiedBound": 2147483647,
+    "canCertifyRemainingHealing": false,
+    "knownSourceEstimateWithPostCombatHeal0": 0,
+    "usesKnownNativeHealingPolicy": true,
+    "forkParentAndLiveBeforeNativeUnchanged": true,
+    "exactStateComparison": "First mismatch hp expected50 actual51; both full snapshots retained locally",
+    "implication": "Positive gold gain can heal through GainMaxHp, omitted by current simulated GainPlayerGold and known-source estimate; strict certificate correctly rejects this root",
+    "scope": "Direct native GainGold command plus source audit of the HandOfGreed fatal path; complete HandOfGreed native play route not run",
+    "productionFixIntegrated": false,
+    "diagnosticFixtureRetainedInLocalPatch": true,
+    "instanceCleaned": true,
+    "visibleGameStarted": false,
+    "rawEvidence": ".local/general-healing-audit/gold-native-differential/native/gold-healing-difference.json",
+    "nextRequired": [
+      "Implement native gold modifier and after-gain callbacks with frozen branch ownership",
+      "Protect recurring max-HP healing until a finite total is proven",
+      "Strict differential for positive/zero/negative gold, BowlerHat and Ectoplasm, held/melted/wrong owner, HandOfGreed fatal route, Fork/RNG/parent/live",
+      "Re-run relevant final regression if production semantics change"
+    ]
   }
 }

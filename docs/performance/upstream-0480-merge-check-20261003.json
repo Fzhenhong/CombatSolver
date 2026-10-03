@@ -374,7 +374,8 @@
     "Silent boss has 47/62 HP-loss route variability; no version-specific regression was established by the four new samples",
     "TestSubject full native execution remains unvalidated: all exact roots matched but execution stopped at the first Automation action",
     "Per-source certificate coverage, unknown rejection distribution and certificate overhead not measured; primary prune counts are not complete request totals",
-    "Visible Steam execution not tested; no version bump, release or remote merge performed"
+    "Visible Steam execution not tested; no version bump, release or remote merge performed",
+    "Subsequent native gold/DragonFruit differential confirmed simulated max-HP/HP omission and known-source estimate omission; strict certificate rejects the root. Not fixed by this scheduling PR."
   ],
   "deployed": true,
   "followup": [

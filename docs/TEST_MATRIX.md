@@ -1,5 +1,7 @@
 # CombatSolver 测试清单
 
+金币回调审计追加：`88843d10d5b94471ad61d36d0efd20f4` 原生/模拟严格差分 Failed，持有DragonFruit获得20金币后，实际51/81、预测50/80，金币均157；严格证书拒绝正确，但已知来源估计漏计。未通过夹具留在忽略目录，生产修复待完成，详见[来源审计](performance/native-health-source-audit-20261003.md)。
+
 ## 0.48.0合入研究分支与前置计划搜索回归（2026-10-03）
 
 合入上游 `a789aad2`，Release构建及Bash结构门禁通过。五角色 `NATIVE-HEALING-ALL-ENCOUNTERS` 各一次 Passed，开局原生合同另一次 Passed。四根 VeryHigh/DOP16 完整筛查的根续用戳及目录指纹与原始基线一致；储君女王423.57秒未获胜，质量门槛拒绝，宿主Passed不等于质量通过。隔离单变量对照恢复300.61秒/67战损/0瓶完整胜利。

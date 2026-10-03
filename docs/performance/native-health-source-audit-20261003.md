@@ -91,6 +91,28 @@
 - 14 个直接生命入口事件已列入结构化清单；`DenseVegetation` 经 `MimicRestSiteHeal` 间接治疗。休息治疗的数量修改与 `AfterRestSiteHeal` 仍可触发 `StoneHumidifier`。
 - `NightTerrors` 修改休息治疗，`Terminal` 入房间降低上限；未认证的 Modifier、附魔、灾厄、第三方回调或扩展继续拒绝严格认证。
 
+## 金币触发生命上限回复：原生差分失败
+
+审计追加核对同一 DLL 的 `HandOfGreed`、`BowlerHat`、`Ectoplasm`、`RunState` 和 `IRunState`，五次原生源码提取均成功；来源哈希记在配套 JSON，完整源码仍留在忽略目录。
+
+`HandOfGreed` 在原生 Fatal 死亡判定后调用 `PlayerCmd.GainGold`。该命令先经过 `ModifyGoldGained` 与 `AfterModifyingGoldGained`，仅修改后金额大于0时写入金币并派发 `AfterGoldGained`。`BowlerHat` 对持有者将金额乘1.25，`Ectoplasm` 对持有者将金额置零；两者后置修改回调只产生显示效果。当前 DLL 的金币获得后原版模型覆盖为 `DragonFruit`：为持有者增加1上限，并由 `GainMaxHp` 同步治疗。单次数量可知，总触发次数未形成证明。
+
+`AfterGoldGained` 使用 `RunState.IterateHookListeners(null)`：有效玩家永久牌组及附魔在前，随后是未熔化遗物、实际药水、Modifier、Badge、多人缩放模型；先经 `Contains` 核对，再追加 ModHelper 跑局订阅者。传入战斗子状态时则追加战斗监听者。不能把这两种监听范围混为同一表，也不能读 live 监听表来计算后台分支上界。
+
+测试仅加入诊断夹具，运行源码未修改生产路径。Release构建0警告/0错误；`GOLD-HEALING-CALLBACK` / `88843d10d5b94471ad61d36d0efd20f4` 在约27.04秒返回 **Failed**：
+
+| 状态 | 玩家生命/上限 | 金币 |
+| --- | ---: | ---: |
+| 原生与预测根 | 50/80 | 137 |
+| 分支预测增加20金币 | 50/80 | 157 |
+| 原生 `PlayerCmd.GainGold(20)` | 51/81 | 157 |
+
+完整状态断言的首个差异是HP 50/51；原生加上限和回复均为1。分叉预测未改父分支或live，完整预测/实际快照保留在 `.local/general-healing-audit/gold-native-differential/`。这是原生金币命令差分；尚未运行贪婪之手整条原生出牌路线，不外推为完整战斗验收。
+
+根的严格回复证书为拒绝、上界 `int.MaxValue`，该部分保持保守。上游“已知来源策略”资格为true、调用其零战后回复参数得到潜力0，却漏掉这条金币触发回复链；当前模拟 `GainPlayerGold` 也只增加金币。该来源不能进入零回复认证，须先补齐金币修改/回调及生命上限语义，并在缺少总次数证明时保留完整上界。
+
+未通过的诊断夹具已从拟提交源码撤回，补丁和构建保留在忽略目录。当前正式阶段PR只修复前置调度并提交审计证据，没有称此缺口已经修复；部署仍是此前通过验证的运行源码。下一步需覆盖正/零/负金额、金币修正与阻止、未熔化/熔化/错误持有者、Fatal原生路线，以及Fork/RNG/父分支/live差分。生产语义变动后再按实际影响补充回归。
+
 ## 尚未完成
 
 本阶段没有把上述清单接成全模型默认安全规则。未知回调的递归可达性、战外药水池与遗物获取闭包、全部敌人间接生成、附着效果、有限重复次数证明、源于新审计的原生/模拟严格差分，以及认证自身开销仍待完成。已知来源策略的最小原生测试通过不代表这些严格认证已完成，也不代表原始慢场景已全部提速两倍。
