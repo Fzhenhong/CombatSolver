@@ -35,4 +35,6 @@ CoverageCatalog 验证未跑通：当前 RitsuLib 改为 compat/shared 分拆包
 
 原生录制路径在第26个输入停滞，runId `750de6555b7841528e7f0887f6fea6c1`，未恢复到T6。旧中途导入首先缺当前重生个体ID2（`39d53d5b581040c9b5ecf33ddecc6084`）；临时测试对齐该ID后仍缺历史Power施加者ID1（`d7cb88a79ade42fe82c66b3c2de8a627`）。临时身份测试入口已撤回，没有把历史施加者改指当前怪物。按包内牌堆/Power重建的场景 `f7abdd59eaf14d1596ffcdd3f0c866c8` 达到120秒上限，没有继续扩展时间帽，未取得该错误的实际/模拟对照。这些是恢复/夹具失败，不是修复基线或修复成功。
 
-本轮没有整场部署、可见Steam或性能结论，不声称全部巨斧机器人报告已修复。后台凭据的API scope是read，本次没有回写报告状态。临时包和无头实例按仓库规范清理，源码保留可复跑的最小夹具。0.48.0已发布冻结，本轮记入下一版本开发记录，未提升版本或发布渠道。
+本轮没有整场部署、可见Steam或性能结论，不声称全部巨斧机器人报告已修复。后台凭据的API scope是read，本次没有回写报告状态。无头实例已清理，源码保留可复跑的最小夹具；验证摘要保存在忽略目录 `.local/verification/axebot-20261003/summary.json`。临时问题包的整目录清理和逐文件清理都被自动审批拒绝，工具仅返回 `blocked by policy`，未给出具体原因；包和临时诊断仍保留在 `.local/issue-bundles/axebot-20261003`。0.48.0已发布冻结，本轮记入下一版本开发记录，未提升版本或发布渠道。
+
+源码修复提交为 `21a5abdf`；复用与最终行为源码一致且已通过测试的Release构建，将manifest、CombatSolver.dll、MemoryCleaner、LICENSE和THIRD_PARTY_NOTICES.md五个文件覆盖到已确认的本地游戏 `mods/CombatSolver`。复制成功，未重复构建、检查版本或启动游戏。
