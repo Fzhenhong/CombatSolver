@@ -4458,6 +4458,7 @@ pwsh -NoProfile -File tools\run-unattended-test.ps1 -ScenarioId MONSTER-MOVES-BA
 | 其余28个冻结根回归 | Completed | 加目标B2共29根可比且战损未高于原始控制；三处RSS首样超10%，亡灵首领9对既有C524，全部保留。 |
 | 16进程哨兵A/B/B/A | Completed | 亡灵首领候选0/0、C52控制4/0；所有有效重复峰值最大/最大在10%内，最大/最低存在1.55与1.70，不保证每次运行。 |
 
-[逐次范围与失败尝试](performance/regent-potion-cap-bound-research-20261003.json)。
-
 | 最终来源与本地部署 | Passed | 从C58最终研究提交31c1cc37精确移植行为/夹具到PR199之上；复用最终Release DLL，五个自有文件复制成功，不提升版本。 |
+| Search结构门禁 | Passed | 最终交付分支REFACTOR_BOUNDARIES_OK search_files=243。 |
+
+[逐次范围与失败尝试](performance/regent-potion-cap-bound-research-20261003.json)。
