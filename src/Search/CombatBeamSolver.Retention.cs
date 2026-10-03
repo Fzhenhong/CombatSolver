@@ -317,7 +317,8 @@ internal sealed partial class CombatBeamSolver
             root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy
                 ? RemainingHealingPotential : null,
             out certifiedHealingBoundPruned,
-            allowTurnTieBound: !_strictHpBoundWithRelicTargets);
+            allowTurnTieBound: !_strictHpBoundWithRelicTargets,
+            pruneEqualHp: policy.RelicTargets.Count == 0);
         // A node may still move to a higher potion tier. Only use its current
         // tier's witness when explicit use is closed by the member's policy.
         List<SearchNode>? sharedBounded = null;
@@ -332,7 +333,8 @@ internal sealed partial class CombatBeamSolver
                 && ShouldPruneByPrimaryIncumbent(
                     StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
                         Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential)),
-                    node.Turn, shared, allowTurnTieBound: !_strictHpBoundWithRelicTargets);
+                    node.Turn, shared, allowTurnTieBound: !_strictHpBoundWithRelicTargets,
+                    pruneEqualHp: policy.RelicTargets.Count == 0);
             if (prune)
             {
                 if (sharedBounded == null)
@@ -360,7 +362,8 @@ internal sealed partial class CombatBeamSolver
         out int pruned,
         BossHpRelief bossHpRelief = BossHpRelief.None,
         Func<SimulationSnapshot, int>? remainingHealingPotential = null,
-        bool allowTurnTieBound = true)
+        bool allowTurnTieBound = true,
+        bool pruneEqualHp = false)
         => ApplyPrimaryIncumbentBoundCore(
             retained,
             incumbent,
@@ -369,7 +372,8 @@ internal sealed partial class CombatBeamSolver
             false,
             remainingHealingPotential,
             out _,
-            allowTurnTieBound);
+            allowTurnTieBound,
+            pruneEqualHp);
 
     private static List<SearchNode> ApplyPrimaryIncumbentBoundCore(
         List<SearchNode> retained,
@@ -379,7 +383,8 @@ internal sealed partial class CombatBeamSolver
         bool rootHasCertifiedHealingBound,
         Func<SimulationSnapshot, int>? remainingHealingPotential,
         out int certifiedHealingBoundPruned,
-        bool allowTurnTieBound = true)
+        bool allowTurnTieBound = true,
+        bool pruneEqualHp = false)
     {
         pruned = 0;
         certifiedHealingBoundPruned = 0;
@@ -393,14 +398,16 @@ internal sealed partial class CombatBeamSolver
                     StrategicHpLowerBound(node.Snapshot, bossHpRelief, futureHealPotential),
                     node.Turn,
                     incumbent,
-                    allowTurnTieBound))
+                    allowTurnTieBound,
+                    pruneEqualHp && !node.IsTerminal && !node.Snapshot.HasRisk))
             {
                 if (rootHasCertifiedHealingBound
                     && !ShouldPruneByPrimaryIncumbent(
                         StrategicHpLowerBound(node.Snapshot, bossHpRelief, baselineFutureHealPotential),
                         node.Turn,
                         incumbent,
-                        allowTurnTieBound))
+                        allowTurnTieBound,
+                        pruneEqualHp && !node.IsTerminal && !node.Snapshot.HasRisk))
                 {
                     certifiedHealingBoundPruned++;
                 }
@@ -470,8 +477,10 @@ internal sealed partial class CombatBeamSolver
         int strategicHpLowerBound,
         int turn,
         PrimarySearchIncumbent incumbent,
-        bool allowTurnTieBound = true)
+        bool allowTurnTieBound = true,
+        bool pruneEqualHp = false)
         => strategicHpLowerBound > incumbent.StrategicHpDeficit
+            || pruneEqualHp && strategicHpLowerBound == incumbent.StrategicHpDeficit
             || allowTurnTieBound && strategicHpLowerBound == incumbent.StrategicHpDeficit
                 && turn > incumbent.CombatEndedTurn;
 

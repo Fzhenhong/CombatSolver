@@ -37,6 +37,14 @@ internal static class PrimaryIncumbentChecks
             "equal HP can retain earlier victory");
         Require(CombatBeamSolver.ShouldPruneByPrimaryIncumbent(9, 1, new(8, 3)),
             "strictly worse HP is pruned");
+        Require(CombatBeamSolver.ShouldPruneByPrimaryIncumbent(8, 1, new(8, 9),
+            pruneEqualHp: true), "equal loss truncates even an earlier unfinished route");
+        Require(!CombatBeamSolver.ShouldPruneByPrimaryIncumbent(7, 20, new(8, 9),
+            pruneEqualHp: true), "a better optimistic loss bound survives");
+        Require(CombatBeamSolver.ShouldPruneByPrimaryIncumbent(0, 1, new(0, 3),
+            pruneEqualHp: true), "zero-loss victory immediately bounds equal-loss continuation");
+        Require(!CombatBeamSolver.ShouldPruneByPrimaryIncumbent(-1, 1, new(0, 3),
+            pruneEqualHp: true), "potential recovery below incumbent remains searchable");
         Console.WriteLine($"PRIMARY_INCUMBENT_CHECKS status=Passed assertions={assertions}");
         return 0;
 
