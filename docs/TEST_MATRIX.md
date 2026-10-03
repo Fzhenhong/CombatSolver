@@ -4,6 +4,14 @@
 
 历史记录见 [归档索引](archive/testing/README.md)。
 
+## 0.48.1 手操药水折算与报告（2026-10-03）
+
+`dotnet run --project tools/testing/checks/DiagnosticLogTests/DiagnosticLogTests.csproj -c Release -- --manual-projection-only` 通过9组门槛与序列化合同：一瓶省8/9/10 HP、两瓶省17/18 HP、无新增用药、原计划用药、零收益和战损上升。该命令只运行本次比较合同；日志工具原完整路径曾停在既有journal写入断言，不将它计为本轮完整通过。
+
+`MANUAL-POTION-FEEDBACK` 的 `8c5dc107ca694cb4814f0b8f15990e22` Passed（24.0秒），穿过Controller会话与真实overlay结构：不足药水成本时不显示反馈，达到每瓶9 HP时显示，原无新增用药反馈仍显示；实例由启动器清理。复跑：`pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId MANUAL-POTION-FEEDBACK -VerifyControllerSessionLifecycle -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`；Linux使用同名场景及GNU参数。
+
+Q007规则夹具从公开包读取五份原始比较，在测试侧注入已知新增用药数量后，分类工具排除三份折算负值、保留两份无新增用药候选；没有原包恢复或完整质量验收。日志服务21项协议/Agent API合同通过，覆盖上传公式拒绝、负值/零/未知、筛选排序、CSV/JSON及旧包；Windows退出时SQLite临时文件清理有占用提示，服务器Python3.12容器同组合同正常通过。客户端Release零警告/错误，工具和文档门禁通过；可见游戏未验证。
+
 ## 倾泻与手空效果边界（2026-10-03）
 
 `CASCADE-EMPTY-HAND-NATIVE` 使用报告 d9c106 的倾泻前牌堆顺序及 Shuffle 完整内部状态，单独保留倾泻+和无尽陀螺；无需恢复原包中的重生个体及历史 Power 施加者。未改行为源码上的 `cc37414e00274b6baaf0d877a60e3ac9` 出现原生/模拟手牌偏差；选择痛击的 `e3bac4a083574686b1e9d018ccc23f80` 复现 `NativeChoicePlanMismatchException`，计划 BASH+1、原生仅 STRIKE_IRONCLAD。修复后 `53ba69afa54544f3a1322b42367d5e90` Passed：嵌套坚毅原生页面完成，完整 continuation（有序牌堆、逐实例状态、Power、怪物和九条 RNG）一致；完整动作回放与执行检查点恢复、完成后 Fork、live 不变对账通过。该场景不运行 Solve，不带增量搜索开关，不代表原包整场部署通过。

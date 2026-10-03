@@ -579,6 +579,26 @@ internal sealed partial class UnattendedTestRunner
         if (SolverController.IsSearching || !SolverController.AutomaticSearchPaused)
             throw new InvalidOperationException("用户停止后，自动回合入口重新启动了搜索。");
 
+        SolverController.RecordManualProjectionComparisonForTesting(17, 9, 0, 1);
+        SolverOverlay.RefreshControls();
+        if (SolverController.ManualRouteImprovementDetected
+            || SolverOverlay.ManualRouteImprovementVisibleForTesting
+            || SolverController.LastManualProjectionComparisonForTesting is not
+                { AdditionalPotionCount: 1, PotionAdjustedHpReduction: -1 })
+            throw new InvalidOperationException("手操多用一瓶药只省8 HP时产生了更优世界线提示。");
+
+        SolverController.RecordManualProjectionComparisonForTesting(18, 1, 0, 2);
+        SolverOverlay.RefreshControls();
+        if (SolverController.ManualRouteImprovementDetected
+            || SolverOverlay.ManualRouteImprovementVisibleForTesting)
+            throw new InvalidOperationException("手操多用两瓶药只省17 HP时产生了更优世界线提示。");
+
+        SolverController.RecordManualProjectionComparisonForTesting(17, 8, 0, 1);
+        SolverOverlay.RefreshControls();
+        if (!SolverController.ManualRouteImprovementDetected
+            || !SolverOverlay.ManualRouteImprovementVisibleForTesting)
+            throw new InvalidOperationException("手操多用一瓶药省9 HP时缺少更优世界线提示。");
+
         SolverController.RecordManualProjectionComparisonForTesting(7, 3);
         SolverOverlay.RefreshControls();
         if (!SolverController.ManualRouteImprovementDetected

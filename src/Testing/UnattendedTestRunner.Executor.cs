@@ -549,9 +549,12 @@ internal sealed partial class UnattendedTestRunner
                 {
                     using var compared = System.Text.Json.JsonDocument.Parse(CombatBugReportMetadata.Serialize(
                         reportId, string.Empty, null, new CombatBugReportClassificationSnapshot(0, 0, 0, 0, 0, []),
-                        new ManualProjectionComparison(1, 2, 10, after, "test")));
+                        new ManualProjectionComparison(1, 2, 10, after, 0, 1, "test")));
                     if (compared.RootElement.GetProperty("hpLoss").GetProperty("reduction").GetInt32() != 10 - after)
                         throw new InvalidDataException("战损下降值的符号不正确。");
+                    if (compared.RootElement.GetProperty("hpLoss").GetProperty("additionalPotionCount").GetInt32() != 1
+                        || compared.RootElement.GetProperty("hpLoss").GetProperty("potionAdjustedHpReduction").GetInt32() != 1 - after)
+                        throw new InvalidDataException("问题包未保存新增用药与折算战损。");
                 }
                 runner._completedChecks.Add($"ReportV2UploadAndArchive:{archivePath}");
                 CombatBugReportUploadReceipt receipt = await CombatBugReportUploader.UploadAsync(
