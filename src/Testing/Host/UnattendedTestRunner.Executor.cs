@@ -900,6 +900,13 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "B013-FIXED-PREFIX-TERMINAL-BOUNDARY")
+            {
+                runner.SetStage("b013_fixed_prefix_terminal_boundary");
+                await runner.AssertB013FixedPrefixTerminalBoundaryAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "FIXED-PREFIX-TURN-OUTCOMES")
             {
                 runner.SetStage("fixed_prefix_turn_outcomes");

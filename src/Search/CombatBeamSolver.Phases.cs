@@ -2360,7 +2360,14 @@ internal sealed partial class CombatBeamSolver
                     // Fixed prefixes have no sibling alternatives for comparative HP investment or block.
                     node = node with { Outcome = CreateUncomparedTurnOutcome(node) };
                 }
+                bool combatOutcomeLocked = snapshot.PlayerDead || snapshot.AllEnemiesDead;
                 node.Parent!.Snapshot.ReleaseSimulator();
+                if (combatOutcomeLocked)
+                {
+                    // The remaining prefix actions are unreachable once the combat outcome is
+                    // locked; replaying them from a stopped simulator is the reported failure.
+                    break;
+                }
             }
             if (resetSchedulingBaseline && prefix.Count > 0)
             {
