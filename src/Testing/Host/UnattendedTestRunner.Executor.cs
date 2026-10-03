@@ -1033,6 +1033,41 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "B013-BLOCK-DECIMAL-BOUNDARY")
+            {
+                runner.SetStage("b013_block_decimal_boundary");
+                await runner.AssertB013BlockDecimalBoundaryAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "B013-FIXED-PREFIX-TERMINAL-BOUNDARY")
+            {
+                runner.SetStage("b013_fixed_prefix_terminal_boundary");
+                await runner.AssertB013FixedPrefixTerminalBoundaryAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "B013-FIXED-PREFIX-TURN-END-CARD")
+            {
+                runner.SetStage("b013_fixed_prefix_turn_end_card");
+                await runner.AssertB013FixedPrefixTurnEndCardAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "B013-RADIANT-PEARL-HAND-DRAW")
+            {
+                runner.SetStage("b013_radiant_pearl_hand_draw");
+                await runner.AssertB013RadiantPearlHandDrawAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "B013-DEFAULT-GC-LIMIT")
+            {
+                runner.SetStage("b013_default_gc_limit");
+                await runner.AssertB013DefaultGcAllocationLimitAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "FIXED-PREFIX-TURN-OUTCOMES")
             {
                 runner.SetStage("fixed_prefix_turn_outcomes");

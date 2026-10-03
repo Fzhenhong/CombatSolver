@@ -170,13 +170,17 @@ internal sealed partial class UnattendedTestRunner
             await Task.Run(() => AssertIndependentPrefixContinuations(root, names, damage, policy, candidate, label));
         }
         _completedChecks.Add("FixedPrefixContinuations:IndependentPrefixOracle:FullStateText:Turn:ForecastOffset:Order");
-        Check(!prefixProbe.CanReplayOpeningPrefix([.. turns, strike, new PlanAction(PlanActionKind.EndTurn, firstTurn + 3)]),
-            "opening discovery rejects terminal suffix after multiple turns");
+        SolverResult truncated = await Task.Run(() => Solve(
+            [.. turns, strike, new PlanAction(PlanActionKind.EndTurn, firstTurn + 3)]));
+        Check(truncated.Snapshot.AllEnemiesDead
+              && truncated.BestNode.Actions.Count == terminal.BestNode.Actions.Count
+              && truncated.CombatEndedTurn == terminal.CombatEndedTurn,
+            "prefix actions after a locked combat outcome are truncated");
         await Task.Run(() => Reject(() => Solve([new PlanAction(PlanActionKind.EndTurn, firstTurn + 1)]), "固定搜索前缀动作无效"));
         await Task.Run(() => Reject(() => Solve([new PlanAction(PlanActionKind.PlayCard, firstTurn,
-            CardId: "STRIKE_IRONCLAD", EndsPlayerTurn: true)]), "固定搜索前缀动作无效"));
+            CardId: "DEFEND_IRONCLAD", EndsPlayerTurn: true)]), "固定搜索前缀动作无效"));
         Check(ContinuationStamp.CaptureLive(combat).StateText == liveBefore, "search changed live root");
-        _completedChecks.Add("FixedPrefixOutcomes:ThreeTurns:ZeroAndPositiveLoss:PartialTail:Terminal:Empty:InvalidSuffix:RootUnchanged");
+        _completedChecks.Add("FixedPrefixOutcomes:ThreeTurns:ZeroAndPositiveLoss:PartialTail:Terminal:TruncatedSuffix:Empty:InvalidFlag:RootUnchanged");
 
         byte[] validBytes = SolvedRouteCache.SerializeRoute(result);
         SolverResult copy = SolvedRouteCache.DeserializeRoute(validBytes, root.Forecast);
