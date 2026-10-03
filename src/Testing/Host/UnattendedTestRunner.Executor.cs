@@ -914,6 +914,13 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "B013-RADIANT-PEARL-HAND-DRAW")
+            {
+                runner.SetStage("b013_radiant_pearl_hand_draw");
+                await runner.AssertB013RadiantPearlHandDrawAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "FIXED-PREFIX-TURN-OUTCOMES")
             {
                 runner.SetStage("fixed_prefix_turn_outcomes");

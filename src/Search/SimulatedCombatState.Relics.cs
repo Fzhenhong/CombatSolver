@@ -92,6 +92,16 @@ internal sealed partial class SimulatedCombatState
                     simulator.AddToPile(selected, PileType.Hand);
                     break;
                 }
+                case RadiantPearl when turn == 1:
+                    // RadiantPearl.BeforeHandDraw generates its Luminesce cards into the hand
+                    // before the opening draw; the turn-setup plan must carry them or the
+                    // plan stamp is one hand card short.
+                    simulator.CreateAndAddGeneratedCardsToCombat<Luminesce>(
+                        player,
+                        PileType.Hand,
+                        relic.DynamicVars.Cards.IntValue,
+                        player);
+                    break;
                 case Toolbox when turn <= 1:
                 {
                     IReadOnlyList<PredictedCard> options = ModelDb.CardPool<ColorlessCardPool>()
