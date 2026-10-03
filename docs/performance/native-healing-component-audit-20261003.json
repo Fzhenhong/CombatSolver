@@ -7770,5 +7770,171 @@
     ],
     "initialSourceObligation": "Frozen root has eighteen distinct reviewed-C58 initial card types plus AscendersBane; random pool membership does not qualify their initial/permanent lifecycle. Explicit per-source initial proof remains required.",
     "performanceHypothesis": "A closed zero recovery proof may enable existing incumbent/Smart gates on this root. Benefit is unmeasured; existing root keeps conservative treatment."
+  },
+  "regentBossIsolatedCompositionContract": {
+    "status": "isolated candidate native contract passed, original 2x performance screen failed; no production certificate expansion",
+    "baseCommit": "0bef6071",
+    "dllSha256": "44d9f3a5b86153fe48d9d8a4953774e3323ce9a10b50d219441383a1cb60199b",
+    "explicitInitialSources": [
+      {
+        "type": "PrepTime",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/PrepTime.cs",
+        "sha256": "890a5005c8be355013fc6e35fe6adb60827fe981ea73b5e5a6a3550ed8536c08",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "StrikeRegent",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/StrikeRegent.cs",
+        "sha256": "f1e4dda97d3da6335ac4fd1b09fb0434793c5814809f5ebe1ba0c506168a9f0e",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "Calamity",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Calamity.cs",
+        "sha256": "39b1aa4a27bbd753c3024d764c5af78a5f218155ba319fc60d334d96f5c3fd46",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "CrescentSpear",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/CrescentSpear.cs",
+        "sha256": "95b19e3575f46e877a7b648d4bd55931e51a36bd660a07bf8ffbd72aea9c5a7d",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "Furnace",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Furnace.cs",
+        "sha256": "26008eef78056b38ab240bc503cd5ededf1e3199b5c1fef31a0232f7c395548e",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "GammaBlast",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/GammaBlast.cs",
+        "sha256": "92de64e33bd35c39400e60109d175bf2d6124da7421b57dd3fd2e0ff6c3cf07b",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "DefendRegent",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/DefendRegent.cs",
+        "sha256": "e9ab79aeca5ab4936bbfe15d37388fd6f60fd37352ec9bb671d4c5fcce2f4514",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "Orbit",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Orbit.cs",
+        "sha256": "1a22e4e6fca70c6f03a4bd78ca76fa5741fc189e6921753235719875fddebaaa",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "LunarBlast",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/LunarBlast.cs",
+        "sha256": "d6253f54ce4532ba9b2ca1e44bc0449e542396ccfc7296fd87fff7e895e2a7d7",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "SevenStars",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/SevenStars.cs",
+        "sha256": "3956889c4225f08f099a6d9fb2a11b93c410cc1bc49dda263a98b97e2703d879",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "GatherLight",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/GatherLight.cs",
+        "sha256": "16e3a7e9e3bd5de82c730a179d40b87091a922b2480f1758ab7e17e2e96edc2a",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "Alignment",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Alignment.cs",
+        "sha256": "0989ad17e6d0cc6fe05e36b0aaecdc79f9697e14690dcfd40e490156ca590e88",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "WroughtInWar",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/WroughtInWar.cs",
+        "sha256": "9af6239e3b910ef9b4101b23b88a2dadfb7e312dd088f09b2b72c43127f7746e",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "CollisionCourse",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/CollisionCourse.cs",
+        "sha256": "a8bed00c79896f09f139b4de3963269fd9b159993c24eee69dcf14167bf78dd0",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "Bombardment",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Bombardment.cs",
+        "sha256": "83406ead18b57fdfd082a3fc86cd8700fce12d44a491389fdafd0509926f5ae5",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "Venerate",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Venerate.cs",
+        "sha256": "003fe8b9ff3b7c8dd4772de3716944191cd12a53761851bf3f6976d38382a2da",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "FallingStar",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/FallingStar.cs",
+        "sha256": "0012d6a29af3bcde93d38b3c72f9d8f3b2e0754e338def9d6bb33d5f51b401a6",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      },
+      {
+        "type": "Quasar",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Quasar.cs",
+        "sha256": "b15706a8aeba8e140b34237fb54f64fc30b30343f330142c89b47881824476ae",
+        "initialLifecycleReview": "full declared methods reviewed; no permanent-deck lifecycle override or player HP write; damage, block, power, star, energy, forge, explicit Debris and filtered Colorless generation depend on the matching pinned C58 command and callback closure",
+        "sourceRole": "explicit initial/permanent card; not inferred from generated-set membership"
+      }
+    ],
+    "sourceHashes": {
+      "src/Search/StrategicHpRecoveryBound.Components.cs": "e83545e50a8ecf9aec49d50d96d2cbd5b557fcb71200f3ba3f2c54d435c3d1f0",
+      "src/Testing/UnattendedTestRunner.ComponentRegentBoss.cs": "ee369233c5a87d108dc3fca75c6323e7cf2285cd401e97ca2e11bb2fc2d8062e",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "64b9e7455ce857f282fd6b744c590eb14958e54abf552444f80791fee2fd0cdb"
+    },
+    "nativeContract": {
+      "runId": "642030889ba7496f9ddfb01e2bd90b69",
+      "status": "Passed",
+      "mainAssemblyHash": "44D9F3A5B86153FE48D9D8A4953774E3323CE9A10B50D219441383A1CB60199B",
+      "elapsedMilliseconds": 30213.1225,
+      "completedChecks": [
+        "ComponentRegentBoss:18ExplicitInitialSources:RootForkZero:UnknownExhaust:WrongSpeedOwner:WrongSandpitOwnerTarget:ParentLiveRngIsolation",
+        "ComponentRegentBoss:SpeedNativeApply:SwiftNativeDraw:FullStateForkRng",
+        "ComponentRegentBoss:SpeedNativeEndRemoval:FullStateForkRng",
+        "ComponentRegentBoss:PrepCalamityFurnaceOrbitForgeDebrisBombardmentNativePlays:FullStateForkRng",
+        "ComponentRegentBoss:VexingNativeFilteredGeneration:MercuryNativeDamage:FullStateForkRng",
+        "ComponentRegentBoss:NativeLiquifyExplicitSixFranticEscape:SandpitTarget:FullStateForkRng",
+        "ComponentRegentBoss:NativeFranticEscapeLayerAndCost:FullStateForkParentRng",
+        "ComponentRegentBoss:NativeSandpitDecrementForcedDeath:FullStateForkParentRng",
+        "NativeOutcome:combatEnded=False:turn=1:hp=0:maxHp=75"
+      ],
+      "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/regent-boss-component-native/result.json",
+      "instanceRemoved": true,
+      "launcherExitCode": 0,
+      "solveInvoked": false
+    },
+    "performanceReport": "docs/performance/component-healing-bound-20261003.json",
+    "limitations": [
+      "final interleaved controls",
+      "full fixed regression",
+      "native frozen target whole deployment"
+    ],
+    "reuses": "same pinned C58 eight canonical pools and callback premises; no implicit initial qualification by generated-pool membership"
   }
 }
