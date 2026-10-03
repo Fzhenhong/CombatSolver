@@ -80,6 +80,10 @@ v2 索引保存稳定战斗/检查点 ID、永久递增编号、原生事件位�
 
 Q002 O003 的玩家T3干预另用 `Q002-O003-PLAYER-T3-PATH`、原ZIP、selector `4052e28b38544018ab6f3f9b2acd8c8e:5`、`ReplayMode=RestoreOnly`、显式短预算政策和EvidenceDirectory。夹具严格核对原生9事件与影子6动作的T4状态、冻结T3及保存获胜后续，再观察正常T3搜索的第7步完整候选池。纯值观察同时复制能力承诺，别名接获胜后续只证明战斗可执行，不保证搜索调度历史等价；场景不把玩家排列注入生产搜索。复跑与质量范围见[Q002验收](TEST_MATRIX.md#q002-o003-能力代表保路2026-10-04)。
 
+`Q002-O003-TURN-BOUNDARY-MEMBER`使用同一ZIP/selector/RestoreOnly，原10秒政策。复用6步完整/增量与9事件原生边界证明，随后固定该前缀，各以5秒/30,000节点比较既有`resetFixedPrefixSchedulingBaseline=false/true`；两组均禁止新增用药、使用普通排序。此模式不重跑已验证47步保存后缀，不采集路径观察。输出`O003-boundary-reset-False.json`及`True.json`的真实profile、动作、结果和统计；搜索后严格检查实机T4与冻结T3不变。固定前缀入口未建立普通扩展的能力承诺，故此对照不证明普通能力承诺历史是唯一根因，也不是协调器自主质量或性能验收。
+
+O004补搜隔离使用 `Q002-O004-OPENING-POTION-POSTERIOR` / `Q002-O004-OPENING-POTION-RANK` / `Q002-O004-OPENING-POTION-PATH`、原ZIP/start、RestoreOnly、原政策及EvidenceDirectory。前者固定同一生成/打牌前缀与30秒/60,000节点成员预算，比较最多1/2瓶；RANK保留2瓶，只取消BaseScoreOnly；PATH在同一普通排序成员中观察首回合及T2共8步，只采集第6步真实整池。夹具先核对4个原生事件的完整戳、推进后的冻结开局及82动作获胜后缀。前缀仅注入这项诊断，不能作开局自主路线质量、正常协调器性能或整场原生部署结论；结果保存 `O004-posterior-root.json` 和各成员的profile/动作/统计。
+
 包协议与顺序文件：`dotnet run --project tools/CheckpointTool/CheckpointTool.csproj -c Release -- self-test`。边界门禁使用 `verify-refactor-boundaries.ps1` / `.sh`。
 
 可见采集测量：`run-visible-steam-benchmark.ps1 -LoggingFixture -TimeoutSeconds 120 -EvidenceDirectory <目录>`，Linux 为 `--logging-fixture --timeout-seconds 120 --evidence-directory <目录>`。该短原生战斗另存 ZIP，索引提供采集累计/最大时间和积压，session.json 提供材料大小。headless 只用于导入和吞吐测量。具体证据及未覆盖场景见 TEST_MATRIX.md。

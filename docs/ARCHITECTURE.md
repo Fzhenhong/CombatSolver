@@ -82,7 +82,9 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 检查点完整搜索 profile 由 `ProtocolHost` 在请求内持有，Runtime 捕获政策时读取其不可变记录；请求结束清除。显式 CLI 扰动沿既有入口覆盖单项，不将测试 profile 写入玩家设置或后台读取器。
 
-保存预测路线的读取、严格回放、路径观察及原生终局断言属于Testing；生产Search不识别报告或测试场景。部署沿现有Runtime入口，跨战斗结束的真实后台搜索代次只通过`SolverController.Testing`只读暴露；不以会话清零计数或已清空的临时账本推断终局。
+保存预测路线的读取、严格回放、路径观察及原生终局断言属于Testing；生产Search不识别报告或测试场景。`UnattendedTestRunner.Q002PotionPosterior`只诊断一个既有开局用药补搜成员：严格核对原生生成/打牌状态及冻结根，固定前缀的药水上限和排序对照不代表协调器自主发现。部署沿现有Runtime入口，跨战斗结束的真实后台搜索代次只通过`SolverController.Testing`只读暴露；不以会话清零计数或已清空的临时账本推断终局。
+
+`UnattendedTestRunner.Q002BoundaryMembers`复用Testing的原生T3/T4边界证明，对固定准确前缀的搜索进展基线重建做对照；完整根、实机不变和成员profile写入测试产物，不向生产提供报告牌序。
 
 ## 7. 工具与维护
 

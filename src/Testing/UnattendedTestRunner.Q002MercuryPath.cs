@@ -15,7 +15,8 @@ internal sealed partial class UnattendedTestRunner
 {
     // Watch the player's T3 intervention; the preceding two turns were solver-owned.
     // Native indices identify instances. These actions are never injected into search.
-    private async Task RunQ002MercuryPlayerTurnPathAsync(CombatState combat, Player player)
+    private async Task RunQ002MercuryPlayerTurnPathAsync(CombatState combat, Player player,
+        bool boundaryMember = false)
     {
         if (_checkpointImport == null || _checkpointImportDirectory == null
             || _request.ReplayMode != "RestoreOnly"
@@ -121,7 +122,7 @@ internal sealed partial class UnattendedTestRunner
                         && item["startTurnNumber"]?.GetValue<int>() == 4
                         && item["combatEndedTurn"] != null && item["deathTurn"] == null);
                 PlanAction[] suffix = winning["plannedActions"]!.Deserialize<PlanAction[]>(UnattendedTestFiles.JsonOptions)!;
-                foreach (PlanAction action in suffix)
+                foreach (PlanAction action in boundaryMember ? [] : suffix)
                 {
                     EnsureWithinDeadline();
                     SetStage($"q002_o003_frozen_suffix_{actions.Count + 1}");
@@ -138,10 +139,10 @@ internal sealed partial class UnattendedTestRunner
                     parent.ReleaseSimulator();
                     parent = next;
                 }
-                if (!parent.AllEnemiesDead || parent.PlayerDead
+                if (!boundaryMember && (!parent.AllEnemiesDead || parent.PlayerDead
                     || parent.CombatEndedTurn != winning["combatEndedTurn"]!.GetValue<int>()
                     || context.Damage.HpLostSoFar + parent.CumulativePlayerHpLost
-                        != winning["projectedBattleHpLost"]!.GetValue<int>())
+                        != winning["projectedBattleHpLost"]!.GetValue<int>()))
                     throw new InvalidOperationException("O003 T3 intervention and saved suffix do not yield the recorded victory.");
             }
         }
@@ -170,6 +171,11 @@ internal sealed partial class UnattendedTestRunner
                 throw new InvalidOperationException("O003 frozen T3 changed after native T4.");
         }
         finally { frozen.ReleaseSimulator(); }
+        if (boundaryMember)
+        {
+            await RunQ002TurnBoundaryMembersAsync(combat, context, actions.ToArray(), before, actual);
+            return;
+        }
         await RunKnownRoutePathTraceAsync(combat, player, prefixes, "Q002O003PlayerT3",
             "q002_o003_player_T3_path", requiredRetentionStep: 7, proveRetentionAliases: true,
             frozenSearchContext: context);

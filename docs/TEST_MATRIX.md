@@ -4,6 +4,12 @@
 
 历史记录见 [归档索引](archive/testing/README.md)。
 
+## Q002 O004 原预算与开局补搜隔离（2026-10-04）
+
+原ZIP/latest、原120,000ms profile/开关、覆盖仅`fixedBudget=true`，SearchOnly `d71823b3fa414e70a50bead7f2b27699`及DeploySolver `e42428465feb47c083d5721a124d7a94`均Passed，80动作/完整根戳/执行政策相同；T12/5损、整场能力药水+发光水2瓶、Instant/0秒、四类重算合计0。latest在玩家4原生事件后，不能证明开局；真正start `a79419b9e5e0421eb8f39621d818665e`仍死亡51，仅改用药上限的实验`1ed9d378d1754e32b46c4e081f244038`超时无result，已撤回。
+
+最小成员诊断`Q002-O004-OPENING-POTION-POSTERIOR` / `8ced0c7fbdcd4aa8b4036c7759235e41` Passed（55.10s）；原ZIP/start/RestoreOnly、原政策，实际成员限30秒/60,000节点/Beam90/BaseScoreOnly。82动作完整回放T12/5损/2瓶，原生4事件的完整ContinuationStamp及冻结开局严格一致；相同固定前缀最多1/2瓶均死亡51。`Q002-O004-OPENING-POTION-RANK` / `0b08f9e230c144638a4177113b09ac24` Passed（47.98s），仅取消BaseScoreOnly仍死亡51。隔离前缀不代表协调器自主发现、性能或完整原生部署；观察版`Q002-O004-OPENING-POTION-PATH`最终`30582727eed44c39853dac590fec979c` Passed（48.26s），2,400事件/零丢弃，首回合准确保留/展开，第6步准入后rawRank916/limit90未保留；搜索后实机根与冻结开局仍严格不变。固定能力承诺生产实验曾让独立O005退化8→29，已撤回，不能作修复。完整结果另记[证据](issues/q002-route-quality.md#o004-原预算的检查点与开局差异2026-10-04)。实例自动删除，Linux脚本接受同一scenario，Linux实机未验证。
+
 ## Q002 O003 能力代表保路（2026-10-04）
 
 `Q002-O003-PLAYER-T3-PATH`、原O003 ZIP、selector `4052e28b38544018ab6f3f9b2acd8c8e:5`、RestoreOnly、固定5秒政策、120秒请求：最终夹具 `43ac830f2ac9475f9242febfd4c4bf13` Passed（62.05s），53动作增量/完整回放、原生9事件后的T4完整戳和推进后的冻结T3严格一致；13,558条事件、无丢弃，完整第7步候选池及2个实际别名的严格获胜后缀通过。别名后缀仅证明战斗合法性，不证明调度历史相同；观察耗时不作性能证据。
@@ -11,6 +17,10 @@
 正常协调器T3同根/同政策/原10秒预算：基线 `30f14344f9e84b15b987ad36273005a6` 未完成、敌方345，候选 `a40cc85a2e3b47a5961bd7868e4bd27e` T10获胜、损血31；总搜索23,541.16/19,670.09ms、展开41,218/41,259、转移259,483/258,567。原生DeploySolver `e9042b8d435341438f929c786b7af9ad` Passed（66.34s），Instant/0秒、实际T10/损血31/敌方0/未归因0、整场Stable Serum1瓶、导出四类计划外重算合计0。
 
 O005同根同5秒政策、同3GiB主机预留的正常哨兵：基线 `8d72a922aa3e4935a0d7513554bea63e` 与候选 `c6d7546911b94057b91110269de4c76c` 均T9/损血8/无药，完整根及执行政策逐字段相同；总搜索15,869.86/16,183.78ms、展开53,351/52,794、转移197,591/194,074。不是观察或增量诊断时间；单对不能证明广泛性能无退化。
+
+激活时机剩余席位实验`a756b255069448e19207a00bdf141608`原T3根/原10秒政策与基线完整根戳/政策相同，仍T10/31损、无新增药水；单对总搜索更慢，无质量改善，已撤回，不列入生产验收。
+
+回合边界成员对照`Q002-O003-TURN-BOUNDARY-MEMBER` / `7b03065ecab94bb78c2ac181437b3c06` Passed（49.76s）：原ZIP/T3/RestoreOnly，6步完整/增量与9事件的完整T4戳一致；固定同一前缀，普通排序/无新增药、5秒/30,000节点各一组。重建基线false为T10/4损、4,449.69ms/7,068展开/29,193转移，true为T10/3损、2,293.38ms/7,066/30,127；实机T4及冻结T3严格不变，实例自动删除。固定前缀未建立普通扩展的能力承诺，两组比较范围是既有基线重建开关；不能代替正常协调器或完整原生执行。
 
 纯合同：`dotnet run --project tools/PowerCardValuationChecks/PowerCardValuationChecks.csproj -c Release`，`POWER_CARD_VALUATION_CHECKS_OK total=104`；新增集合/激活顺序/药水和回合隔离/死亡和终局排除/配额/输入不变测试运行真实代表选择器，工具值节点不替代原生正确性。实例全部删除，失败夹具、主机排队和未验证范围见[Q002记录](issues/q002-route-quality.md#o003-完整见证与能力代表保路)。Linux脚本接受同一scenario，Linux实机未运行。
 

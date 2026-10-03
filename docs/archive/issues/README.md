@@ -22,3 +22,4 @@
 - [shadow-damage-dealer-liveness-20260910](shadow-damage-dealer-liveness-20260910.md)
 - [test-subject-reports-20260909](test-subject-reports-20260909.md)
 - [unexpected-replans-20260909](unexpected-replans-20260909.md)
+- [Q002 O005 固定预算阶段验收](q002-o005-validation-20261004.md)

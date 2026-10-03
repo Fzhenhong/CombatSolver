@@ -39,6 +39,14 @@ internal sealed partial class UnattendedTestRunner
             bool expectedCardPlayed = request.ExpectedPlayedCardId == null;
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
+            if (request.ScenarioId is "Q002-O004-OPENING-POTION-POSTERIOR" or "Q002-O004-OPENING-POTION-RANK"
+                or "Q002-O004-OPENING-POTION-PATH")
+            {
+                await runner.RunQ002OpeningPotionPosteriorAsync(combatState, player,
+                    baseScoreOnly: request.ScenarioId == "Q002-O004-OPENING-POTION-POSTERIOR",
+                    tracePath: request.ScenarioId == "Q002-O004-OPENING-POTION-PATH");
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "CHECKPOINT-PROFILE-CONTRACT")
             {
                 runner.AssertCheckpointProfileContract(combatState);
@@ -54,9 +62,10 @@ internal sealed partial class UnattendedTestRunner
                 await runner.PrepareRecordedPlanDeploymentAsync(combatState, deploy: false);
                 return Observation(combatEnded: false);
             }
-            if (request.ScenarioId == "Q002-O003-PLAYER-T3-PATH")
+            if (request.ScenarioId is "Q002-O003-PLAYER-T3-PATH" or "Q002-O003-TURN-BOUNDARY-MEMBER")
             {
-                await runner.RunQ002MercuryPlayerTurnPathAsync(combatState, player);
+                await runner.RunQ002MercuryPlayerTurnPathAsync(combatState, player,
+                    boundaryMember: request.ScenarioId == "Q002-O003-TURN-BOUNDARY-MEMBER");
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId == "KNOWN-HEALING-POLICY")
