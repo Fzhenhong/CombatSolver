@@ -2326,8 +2326,8 @@ internal sealed partial class SimulatedCombatState
         ulong dynamicFirst = 0;
         ulong dynamicSecond = 0;
         int dynamicCount = 0;
-        // DynamicVarSet.GetEnumerator 会装箱内部字典的枚举器；直接枚举已 publicize 的 _vars。
-        foreach (var dynamicVar in power.DynamicVars._vars)
+        // DynamicVarSet 的公开 GetEnumerator 会装箱内部字典枚举器；经访问桥读取 _vars。
+        foreach (var dynamicVar in new DynamicVarSetAccess.EntryEnumerable(power.DynamicVars))
         {
             if (!SemanticStateFieldPolicy.IsSemantic(power, dynamicVar.Key, dynamicVar.Value))
                 continue;

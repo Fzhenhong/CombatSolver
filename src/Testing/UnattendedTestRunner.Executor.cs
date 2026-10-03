@@ -55,6 +55,11 @@ internal sealed partial class UnattendedTestRunner
                 runner.AssertPredictedMonsterScalingBoundary(combatState);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "DYNAMIC-VAR-BRIDGE")
+            {
+                runner.AssertDynamicVarBridge(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "LOOP-REPLAY-REQUEST-BUDGET")
             {
                 await runner.AssertLoopReplayBudgetAsync(combatState);

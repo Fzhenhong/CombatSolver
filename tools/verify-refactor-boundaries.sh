@@ -1708,6 +1708,10 @@ for file in CombatBeamSolver.FinalPlanOrdering.cs CombatBeamSolver.Transposition
     done
 done
 
+if rg -q -F '._vars' "$repository_root/src" --glob '!**/DynamicVarSetAccess.cs'; then
+    violations+=("DynamicVarSet._vars direct field access must go through DynamicVarSetAccess")
+fi
+
 if ((${#violations[@]} > 0)); then
     printf '%s\n' "${violations[@]}" >&2
     printf 'Refactor boundary verification failed with %d violation(s).\n' "${#violations[@]}" >&2
