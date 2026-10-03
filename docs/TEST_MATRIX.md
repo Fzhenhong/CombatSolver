@@ -17,6 +17,24 @@
 
 既有阶段原生证据包括 `MIRRORED-HOOK-FILTER`、`CARD-EXECUTION-CONTINUATION`、`EXECUTION-CHOICE-INCREMENTAL`、`SURVIVABLE-BOUNDARY-CONTRACT`、`REFINEMENT-INCUMBENT-CONTRACT` 和治疗闭包合同；历史通过不等同于合并上游后重新通过。四场阶段 ABBA 的战损与内核峰值门槛通过，保守提速 2.336～5.544 倍。合并后的 Release／结构门禁和受影响原生合同，以及 29 根完整极高／DOP16 的质量／内存回归另行记录。详见[范围与证据](performance/veryhigh-dop16-20261001.md)。
 
+## B015统计消费者终止隔离（2026-10-02）
+
+`B015-T016-AFTERIMAGE-ROUTE` / `coverage/unattended/b015-t016-afterimage-route.json`：同原根按日志STRANGLE→AFTERIMAGE顺序从生产PrepareCardActions取六步动作，每步完整/增量/原生状态与RNG一致；目标自然跨ID1→ID2。生产ReplayAdjustedRoute前移余像使第二张SHIV目标2失效，同输入修前Failed、修后Passed；合法两步前移、无重排控制、共享路径失效目标及原路线保留通过。120秒，0.111.0/Ritsu0.6.3/同MVID BaseLib3.4.7；不是完整Solve胜利路线发布验收。
+
+`B015-FIXED-PREFIX-TARGETS` / `coverage/unattended/b015-fixed-prefix-targets.json`：直接生产候选→ApplyFixedPrefix单动作，合法目标致胜、缺失目标拒绝、原生Continuation不变，Passed（18.33秒）。既有ADJUSTED-ROUTE-INVALID-SUFFIX Passed（20.12秒）；更广FIXED-PREFIX-TURN-OUTCOMES起初在120秒无结果，未提高预算；后查明是全新隔离档案第一次洗牌时原版洗牌引导等待确认，上游同样卡住。放入只关闭引导的进度档后，上游 `c4e0b47d` 与本分支均Passed（19.42 / 23.86秒）。
+
+整合上游 `c4e0b47d` 后：`B015-T016-AFTERIMAGE-ROUTE` Passed（32.80秒），`B015-FIXED-PREFIX-TARGETS` Passed，统计存储合同通过。PR哨兵按上游→本分支→本分支→上游交替：`TURN-SETUP-FIXED-PREFIX-STAMPEDE` 四次路线（含卡牌状态键）、根续用戳、展开8549/转移17245均相同，搜索耗时8649/3213/6653/6992 ms，四次都在同一条macOS无法建立No-GC区域的断言失败（发生在搜索结果之后，上游相同）；`PROFILE-SHIV-DEPLOY` 四次Passed，路线与续用戳相同、部署后战损0。0.111.0/Ritsu0.6.3，macOS隔离无头，各120秒。
+
+`B015-T016-ORIGINAL-PREFIX` / `coverage/unattended/b015-t016-original-prefix.json` 是保留失败的诊断入口：原ZIP开战双状态、日志选牌、前五步完整/增量/原生状态与RNG均通过；生产串行兄弟及两个父节点的真实调度器/worker检查通过，2准备/4动作且实测动作并发2，同原报告MVID BaseLib3.4.7。当前生成器未产生非法目标，随后强制历史SHIV→ID2仍失败，故请求总Failed；不是当前生产RED或修复验收。真实0.111.0/Ritsu0.6.3、120秒；差异环境及复跑参数见[后续证据](community/b015-follow-up.md)。
+
+`RUN-STATISTICS-WORKER-FAILURE` / `coverage/unattended/run-statistics-worker-failure.json`：原始NUL JSON导致真实消费者构造失败后，300次入队；修改前Failed（capacity exceeded），修改后Passed（队列空、快照无效、损坏文件保留）。游戏0.111.0、RitsuLib0.6.5、macOS隔离无头，请求均120秒预算。统计聚合/持久化既有合同通过；该阶段尚未覆盖的边界见下方后续记录。命令及边界见[B015阶段证据](community/b015-stage-one.md)。
+
+`RUN-STATISTICS-SATURATION` / `coverage/unattended/run-statistics-saturation.json`：屏障暂停真实健康consumer，256业务信号、满sync合并重试、第257业务事件显式停用；已接收事件排空持久化，partial重开与原生结算保留，禁止重新上传，排空期间I/O错误不被吞。真实0.111.0/Ritsu0.6.5同输入修前Failed、修后Passed；最终故障及饱和请求均在Ritsu0.6.2复核通过；纯Store另覆盖旧full收据撤销和纠正收据不重复上传。详见[B015后续证据](community/b015-follow-up.md)。
+
+`B015-MAD-SCIENCE` / `coverage/unattended/b015-mad-science.json`：真实0.111.0/Ritsu0.6.2中Skill/Chaos原生升级、保存恢复、root/Fork、兄弟隔离、合法出牌完整状态/RNG差分通过；None明确拒绝。不是原包坏牌修复，也未定位战前替换调用者。
+
+`B015-BOUNDARIES` / `coverage/unattended/b015-boundaries.json`：真实0.111.0/Ritsu0.6.2中Stock替补CombatId/Fork/父不变/增量完整回放/两次原生SHIV状态一致；1HP原生CrimsonMantle自伤在T+1死亡，模拟终局/Fork与原生ProcessPendingLoss安全点完整状态一致。另用T016原报告Ritsu0.6.3复核通过；主线最小边界通过。T016原包开战双状态对账通过；cursor0后的自动Hook触发recorded_action_mismatch，整个RestoreOnly失败；原包另缺选牌录制；T019已定位f1461c7多人实验分支的Last(predicate)无人存活异常，详见后续证据中的构建身份更正。
+
 ## 0.47.3 版本与发布登记（2026-10-01）
 
 本次小版本由0.47.2更新至0.47.3，整合内存修复分支至main，并同步项目、manifest、开发笔记与中英玩家日志。main整合只新增既有多人规划文档；本次版本登记没有行为源码或测试输入变化，复用本页GC与储君生成路线部署合同及PR #147原生费用/选牌合同。最终发布只执行Release构建、最小ZIP和统一三渠道脚本，不重跑已通过场景、不启动可见Steam或完整发布门禁。恢复后的管理员系统清理与完整重型生成流的可见100%卡死仍保持未实测口径。

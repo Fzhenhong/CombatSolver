@@ -2392,7 +2392,11 @@ internal sealed partial class CombatBeamSolver
 
         SimPlayerCombatState player = simulator.State.GetPlayerCombatState(_player);
         PredictedCard? card = FindCardForReplay(player.Hand.Cards, action);
-        return card != null && combat.CanPlayCard(simulator, card);
+        // Reordering or inserting earlier actions can change the active roster.
+        // Keep the planned identity: an invalid suffix rejects the adjusted route
+        // rather than replaying it against a missing target or choosing another one.
+        return card != null && combat.CanPlayCard(simulator, card)
+            && TargetsFor(card, simulator).Any(target => target.Target?.CombatId == action.TargetCombatId);
     }
 
     private PlanAction WithDisplayNames(PlanAction action)

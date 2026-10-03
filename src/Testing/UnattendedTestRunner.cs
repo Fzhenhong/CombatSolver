@@ -279,13 +279,17 @@ internal sealed partial class UnattendedTestRunner
         }
         finally
         {
-            if (monitor != null)
-                await monitor.DisposeAsync();
-            _releaseAdaptedOnPlayIntegration?.Invoke();
-            ReleaseTurnSetupControlCheck();
-            _executor.RestoreSettings();
-            RestoreHeadlessFastModeOverride();
-            ReleaseCheckpointImport();
+            try { ReleaseB015OriginalPrefix(); }
+            finally
+            {
+                if (monitor != null)
+                    await monitor.DisposeAsync();
+                _releaseAdaptedOnPlayIntegration?.Invoke();
+                ReleaseTurnSetupControlCheck();
+                _executor.RestoreSettings();
+                RestoreHeadlessFastModeOverride();
+                ReleaseCheckpointImport();
+            }
         }
     }
 

@@ -39,6 +39,34 @@ internal sealed partial class UnattendedTestRunner
             bool expectedCardPlayed = request.ExpectedPlayedCardId == null;
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
+            if (request.ScenarioId is "B015-T016-ORIGINAL-PREFIX" or "B015-T016-AFTERIMAGE-ROUTE")
+            {
+                await runner.AssertB015OriginalPrefixAsync(combatState, player);
+                return Observation(combatEnded: !CombatManager.Instance.IsInProgress);
+            }
+            if (request.ScenarioId == "B015-MAD-SCIENCE")
+            {
+                runner.SetStage("b015_mad_science");
+                await runner.AssertB015MadScienceAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "B015-BOUNDARIES")
+            {
+                _ = await runner.AssertB015BoundariesAsync(combatState, player);
+                return Observation(combatEnded: !CombatManager.Instance.IsInProgress);
+            }
+            if (request.ScenarioId == "RUN-STATISTICS-SATURATION")
+            {
+                await RunStatistics.AssertHealthySaturationIsolationAsync(request.EvidenceDirectory
+                    ?? throw new InvalidOperationException("Statistics checks require an evidence directory."));
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "RUN-STATISTICS-WORKER-FAILURE")
+            {
+                await RunStatistics.AssertWorkerFailureIsolationAsync(request.EvidenceDirectory
+                    ?? throw new InvalidOperationException("Statistics fixture requires an evidence directory."));
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "GENERATED-NOVELTY-SEARCH")
             {
                 _ = ApplySettingsOverrides();
