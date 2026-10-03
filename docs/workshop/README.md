@@ -6,7 +6,7 @@
 
 2026-09-13 用户要求保留原有完整简介，仅删除链接；今后的中英文简介不放网址或URL标签，开源入口改用GitHub项目搜索提示。功能、许可署名、依赖、性能说明、交流群和反馈内容均保留，不能用精简草案覆盖原文。发布配置的默认英文description须同步更新。
 
-2026-09-08 已通过 Steamworks 两次独立的元数据更新分别保存 `schinese` 与 `english`，两次 SubmitItemUpdate 均返回 OK。此次仅改变标题/描述，不上传 Mod 二进制。
+中英文介绍的依赖版本与 manifest 保持一致。2026-10-03 两个明确语言的 Steamworks 描述更新均返回 OK，只同步介绍，未上传二进制或改动更新日志。
 
 维护时先对更新句柄调用 `SetItemUpdateLanguage`，再设置标题、描述，最后提交。不能用语言标签替代语言字段。未指定语言时 Steamworks 默认写 English；当前官方 ModUploader CLI 没有语言参数，本地 workshop.json 已改为英文标题/介绍作为默认输入，避免之后发包把中文覆盖回 English。更新简中内容时使用明确的 `schinese` 更新句柄。
 
