@@ -102,11 +102,17 @@ internal sealed partial class UnattendedTestRunner
         PlanAction defend = new(PlanActionKind.PlayCard, firstTurn + 3, CardId: "DEFEND_IRONCLAD");
         CombatBeamSolver prefixProbe = new(root, names, damage, policy, searchProfile: policy.Profile);
         PlanAction immediateStrike = strike with { Turn = firstTurn };
-        Check(!prefixProbe.CanReplayOpeningPrefix([immediateStrike, new PlanAction(PlanActionKind.EndTurn, firstTurn)]),
-            "opening discovery rejects actions after terminal victory");
+        Check(prefixProbe.CanReplayOpeningPrefix([immediateStrike, new PlanAction(PlanActionKind.EndTurn, firstTurn)]),
+            "opening discovery accepts the prefix truncated at terminal victory");
         SolverResult Solve(IReadOnlyList<PlanAction> prefix, bool reset = false)
             => new CombatBeamSolver(root, names, damage, policy, searchProfile: policy.Profile,
                 fixedPrefixActions: prefix, resetFixedPrefixSchedulingBaseline: reset).Solve();
+        SolverResult immediateVictory = await Task.Run(() => Solve(
+            [immediateStrike, new PlanAction(PlanActionKind.EndTurn, firstTurn)]));
+        Check(immediateVictory.Snapshot.AllEnemiesDead
+              && immediateVictory.BestNode.Actions.Count == 1
+              && immediateVictory.CombatEndedTurn == firstTurn,
+            "opening terminal suffix preserves the victory action and combat end turn");
 
         CombatBeamSolver inspection = new(root, names, damage, policy, searchProfile: policy.Profile);
         SimulationSnapshot seedSnapshot = InvokeForcedTerminalReplay(inspection, [], null, 0, null);

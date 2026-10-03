@@ -24,6 +24,8 @@
 
 政策由主线程从设置冻结到 `SearchPolicySnapshot`。后台通过请求参数、诊断 sink 与压力信号消费外部能力；算法不读取设置单例或操作 GC。Power 显示变量在主线程根捕获时物化；worker 只消费已物化值。克隆并发边界由 `BaseLibCloneConcurrencyPatch` 与原生克隆隔离规则维护。
 
+常规 GC 搜索的系统余量、分配限额和 Gen2 回收由 Runtime 作用域持有，Search 只在排空后的提交边界消费压力信号。Runtime 在限额和诊断成功后登记作用域，入口失败释放信号并传播原异常；退出时按作用域清理计数和信号。
+
 ## 3. Search
 
 | 入口 | 所有权 |

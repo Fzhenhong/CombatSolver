@@ -23,6 +23,23 @@ internal sealed partial class UnattendedTestRunner
         await ClearPlayerPilesAsync(player);
         await SetBlockAsync(player.Creature, 0);
 
+        await InjectPowerAsync(combat, player, new() { PowerId = "SHADOWMELD_POWER", Target = "Player", Amount = 30 });
+        await InjectPowerAsync(combat, player, new() { PowerId = "FRAIL_POWER", Target = "Player", Amount = 1 });
+        var nativeParent = CombatRootSnapshot.Capture(combat).ForkSimulator();
+        var nativeBranch = nativeParent.Fork();
+        var nativeShadow = (SimulatedCombatState)nativeBranch.State.CombatState;
+        decimal reduced = nativeBranch.GainBlock(player.Creature, 1m, ValueProp.Move);
+        decimal actual = await CreatureCmd.GainBlock(player.Creature, 1m, ValueProp.Move, null);
+        if (reduced != actual || reduced != 805_306_368m)
+            throw new InvalidOperationException($"Shadowmeld/Frail product changed: predicted={reduced}, actual={actual}.");
+        AssertSnapshotEqual(CaptureSimulated(nativeBranch, nativeShadow, player, combat.Enemies[0]),
+            CaptureActual(combat, player, combat.Enemies[0]), _request.ScenarioId, "RepresentableFrailProduct");
+        if (nativeParent.State.GetCreature(player.Creature).Block != 0)
+            throw new InvalidOperationException("Block multiplication changed the parent branch.");
+        foreach (PowerModel power in player.Creature.Powers.ToArray()) await PowerCmd.Remove(power);
+        await SetBlockAsync(player.Creature, 0);
+        _completedChecks.Add("ShadowmeldFrail:NativeFullStateRng:RepresentableProduct:ForkIsolation");
+
         var simulator = CombatRootSnapshot.Capture(combat).ForkSimulator();
         var shadow = (SimulatedCombatState)simulator.State.CombatState;
 
@@ -30,6 +47,14 @@ internal sealed partial class UnattendedTestRunner
         shadow.Apply<ShadowmeldPower>(player.Creature, 3, player.Creature);
         decimal normal = simulator.GainBlock(player.Creature, 6m, ValueProp.Unpowered);
         AssertBlockBoundary(normal, 48m, simulator.State.GetCreature(player.Creature).Block, 48, "normal");
+        shadow.SetAmount<ShadowmeldPower>(player.Creature, 0);
+
+        // 2^96 exceeds decimal even before the amount is multiplied.
+        shadow.Apply<ShadowmeldPower>(player.Creature, 96, player.Creature);
+        decimal firstFactorOverflow = simulator.GainBlock(player.Creature, 1m, ValueProp.Unpowered);
+        AssertBlockBoundary(firstFactorOverflow, SimCreatureState.BlockSettlementCeiling,
+            simulator.State.GetCreature(player.Creature).Block,
+            (int)SimCreatureState.BlockSettlementCeiling, "first_factor_overflow");
         shadow.SetAmount<ShadowmeldPower>(player.Creature, 0);
 
         // 2^95 leaves decimal range at the product (the reported VarDecMul failure).
@@ -46,6 +71,10 @@ internal sealed partial class UnattendedTestRunner
         AssertBlockBoundary(beyondFactorRange, SimCreatureState.BlockSettlementCeiling,
             simulator.State.GetCreature(player.Creature).Block,
             (int)SimCreatureState.BlockSettlementCeiling, "beyond_factor_range");
+
+        simulator.State.GetCreature(player.Creature).DamageBlock(SimCreatureState.BlockSettlementCeiling, ValueProp.Move);
+        decimal zero = simulator.GainBlock(player.Creature, 0m, ValueProp.Unpowered);
+        AssertBlockBoundary(zero, 0m, simulator.State.GetCreature(player.Creature).Block, 0, "zero_amount");
 
         _completedChecks.Add(
             "ShadowmeldBlockDecimalBoundary:Normal=48:Saturated=999999999:BeyondFactorRange=999999999");

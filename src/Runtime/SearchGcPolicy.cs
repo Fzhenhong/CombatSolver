@@ -679,15 +679,24 @@ internal static partial class SearchGcPolicy
                     && !_manualReclaimRequested)
                 {
                     SearchGcLifecycleSnapshot lifecycleAtEntry = CaptureLifecycle();
-                    _activeSearches++;
-                    _defaultGcSearches++;
-                    // Default GC still bounds the request: a system-memory-derived allocation
-                    // limit and a reclaim/resume checkpoint, without a No-GC region.
-                    ConfigureDefaultGcSearchLimit(memoryPressureSignal, configuredBudgetBytes);
-                    Entry.Logger.Info(
-                        "[CombatSolver/Test] GC_LATENCY policy=clr_default no_gc_enabled=false " +
-                        $"configured_budget={configuredBudgetBytes}");
-                    return new DefaultGcSearchScope(lifecycleAtEntry, memoryPressureSignal);
+                    DefaultGcSearchScope? admittedScope = null;
+                    try
+                    {
+                        // Publish admission only after the limit and diagnostics succeed.
+                        ConfigureDefaultGcSearchLimit(memoryPressureSignal, configuredBudgetBytes);
+                        Entry.Logger.Info(
+                            "[CombatSolver/Test] GC_LATENCY policy=clr_default no_gc_enabled=false " +
+                            $"configured_budget={configuredBudgetBytes}");
+                        admittedScope = new DefaultGcSearchScope(lifecycleAtEntry, memoryPressureSignal);
+                        _activeSearches++;
+                        _defaultGcSearches++;
+                        return admittedScope;
+                    }
+                    finally
+                    {
+                        if (admittedScope is null)
+                            memoryPressureSignal.Disable();
+                    }
                 }
             }
             if (!waitLogged)

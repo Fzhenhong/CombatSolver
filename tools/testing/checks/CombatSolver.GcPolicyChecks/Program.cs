@@ -4,6 +4,8 @@ if (args is ["manual-release"])
     PolicyCheck.Run("manual memory release keeps live pages resident", GcManualMemoryReleaseChecks.Run);
 else if (args is ["diagnostic-failure"])
     GcDiagnosticFailureChecks.Run();
+else if (args is ["default-entry"])
+    GcDiagnosticFailureChecks.RunDefaultEntry();
 else if (args is ["recovery-lifecycle"])
 {
     PolicyCheck.Run("actual region loss and bounded recovery", GcRecoveryChecks.RunLifecycle);
@@ -26,5 +28,5 @@ else if (args.Length == 0)
     GcRegionAdmissionChecks.Run();
 }
 else
-    throw new ArgumentException("Expected no arguments, 'admission', 'scopes', 'checkpoint', 'diagnostic-failure', 'manual-release', 'memory', 'recovery' or 'recovery-lifecycle'.");
+    throw new ArgumentException("Expected no arguments, 'admission', 'scopes', 'checkpoint', 'diagnostic-failure', 'default-entry', 'manual-release', 'memory', 'recovery' or 'recovery-lifecycle'.");
 Console.WriteLine($"GC policy checks passed: {PolicyCheck.Completed} scenarios.");

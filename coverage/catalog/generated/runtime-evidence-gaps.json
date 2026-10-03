@@ -12,7 +12,7 @@
       "status": "SolverCompensation",
       "hook": "AfterSideTurnStart(MegaCrit.Sts2.Core.Combat.CombatSide,System.Collections.Generic.IReadOnlyList\u003CMegaCrit.Sts2.Core.Entities.Creatures.Creature\u003E,MegaCrit.Sts2.Core.Combat.ICombatState)",
       "capability": "SolverCompensation",
-      "methodHash": "e04193cb280b4b82957c251d6562b3cc3dbebf271a66981fe544c4a20acce0b9"
+      "methodHash": "a906bb1b1ad9d4998f3e445705ce948181774c49eefea4ef96761eeaf7791224"
     }
   ]
 }
