@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using CombatSolver.Engine.Common;
 using CombatSolver.Engine.Common.Mirrors;
 using CombatSolver.Engine.InCombat.Mirrors.Hooks.Card;
+using CombatSolver.Engine.InCombat.Simulation;
 
 namespace CombatSolver.Engine.InCombat.Mirrors.Hooks.Block;
 
@@ -48,8 +49,28 @@ internal static class ModifyBlockMultiplicativeMirrors
         registry.Register<Vambrace>(HandleVambrace);
         registry.Register<MultiplayerScalingModel>(HandleMultiplayerScaling);
         registry.Register<UnmovablePower>(HandleUnmovablePower);
+        registry.Register<ShadowmeldPower>(HandleShadowmeldPower);
 
         return registry;
+    }
+
+    /// <summary>
+    /// Vanilla doubles block once per Shadowmeld stack: 2^Amount. The exponential factor
+    /// leaves decimal range near 97 stacks, where the native cast would throw before the
+    /// product is settled. The product is clamped to the block settlement ceiling anyway,
+    /// so the factor saturates at that ceiling once it can no longer be represented exactly.
+    /// </summary>
+    private static decimal HandleShadowmeldPower(
+        ShadowmeldPower power,
+        ModifyBlockMultiplicativeMirrorContext context)
+    {
+        if (power.Owner != context.Target)
+        {
+            return 1m;
+        }
+        return power.Amount >= 97
+            ? SimCreatureState.BlockSettlementCeiling
+            : (decimal)Math.Pow(2.0, power.Amount);
     }
 
     private static decimal HandleUnmovablePower(

@@ -46,7 +46,7 @@ internal static partial class HookMirrors
         if (cardModel?.Enchantment is { } enchantment)
         {
             block += enchantment.EnchantBlockAdditive(block);
-            block *= enchantment.EnchantBlockMultiplicative(block);
+            block = MultiplyBlockWithinSettlement(block, enchantment.EnchantBlockMultiplicative(block));
         }
 
         foreach (var listener in IterateCombatHookListeners(simulator, MirroredHookMask.ModifyBlockAdditive))
@@ -81,7 +81,7 @@ internal static partial class HookMirrors
         {
             context.Amount = block;
             var multiplier = ModifyBlockMultiplicativeMirrors.Invoke(listener, context);
-            block *= multiplier;
+            block = MultiplyBlockWithinSettlement(block, multiplier);
             if (multiplier != 1)
             {
                 modifiers.Add(listener);
@@ -97,6 +97,34 @@ internal static partial class HookMirrors
         }
 
         return Math.Max(0, block);
+    }
+
+    /// <summary>
+    /// Multiplies a block amount by a modifier factor and keeps the product inside the
+    /// simulation's settlement ceiling. Factors and products beyond that ceiling are
+    /// indistinguishable after <see cref="SimCreatureState.GainBlock"/> clamps the gained
+    /// block, so saturating here preserves the settled result while keeping decimal
+    /// arithmetic defined where vanilla would overflow (e.g. Shadowmeld stacks).
+    /// </summary>
+    private static decimal MultiplyBlockWithinSettlement(decimal block, decimal multiplier)
+    {
+        bool blockOutOfRange = block > SimCreatureState.BlockSettlementCeiling
+            || block < -SimCreatureState.BlockSettlementCeiling;
+        bool multiplierOutOfRange = multiplier > SimCreatureState.BlockSettlementCeiling
+            || multiplier < -SimCreatureState.BlockSettlementCeiling;
+        if (blockOutOfRange || multiplierOutOfRange)
+        {
+            return (block < 0m) ^ (multiplier < 0m)
+                ? -SimCreatureState.BlockSettlementCeiling
+                : SimCreatureState.BlockSettlementCeiling;
+        }
+
+        decimal product = block * multiplier;
+        return product > SimCreatureState.BlockSettlementCeiling
+            ? SimCreatureState.BlockSettlementCeiling
+            : product < -SimCreatureState.BlockSettlementCeiling
+                ? -SimCreatureState.BlockSettlementCeiling
+                : product;
     }
 
     /// <summary>

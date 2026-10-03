@@ -893,6 +893,13 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "B013-BLOCK-DECIMAL-BOUNDARY")
+            {
+                runner.SetStage("b013_block_decimal_boundary");
+                await runner.AssertB013BlockDecimalBoundaryAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "FIXED-PREFIX-TURN-OUTCOMES")
             {
                 runner.SetStage("fixed_prefix_turn_outcomes");
