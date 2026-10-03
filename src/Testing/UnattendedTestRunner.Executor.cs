@@ -67,6 +67,12 @@ internal sealed partial class UnattendedTestRunner
                     ?? throw new InvalidOperationException("Statistics fixture requires an evidence directory."));
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "REMAINING-HEALING-DEFECT-PLAYER-PRISM")
+            {
+                runner.SetStage("remaining_healing_defect_player_prism");
+                await runner.RunDefectPrismHealingProbeAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "GENERATED-NOVELTY-SEARCH")
             {
                 _ = ApplySettingsOverrides();
@@ -787,6 +793,13 @@ internal sealed partial class UnattendedTestRunner
             {
                 runner.SetStage("opening_discard_choice_value");
                 await runner.AssertOpeningDiscardChoiceValueAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "OPENING-POWER-BOUNDARY")
+            {
+                runner.SetStage("opening_power_boundary");
+                await runner.AssertOpeningPowerBoundaryAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
 

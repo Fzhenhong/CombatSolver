@@ -22,6 +22,22 @@ namespace CombatSolver;
 
 internal sealed partial class CombatBeamSolver
 {
+    // This closed native root has no growth actions or future HP credit. With
+    // zero-allowance counter goals, strictly worse HP cannot become preferable;
+    // equal-HP routes must keep every turn so they can improve the counters.
+    private readonly bool _strictHpBoundWithRelicTargets =
+        root.PlayerIdentity.Character.GetType() == typeof(MegaCrit.Sts2.Core.Models.Characters.Defect)
+        && root.Enemies.Count > 0
+        && root.Enemies.All(enemy => enemy.Monster?.GetType() == typeof(MegaCrit.Sts2.Core.Models.Monsters.InfestedPrism))
+        && CanUseStrictHpRelicBound(root.CanCertifyRemainingHealing
+                && root.InitialRemainingHealingUpperBound == 0,
+            policy.EffectiveHasGrowthTargets, policy.RelicTargets);
+
+    internal static bool CanUseStrictHpRelicBound(bool certifiedNoHealing,
+        bool hasGrowthTargets, IReadOnlyList<RelicCounterTarget> targets)
+        => certifiedNoHealing && !hasGrowthTargets && targets.Count > 0
+            && targets.All(target => target.HpAllowance == 0);
+
     private readonly record struct CycleProbeFamilyKey(
         int Turn,
         StateFingerprint ShapeKey,
@@ -235,7 +251,8 @@ internal sealed partial class CombatBeamSolver
                 hasOrderedMutationWork,
                 hasCycleExitWork,
                 cycleRegionTransaction);
-            List<SearchNode> bounded = ApplyPrimaryIncumbentBound(finalized);
+            List<SearchNode> bounded = ApplySmartPotionEligibilityBound(
+                ApplyPrimaryIncumbentBound(finalized));
             // Emit all watched final aliases, after every portfolio and the incumbent.
             // The paired value events avoid equating a `with` clone with a dropped route.
             ObserveSearchPathBoundary(
@@ -285,7 +302,8 @@ internal sealed partial class CombatBeamSolver
     private List<SearchNode> ApplyPrimaryIncumbentBound(List<SearchNode> retained)
     {
         // Per-event growth can repeat; the HP-only floor is not a bound on this objective.
-        if (_hasGrowthTargets || _theftPolicy == SolverTheftPolicy.PreserveResources || _primaryIncumbent is not { } incumbent)
+        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
+            || _theftPolicy == SolverTheftPolicy.PreserveResources || _primaryIncumbent is not { } incumbent)
             return retained;
 
         List<SearchNode> bounded = ApplyPrimaryIncumbentBoundCore(
@@ -295,7 +313,8 @@ internal sealed partial class CombatBeamSolver
             _strategicBossHpRelief,
             root.HasOnlyPostCombatHealing,
             root.CanCertifyRemainingHealing ? RemainingHealingPotential : null,
-            out int certifiedHealingBoundPruned);
+            out int certifiedHealingBoundPruned,
+            allowTurnTieBound: !_strictHpBoundWithRelicTargets);
         _run.PrimaryIncumbentBranchesPruned += pruned;
         _run.PrimaryIncumbentCertifiedHealingBoundBranchesPruned += certifiedHealingBoundPruned;
         return bounded;
@@ -306,7 +325,8 @@ internal sealed partial class CombatBeamSolver
         PrimarySearchIncumbent incumbent,
         out int pruned,
         BossHpRelief bossHpRelief = BossHpRelief.None,
-        Func<SimulationSnapshot, int>? remainingHealingPotential = null)
+        Func<SimulationSnapshot, int>? remainingHealingPotential = null,
+        bool allowTurnTieBound = true)
         => ApplyPrimaryIncumbentBoundCore(
             retained,
             incumbent,
@@ -314,7 +334,8 @@ internal sealed partial class CombatBeamSolver
             bossHpRelief,
             false,
             remainingHealingPotential,
-            out _);
+            out _,
+            allowTurnTieBound);
 
     private static List<SearchNode> ApplyPrimaryIncumbentBoundCore(
         List<SearchNode> retained,
@@ -323,7 +344,8 @@ internal sealed partial class CombatBeamSolver
         BossHpRelief bossHpRelief,
         bool rootHasCertifiedHealingBound,
         Func<SimulationSnapshot, int>? remainingHealingPotential,
-        out int certifiedHealingBoundPruned)
+        out int certifiedHealingBoundPruned,
+        bool allowTurnTieBound = true)
     {
         pruned = 0;
         certifiedHealingBoundPruned = 0;
@@ -336,13 +358,15 @@ internal sealed partial class CombatBeamSolver
             if (ShouldPruneByPrimaryIncumbent(
                     StrategicHpLowerBound(node.Snapshot, bossHpRelief, futureHealPotential),
                     node.Turn,
-                    incumbent))
+                    incumbent,
+                    allowTurnTieBound))
             {
                 if (rootHasCertifiedHealingBound
                     && !ShouldPruneByPrimaryIncumbent(
                         StrategicHpLowerBound(node.Snapshot, bossHpRelief, baselineFutureHealPotential),
                         node.Turn,
-                        incumbent))
+                        incumbent,
+                        allowTurnTieBound))
                 {
                     certifiedHealingBoundPruned++;
                 }
@@ -400,9 +424,10 @@ internal sealed partial class CombatBeamSolver
     internal static bool ShouldPruneByPrimaryIncumbent(
         int strategicHpLowerBound,
         int turn,
-        PrimarySearchIncumbent incumbent)
+        PrimarySearchIncumbent incumbent,
+        bool allowTurnTieBound = true)
         => strategicHpLowerBound > incumbent.StrategicHpDeficit
-            || strategicHpLowerBound == incumbent.StrategicHpDeficit
+            || allowTurnTieBound && strategicHpLowerBound == incumbent.StrategicHpDeficit
                 && turn > incumbent.CombatEndedTurn;
 
     internal static bool TryTightenPrimarySearchIncumbent(
@@ -472,7 +497,8 @@ internal sealed partial class CombatBeamSolver
         IReadOnlyList<SearchNode> retained,
         int completedTurnLayers)
     {
-        if (_hasGrowthTargets || _theftPolicy == SolverTheftPolicy.PreserveResources)
+        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
+            || _theftPolicy == SolverTheftPolicy.PreserveResources)
             return false;
         bool canEstablishPotionFreeIncumbent = _minimumPotionUses == 0
             && _potionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart;
