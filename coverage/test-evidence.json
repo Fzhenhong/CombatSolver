@@ -1,4 +1,44 @@
 {
+  "AXEBOT-JOSS-LATE-ETHEREAL": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferential",
+    "procedure": "MockMonsterEncounter，金纸与音乐盒，消耗堆的异界嚎叫在回合末自动打出；120秒上限，不运行搜索。",
+    "expected": "音乐盒新生成的虚无复制牌计入金纸，实际/模拟有序牌堆、遗物、Power、怪物状态与RNG一致。",
+    "observed": "失败94ec8b7610e34da1b963faae75a41186：实际金纸1、模拟0；修复后26b7755643d241f091c62f57c9f75a3a Passed，完整状态一致。",
+    "evidence": "coverage/unattended/axebot-joss-late-ethereal.json; docs/issues/axebot-reports-20261003.md"
+  },
+  "AXEBOT-COMPACT-ORDER": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferential",
+    "procedure": "机器人，压缩+将间隔的两张状态牌变为燃料；120秒上限，不运行搜索。",
+    "expected": "按原版整批移除、记录缩短牌堆内索引、排序后插入，有序完整状态与RNG一致。",
+    "observed": "失败3195ac535ce0499d8f4e02b24707124e：Hand[1]模拟打击、实际燃料+；修复后b45e21f166d042f1ae59079d001e375d Passed。",
+    "evidence": "coverage/unattended/axebot-compact-order.json; docs/issues/axebot-reports-20261003.md"
+  },
+  "AXEBOT-FOLLY-STAR-CLEANUP": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferential",
+    "procedure": "静默猎手，子弹时间修改FOLLY临时星能费用，回合末虚无消耗后严格比较。",
+    "expected": "只有临时星能费用的牌也运行原版回合末清理；不保留过期费用层。",
+    "observed": "失败02192ab7e98d410291b5d7f6b7dea043：模拟消耗堆FOLLY残留临时星能层；修复后896d94be19b9473e988aa997fc30c2c7 Passed。",
+    "evidence": "coverage/unattended/axebot-folly-star-cleanup.json; docs/issues/axebot-reports-20261003.md"
+  },
+  "AXEBOT-JOSS-DEFERRED-FORK": {
+    "status": "Passed",
+    "level": "HeadlessRootStateAndForkContract",
+    "procedure": "金纸根含1次已计数与2次延迟消耗，捕获后推进live，核对父子/兄弟、指纹与续用文本。",
+    "expected": "延迟计数从主线程根冻结，在StateStore按值Fork；各分支只消费自身计数一次，live保持。",
+    "observed": "e7c0363924e74211b043ebfaca50ac0c Passed；根计数、live推进隔离、父子/兄弟Fork、指纹/续用文本及逐分支消费通过。初次e3faadd893c74974af6060628bbf13ec在测试自身的隔离域内捕获根，触发Power显示变量保护；修正测试捕获时点后通过。",
+    "evidence": "coverage/unattended/axebot-joss-deferred-relics.json; src/Testing/UnattendedTestRunner.JossPaperDeferred.cs; docs/issues/axebot-reports-20261003.md"
+  },
+  "AXEBOT-TRANSFORM-SENTINEL": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferential",
+    "procedure": "原力+转换间隔攻击牌，以及SEANCE选择抽牌堆的一张牌；不运行搜索，120秒上限。",
+    "expected": "逐张变牌使用原版逐张移除/插入；压缩继续使用独立整批入口；有序状态与RNG一致。",
+    "observed": "8512e36aecd74d93a15f3adb34502190 Passed，两项原生差分均通过。初稿将整批时序应用到逐张调用，在2224c8a468a44f90bb98e79247f7af63出现原力H[1]偏差；最终按原版调用方式分开入口。",
+    "evidence": "coverage/unattended/axebot-transform-sentinel.json; docs/issues/axebot-reports-20261003.md"
+  },
   "B015-T016-AFTERIMAGE-ROUTE-20261002": {
     "status": "PassedWithDocumentedBoundaries",
     "level": "OriginalRootNativeDifferentialAndProductionPostprocessing",

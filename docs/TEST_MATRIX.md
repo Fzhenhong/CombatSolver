@@ -1,5 +1,21 @@
 # CombatSolver 测试清单
 
+## 巨斧机器人近期报告（2026-10-03）
+
+当前主线 `7df1f048` / 0.48.0 上建立三项失败基线。最终通过五项原生完整状态/RNG差分及一项根/Fork合同：金纸+音乐盒在回合末生成虚无复制牌；压缩+两张间隔状态牌的燃料顺序；子弹时间后的 FOLLY 临时星能清理；原力+逐张变牌；SEANCE 抽牌堆选牌变换；金纸延迟计数在根、live推进、父子/兄弟、指纹和续用中的隔离。
+
+| 场景 | 最终 runId | 范围 |
+|---|---|---|
+| AXEBOT-JOSS-FINAL | `26b7755643d241f091c62f57c9f75a3a` | 原生回合末完整状态/RNG |
+| AXEBOT-COMPACT-FINAL | `b45e21f166d042f1ae59079d001e375d` | 原生有序手牌/生成牌/状态/RNG |
+| AXEBOT-FOLLY-FINAL | `896d94be19b9473e988aa997fc30c2c7` | 原生回合末完整费用层/状态/RNG |
+| AXEBOT-TRANSFORM-FINAL | `8512e36aecd74d93a15f3adb34502190` | 原力与SEANCE两项原生完整差分 |
+| AXEBOT-JOSS-DEFERRED-FORK | `e7c0363924e74211b043ebfaca50ac0c` | 根冻结、live推进、指纹/续用、父子/兄弟及逐分支消费 |
+
+复跑在仓库根目录使用 `tools/run-unattended-test.ps1`：前三项分别传 `coverage/unattended/axebot-joss-late-ethereal.json`（IRONCLAD）、`axebot-compact-order.json`（DEFECT）、`axebot-folly-star-cleanup.json`（SILENT）至 `-MonsterMoveChecksPath`；变牌哨兵使用 `axebot-transform-sentinel.json`（IRONCLAD）。均为 `-EncounterId MockMonsterEncounter -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。Fork 合同使用精确 `-ScenarioId AXEBOT-JOSS-DEFERRED-FORK -RelicsPath coverage/unattended/axebot-joss-deferred-relics.json`，其他参数相同。没有运行搜索，因此不带增量搜索开关。
+
+Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。CoverageCatalog 的状态字段验证未通过：既有 JSON 使用工具未定义的 `PassedWithDocumentedBoundaries` / `PassedWithDocumentedPerformanceRegression`，临时补足解析后又遇 `InfusedCore` 重复构造；相关临时修改已撤回。完整问题包部署、全场零重算和性能未验证；倾泻包中途缺历史 applier ID 1、原生录制恢复停在输入26，最小重建请求120秒超时，未扩大时间帽。详细失败基线及材料边界见 [报告记录](issues/axebot-reports-20261003.md)。本轮创建的无头实例均按清理开关删除。
+
 ## 0.48.0 全平台发布定稿（2026-10-03）
 
 用户要求全平台发版，本次只更新发布记录、索引与渠道元数据，版本仍为 0.48.0，行为源码、依赖和测试输入保持。复用下文已经通过的社区 PR 合并、五角色推广、T015 最小交接与两回合插药原生执行结果；从定稿提交进行一次带私有连接配置的正式 Release 构建、五文件最小 ZIP 和本地部署，统一脚本发布三个渠道。不重复行为测试，不执行完整门禁或可见 Steam 测试。构建与渠道完成以本轮命令及发布状态为准。

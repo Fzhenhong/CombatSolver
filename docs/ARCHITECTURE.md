@@ -513,6 +513,8 @@ Search在首回合、EndTurn及已知可能嵌套/重复的卡牌回放建立捕
 
 补货在 `AfterDeathMirrors` 按原版 Hook 时点调用领域生成入口：旧个体仍在阵容中，替补生命判重读取分支最大生命和 Niche RNG；`DeathPowerSupport` 的后续清理保留死亡生命周期，生成替补由该镜像独占。
 
+金纸在 `AfterCardExhaustedMirrors` 逐次记录虚无消耗，延迟计数属于 `JossPaperPredictionState`。主线程从原版 `_etherealCount` 捕获，StateStore 按值 Fork，指纹和续用文本共同保留；`SimulatedCombatState.TriggerRelicsAfterSideTurnEnd` 消费该计数。这样包含 AutoPostPlay 中音乐盒新生成的虚无牌，不依赖回合末开始时的手牌预统计。`CardChoiceSupport.TransformCardBatch` 对应压缩的原版整批变牌命令；`TransformCards` 对应原力、SEANCE 等逐张调用，二者复用单张移除/生成结算入口。
+
 温柔在 `AfterCardPlayedMirrors` 中按每次真实分派更新既有分支计数并施加力量/敏捷损失。`TriggeredPowerSupport` 的历史扫描保留伤害补偿，温柔由镜像独占；外层出牌扫描包含内层自动牌历史时也只结算各自的 Hook。回合末恢复继续由 `EndTurnPowerSupport` 消费该计数。
 
 苦无、手里剑和彩虹戒指的属性施加在各自 `AfterCardPlayed` 镜像内完成：在原版 `IsInProgress` 门内更新计数，按每次 `PowerCmd.Apply` 的 `IsEnding` 门决定是否施加，不能延到其他监听器之后。彩虹戒指的领域生命周期仅同步既有激活投影，不再施加属性；末击不会提前中断整组监听器。

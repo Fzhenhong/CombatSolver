@@ -75,6 +75,11 @@ internal sealed partial class UnattendedTestRunner
                 _ = await runner.AssertB015BoundariesAsync(combatState, player);
                 return Observation(combatEnded: !CombatManager.Instance.IsInProgress);
             }
+            if (request.ScenarioId == "AXEBOT-JOSS-DEFERRED-FORK")
+            {
+                runner.AssertJossPaperDeferredFork(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "RUN-STATISTICS-SATURATION")
             {
                 await RunStatistics.AssertHealthySaturationIsolationAsync(request.EvidenceDirectory

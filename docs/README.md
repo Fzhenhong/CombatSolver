@@ -1,5 +1,7 @@
 # CombatSolver 文档导航
 
+- [巨斧机器人报告排查](issues/axebot-reports-20261003.md)：六份后台包、三项重算偏差修复、最小原生验证与仍未解决的倾泻/内存报告。
+
 - [五角色、所有原版遭遇的已知回血剪枝](performance/native-healing-bound-generalization-20261003.md)：千足虫 PR 的加速机制、通用政策、遗物目标保路与跨成员复用。
 
 - [社区 PR 合并与已知回血策略审计](refactoring/merge-audit-20261003.md)：六个正式 PR 完整分支的审查、最小验证、多成员胜利界复用和未验证边界。
