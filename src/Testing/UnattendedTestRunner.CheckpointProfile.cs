@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using MegaCrit.Sts2.Core.Combat;
 
 namespace CombatSolver;
@@ -6,6 +8,7 @@ internal sealed partial class UnattendedTestRunner
 {
     private void AssertCheckpointProfileContract(CombatState combat)
     {
+        AssertCheckpointPortfolioSettingsContract(combat);
         if (_protocolHost.BeamWeightPerturbationOverride != null)
             throw new InvalidOperationException("Profile contract requires no separate CLI weight override.");
         SolverSettingsSnapshot settings = SolverSettings.Capture();
@@ -42,6 +45,67 @@ internal sealed partial class UnattendedTestRunner
         finally
         {
             _protocolHost.ApplyRecordedSearchProfile(previous);
+        }
+    }
+
+    private void AssertCheckpointPortfolioSettingsContract(CombatState combat)
+    {
+        SolverSettingsData original = SolverSettings.Current;
+        JsonObject? previousImport = _checkpointImport;
+        SolverSettingsSnapshot before = SolverSettings.Capture();
+        SolverSearchProfile profile = before.Profile;
+        try
+        {
+            foreach (var flags in new[]
+            {
+                (Novelty: true, Beam: false, Early: false, Reward: false),
+                (Novelty: false, Beam: true, Early: true, Reward: true),
+            })
+            {
+                SolverSettingsData current = original with
+                {
+                    UseNoveltyPortfolio = !flags.Novelty,
+                    UseBeamWidthPortfolio = !flags.Beam,
+                    UseEarlyTurnExploration = !flags.Early,
+                    PredictPotionReward = !flags.Reward,
+                };
+                JsonObject recorded = JsonSerializer.SerializeToNode(current, UnattendedTestFiles.JsonOptions)!.AsObject();
+                recorded["potionPolicy"] = JsonSerializer.SerializeToNode(current.PotionPolicy, UnattendedTestFiles.JsonOptions);
+                recorded["profile"] = JsonSerializer.SerializeToNode(profile, UnattendedTestFiles.JsonOptions);
+                recorded["searchMaxDegreeOfParallelism"] = before.SearchMaxDegreeOfParallelism;
+                recorded["useNoveltyPortfolio"] = flags.Novelty;
+                recorded["useBeamWidthPortfolio"] = flags.Beam;
+                recorded["useEarlyTurnExploration"] = flags.Early;
+                recorded["predictPotionReward"] = flags.Reward;
+                _checkpointImport = new JsonObject { ["resolvedPolicy"] = recorded };
+                SolverSettingsData restored = ApplyRecordedCheckpointPolicy(current);
+                if (restored.UseNoveltyPortfolio != flags.Novelty
+                    || restored.UseBeamWidthPortfolio != flags.Beam
+                    || restored.UseEarlyTurnExploration != flags.Early
+                    || restored.PredictPotionReward != flags.Reward)
+                    throw new InvalidOperationException("Recorded portfolio/reward switches were replaced by current settings.");
+                SolverSettings.ApplyForTesting(restored);
+                SearchPolicySnapshot frozen = SolverController.CaptureSearchPolicy(SolverSettings.Capture(), combat, false, null);
+                if (frozen.UseNoveltyPortfolio != flags.Novelty
+                    || frozen.UseBeamWidthPortfolio != flags.Beam
+                    || frozen.EarlyTurnExplorationDepth != (flags.Early ? 2 : 0)
+                    || frozen.PredictPotionReward != flags.Reward)
+                    throw new InvalidOperationException("Recorded portfolio/reward switches changed during policy capture.");
+                foreach (string key in new[] { "useNoveltyPortfolio", "useBeamWidthPortfolio", "useEarlyTurnExploration", "predictPotionReward" })
+                    recorded.Remove(key);
+                SolverSettingsData legacy = ApplyRecordedCheckpointPolicy(current);
+                if (legacy.UseNoveltyPortfolio != current.UseNoveltyPortfolio
+                    || legacy.UseBeamWidthPortfolio != current.UseBeamWidthPortfolio
+                    || legacy.UseEarlyTurnExploration != current.UseEarlyTurnExploration
+                    || legacy.PredictPotionReward != current.PredictPotionReward)
+                    throw new InvalidOperationException("Unrecorded legacy switches changed their existing fallback.");
+            }
+            _completedChecks.Add("CheckpointPolicy:RecordedTrueAndFalseSwitches:FrozenPolicy:LegacyFallback");
+        }
+        finally
+        {
+            _checkpointImport = previousImport;
+            SolverSettings.ApplyForTesting(original);
         }
     }
 }
