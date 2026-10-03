@@ -88,7 +88,7 @@ Smart 开局药水的有序候选仍按原 `PowerPrefixKey` 去重并限制 8／
 
 夜魇开局与能力路线深搜的固定前缀求解也经请求派发。夜魇仍用可选药水业务诊断；能力路线成员保留原宽度／评分变体、专用进度阶段、工作量采样和计时起止点。`PowerRoutes` 不再直接构造固定前缀求解器。
 
-默认关闭的前两回合实验从原独立时间和追加节点额度生成续搜 profile，保留分层交错与最多 24 个排名位置；固定前缀执行使用调度器的可选后验入口。该实验额度暂不改写为普通请求窗口，协调器各分片已无直接固定前缀求解器构造。
+默认关闭的前两回合实验从原独立时间和追加节点额度生成续搜 profile，保留深度交错；每层先续搜前 4 个排名位置，仅当该层在前 4 个内严格改进当前完整结果时才扩展至最多 6 个。达到相应窗口上限时记录 `rank_limit`，可接受目标和零战损停止优先。固定前缀执行使用调度器的可选后验入口。该实验额度暂不改写为普通请求窗口，协调器各分片已无直接固定前缀求解器构造。
 
 P3 的前缀求解请求均声明 `ContinuationPurpose` 并通过 `FrontierContinuationScheduler` 构造；原各模式在候选生成、合法性、准入与取优上的不同控制流继续由对应模式负责。`BlockPotionInsertion.ReplayAdjustedRoute` 是所属 solver 内的结构调整回放，继续通过既有 `ReplayAction` 计入该 solver 工作量；它不是新的独立请求预算池。
 
@@ -263,7 +263,7 @@ RitsuLib 0.6.0 自身拥有 BaseLib 目标类型的外部登记查询、按程�
 
 开发监控沿用 Runtime 的进度快照，Testing 的 `DevelopmentMonitorPublisher` 每秒最多一次复制纯标量并原子写入会话文件。独立窗口进程只读该文件，不访问模拟状态或游戏 UI；游戏始终以 `--headless` 启动。`StrategySessionRunner` 管理窗口进程身份、跨包状态和 stop 清理；关闭窗口不改变游戏请求生命周期。Windows 使用 WPF，Linux 入口使用独立终端显示同一状态协议。
 
-离线无人请求可显式开启 `EarlyTurnExplorationDepth`（1 或 2）；玩家性能设置也可开启前两回合探索，默认关闭，并随请求冻结深度 2、总计 40 分钟的上限。常规搜索结束后，`CombatBeamSolver` 在指定回合末剪枝前按完整状态键去重、按开局动作和跨回合特征选取有界前沿；`CombatSearchCoordinator.EarlyTurnExploration` 只持有动作前缀，重新从原根严格模拟并完整续搜。追加阶段有请求总时限、共享节点上限和现有内存压力准入；候选必须完整胜利且满足强制用药指令，才按原终局政策替换结果。无人测试协议和开发会话负责离线时限与超时记录，Search 不读取包路径或会话状态。
+离线宿主可显式开启 `EarlyTurnExplorationDepth`（1 或 2）并设置该追加通道的请求累计时限；玩家性能设置也可开启前两回合探索，默认关闭，并随请求冻结深度 2、总计 40 分钟的上限。常规搜索结束后，`CombatBeamSolver` 在指定回合末剪枝前按完整状态键去重、按开局动作和跨回合特征选取有界前沿；`CombatSearchCoordinator.EarlyTurnExploration` 只持有动作前缀，重新从原根严格模拟并完整续搜。追加阶段有请求总时限、共享节点上限和现有内存压力准入；候选必须完整胜利且满足强制用药指令，才按原终局政策替换结果。`SolverResult.EarlyTurnExploration` 只记录侦察、逐 rank 续搜成本与改进，不参与排序或状态等价；无人测试 Writer 和离线宿主把它输出为指标。无人测试协议和开发会话负责离线时限与超时记录，Search 不读取包路径或会话状态。
 
 开发中的反馈修复：`GrowthOpportunityPolicy` 在主线程从当前可用的物理牌实例冻结逐来源目标。能力牌和消耗牌的基础次数都是每个尚可打实例一次；遗传算法、巨镰与黏糊强化额外要求 `DeckVersion`，固定 `GetEnchantedReplayCount` 逐次加入目标。单一致命来源按敌人数和实体数取可证明上限；多个致命来源竞争、动态重放、复制、消耗回收或第三方缺少目标计算器时写入不可证明原因。第三方计算器只收到不可变 `GrowthOpportunityCardSnapshot`，不能读取实机对象；负次数直接拒绝策略捕获。`SearchPolicySnapshot.GrowthTargetSatisfied` 比较整个收益向量，任一来源不可证明都禁止成长早停。早停还要求实际用药不超出用户必要数量。偷窃分项沿既有 SimulatedCombatState 计数投影为 SimulationSnapshot → SolverSnapshot → OverlaySnapshot，只读 UI 不重新读取真实战斗。Runtime 在选牌部署失配时暂停并交还手动选择，只有退出场景才取消原生选择；缺失战斗通知的面板恢复由 MonitorCombatPresence 在稳定回合负责。
 `SearchPolicySnapshot.CanStopAtHpTarget` 统一默认开启的战损目标早停与实际成长目标。主线程冻结 `GrowthOpportunityTargets`，额度本身不代表持有对应牌；目标向量和不可证明原因进入路线缓存与问题包。Phases 在已准入候选提交时检查完整胜利、全部有界成长目标、遗物、偷窃和强制用药要求，命中后排空当前父节点/并行批次，释放后续工作并从达标候选收尾；Coordinator 在补充搜索结果边界沿用同一开关与阈值。profile `StopPortfolioAtHpTarget` 默认将同一达标判定延伸至宽度/能力组合的已选incumbent及能力前缀入口/成员边界；玩家关闭达标早停仍保留原搜索。Runtime 在根捕获中、变量主线程物化后冻结 `HasVisibleHealingSource`（牌/玩家Power/可搜索药水的Heal、HealPercent、RegenPower变量或已有RegenPower），Search 只读该布尔值和已选路线的实际回血；任一存在则保留追加审计。它不改变终局比较，也不是穷举治疗来源或收益上界，不能将“达标”称为全目标最优。“不考虑局外收益”从统一入口移除成长目标。
@@ -276,6 +276,8 @@ RitsuLib 0.6.0 自身拥有 BaseLib 目标类型的外部登记查询、按程�
 `BuildAcceptedEndTurnNodes` 是回合层/软时间预算收尾及普通串行回合尾的共同入口，复用 raw EndTurn 批次生成、跨回合剪枝与循环出口准入。全部直接选择分支在转置准入前结算临时观测；批次持有未转交快照，迭代器提前结束或生成失败时统一释放。
 
 `StateEvaluation.BuildProjectedDeathPrevention` 每次按分支药水槽和遗物原序读取瓶中精灵、蜥蜴尾巴的可用状态，不缓存跨快照的可变结果。意图预测携带孤注一掷的一次性致死状态：玩家实际承受正数攻击伤害后先消费该状态并置为死亡，再按原版顺序尝试保命；全额格挡不触发。Engine 的 `HookMirrors.ModifyHpLost` 返回只读修正者集合，空结果共享空数组，非空 List 独占；后续通知先取得原监听表，空集合只跳过通知遍历。回调顺序、成员身份与重复成员只调用一次的规则保持。
+
+早期回合探索的外部生命界由 `CombatSearchCoordinator.EarlyTurnExploration` 选择，经既有 `ContinuationSearchRequest.PrimaryIncumbent` 注入。完整胜利的成长/遗物/死亡保护门禁属于协调器原有 builder；ETC 额外保留强制药水、风险、战略额度及失窃资源保全条件。已选有药而前缀未用药时旁路，保留无药资格基线。初始外部界将回合设为最大值，只剪严格更差的战略生命下界；成员内部既有界更新规则保持。Search 不读取 Runtime 设置，不新增分支状态、暂停句柄或新的预算所有者。
 
 ### 3.1 请求级编排
 

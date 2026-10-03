@@ -2,6 +2,10 @@
 
 - [B015后续证据](community/b015-follow-up.md)：T016余像前移失效目标回退、T018队列故障隔离，以及其余主题来源/原生对照边界。
 - [B015阶段一证据](community/b015-stage-one.md)：五主题分诊、T018统计消费者失败隔离及未验收边界。
+- [静默猎手基础根的生命界认证](performance/silent-recovery-bound-20261001.md)：窄范围来源证明、原生治疗旁路及两个固定根的工作量和评分尾键取舍。
+
+- [早期回合探索实机复核与后续候选](performance/early-turn-log-review-20261001.md)：19 场日志保留、外部生命界命中、达标停止与候选预算研究切口。
+
 - [社区贡献指南](../CONTRIBUTING.md)：整批自动认领、环境与 PR 验收。
 - [夹具与开发脚手架](community/testing-guide.md)：最小差分、问题包回放、生成场景、策略脚本与离线宿主。
 - [社区任务资料](community/task-data.md)：报告范围、分类去重、公开材料与后续批次。

@@ -7,6 +7,18 @@
 - 对照：同一命令在把 `EnchantmentOnPlayMirrors.HandleInky` 回退成 `ApplyPower`（无 cardSource）后 `Failed`，错误与失败基线逐字段一致；恢复 `ApplyPowerFromSource(..., context.PreviewCard)` 后 `Passed`。Release 构建 0 警告 0 错误，实例由启动器输出删除。
 - 本主题只覆盖生成牌附魔来源与灯的一次性消费时点；跨回合续用对账的泛化状态一致性仍按 T006 归口，未在此重派生。
 
+## 生命界认证与边际剪枝日志（2026-10-02）
+与上游合并后，primary incumbent 使用上游逐分支剩余治疗估计作为基线；仅当本分支的固定战后治疗证书更紧时，再取两者较小值。`primary_incumbent_certified_healing_bound_pruned` 只统计固定战后上界相对该基线新增剪掉的候选；根没有上游动态证书时，基线为完整缺血余量。因此总剪枝数仍包含上游已认证动态上界的收益，而该边际字段不把它们归到本分支。
+
+此轮只增加诊断数据，不改变认证门禁、搜索候选、剪枝条件或预算。`COMBAT_ROOT_CAPTURE` 与自动搜索入口的 `TURN_SETUP_ROOT_CAPTURE` 均记录 `strategic_hp_recovery_bound`（根认证是否通过）、`strategic_hp_recovery_bound_reason`（认证顺序中首个不满足的稳定原因码）、`strategic_hp_recovery_bound_source`（如首因来自特定角色、敌人、遭遇 Modifier、药水、遗物、Power 或卡牌，则记录其 ID；URI 转义；无单一来源时为 `-`）和 `strategic_hp_recovery_bound_postcombat_heal_hp`（已认证根允许计入的固定战后治疗量；未认证时为 `unbounded`）。原因码包括 `unsupported_character`、`non_native_enemy`、`encounter_modifier`、`run_mod_subscriber`、`combat_mod_subscriber`、`base_lib_card_modifier`、`adapted_on_play`、`potion_present`、`unsupported_relic`、`unsupported_player_power`、`card_enchantment`、`card_affliction`、`unsupported_card` 和 `certified`。
+
+搜索结果及 ETC 成员日志中的 `primary_incumbent_certified_healing_bound_pruned`／`incumbent_certified_healing_bound_pruned` 是边际数：同一候选在认证上界下被 primary incumbent 剪掉，而把未来治疗潜力放宽到完整缺血余量时不会被剪掉。原有 `primary_incumbent_pruned`／`incumbent_pruned` 总数不变。边际数只覆盖 incumbent 这一剪枝点检查过的保留节点，不能解释为所有层的剪枝总数、减少的展开数或节省时间；旧日志不会包含这些字段。源码审阅确认该比较不改变原先的剪枝谓词。首次实机验证 session `15052-1603d6f4ec2a4f54b4ebfdefb92e6576` 含26个战斗文件、26个 Begin/End、25个保留事件、无截断；150条搜索结果和292条 ETC 成员记录均带新边际字段且为0。26条根捕获中，18条 `COMBAT_ROOT_CAPTURE` 均旁路（药水8次、未认证遗物10次），另8条自动入口 `TURN_SETUP_ROOT_CAPTURE` 缺少认证字段，故该局不能完整统计根认证原因；字段已补到该入口，旧日志无法回补。最终 Release 构建成功（0警告／0错误），五文件精确部署至 `D:\SteamLibrary\steamapps\common\Slay the Spire 2\mods\CombatSolver`。未运行战斗测试或可见游戏；新一局日志可完整核验认证和实际命中。
+
+本轮 Release 使用 `dotnet build CombatSolver.csproj -c Release -p:CopyModOnBuild=false -p:SteamRoot=D:/SteamLibrary`，0 警告／0 错误；构建阶段先因默认 Steam 路径不匹配失败，显式指向已确认的游戏目录后成功。成功构建后精确覆盖 manifest、DLL、MemoryCleaner、LICENSE 与第三方声明文件至本地 Mod 目录。未运行战斗测试或启动可见游戏；来源 ID 字段待新日志核验。
+
+新进程 `52388-9f74d33df71a4a2ab7303229aad4bb09` 加载了带来源字段的本地 0.47.3：24 份战斗 JSONL 均有 Begin/End，23 次保留事件，无截断或 Error；33 次根捕获均有来源字段，但全部因 `encounter_modifier` 旁路且 source 为 `-`。138 条搜索结果均含边际剪枝字段且计数为0。94 条 ETC 成员共展开457,043节点、累计59.805秒、17条 `selected=true`；EndTurn的10条成员耗时11.183秒／76,642节点，有1条严格采用。日志证明来源字段接线完整，但暴露 Modifier 类别尚未记录身份。本次进一步把首个遭遇 Modifier 的 `Id.Entry` 写入来源字段；新改动的构建、部署和未执行项接续记录在本段末尾。
+
+该续接改动 Release 构建 0 警告／0 错误，五文件再次精确覆盖至本地 Mod 目录。未运行战斗测试或可见游戏；上面的新进程早于本次续接，因此还没有 Modifier ID 字段的实机验证。
 ## 无人测试隔离静音（2026-10-02）
 
 | 验证 | 实际结果 |
@@ -18,7 +30,8 @@
 
 配置阶段检查通过 PowerShell AST 截取 `settingsPath` 初始化至 `resolvedProgressSnapshotPath` 前的真实语句，并在临时目录执行；临时目录已清理，没有新增永久测试或复制实现。未启动或停止游戏、未重跑战斗验证；上述证据证明配置生成行为，不替代 FMOD 实际音频输出验收。
 
-## 部分重战斗场景搜索优化（2026-10-02，合并前回归待完成）
+## 部分重战斗场景搜索优化（2026-10-02，上游合并后回归）
+上游 `96ee2669` 合并后 Release 构建通过（0 警告／0 错误），PowerShell 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=239` 通过。最小原生合同 `REMAINING-HEALING-BOUND`（run `40560a794030405686c40d2bcf088373`）Passed：动态剩余治疗估计、Bundle of Joy 未知未来牌回退、再生药水与Power上界、未知分支的保守回退、incumbent剪枝、原生七次再生差分和摄政 strict incremental 搜索均通过；最终 63 HP、零战损、一回合胜利。无头实例 `F:\rider\CombatSolver\.local\headless-instances\wt-e01189cc8f079ad9` 已由脚本清理。该检查覆盖上游动态界及 incumbent 接线；本分支固定战后治疗边际计数仍缺少正命中实机日志，完整 29 根质量／内存回归沿用合并前已记录的证据，不将其称为本次重跑。 另有 `HEAL-BOUND-SAFE-ROOT`（run `01bde09fc40c4a29890936d39bb2be1c`）Passed：Ironclad 固定战后上界根认证、根捕获线程隔离与 incumbent 过滤合同通过；实例已清理。
 
 本 PR 在上游 `88298ae5` 上保留 AfterCardPlayed 捕获参与过滤、安全边界保留、已证明无额外治疗路线的战损下界、组合成员共享无药完整胜利、开局完整路线，以及原生感染棱柱／灵魂枢纽／摄政虱虫场景的受限治疗闭包。未纳入伤害目标过滤原型或已撤回实验。
 
@@ -69,6 +82,75 @@
 ## 重复牌与费用状态（2026-09-29）
 
 `CARD-COST-IDENTITY-CONTRACT` 原生11组费用身份合同通过；`CHOICE-COMBINATION-CONTRACT`（`1cc7c04da24d427b9c9cff7bb0f0080c`）1200组/5069条完整选择与旧枚举器一致。覆盖能量/星能修改的时效、顺序、隐藏层、Fork隔离、实际选牌去重及续用字段定位。目标短搜两对ABBA的73个非时序字段、完整路线、根与剪枝计数一致。命令、原生最终runId、微基准限制和未采用实验见[重复牌研究](performance/duplicate-choice-pruning-20260929.md)及[证据](performance/duplicate-choice-pruning-20260929.json)。未作可见性能、Windows游戏或整场质量结论。
+
+## 静默猎手基础根的生命界认证（2026-10-01）
+
+三项最小原生验证在同一隔离进程通过：基础／升级四牌与起始遗物的 `HEAL-BOUND-SAFE-ROOT`（`5f52ea1c811e48528784550f0f773611`）认证true并完成四牌／弃牌／怪物行动的MoveState及RNG差分；鲜血药水根／实际治疗（`e6fe6a56234b45009e141cabb8b7e14d`）与炼金术根（`66b652b2541a4c6b830a0d5e53dc04eb`）认证false。后两请求复用PID47772，最后请求带清理开关并由启动器删除实例。首轮缺旧布局设置未进入行为测试；一次错误目标夹具由Player改为None后通过，没有改生产结算。
+
+复用行为源码512bd7c9已有基线，候选两次独立进程Coordinator完整请求的根、政策和预算相同，主搜／ETC各90秒、外层120秒，未触发时间边界。胜利、战损59／53、0药水、第17回合保持；展开85,950→77,409及62,229→56,485。第一根路线变化且Score尾键降低100,000，生产完整比较器判较差、去尾键判同等，故只报告主要战斗结果保持，不报告完整排序等价。第二根路线／质量相同。当前Release0/0、Windows结构门禁238通过，23:07:19完成五文件本地与既有创意工坊副本部署。原生夹具参数、尾键取舍、实际耗时及未执行项见[证据](performance/silent-recovery-bound-20261001.md)。
+
+## 早期回合探索的外部生命界（2026-10-01）
+
+用户提供了部署后自行完成的实机 session `55876-53693100b43f42a4a990050c8d4c4ee1`，本轮只读取日志，未由 agent 启动游戏。19 场日志保留完整生命周期事件；12 次探索开始均出现当前外部界标记，60/96 个成员注入界，其中 5 个灵魂异鱼成员命中 2,219 条剪枝。8 次入口跳过、2 次探索内达标停止，rank 从未超过 5；82 次续用无漂移，83 条实机回合损血匹配执行时有效计划。没有本局旧 DLL 同根对照，不作速度、全状态等价或全局质量不降结论；末战全部成员旁路新界。详见[实机复核与未实现候选](performance/early-turn-log-review-20261001.md)。本轮文档阶段复用下述已成功的同源码构建、合同及部署证据，不重复执行。
+
+当前任务基线为合并版 `c647b1f1`，候选只改变 ETC 成员的外部 incumbent 接线。完整胜利、成长/遗物、死亡保护门禁复用 `BuildPrimarySearchIncumbent`；另检查强制药水、战略额度、风险及失窃资源政策。已选有显式用药而前缀未用药时不注入。外部界的回合设为 `int.MaxValue`，只剪严格更差的已证明战略战损下界；原内部收紧仍可建立自己的回合界。没有降低节点预算、改变候选顺序或终局比较，也没有增加搜索暂停/恢复能力。
+
+`dotnet tools/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll --check-early-turn-continuation-bound`：143 条断言通过，覆盖 incumbent 有/无的 128 组门禁组合、严格更差/相等/更低的生命界、相等生命界的晚回合及负战略战损。此纯合同验证门禁和剪枝谓词，不代替真实成长/遗物生命周期测试。
+
+四组均在独立普通 .NET 进程运行生产 Coordinator：Custom、8,000 节点、card/pile/hand 分支 32/18/24、DOP1、主搜/ETC 累计时限均 90,000 ms、depth2、组合/NoGC/增量关闭，外层每根 120 秒截止。先重新运行合并版基线再运行候选；以下不是引用旧提交的历史结果。全部根戳、搜索政策、预算、完整动作路线与完整质量记录相同，四根均完整胜利。
+
+| 固定根 | Beam/药水 | 战损/药水/结束回合 | 总展开 A→B | 总转移 A→B | ETC 尝试 A→B |
+|---|---|---|---|---|---|
+| SILENT / TERROR_EEL_ELITE / CSOPT20261001D | 96 / Smart | 59 / 0 / 17 | 85,950→85,950 | 247,414→247,414 | 10→10 |
+| SILENT / TERROR_EEL_ELITE / CSOPT20261001 | 96 / Smart | 53 / 0 / 17 | 62,229→62,229 | 181,831→181,831 | 8→8 |
+| SILENT / TERROR_EEL_ELITE / CSOPT20261001D，注入 DEXTERITY_POTION | 96 / RequireAtLeastOne | 26 / 1 / 14 | 70,255→70,255 | 230,165→230,165 | 8→8 |
+| IRONCLAD / TERROR_EEL_ELITE / CSOPT20261001D | 64 / Smart | 66 / 0 / 9 | 28,588→25,853 | 74,198→67,224 | 12→12 |
+
+铁甲战士 ETC 展开 25,900→23,165，请求展开减少 9.6%、转移减少 9.4%；中途严格改进次数 3→2，最终路线保持，不把中途改善次数当作最终质量。三组静默猎手虽然在合资格成员注入了界，但治疗收益上界较宽，均无生命界剪枝、无工作量收益。正药水根四条未用药前缀旁路、四条已用药前缀注入，保护无药资格路径；原始请求另含 `schemaVersion=1`、`enemyCurrentHp=140`、`fixedSearchBudget=true`、`timeoutSeconds=120`，其余为上表角色/遭遇/种子与药水。
+
+一次 A/B 的无头搜索秒数分别为 29.263→30.568、22.879→22.750、29.936→29.260、11.008→10.662。未做 ABBA/可见 Steam 性能验收，不由此报告稳定提速或帧时间收益。新增日志的 `incumbent_pruned` 合计包含成员原本的内部生命界剪枝，不能当作外部界的净新增数量。
+
+基线 DLL、全部命令输出、根/路线/质量、日志与 `comparison.json` 保留于忽略目录 `.local/early-turn-incumbent-20261001/`。最新玩家千足虫只有日志/路线缓存及当前工具无法导入的 `.mcr`，没有导出的开战存档/检查点；本轮没有恢复真实千足虫或女王根。Mod 与离线宿主 Release 构建均 0 警告/0 错误，Windows 结构门禁通过（238 个 Search 文件），最终 manifest、DLL、Windows MemoryCleaner 和两份许可文件已部署至确认的本地 Mod 与既有创意工坊安装目录，原文件保留本地备份。未运行原生整场部署、Linux 或可见游戏验证。
+
+## 下一版本（开发中）：早期回合探索测量入口（2026-10-01）
+
+OfflineSearchHarness 的 Coordinator 模式可用 `--early-turn-exploration-depth 1|2` 开启早期回合探索，并用 `--early-turn-exploration-budget-ms` 指定从请求开始计的 5,000..2,390,000 ms 累计时限；`run_plan.py` 支持相同的 plan 字段并按时限扩充进程超时。结果增加总体尝试/严格改进/首次改进深度与 rank，以及逐 rank 的工作量和成绩。该入口只打开离线测试请求，不改变玩家默认开关。
+
+早期回合探索现在也遵守既有 `HasReachedAcceptableBattleHpLoss` 停止目标：基线已经达标时不启动探索；侦察或续搜得到达标完整路线后结束后续 rank 派发。可接受目标仍要求胜利、战损阈值、成长/遗物目标、失窃资源、死亡保护和药水使用条件全部满足，因此 Smart 下仍保留降低非必需药水消耗的搜索空间。变更后 Release 构建与本地五文件部署通过；本轮未运行战斗场景，当前运行日志/性能影响尚待实机观察。
+
+问题反馈页新增可选的本进程详细战斗日志保留开关。开启后新战斗开始时不再删除上一场的 JSONL 文件，并写入 `COMBAT_LOG_RETAINED` 进程事件；默认关闭，已删除日志无法恢复。只改变本地详细文件保留，不改变候选日志量与搜索并行度；每场日志仍有 32 MiB 上限，问题包仍只导出当前/最近战斗详细文件。Release 编译（0 警告／0 错误）及本地五文件部署通过；未运行游戏交互或跨战斗保留验证。
+
+CombatSolver 与 OfflineSearchHarness 的 Release 编译均通过（0 警告、0 错误；显式使用本机确认的游戏/RitsuLib 路径并关闭构建自动复制），Python 批量运行器语法编译通过。按仓库要求完成最终源码的五文件本地 Mod 部署。本轮没有运行战斗场景或深度 0/2 固定根对照；逐 rank 运行数据和入口门禁尚未获得运行证据。后续策略收益结论仍需独立进程的完整请求 A/B 对照，本轮不做可见 Steam 性能结论。
+
+### 前两回合探索 rank 窗口（2026-10-01）
+
+保留每层前 8 个 rank，继续使用原来的深度交错顺序、共享请求时间/节点账本和完整路线比较；有更多候选时结果写 `stop=rank_limit`，可接受目标／零战损及预算停止原因优先。起始事件写入 `max_ranks_per_depth=8`。这会减少后续候选搜索，不能保证未搜索 rank 不含唯一更优路线。
+
+对已保留的实机日志回溯截断，每层取 rank 0..7 会在 6 次探索中保留 92/231 条续搜、4/4 次既有改进，预计少展开 630,178 个续搜节点（原续搜 1,002,801）；这是按既有结果做的反事实计数，不是重跑后的测量。
+
+OfflineSearchHarness 同根 `Coordinator` 对照：TERROR_EEL_ELITE、SILENT、seed `CSOPT20261001`、Custom beam 96 / 每 solver 8,000 nodes，完整胜利两侧均为 53 战损、0 药水，动作路线完全相同，`boundary=None`；rank 续搜 25→15，展开 181,920→108,788，转移 530,474→317,326。PHANTASMAL_GARDENERS_ELITE、seed `CSOPT20261001C`、Custom beam 64 / 1,500 nodes：两侧路线及 38 战损相同，续搜 48→16、展开 73,820→26,764、转移 375,559→137,345；两侧均触及 `NodeLimit` 且未胜，不能当作完整质量验收。零战损 `CORPSE_SLUGS_WEAK` 哨兵仍在入口跳过探索。
+
+候选 Release 编译成功（0 警告／0 错误）；只运行无头离线搜索，没有启动可见 Steam。实机日志和离线根尚不能排除 rank 8 之后出现独有好解，后续若有更多战斗日志应重点查看 rank 8+ 改进及 `rank_limit` 命中情况。
+
+### 前四 rank 无改进时关闭该层扩展（2026-10-01）
+
+候选策略每层先跑 rank 0..3；只有该层某次续搜产生满足强制用药条件的完整胜利、并严格优于当前结果，才继续 rank 4..7。严格沿用原深度交错、完整路线比较、共享时间／节点额度、可接受目标与零战损停止。起始事件现在写 `initial_ranks_per_depth=4`、`max_ranks_per_depth=8` 和 `rank_extension=after_improvement`；`stop=rank_limit` 表示至少一个前沿层仍有未调度候选。
+
+回算上一轮已分析的 6 组实机探索记录：适应策略会保留 64/231 次续搜，4/4 个已记录改进均保留，预计续搜展开 237,963（比未截断的 1,002,801 少 764,838；比统一 cap 8 再少 134,660）。这是对已完成工作量的反事实筛选，不是重新模拟，也不能证明 rank 4+ 不含未观测到的独有更优解。
+
+与统一 cap 8 的 OfflineSearchHarness 同根 `Coordinator` 对照：TERROR_EEL_ELITE / SILENT / `CSOPT20261001`，beam 96、每 solver 8,000 nodes：根与完整动作路线一致，均完整胜利、战损 53、0 药水、`boundary=None`；总展开 108,788→62,229、总转移 317,326→181,831、续搜 15→8 次（续搜展开 100,813→54,254），离线请求墙钟 16.77→11.48 秒。PHANTASMAL_GARDENERS_ELITE / SILENT / `CSOPT20261001C`，beam 64、每 solver 1,500 nodes：根与路线、38 战损一致，两侧均为 `NodeLimit` 且未胜；总展开 26,764→14,973、总转移 137,345→77,097、续搜 16→8 次（续搜展开 25,264→13,473），离线请求墙钟 10.83→7.24 秒。两根均是前 4 rank 没有严格改进，因此该实验只实测了收在 4 的路径，扩至 8 的路径目前仅由日志回算支持。墙钟仅用于无头同机探索，不外推实机帧时间。
+
+扩展路径单独对照：TERROR_EEL_ELITE / SILENT / `CSOPT20261001D`，beam 96、每 solver 8,000 nodes。统一 cap 8 与自适应候选根、完整路线相同；深度 2 / rank 1 两侧都找到 59 战损的完整胜利，0 药水、`boundary=None`、结束回合 17。候选仍将深度 2 扩到 rank 7、深度 1 收在 rank 3；严格改进保留。续搜 16→12 次、续搜展开 123,170→92,616、总展开 131,170→100,616、总转移 378,010→289,200、离线请求墙钟 20.46→16.31 秒。该根验证了扩展分支与一次真实改进的保留；单一种子仍不能证明整体策略质量不降。
+
+最终恢复自适应源码后的 Release 构建为 0 警告／0 错误，`git diff --check` 通过，本地 `mods/CombatSolver` 五文件部署成功。所有运行均为 OfflineSearchHarness；未启动可见 Steam。
+
+### 改进后尾部 rank 上限收至 5（2026-10-01）
+
+保留每层 rank 0–3；严格改进才启用尾部，最多续搜至 rank 5（`max_ranks_per_depth=6`）。用户最新一局的深度 2 扩展层在 rank 0 与 rank 3 改进，rank 4–7 未改善，因此该窗口保留已观测到的两次改进。
+
+与现行 4/8 自适应策略同根对照：TERROR_EEL_ELITE / SILENT / `CSOPT20261001D`，beam 96、每 solver 8,000 nodes。两边路线动作序列相同（69 项），均完整胜利、战损 59、0 药水、`boundary=None`；首次改进均在深度 2 / rank 1。cap 6 把续搜 12→10、续搜展开 92,616→77,950、总展开 100,616→85,950（−14.6%）、总转移 289,200→247,414（−14.4%）。cap 8 的 rank 6、7 均未改善。此为单次独立进程对照，耗时仅作观察，不构成稳定提速结论；其他战斗中的 rank 6+ 仍可能包含独有更优路线。
+
+候选 Release 构建 0 警告／0 错误；OfflineSearchHarness 在固定根达到 M2、完整胜利且结果边界为 `None`。最终五文件已部署到本机游戏 `mods/CombatSolver`；本轮无可见 Steam 验证。
 
 ## PR #144 最终修复与合并验证（2026-09-28）
 
