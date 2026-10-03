@@ -655,7 +655,13 @@ internal static partial class CombatSearchCoordinator
             if (policy.IncludeTurnSetup)
                 return CapturePassResult(passResult, null, false);
             SearchPassContext auditContext = passContext;
-            if (passResult.DeterministicBlockPotionInserted)
+            // Smart 无强制指令时主路线应无药。插入药由确定性路线引入；开目标变体等预审计
+            // continuation 也可能把带插入药的首回合前缀带回主路线。两种情况都先重派生无药
+            // 基线再走补充审计，避免 Smart 梯度收到带药起点。
+            bool needsPotionFreeAuditBaseline = passResult.DeterministicBlockPotionInserted
+                || initialPotionPolicyOverride == SolverPotionPolicy.Disabled
+                    && passResult.ExplicitPotionCount > 0;
+            if (needsPotionFreeAuditBaseline)
             {
                 SearchPolicySnapshot potionFreePolicy = beamPolicy with
                 {

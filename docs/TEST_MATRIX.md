@@ -1,5 +1,17 @@
 # CombatSolver 测试清单
 
+## B014 T015 智能药水审计追加（2026-10-03）
+
+完整分支来源 `yM7-1/CombatSolver:fix/batch-b014` / `a9162efd`。最终生产变动为 `cf10d513` 的预审计无药基线资格修复；完整合并历史保留，维护者移除 `0833dd1b` 按文本缺失自动删除费用子状态的宽松回放比较。直接编译作者 helper 的反例证明当前无修改牌对修改费用牌被误判相等、多张旧格式牌转换不完整；费用与星能严格差异合同加入既有 `REPLAY-BOUNDARY-CONTRACT`。
+
+`SMART-AUDIT-POTION-BASELINE` / `24b1580a6ee5488e93df1df4f18a0a28` Passed（23.42 秒）：原版最小铁甲/爬虫场景，两次真实搜索共用冻结根，DOP1/800节点/strict incremental；在实际主结果发布入口清除插药标记，实际带药交接 1 次，Smart 审计完成，控制与候选 HP 指标相同、1 瓶药、T2 获胜，真实战斗和根未改。随后执行既有历史/原生失败传播及新增费用与星能漂移合同。不是原包完整 SearchOnly 或真实自动部署验收。
+
+准备失败保留：`e2b6bdac…` 将 unattended 请求误传为生成场景配置，启动阶段拒绝 `scenarioId`，未运行生产路径；`2dafc6f0…` 的测试跳过公共 Solve 入口，缺少请求级 `PortfolioTelemetry` 而失败。修正调用参数与夹具上下文后上述最终请求通过，未为此修改生产算法或预算。所有请求超时 120 秒，启动器均成功删除各自隔离实例。
+
+最终 Release 构建 0 警告/0 错误，Windows 门禁 `REFACTOR_BOUNDARIES_OK search_files=246`、diff 空白与中英日志链接检查通过。原始 T015 包、重度矩阵、逐怪回归及可见 Steam 未重跑；作者原包与哨兵数字保留为贡献者证据，不记作本轮实跑。
+
+`BLOCK-POTION-ROUTE-INSERTION` / `d4510f7c9b744a87ae61633b6b1bcce3` Passed（23.50 秒）：沿既有提交夹具执行真实两回合原生部署，确定性格挡药插入为 true、用药 1 瓶、预测节省 9 HP、T2 胜利、实际终局 HP 36、零计划外重算。请求总展开 44、转移 99；不将这次小场景耗时作为提速结论。启动器成功删除 `.local/headless-instances/b014-t015-sentinel-20261003`，前述目标实例也已清理。
+
 ## 0.48.0 版本与玩家日志（2026-10-03）
 
 本次版本由 `0.47.3` 按项目“大版本”规则更新至 `0.48.0`，玩家日志以最近已发布 `v0.47.3` 为基线。只改版本、文档与索引；L0 核对项目/manifest 版本一致、中英八项对应、作者与 PR 链接、官方游戏译名及文档引用，再从提交进行一次 Release 构建与五文件本地部署。战斗行为复用下文六 PR 合并及五角色推广的既有结果，不将这些历史结果写成本轮重跑。未执行重度测试、逐个怪物回归、性能配对或可见游戏测试。本版本尚未发布。
@@ -69,11 +81,11 @@
 - `PREDICTED-MONSTER-SCALING`：修改前 `40b0ce9f7d0941d58dfb45570901fee0` Failed（单人预测怪构造仍调用 `ScaleMonsterHpForMultiplayer`，搜索 worker 会执行第三方 postfix）；修改后 `3daf40f0d1f441aaa1df9b7edfd5d134` Passed（HP 17∈14..18，多人缩放调用 0 次）。命令入口：`tools/run-unattended-test.ps1 -ScenarioId <ID> -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 999 -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。
 - `CARD-CONTINUATION-EXPANDED` / `af3944d5d9a6495499b87dc4923d2a0e` Passed：原版 HEIRLOOM_HAMMER+0/+1 选牌续执行合同通过；T013 代表包运行环境含 RebalancedSpire，按第三方内容记录。
 - `SMOKE-001 -VerifyForkBoundaries` / `7fc97fd1a99c4b61889bc68063919952` Failed：停在既有“回合结束 Power 挂起”检查；去本批改动复跑同样失败。该场景内的生成怪生命检查未执行，T011 由专用夹具覆盖。本轮未提升版本、未发包、未部署可见 Mod。
-- `DYNAMIC-VAR-BRIDGE`（T014）`ba6168def5814f94a054ea9b73a2cd5b` Passed：`DynamicVarSetAccess` 用一次性解析的缓存委托读取 `DynamicVarSet` 内部字典（字段缺失时回退公开枚举），28 处直访全部改走桥接；夹具对牌与 Power 各比较键序列、值引用与枚举序列，强制公开回退时逐项一致，live 战斗不变。命令：`tools/run-unattended-test.ps1 -ScenarioId DYNAMIC-VAR-BRIDGE -CharacterId DEFECT -EncounterId FUZZY_WURM_CRAWLER_WEAK -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。结构门禁新增 `src` 内禁止 `._vars` 直访（桥接文件除外）。编译产物 `System.Reflection.Metadata` 扫描：`_vars` 字段引用 0（基点源码直访 28 处已全部收口）。
-- T011/T012 变基后复检：`PREDICTED-MONSTER-SCALING` `96651321` Passed（HP 17、缩放调用 0）；`DISPLAY-NAME-SUMMON` `9dad3061` Passed（sneaky1 左起1/sneaky2 左起2/fat 左起1）。
-- B014 固定哨兵（`INITIAL-TOOLBOX-INFUSED-CORE`，与 `coverage/unattended/initial-toolbox-infused-core.json` 同配置：1500ms 固定预算、增量等价、首次准备断言后停止；同机各 3 次）：基点 `1a3d1a37` 681.91/678.10/719.58ms，均值 693.20ms（组内极差 41.48ms）；批次尖端 714.97/703.43/693.00ms，均值 703.80ms（组内极差 21.97ms）。两组展开 130、转移 1882、boundary None，`InitialPolicy` 除耗时与 GC 采样外逐字段相同（Turns=2、Shuffles=1、HpLost=0、ProjectedBattleHpLost=0、Block=5/5、Pruned=0、ChoiceBranches=16、Actions=4、CombatEndedTurn=2）；均值差 +10.6ms（+1.5%）小于基线组内极差，不构成稳定耗时增加。
+- `DYNAMIC-VAR-BRIDGE`（T014）`ba6168def5814f94a054ea9b73a2cd5b` Passed：`DynamicVarSetAccess` 用一次性解析的缓存委托读取 `DynamicVarSet` 内部字典（字段缺失时回退公开枚举），28 处直访全部改走桥接；夹具对牌与 Power 各比较键序列、值引用与枚举序列，强制公开回退时逐项一致，live 战斗不变。命令：`tools/run-unattended-test.ps1 -ScenarioId DYNAMIC-VAR-BRIDGE -CharacterId DEFECT -EncounterId FUZZY_WURM_CRAWLER_WEAK -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。结构门禁新增 `src` 内禁止 `._vars` 直访（桥接文件除外）。编译产物 `System.Reflection.Metadata` 扫描：`_vars` 字段引用 0（基点源码直访 28 处已全部收口）。含 T015 修复的尖端复跑 `b98d4d7b` Passed。
+- T011/T012 变基后复检：`PREDICTED-MONSTER-SCALING` `96651321` Passed（HP 17、缩放调用 0）；`DISPLAY-NAME-SUMMON` `9dad3061` Passed（sneaky1 左起1/sneaky2 左起2/fat 左起1）；含 T015 修复的尖端复跑 `e266efe1`/`89abbaec` Passed。
+- B014 固定哨兵（`INITIAL-TOOLBOX-INFUSED-CORE`，与 `coverage/unattended/initial-toolbox-infused-core.json` 同配置：1500ms 固定预算、增量等价、首次准备断言后停止；同机各 3 次）：基点 `1a3d1a37` 681.91/678.10/719.58ms，均值 693.20ms（组内极差 41.48ms）；批次尖端 714.97/703.43/693.00ms，均值 703.80ms（组内极差 21.97ms）。两组展开 130、转移 1882、boundary None，`InitialPolicy` 除耗时与 GC 采样外逐字段相同（Turns=2、Shuffles=1、HpLost=0、ProjectedBattleHpLost=0、Block=5/5、Pruned=0、ChoiceBranches=16、Actions=4、CombatEndedTurn=2）；均值差 +10.6ms（+1.5%）小于基线组内极差，不构成稳定耗时增加。含 T015 修复后的同窗口复测：基点重跑 797.66/806.14ms（均值 801.90），尖端 780.56/799.93/820.84/787.96ms（均值 797.32），展开/转移/质量字段仍相同，均值差 −0.6% 小于尖端组内极差；两个窗口一致说明无稳定耗时增加。
 - T013 结论：代表包 `e7f1cf14e6ad4a60be7f4f3724929b81` 运行环境载入 `RebalancedSpire`/`AutoRebalancedSpire`（日志含 `[AutoRebalancedSpire] 未建模的结算内选择：传家宝锤`），按“不主动适配修改游戏内容的第三方 Mod”归档排除；原版 `CARD-CONTINUATION-EXPANDED` 合同通过。
-- T015 状态（未验证）：代表包 `ba79d87499a4455bbba4a51baf381eea` 的 0.47.2 续用戳缺 `cost-state`/`stars` 子状态，三个检查点 RestoreOnly 均为 `native_replay_continuation_mismatch`，运行复现受旧材料阻塞。现场日志链：更早代的 `BLOCK_POTION_ROUTE_INSERTED` → generation 18 `SEARCH_INTERIM_RESULT potions=1 projected_battle_hp_lost=0` → `SMART_LAYER_MEMORY_SAMPLE layer=0` → `AuditSmartPotionUse → SearchSmartPotionGradient` 起点断言（`ExplicitPotionCount != ForcedDirectiveCount`）；本代无插入记录，primary 带药来源未闭环（候选：跨代 incumbent／复用），保留为未验证项。
+- T015 修复（Smart 审计无药基线）：旧包 `ba79d87499a4455bbba4a51baf381eea`（0.47.2）的续用戳缺 `cost-state`/`stars` 子状态，测试端在 `ReplayContinuationMatches` 增加同形态 legacy 容错（记录侧整段缺失时从重放文本剥离该子状态）后 `start` 检查点 `RestoreOnly` 恢复通过。`SearchOnly` 复现：修改前 `c1a7645235564bbba22d7406dd32e6fd` Failed（`assert_initial_solver_result`，`Smart 梯度搜索必须从仅满足强制用药的结果开始`）→ 修改后 `75d9d046e7ce4aae85a303cb03341191` Passed（`search_completed`，展开 289,973、转移 2,274,934、boundary None，约 98 秒）。根因：`OPENING_TARGET_VARIANT` 预审计块（`CombatSearchCoordinator.cs`，2026-09-27 `b277fce5` 引入）缺少 `ExplicitPotionCount == 0` 门，从带插入药的首回合前缀派生 continuation，候选 `DeterministicBlockPotionInserted=false` 且带 1 瓶 BLOCK_POTION 回到主路线，Smart 梯度断言拒绝。修复：预审计前对「插入药或 Smart 无强制指令下带药」的主路线统一按 Disabled 重派生无药基线再走补充审计。命令：`dotnet run --project tools/CheckpointTool/CheckpointTool.csproj -c Release -- batch .local/issue-bundles/B014/T015/raw --mode SearchOnly --selector start --timeout 300 --output <目录> --game-root "D:\Steam\steamapps\common\Slay the Spire 2" --ritsu-root "D:\Steam\steamapps\workshop\content\2868840\3747602295"`。
 
 ## 部分重战斗场景搜索优化（合并前上游证据）
 

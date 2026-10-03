@@ -762,6 +762,13 @@ internal sealed partial class UnattendedTestRunner
                 runner._completedChecks.Add("TestSubjectOriginalReportTurn2");
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "SMART-AUDIT-POTION-BASELINE")
+            {
+                await runner.AssertSmartAuditPotionBaselineAsync(combatState, player);
+                await runner.AssertReplayBoundaryContractAsync(player);
+                runner._completedChecks.Add("SmartAuditPotionBaselineAndStrictReplayCosts");
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "REPLAY-BOUNDARY-CONTRACT")
             {
                 await runner.AssertReplayBoundaryContractAsync(player);
