@@ -3724,5 +3724,240 @@
       "Other fixed roots and full candidate regression",
       "Target native full-combat deployment"
     ]
+  },
+  "researchVariableSetCloning": {
+    "baseCommit": "e7a07619",
+    "baseDllSha256": "f266bf00e97852baf8b72fdf459bf7f0582e052549827145b2126d9ac27c7447",
+    "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+    "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
+    "status": "Both native contracts passed; original and owner-scoped full request initial screens provide no meaningful benefit and both fail original 2x goal; isolated research, not production",
+    "nativeSourceHashes": {
+      "DynamicVarSet.cs": "b9a0006423f3cd44c4a674f6f5a4af6d44de97724d7b8618cb709f5ace430fee",
+      "DynamicVar.cs": "ebb3098425489bfbfb195d64b1b0ad8815b5d6baefd34dc41505eea11c1b224c",
+      "CardModel.cs": "5a9be9595a3c6b40d8659a2dd9c10b9faa048fe69b3e3301c9b23ee69190bac7",
+      "PowerModel.cs": "6609615b36ad77eea826617305fc6b731e91fdf78cabf5962ae24075d416e7be",
+      "AbstractModel.cs": "c4143ca644e0ff990f65f23049287a26f652a22f30dba3f98fbd93f46f223b67"
+    },
+    "build": {
+      "seconds": 14.8,
+      "warnings": 0,
+      "errors": 0,
+      "dllSha256": "50010d2f48277ce7a93132868d9055a85fc3f359f468b12d0f1c6054091e2316"
+    },
+    "sourceHashes": {
+      "src/Engine/Common/NativeModelCloneConcurrency.cs": "10988852418de050d43fa8fb1e1c0b830c8bc8e49e58a6f84aa29fda0ac920e7",
+      "src/Engine/Common/PredictionDynamicVarSetCloning.cs": "0ed154a49b7d3927d54b906b73de4fe226761c2175d018fec2a2c7685d983873",
+      "src/Engine/Common/PredictionUtils.cs": "8739f48f8ade2642fc1be306e725a0ab4823f14f5234b1cc939b23036e62862b",
+      "src/Runtime/PredictionDynamicVarSetClonePatch.cs": "4920b0fb103b0952f1ebde4bcff0c249d8f62095148e99e644878402f0efe74a",
+      "src/Testing/UnattendedTestRunner.VariableSetClone.cs": "cf7a039aea4bda2706d1cfe744a85ed423ede3d31dd8c01f5a4a50224f3a4916",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "7e3292afe5bb8096d5eee68b41f1b476111a418ca5fbfc83c1d51f6ebe578ba9",
+      "tools/OfflineSearchHarness/ModRuntime.cs": "ce361bd8eba1e03931c3a80442fef6626153d9a7cb2cee9aa92b05f6b9063a0d",
+      "src/Runtime/Entry.cs": "2a9c55b4eabdeca8cb713f47e3bfa511cd7d03882ae0c0f4bb7a25fa2ed98e2f"
+    },
+    "preNativeCorrections": [
+      "Routed new patch through the existing Ritsu IPatchMethod runtime installer and corresponding offline patch list.",
+      "Initial host-copy command used a duplicated relative path; failed before deleting or copying files, corrected to the authoritative root."
+    ],
+    "failedNativeContracts": [
+      {
+        "runId": "71646656ca6b4cbda02a1b89c0f45d91",
+        "status": "Failed",
+        "mainAssemblyHash": "37A90445DA0554CE36DFE9AED85D20661812CFB9702600400E9FF3C249D96773",
+        "completedChecks": [],
+        "error": "System.InvalidOperationException: Fixture did not reach eligible native card cloning.\n   at CombatSolver.UnattendedTestRunner.AssertModelCloneConcurrency(CombatState combat)\n   at CombatSolver.UnattendedTestRunner.AssertVariableSetClone(CombatState combat)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()",
+        "reason": "new patch missing from explicit Entry runtime registration, corrected after diagnostic",
+        "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/variable-clone-native/result.json",
+        "instanceRemoved": true
+      },
+      {
+        "runId": "508caebc190943b0a10d90b61718f693",
+        "status": "Failed",
+        "mainAssemblyHash": "E34D87A94DCA0ACF2FFE45076BB69226EF1CA3E33C7FEBDE4C14ECAC0DF954D2",
+        "completedChecks": [
+          "VariableCloneMetadata:MVID=8a76776c-0ce1-4d4f-90bd-8cce653dad8e:constructor=none:clone=none"
+        ],
+        "error": "System.InvalidOperationException: Fixture did not reach eligible native card cloning.\n   at CombatSolver.UnattendedTestRunner.AssertModelCloneConcurrency(CombatState combat)\n   at CombatSolver.UnattendedTestRunner.AssertVariableSetClone(CombatState combat)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()",
+        "reason": "new patch missing from explicit Entry runtime registration, corrected after diagnostic",
+        "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/variable-clone-native-diagnostic/result.json",
+        "instanceRemoved": true
+      }
+    ],
+    "host": {
+      "baselineSource": "/home/ltlly/Code/nmslmod/CombatSolver-perf-stage1-20261002/tools/OfflineSearchHarness",
+      "changes": [
+        "one optional patch type in ModRuntime.SearchPatchTypes"
+      ],
+      "buildWarnings": 0,
+      "buildErrors": 0,
+      "buildSeconds": 10.35,
+      "dllSha256": "de371ab4c73f0e41c4894c60b1cd6e01642acbc37915237583eebbe18ef27ce9"
+    },
+    "nativeContract": {
+      "runId": "9d30b70de8034ef487d335be285f1a30",
+      "status": "Passed",
+      "mainAssemblyHash": "50010D2F48277CE7A93132868D9055A85FC3F359F468B12D0F1C6054091E2316",
+      "elapsedMilliseconds": 27282.7587,
+      "completedChecks": [
+        "VariableCloneMetadata:MVID=8a76776c-0ce1-4d4f-90bd-8cce653dad8e:constructor=none:clone=CombatSolver.PredictionDynamicVarSetClonePatch.Prefix",
+        "DynamicVarMetadata:LiveBaseline=3SourceEntries:2000SparseClones=0Entries:CustomTooltipAndUpgrade:ForkIndependent:Allocated=177376",
+        "VariableSetClone:NativeCardAndPower:0/1/2/4/9Variables:OrderedValuesAndOwner:ExclusiveMutation:FrameworkMetadata:ConcurrentClone:UnknownPatchAndBridgeFallback:LiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=80:maxHp=80"
+      ],
+      "launcherExitCode": 0,
+      "instanceRemoved": true
+    },
+    "scope": "Only qualified prediction model cloning replaces the native variable-set Clone iteration, preserving native per-variable Clone and owner initialization. No mutable sharing, no score/budget/healing change. Live, unknown stage/patch/variable, version mismatch and public bridge fallback retain the native method.",
+    "unverified": [
+      "Final serial alternating acceptance",
+      "Other fixed roots and full candidate regression",
+      "Target native full-combat deployment"
+    ],
+    "initialPrototype": {
+      "build": {
+        "seconds": 14.62,
+        "warnings": 0,
+        "errors": 0,
+        "dllSha256": "d9e0b833f9d19d6538a34450eeda1cce990b0ebffd530ed9dae451ae2e5d555a"
+      },
+      "sourceHashes": {
+        "src/Engine/Common/NativeModelCloneConcurrency.cs": "10988852418de050d43fa8fb1e1c0b830c8bc8e49e58a6f84aa29fda0ac920e7",
+        "src/Engine/Common/PredictionDynamicVarSetCloning.cs": "de7dd8f254b848dacf5850bdea6bf5bd14346bcab9ca4f999a3735ab128ca055",
+        "src/Engine/Common/PredictionUtils.cs": "06f25580ca4b0001c6814c116dc627d8af1ae32774236b2f66db9e5af766282a",
+        "src/Runtime/PredictionDynamicVarSetClonePatch.cs": "4920b0fb103b0952f1ebde4bcff0c249d8f62095148e99e644878402f0efe74a",
+        "src/Testing/UnattendedTestRunner.VariableSetClone.cs": "0bd9719999a6039b2af8ea862fb7f8b17e68cb22ef029c25e5772c49ca6f6e0f",
+        "src/Testing/UnattendedTestRunner.Executor.cs": "7e3292afe5bb8096d5eee68b41f1b476111a418ca5fbfc83c1d51f6ebe578ba9",
+        "tools/OfflineSearchHarness/ModRuntime.cs": "ce361bd8eba1e03931c3a80442fef6626153d9a7cb2cee9aa92b05f6b9063a0d",
+        "src/Runtime/Entry.cs": "2a9c55b4eabdeca8cb713f47e3bfa511cd7d03882ae0c0f4bb7a25fa2ed98e2f"
+      },
+      "nativeContract": {
+        "runId": "691669b8c7c844d4aed28279c79f7f08",
+        "status": "Passed",
+        "mainAssemblyHash": "D9E0B833F9D19D6538A34450EEDA1CCE990B0EBFFD530ED9DAE451AE2E5D555A",
+        "elapsedMilliseconds": 27379.6586,
+        "completedChecks": [
+          "VariableCloneMetadata:MVID=8a76776c-0ce1-4d4f-90bd-8cce653dad8e:constructor=none:clone=CombatSolver.PredictionDynamicVarSetClonePatch.Prefix",
+          "DynamicVarMetadata:LiveBaseline=3SourceEntries:2000SparseClones=0Entries:CustomTooltipAndUpgrade:ForkIndependent:Allocated=177376",
+          "VariableSetClone:NativeCardAndPower:0/1/2/4/9Variables:OrderedValuesAndOwner:ExclusiveMutation:FrameworkMetadata:ConcurrentClone:UnknownPatchAndBridgeFallback:LiveRngIsolation",
+          "NativeOutcome:combatEnded=False:turn=1:hp=80:maxHp=80"
+        ],
+        "launcherExitCode": 0,
+        "instanceRemoved": true
+      },
+      "performanceScreen": {
+        "scene": "dev-01-silent-elite",
+        "configuration": {
+          "profile": "VeryHigh",
+          "dop": 16,
+          "budgetMilliseconds": 300000,
+          "potionPolicy": "Smart",
+          "searchMode": "Coordinator",
+          "portfolio": true,
+          "productionBudget": true,
+          "noGcRegionGigabytes": 16,
+          "diagnosticSampling": false
+        },
+        "serialOrder": [
+          "A",
+          "B"
+        ],
+        "sameRoot": true,
+        "samePolicy": true,
+        "sameQuality": true,
+        "A": {
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/variable-clone-silent-screen-A/harness-result.json",
+          "wallSeconds": 23.6176152,
+          "peakProcessWorkingSetBytes": 20869931008,
+          "quality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "expanded": 109546,
+          "transitions": 627623,
+          "workerAllocatedBytes": 23322181064
+        },
+        "B": {
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/variable-clone-silent-screen-B/harness-result.json",
+          "wallSeconds": 23.4438248,
+          "peakProcessWorkingSetBytes": 20836085760,
+          "quality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "expanded": 109546,
+          "transitions": 627623,
+          "workerAllocatedBytes": 23360131456
+        },
+        "singleSampleSpeedupVsCurrent": 1.0074130565930521,
+        "singleSampleSpeedupVsOriginal": 1.5837953114203445,
+        "singleSamplePeakIncreaseVsCurrent": -0.001621723041970058,
+        "status": "not final acceptance; unchanged outcomes and negligible screening speed benefit; original 2x failed"
+      }
+    },
+    "refinement": "Scope permits only the exact qualified cloned model as owner; removes repeated variable-type enumeration while rejecting nested calls for other owners.",
+    "performanceScreen": {
+      "scene": "dev-01-silent-elite",
+      "configuration": {
+        "profile": "VeryHigh",
+        "dop": 16,
+        "budgetMilliseconds": 300000,
+        "potionPolicy": "Smart",
+        "searchMode": "Coordinator",
+        "portfolio": true,
+        "productionBudget": true,
+        "noGcRegionGigabytes": 16,
+        "diagnosticSampling": false
+      },
+      "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/variable-clone-silent-owner/harness-result.json",
+      "wallSeconds": 23.6083869,
+      "peakProcessWorkingSetBytes": 20778213376,
+      "quality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "expanded": 109546,
+      "transitions": 627623,
+      "workerAllocatedBytes": 23351024800,
+      "sameRoot": true,
+      "samePolicy": true,
+      "sameQuality": true,
+      "singleSampleSpeedupVsCurrent": 1.0003908907473895,
+      "singleSampleSpeedupVsOriginal": 1.5727554769953385,
+      "singleSamplePeakIncreaseVsCurrent": -0.004394726171583541,
+      "singleSampleWorkerAllocationChangeVsCurrent": 0.001236751224975352,
+      "status": "initial screen only, failed 2x, no final alternating acceptance or full regression"
+    }
   }
 }
