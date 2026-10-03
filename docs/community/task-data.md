@@ -4,9 +4,9 @@
 
 **建议优先修复 Bug 批次，再处理更优世界线优化批次。** 优化任务先确认模拟与部署正确，再在同根、同政策、同预算下比较路线质量。
 
-## 本地审核任务
+## 最新发布批次
 
-[2026-10-04 的更优世界线任务稿](drafts/2026-10-04/README.md)包含 Q008～Q010，共15个新遭遇主题、15个代表包。按0.44.0及以上报告的折算战损改善量从高到低选择，范围9～3 HP；每主题记录前后预计总用药、额外瓶数、折算公式和静态证据。当前阶段为本地资料审核，后续社区资料发布使用审核后的批次正文和材料。
+[2026-10-04 的更优世界线任务资料](../archive/community/2026-10-04-worldlines/README.md)包含 Q008～Q010，共15个新遭遇主题、15个代表包。按0.44.0及以上报告的折算战损改善量降序选择，三批总量分别为34、25、19 HP；每主题记录前后预计总用药、额外瓶数、折算公式和静态证据。算法首因与当前版本实际收益由认领者验证。
 
 ## 已发布材料与历史素材
 
@@ -49,7 +49,7 @@ python tools/community/classify-community-reports.py --reports .local/community-
 
 ## 下载和公开副本
 
-当前提供9个批次、45个主题、53个代表包。Q004、Q005已弃用，关闭议题与原始静态证据保存在发布账本的历史记录中。
+当前提供12个批次、60个主题、68个代表包。Q004、Q005已弃用，关闭议题与原始静态证据保存在发布账本的历史记录中。
 
 资料存放在独立 [community-tasks-2026-10-02 Release](https://github.com/Torch1230/CombatSolver/releases/tag/community-tasks-2026-10-02)，Release 正文提供各批次议题与整批下载：
 
@@ -62,10 +62,13 @@ python tools/community/classify-community-reports.py --reports .local/community-
 - [Q003：O006～O010](https://github.com/Torch1230/CombatSolver/issues/183)，5 个代表包。
 - [Q006：O021～O025](https://github.com/Torch1230/CombatSolver/issues/186)，5 个代表包。
 - [Q007：O026～O030](https://github.com/Torch1230/CombatSolver/issues/187)，5 个代表包。
+- [Q008：O031～O035](https://github.com/Torch1230/CombatSolver/issues/208)，5 个代表包，总折算改善 34 HP。
+- [Q009：O036～O040](https://github.com/Torch1230/CombatSolver/issues/209)，5 个代表包，总折算改善 25 HP。
+- [Q010：O041～O045](https://github.com/Torch1230/CombatSolver/issues/210)，5 个代表包，总折算改善 19 HP。
 
 批次 ZIP 按主题编号分目录，包含 `theme.json`、`static-evidence.json` 和 `reports/*.zip`。把代表报告 ZIP 交给回放入口。旧十项批次已经迁移，关闭只表示归并；旧 ZIP 和排名 CSV 保留历史用途，当前认领以五主题批次为准。
 
-`community-task-index.json` 保存当前 0.47.x 报告归属、主题、代表和批次，也保留历史条目及迁移状态。`theme-registry.json` 是稳定机制、匹配规则、证据等级和已发布资料去向的维护入口。认领单位仍为整批，PR 按主题编号记录进展。
+`community-task-index.json` 保存各批次的报告归属、主题、代表和批次，也保留历史条目及迁移状态。`theme-registry.json` 是稳定机制、匹配规则、证据等级和已发布资料去向的维护入口。认领单位仍为整批，PR 按主题编号记录进展。
 
 [export-community-bundle.py](../../tools/community/export-community-bundle.py) 生成公开副本，清理 `report.json` 和 `diagnostics/` 中的昵称、联系方式、玩家统计字段及个人路径。**`replay/*` 保留原字节**，用于保存牌序、RNG、模型身份、原生状态与录制事件；发布材料静态检查中的单人玩家 `net_id` 均为游戏测试身份 1。公开副本的 ZIP 字节与原包不同。
 
