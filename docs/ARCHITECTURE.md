@@ -468,6 +468,8 @@ Smart 层间使用 `SmartLayerMemoryForecast` 的同窗分配和转移高水位�
 
 `SimPlayerCombatState.Phase` 在主线程根捕获，Fork 按值复制，阶段推进写入分支状态并进入搜索状态键。它决定 UnceasingTop 的触发窗口；续用只在稳定 Play 阶段比较，最小跨回合夹具另显式核对原生阶段。结束回合按 AutoPostPlay、BeforeSideTurnEnd、球被动、手牌回合末效果的顺序推进。
 
+`CombatPredictionSimulator.EffectScope` 镜像 CombatManager 按玩家记录的卡牌/药水效果嵌套。卡牌效果作用域覆盖全部重复执行及完成 Hook，来源牌移动到结果牌堆和手空检查在自身作用域退出后进行；外层效果仍活动时推迟手空遗物。普通 Fork 要求效果作用域为空。嵌套执行步骤保存不可变的玩家身份序列，恢复时重建独占列表并检查作用域平衡；自身手动选牌检查点只接受单层根卡，恢复该卡的效果作用域。它属于动作事务，稳定根、指纹和跨回合续用均无需保存非空值。
+
 `PredictionUtils.CloneModelForSimulation` 对卡牌在 DeepCloneFields 前清除 CardModel 事件委托；原版克隆阶段会重新附着附魔并发出事件，不能让这些事件调用源卡的 UI 订阅者。深拷贝和 AfterCloned 仍使用原版实现。`NativeModelCloneConcurrency` 仅在模拟隔离域放行无附魔/灾厄、动态变量已物化且均为原版类型、克隆阶段未改写的原版卡牌；同时严格核对变量 Clone 的 BaseLib/Ritsu 补丁及稀疏元数据复制保护。Power 还必须继承 PowerModel 的克隆阶段及默认 InitInternalData，并核对 AbstractModel.DeepCloneFields 与 Power.DynamicVars 的物化保护补丁；不共享可变 Power，不触发惰性变量创建。未知类型、阶段或补丁保留原锁。类型与补丁证据仅在线程当前最外层隔离域内缓存，不持有模型，跨域重新核对；不支持求解过程中动态变更补丁。
 
 ### 4.1 基础层

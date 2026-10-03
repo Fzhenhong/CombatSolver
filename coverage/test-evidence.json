@@ -1,4 +1,20 @@
 {
+  "CASCADE-EMPTY-HAND-NATIVE": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndExecutionContinuation",
+    "procedure": "倾泻+、无尽陀螺、报告d9c106第6回合倾泻前有序牌堆与Shuffle状态；单动作、Instant、120秒上限，不运行Solve。",
+    "expected": "外层卡牌效果结束后触发手空，嵌套坚毅候选与原生一致；完整回放、执行检查点、完成后Fork及原生continuation/RNG一致。",
+    "observed": "e3bac4a083574686b1e9d018ccc23f80复现计划消耗BASH+1、原生仅STRIKE_IRONCLAD的NativeChoicePlanMismatchException；修复后53ba69afa54544f3a1322b42367d5e90 Passed。未恢复原包整场路线。",
+    "evidence": "src/Testing/UnattendedTestRunner.CascadeEmptyHand.cs; docs/issues/axebot-reports-20261003.md"
+  },
+  "EFFECT-SCOPE-ADJACENT-CONTRACT": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateAndForkContinuationContract",
+    "procedure": "同请求复用进程：无尽陀螺的Havoc/普通/重放出牌，五种嵌套续执行，手动自身选牌及九种选牌药水合同；Instant、120秒上限。",
+    "expected": "外层结果牌堆与手空边界正确；作用域事务拒绝普通Fork，完成后Fork正常；原生状态/RNG、兄弟/父根隔离、重捕获、DOP2和取消/异常保持。",
+    "observed": "260511f79ef34d9393ef2d5f6b07f672 Passed，请求37.4秒；全部上述合同及原生完整continuation对账通过，实例由启动器删除。性能未验收。",
+    "evidence": "src/Testing/UnattendedTestRunner.CascadeEmptyHand.cs; docs/TEST_MATRIX.md"
+  },
   "AXEBOT-JOSS-LATE-ETHEREAL": {
     "status": "Passed",
     "level": "HeadlessNativeFullStateDifferential",

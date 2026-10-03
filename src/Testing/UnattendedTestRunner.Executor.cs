@@ -433,6 +433,19 @@ internal sealed partial class UnattendedTestRunner
                     : ["Havoc", "Cascade", "DrawPrefix", "Repeat", "Decisions"]);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "CASCADE-EMPTY-HAND-NATIVE")
+            {
+                await runner.AssertCascadeEmptyHandAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "EFFECT-SCOPE-ADJACENT-CONTRACT")
+            {
+                await runner.AssertEmptyHandEffectBoundaryAsync(combatState, player);
+                await runner.RunCardExecutionContinuationContractAsync(combatState, player, ["Havoc", "Cascade", "DrawPrefix", "Repeat", "Decisions"]);
+                await runner.RunCardContinuationContractAsync(combatState, player);
+                await runner.RunPotionContinuationContractAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId is "TURN-EXECUTION-CONTINUATION" or "TURN-AFTER-EXECUTION-CONTINUATION" or "TURN-NESTED-EXECUTION-CONTINUATION")
             {
                 await runner.RunTurnExecutionContinuationContractAsync(combatState, player,
