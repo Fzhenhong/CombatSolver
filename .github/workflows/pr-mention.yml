@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Mention maintainer on open pull requests
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -40,6 +40,7 @@ jobs:
               });
               if (comments.some(comment =>
                 comment.user.type === 'Bot' && comment.body.includes(marker))) {
+                core.info(`PR #${pull.number} already mentioned`);
                 continue;
               }
 
