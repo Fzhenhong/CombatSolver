@@ -89,4 +89,12 @@ FranticEscape 同样不能普通随机生成，但 TheInsatiable 会明确生成
 
 下一批组件认证优先组合已有八池和已审查敌人动作、遗物、药水、Power、附着证明，逐来源取零、有限值或未知。未知初始来源即使暂时离场或在消耗堆仍永久拒绝。多份再生、药水额度、成长、条件回复及复活资源沿用既有政策；无法证明其他目标安全时继续原搜索。
 
+## 储君首领候选来源（2026-10-04）
+
+为尚未达到两倍的 `dev-08-regent-boss` 定向读取当前安装DLL的TheInsatiable、VexingPuzzlebox、MercuryHourglass、MembershipCard、SwiftPotion及SpeedPotionPower六个完整类型，并复用同哈希的SpeedPotion、TemporaryDexterityPower、SandpitPower和FranticEscape源码。提取时游戏SHA与上述固定版本相同；各项源码哈希、对象、时点、条件、次数、依赖和未完成证明保存于配套JSON的 `regentBossCandidateSourceReview`，不扩大运行时资格。
+
+TheInsatiable的初始行动明确给玩家生成六张FranticEscape，三张进抽牌堆、三张进弃牌堆；不能用 `CanBeGeneratedInCombat=false` 排除它。Sandpit在敌方侧开始递减，移除时可强制击杀玩家及Osty；其目标与死亡/保命回调仍须完整差分。VexingPuzzlebox在拥有者第一回合开始，从原生角色解锁池经GetDistinctForCombat生成一张本回合免费牌；MercuryHourglass每个拥有者回合开始伤害可命中敌人，MembershipCard只影响商店价格。SpeedPotionPower沿TemporaryDexterityPower的施加、数量变动和回合结束移除链调整敏捷；SwiftPotion给目标玩家抽三张牌。上述命名效果直接玩家回复量为零，生成、伤害、死亡、抽牌及Power监听闭包不能因此省略。
+
+该冻结根十八类普通初始牌及AscendersBane的初始/永久生命周期必须独立准入，不能直接把C58随机生成集合变成默认初始牌白名单。尚未完成这些组合证明、新原生合同或候选性能筛查；零回复认证能否带来收益仍是待测假设。
+
 本阶段新增运行时证书为 0。现有环境的根资格覆盖已诊断，旧主界剪枝计数已按其原版本复用；逐组件拒绝计数、严格证书独占剪枝和认证开销尚未测量。新审查机制也尚未新增原生/模拟合同或整请求性能测试。只做根来源、文档结构和数据口径检查，复用未变化源码的已验证构建及五文件部署，不重复跑既有成功场景。下一候选须先完成相关最小原生差分，再进行无插桩固定根性能对照。

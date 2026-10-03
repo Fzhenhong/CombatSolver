@@ -3959,5 +3959,241 @@
       "singleSampleWorkerAllocationChangeVsCurrent": 0.001236751224975352,
       "status": "initial screen only, failed 2x, no final alternating acceptance or full regression"
     }
+  },
+  "researchTransitionRepeatObservations": {
+    "baseCommit": "0049e2ca",
+    "runtimeDllSha256": "f266bf00e97852baf8b72fdf459bf7f0582e052549827145b2126d9ac27c7447",
+    "scene": "dev-01-silent-elite",
+    "status": "diagnostic opportunities only; no runtime reuse or caching implemented",
+    "hostSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-host/TransitionRepeatProbe.cs",
+    "hostSourceSha256": "c2c7fcf40dadc4e5cf6a267a44149fde5e94ae3c236a1cf32fe50036d8c43cbb",
+    "hostBuild": {
+      "warnings": 0,
+      "errors": 0,
+      "seconds": 2.78,
+      "priorFailure": "CS0119: probe method Path shadowed System.IO.Path; renamed GetPathKey before the strict run"
+    },
+    "fixedConfiguration": "same frozen root, VeryHigh, DOP16, Smart, Coordinator/Portfolio, 300000 ms production budget, 16 GiB No-GC; diagnostic instrumentation enabled",
+    "countsScope": "actual ReplayAction calls; includes probes and is not the coordinator work-ledger transition count",
+    "runs": [
+      {
+        "label": "transition-repeat-silent-diagnostic",
+        "scope": "initial state/action observation; worker grouping approximate",
+        "observationOnly": true,
+        "observations": {
+          "observationOnly": true,
+          "capacity": 500000,
+          "Total": 627688,
+          "Repeated": 195351,
+          "CrossMember": 181041,
+          "EqualOutputs": 195024,
+          "DifferentOutputs": 327,
+          "DifferentActionCounts": 158,
+          "Bypasses": 0,
+          "keys": 432337,
+          "actions": 2452,
+          "ByKind": {
+            "PlayCard": 464688,
+            "UsePotion": 4796,
+            "EndTurn": 158204
+          },
+          "CrossByKind": {
+            "EndTurn": 35803,
+            "PlayCard": 144460,
+            "UsePotion": 778
+          }
+        },
+        "harnessResult": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-diagnostic/harness-result.json",
+        "probeResult": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-diagnostic/transition-repeat-probe.json",
+        "diagnosticWallSeconds": 23.6761269,
+        "quality": {
+          "Won": true,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 40,
+          "StrategicHpDeficit": 40,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 0,
+          "Score": 9999619974,
+          "CombatEndedTurn": 4,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "notPerformanceAcceptance": true,
+        "memberCount": 37,
+        "mismatchWitnesses": [],
+        "completeObservationsRetained": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-diagnostic/transition-repeat-probe.json"
+      },
+      {
+        "label": "transition-repeat-silent-details",
+        "scope": "owner-aware member grouping and mismatch details",
+        "observationOnly": true,
+        "observations": {
+          "observationOnly": true,
+          "capacity": 500000,
+          "Total": 627665,
+          "Repeated": 195335,
+          "CrossMember": 188145,
+          "EqualOutputs": 195009,
+          "DifferentOutputs": 326,
+          "DifferentActionCounts": 157,
+          "Bypasses": 0,
+          "keys": 432330,
+          "actions": 2452,
+          "ByKind": {
+            "PlayCard": 464643,
+            "UsePotion": 4802,
+            "EndTurn": 158220
+          },
+          "CrossByKind": {
+            "PlayCard": 150655,
+            "EndTurn": 36696,
+            "UsePotion": 794
+          },
+          "Differences": {
+            "history": 326
+          }
+        },
+        "harnessResult": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-details/harness-result.json",
+        "probeResult": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-details/transition-repeat-probe.json",
+        "diagnosticWallSeconds": 23.2140111,
+        "quality": {
+          "Won": true,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 40,
+          "StrategicHpDeficit": 40,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 0,
+          "Score": 9999619974,
+          "CombatEndedTurn": 4,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "notPerformanceAcceptance": true,
+        "memberCount": 31,
+        "mismatchWitnesses": [
+          {
+            "kind": "PlayCard",
+            "cardId": "DEFEND_SILENT",
+            "priorMember": 1,
+            "member": 3,
+            "priorActionCount": 19,
+            "actionCount": 19,
+            "priorParentHistory": 127,
+            "parentHistory": 125,
+            "priorOutputHistory": 130,
+            "outputHistory": 128
+          },
+          {
+            "kind": "PlayCard",
+            "cardId": "BULLET_TIME",
+            "priorMember": 1,
+            "member": 3,
+            "priorActionCount": 19,
+            "actionCount": 19,
+            "priorParentHistory": 127,
+            "parentHistory": 125,
+            "priorOutputHistory": 131,
+            "outputHistory": 129
+          }
+        ],
+        "completeObservationsRetained": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-details/transition-repeat-probe.json"
+      },
+      {
+        "label": "transition-repeat-silent-strict",
+        "scope": "also observes full action-prefix hash, parent action count and history length",
+        "observationOnly": true,
+        "observations": {
+          "observationOnly": true,
+          "capacity": 500000,
+          "Total": 627665,
+          "Repeated": 195335,
+          "CrossMember": 188145,
+          "EqualOutputs": 195009,
+          "DifferentOutputs": 326,
+          "DifferentActionCounts": 157,
+          "Bypasses": 0,
+          "keys": 432330,
+          "actions": 2452,
+          "ByKind": {
+            "PlayCard": 464643,
+            "UsePotion": 4802,
+            "EndTurn": 158220
+          },
+          "CrossByKind": {
+            "PlayCard": 150655,
+            "EndTurn": 36696,
+            "UsePotion": 794
+          },
+          "Differences": {
+            "history": 326
+          },
+          "StrictRepeated": 133167,
+          "StrictCrossMember": 124617,
+          "StrictDifferentOutputs": 0,
+          "StrictBypasses": 0,
+          "strictKeys": 494498
+        },
+        "harnessResult": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-strict/harness-result.json",
+        "probeResult": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-strict/transition-repeat-probe.json",
+        "diagnosticWallSeconds": 23.9138023,
+        "quality": {
+          "Won": true,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 40,
+          "StrategicHpDeficit": 40,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 0,
+          "Score": 9999619974,
+          "CombatEndedTurn": 4,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "notPerformanceAcceptance": true,
+        "memberCount": 31,
+        "mismatchWitnesses": [
+          {
+            "kind": "PlayCard",
+            "cardId": "DEFEND_SILENT",
+            "priorMember": 1,
+            "member": 3,
+            "priorActionCount": 19,
+            "actionCount": 19,
+            "priorParentHistory": 127,
+            "parentHistory": 125,
+            "priorOutputHistory": 130,
+            "outputHistory": 128
+          },
+          {
+            "kind": "PlayCard",
+            "cardId": "BULLET_TIME",
+            "priorMember": 1,
+            "member": 3,
+            "priorActionCount": 19,
+            "actionCount": 19,
+            "priorParentHistory": 127,
+            "parentHistory": 125,
+            "priorOutputHistory": 131,
+            "outputHistory": 129
+          }
+        ],
+        "completeObservationsRetained": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/transition-repeat-silent-strict/transition-repeat-probe.json"
+      }
+    ],
+    "limitations": [
+      "First run grouped some workers by their own fields; subsequent runs explicitly register workers to the owning solver.",
+      "State-key grouping produced 326 output-label differences, all in history entry count; it is not a sufficient reuse condition.",
+      "Strict grouping found zero differences only in recorded scalar output labels; hash and entry-count equality are not a complete state/history or congruence proof.",
+      "No mutable state is shared and no native/Fork reuse contract, runtime prototype, memory acceptance or speed acceptance is claimed.",
+      "Probe dictionaries retain scalar keys, identifiers and detached descriptions only; weak tables do not create strong roots for observed nodes or solvers."
+    ]
   }
 }

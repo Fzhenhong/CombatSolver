@@ -7560,5 +7560,215 @@
   "failedExtraction": {
     "type": "MegaCrit.Sts2.Core.Models.Relics.SpoilsMap",
     "reason": "wrong namespace, exit 70; actual Models.Cards.SpoilsMap then extracted successfully; failure confers no evidence"
+  },
+  "regentBossCandidateSourceReview": {
+    "date": "2026-10-04",
+    "scene": "dev-08-regent-boss",
+    "baseCommit": "0049e2ca",
+    "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+    "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
+    "status": "source review only; no runtime qualification, native new contract or performance conclusion",
+    "sources": [
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Monsters.TheInsatiable",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/regent-boss-source-audit/Monsters.TheInsatiable.cs",
+        "sourceSha256": "e2afd78d123696b1c51eede33ea2126c1f3860f5e4f514a884958d95a1501ab7",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reviewScope": "complete declared gameplay methods; component callback dependencies and new initial-source qualification still need closure and native difference contracts"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Relics.VexingPuzzlebox",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/regent-boss-source-audit/Relics.VexingPuzzlebox.cs",
+        "sourceSha256": "90c334621cad4adcc6a523c56c5fb7693aa843e1c61205b56f8e58f553cbeac7",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reviewScope": "complete declared gameplay methods; component callback dependencies and new initial-source qualification still need closure and native difference contracts"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Relics.MercuryHourglass",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/regent-boss-source-audit/Relics.MercuryHourglass.cs",
+        "sourceSha256": "dcf6bf1738a9abdb6f341f4f8a811a5a1ff08e337db96b869bd61826f7afc159",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reviewScope": "complete declared gameplay methods; component callback dependencies and new initial-source qualification still need closure and native difference contracts"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Relics.MembershipCard",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/regent-boss-source-audit/Relics.MembershipCard.cs",
+        "sourceSha256": "15f05af296327f0528c6873a9120774b33142f22babb7ccb5d78a4aebd41530b",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reviewScope": "complete declared gameplay methods; component callback dependencies and new initial-source qualification still need closure and native difference contracts"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Potions.SwiftPotion",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/regent-boss-source-audit/Potions.SwiftPotion.cs",
+        "sourceSha256": "f66c044a9363f91fb091e7fccba74303b8a265f6620fc2dc8e3da3a5c192b2fa",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reviewScope": "complete declared gameplay methods; component callback dependencies and new initial-source qualification still need closure and native difference contracts"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Powers.SpeedPotionPower",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/regent-boss-source-audit/Powers.SpeedPotionPower.cs",
+        "sourceSha256": "aa418c7cbbd089f02882873680d5ffeaebc3e45efe72080667783d3035abaeea",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reviewScope": "complete declared gameplay methods; component callback dependencies and new initial-source qualification still need closure and native difference contracts"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Powers.TemporaryDexterityPower",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/powers/TemporaryDexterityPower.cs",
+        "sourceSha256": "c51abacd5ee437490142d624f96b11e859d0fba29b159bbab21611212558275f",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reusedSource": true,
+        "reviewScope": "reused pinned source, now follows complete SpeedPotion parent callbacks or Sandpit lifecycle; no runtime certification"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Powers.SandpitPower",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/callback-closure/Powers.SandpitPower.cs",
+        "sourceSha256": "c196f68b0c76b4b03d8f8b16b32e71df90cca3595dea5e32d8b2c69d5d2759d0",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reusedSource": true,
+        "reviewScope": "reused pinned source, now follows complete SpeedPotion parent callbacks or Sandpit lifecycle; no runtime certification"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Cards.FranticEscape",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/FranticEscape.cs",
+        "sourceSha256": "86890ea3ea43d5d602da6082bc26b8d9cc0692087a55561c8ed0709d0dc101db",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reusedSource": true,
+        "reviewScope": "reused pinned source, now follows complete SpeedPotion parent callbacks or Sandpit lifecycle; no runtime certification"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Potions.SpeedPotion",
+        "rawSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-pilot-sources/Models.Potions.SpeedPotion.cs",
+        "sourceSha256": "f88a4cbdf0fda81069fc923d670becfb38889fb96453c2edd8680eb8a63de2e3",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "reusedSource": true,
+        "reviewScope": "reused pinned source, now follows complete SpeedPotion parent callbacks or Sandpit lifecycle; no runtime certification"
+      }
+    ],
+    "mechanisms": [
+      {
+        "type": "TheInsatiable",
+        "target": "enemy Sandpit owners, player targets, player Draw/Discard piles and attacked players",
+        "timing": "Liquify once in the normal move machine; Thrash/Bite/Salivate repeat",
+        "condition": "native target roster; six explicitly created FranticEscape cards per player, three Draw and three Discard",
+        "countAndRepeatability": "four initial Sandpit layers; attacks and Strength follow native cycle",
+        "directPlayerRecoveryUpperBound": 0,
+        "reachableSources": [
+          "initial encounter"
+        ],
+        "remainingProofObligations": [
+          "Sandpit/FranticEscape targets and forced death callbacks",
+          "all damage/death listeners",
+          "native enemy-turn and generated-card state difference"
+        ],
+        "reviewStatus": "declared effect reviewed; whole composed source not yet certified",
+        "runtimeCertificateAdded": false
+      },
+      {
+        "type": "SandpitPower/FranticEscape",
+        "target": "Sandpit enemy owner and player/Pets target",
+        "timing": "enemy side start decrement; removal forces player and Osty death; card play adds one layer and raises own combat cost",
+        "condition": "matching target player; removal skips dead owner or dead target",
+        "countAndRepeatability": "each native callback/card play; no claimed finite lifetime bound",
+        "directPlayerRecoveryUpperBound": 0,
+        "reachableSources": [
+          "TheInsatiable explicit generation",
+          "initial/clone/return sources remain separate"
+        ],
+        "remainingProofObligations": [
+          "exact owner and target qualification",
+          "preserve loss and death-save resource evaluation",
+          "native removal/forced-death and Fork contract"
+        ],
+        "reviewStatus": "declared effect reviewed; whole composed source not yet certified",
+        "runtimeCertificateAdded": false
+      },
+      {
+        "type": "VexingPuzzlebox",
+        "target": "owning player Hand",
+        "timing": "AfterPlayerTurnStart when owner TurnNumber=1",
+        "condition": "owner player; current native character pool, unlock and multiplayer filters; GetDistinctForCombat count 1",
+        "countAndRepeatability": "one generated card per matching callback; no state flag added",
+        "directPlayerRecoveryUpperBound": 0,
+        "reachableSources": [
+          "held relic"
+        ],
+        "remainingProofObligations": [
+          "C58 eight-pool premises and callbacks must remain valid",
+          "initial/permanent sources independent of random-generation proof",
+          "root and replay must not replay the initial trigger incorrectly"
+        ],
+        "reviewStatus": "declared effect reviewed; whole composed source not yet certified",
+        "runtimeCertificateAdded": false
+      },
+      {
+        "type": "MercuryHourglass",
+        "target": "HittableEnemies",
+        "timing": "each owning player turn start",
+        "condition": "matching player owner",
+        "countAndRepeatability": "3 unpowered damage per callback",
+        "directPlayerRecoveryUpperBound": 0,
+        "reachableSources": [
+          "held relic"
+        ],
+        "remainingProofObligations": [
+          "damage/kill listener closure and growth objectives"
+        ],
+        "reviewStatus": "declared effect reviewed; whole composed source not yet certified",
+        "runtimeCertificateAdded": false
+      },
+      {
+        "type": "MembershipCard",
+        "target": "merchant prices",
+        "timing": "ModifyMerchantPrice",
+        "condition": "owning local player",
+        "countAndRepeatability": "50% price calculation per matching entry",
+        "directPlayerRecoveryUpperBound": 0,
+        "reachableSources": [
+          "held relic"
+        ],
+        "remainingProofObligations": [
+          "merchant/purchase boundary remains outside current combat search"
+        ],
+        "reviewStatus": "declared effect reviewed; whole composed source not yet certified",
+        "runtimeCertificateAdded": false
+      },
+      {
+        "type": "SpeedPotion/SpeedPotionPower/TemporaryDexterityPower",
+        "target": "targeted player DexterityPower",
+        "timing": "before apply, matching amount changes, owning side end removal and negative adjustment",
+        "condition": "valid player target and native positive Sign; origin model only supplies metadata",
+        "countAndRepeatability": "5 temporary dexterity per normal dose; amount changes use native delta",
+        "directPlayerRecoveryUpperBound": 0,
+        "reachableSources": [
+          "actually held SpeedPotion"
+        ],
+        "remainingProofObligations": [
+          "all Power amount/apply/remove listeners",
+          "owner and target qualification",
+          "native potion/use/end-turn plus Fork/RNG contract"
+        ],
+        "reviewStatus": "declared effect reviewed; whole composed source not yet certified",
+        "runtimeCertificateAdded": false
+      },
+      {
+        "type": "SwiftPotion",
+        "target": "targeted player card piles",
+        "timing": "OnUse Draw",
+        "condition": "valid targeted player",
+        "countAndRepeatability": "3 cards per dose; repeats use remaining legal doses",
+        "directPlayerRecoveryUpperBound": 0,
+        "reachableSources": [
+          "actually held SwiftPotion"
+        ],
+        "remainingProofObligations": [
+          "complete draw/callback closure including generated cards",
+          "native potion/state/Fork/RNG contract"
+        ],
+        "reviewStatus": "declared effect reviewed; whole composed source not yet certified",
+        "runtimeCertificateAdded": false
+      }
+    ],
+    "initialSourceObligation": "Frozen root has eighteen distinct reviewed-C58 initial card types plus AscendersBane; random pool membership does not qualify their initial/permanent lifecycle. Explicit per-source initial proof remains required.",
+    "performanceHypothesis": "A closed zero recovery proof may enable existing incumbent/Smart gates on this root. Benefit is unmeasured; existing root keeps conservative treatment."
   }
 }
