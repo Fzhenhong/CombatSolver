@@ -1,5 +1,15 @@
 # CombatSolver 测试清单
 
+## 五角色、所有原版遭遇的已知回血剪枝（2026-10-03）
+
+基线 `bb0e0129`；本次扩大零HP额度遗物目标的通用界及跨成员传递，并把开局胜利界接入既有已知来源政策。Release构建0警告/0错误，Windows结构门禁 `REFACTOR_BOUNDARIES_OK search_files=246`，Bash语法及diff空白检查通过。
+
+`NATIVE-HEALING-ALL-ENCOUNTERS`（`FUZZY_WURM_CRAWLER_WEAK`）五角色全部 Passed：SILENT `5a6aad3d396c499193fe0875328b36c6`、DEFECT `b61f28b99b1440d3853c193c2744e932`、NECROBINDER `2e796b4d7a094194bea77ed5d2c2571e`、IRONCLAD `891c659da1ad45e18a12d46a61e9cba3`、REGENT `ed83221dd8c8429aaf5f36134090a194`。DOP2/800节点/三宽度成员/strict incremental 下，旧证书false、新政策true，零额度PenNib目标的剪枝实际正命中（17/9/17/17/17），后续成员继承完整无药胜利界，控制/候选总转移201/189，完整胜利和损血相同；正额度和成长规则保护，live不变。随后全部执行已有再生/持有药水/明确药水额度、NotYet/Feed、修书刀未持有无余量/持有保留、同血量后续回合保留、Fork/RNG/旧根隔离检查。共同最小牌组使用原版Silent攻击/防御以隔离角色资格差异，不作自然五牌组性能结论。
+
+`KNOWN-HEALING-OPENING` / `c05f780bffb045b18c8d763ae58b0171` Passed：旧闭包以外开局胜利只运行一次，给首成员传界，控制质量/live隔离通过。`KNOWN-HEALING-POLICY` 在 GREMLIN_MERC_NORMAL（SILENT，`adffa7bfb1814dc9b0602d01df0d7c55`）与 QUEEN_BOSS（NECROBINDER，`4328164c951e41fba897e4dab1773261`）Passed，跨普通/首领遭遇的实际剩余治疗与保路合同通过。
+
+八个最小请求复用同一无头进程，最后启动器成功删除 `.local/headless-instances/native-healing-20261003`。没有全怪物逐个回归、长战斗、29根矩阵或生产性能配对；严格增量耗时不用于提速数字。方法、作者原千足虫性能数据及推广边界见 [说明](performance/native-healing-bound-generalization-20261003.md)。
+
 ## 六个正式 PR 与已知回血策略合并（2026-10-03）
 
 完整合并 #194/#197/#190/#199/#200（最新铁甲增量）/#198。Release 构建 0 警告/0 错误，Windows 结构门禁 `REFACTOR_BOUNDARIES_OK search_files=246`，`git diff --check` 通过。详细审计、最终 head、维护者修正与前半批证据见 [本轮审计](refactoring/merge-audit-20261003.md)。RunStatisticsTests 通过，早期回合续搜离线合同通过 143 项断言。

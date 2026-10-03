@@ -22,20 +22,18 @@ namespace CombatSolver;
 
 internal sealed partial class CombatBeamSolver
 {
-    // This closed native root has no growth actions or future HP credit. With
-    // zero-allowance counter goals, strictly worse HP cannot become preferable;
-    // equal-HP routes must keep every turn so they can improve the counters.
-    private readonly bool _strictHpBoundWithRelicTargets =
-        root.PlayerIdentity.Character.GetType() == typeof(MegaCrit.Sts2.Core.Models.Characters.Defect)
-        && root.Enemies.Count > 0
-        && root.Enemies.All(enemy => enemy.Monster?.GetType() == typeof(MegaCrit.Sts2.Core.Models.Monsters.InfestedPrism))
-        && CanUseStrictHpRelicBound(root.CanCertifyRemainingHealing
-                && root.InitialRemainingHealingUpperBound == 0,
+    // A finite branch healing allowance can prove strictly worse HP regardless
+    // of character or encounter. Zero-allowance counter goals still keep every
+    // equal-HP turn so that the final route can improve those counters.
+    private readonly bool _strictHpBoundWithRelicTargets = CanUseStrictHpRelicBound(root, policy);
+
+    internal static bool CanUseStrictHpRelicBound(CombatRootSnapshot root, SearchPolicySnapshot policy)
+        => CanUseStrictHpRelicBound(root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy,
             policy.EffectiveHasGrowthTargets, policy.RelicTargets);
 
-    internal static bool CanUseStrictHpRelicBound(bool certifiedNoHealing,
+    internal static bool CanUseStrictHpRelicBound(bool hasRemainingHealingBound,
         bool hasGrowthTargets, IReadOnlyList<RelicCounterTarget> targets)
-        => certifiedNoHealing && !hasGrowthTargets && targets.Count > 0
+        => hasRemainingHealingBound && !hasGrowthTargets && targets.Count > 0
             && targets.All(target => target.HpAllowance == 0);
 
     private readonly record struct CycleProbeFamilyKey(

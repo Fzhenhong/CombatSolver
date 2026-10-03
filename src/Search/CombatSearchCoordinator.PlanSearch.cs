@@ -35,7 +35,8 @@ internal static partial class CombatSearchCoordinator
         SearchPassContext context, SolverPotionPolicy? potionPolicyOverride)
     {
         SearchPolicySnapshot policy = context.Policy;
-        if (!context.Root.CanCertifyRemainingHealing || !policy.UseBeamWidthPortfolio
+        if (!(context.Root.CanCertifyRemainingHealing || context.Root.UsesKnownNativeHealingPolicy)
+            || !policy.UseBeamWidthPortfolio
             || policy.UseNoveltyPortfolio || policy.IncludeTurnSetup
             || policy.PortfolioExperiment != null || policy.DevelopmentStrategy != null
             || policy.DisableRefinementIncumbentForTesting || policy.DisableOpeningPlanIncumbentForTesting

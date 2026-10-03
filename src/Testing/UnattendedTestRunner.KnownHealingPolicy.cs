@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Models.Relics;
+using MegaCrit.Sts2.Core.ValueProps;
 
 namespace CombatSolver;
 
@@ -30,6 +31,9 @@ internal sealed partial class UnattendedTestRunner
         string liveBefore = ContinuationStamp.CaptureLive(live).StateText;
         int Potential(CombatPredictionSimulator sim, int? cap = null, bool potions = true)
             => StrategicHpRecoveryBound.KnownNativeHealingPotential(sim, player, 6, potions, cap);
+        var evaluator = new SurgicalEvaluationDriver(root, SolverDisplayNames.Capture(live),
+            BattleDamageTracker.Observe(live),
+            SolverController.CaptureSearchPolicy(SolverSettings.Capture(), live, false, null));
         using (SimulationNotificationIsolation.Enter())
         {
             if (Potential(parent) != 6)
@@ -48,6 +52,29 @@ internal sealed partial class UnattendedTestRunner
                 PileType.Hand, player, resultKind: CardGenerationResultKind.Fixed);
             if (Potential(feed) != int.MaxValue)
                 throw new InvalidOperationException("Feed must remain under the growth policy.");
+            var noRecovery = parent.Fork();
+            noRecovery.Damage(player.Creature, 12, ValueProp.Unblockable | ValueProp.Unpowered, live.Enemies[0]);
+            var recovery = noRecovery.Fork();
+            ((SimulatedCombatState)recovery.State.CombatState).SetAmount<RegenPower>(player.Creature, 3);
+            var equalHp = parent.Fork();
+            equalHp.Damage(player.Creature, 11, ValueProp.Unblockable | ValueProp.Unpowered, live.Enemies[0]);
+            SimulationSnapshot reject = evaluator.Evaluate(noRecovery);
+            SimulationSnapshot retain = evaluator.Evaluate(recovery);
+            SimulationSnapshot tied = evaluator.Evaluate(equalHp);
+            try
+            {
+                SearchNode Node(SimulationSnapshot snapshot) => new(null, 0, 0, 0, 99,
+                    SearchRouteTraits.None, 0, snapshot.Score, snapshot.StateKey, snapshot.HasRisk,
+                    SearchBoundaryReason.None, false, null, snapshot, null!);
+                SearchNode bad = Node(reject), good = Node(retain), sameHp = Node(tied);
+                var output = CombatBeamSolver.ApplyPrimaryIncumbentBound([bad, good, sameHp], new(5, 1),
+                    out int pruned, remainingHealingPotential: snapshot => Potential(
+                        (CombatPredictionSimulator)snapshot.Simulator), allowTurnTieBound: false);
+                if (pruned != 1 || output.Count != 2
+                    || !ReferenceEquals(output[0], good) || !ReferenceEquals(output[1], sameHp))
+                    throw new InvalidOperationException("Native pruning must reject worse HP, retain actual healing and preserve equal-HP later turns.");
+            }
+            finally { reject.ReleaseSimulator(); retain.ReleaseSimulator(); tied.ReleaseSimulator(); }
             if (DescribeContinuationContractState(parent, root, player) != parentBefore
                 || ContinuationStamp.CaptureLive(live).StateText != liveBefore)
                 throw new InvalidOperationException("Healing policy changed its parent, live state or RNG.");
@@ -77,6 +104,6 @@ internal sealed partial class UnattendedTestRunner
                 || Potential(parent) != 6)
                 throw new InvalidOperationException("Known Doom-kill relic healing must retain its allowance without changing the old root.");
         }
-        _completedChecks.Add("KnownHealingPolicy:AlchemizeExcluded:NotYetAndFeedProtected:HeldBloodAndRegen:StackedTicks:PotionCap:PostcombatHeal:DoomKillRelicProtected:FrozenRoot:ForkLiveRngIsolation");
+        _completedChecks.Add("KnownHealingPolicy:AlchemizeExcluded:NotYetAndFeedProtected:HeldBloodAndRegen:StackedTicks:PotionCap:PostcombatHeal:DoomKillRelicProtected:AbsentRelicZeroAllowance:WorseHpPruned:ActualHealingRetained:EqualHpLaterTurnsRetained:FrozenRoot:ForkLiveRngIsolation");
     }
 }

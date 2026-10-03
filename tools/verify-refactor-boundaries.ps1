@@ -1371,6 +1371,17 @@ if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot "src/Runtime/Com
     $violations.Add("CombatRootSnapshot.cs: native healing policy eligibility must be frozen at the root")
 }
 $beamPhasesPath = Join-Path $searchRoot "CombatBeamSolver.Phases.cs"
+foreach ($healingBoundary in @(
+    @('src/Search/CombatBeamSolver.Retention.cs', '_strictHpBoundWithRelicTargets = CanUseStrictHpRelicBound(root, policy)'),
+    @('src/Search/CombatBeamSolver.Retention.cs', 'targets.All(target => target.HpAllowance == 0)'),
+    @('src/Search/CombatBeamSolver.Retention.cs', 'allowTurnTieBound: !_strictHpBoundWithRelicTargets'),
+    @('src/Search/CombatSearchCoordinator.cs', '!CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)'),
+    @('src/Search/CombatSearchCoordinator.PlanSearch.cs', 'context.Root.CanCertifyRemainingHealing || context.Root.UsesKnownNativeHealingPolicy')
+)) {
+    if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot $healingBoundary[0]) -SimpleMatch $healingBoundary[1] -Quiet)) {
+        $violations.Add("Missing common healing-bound policy: $($healingBoundary[0])")
+    }
+}
 if (-not (Select-String -LiteralPath $beamPhasesPath -SimpleMatch "TightenPrimarySearchIncumbentAtTurnLayer(" -Quiet)) {
     $violations.Add("${beamPhasesPath}: turn-layer incumbent is no longer tightened before coordinator pruning")
 }

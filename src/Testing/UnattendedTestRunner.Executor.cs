@@ -45,10 +45,18 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertKnownHealingPolicyAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
-            if (request.ScenarioId == "KNOWN-HEALING-MEMBERS")
+            if (request.ScenarioId is "KNOWN-HEALING-MEMBERS" or "NATIVE-HEALING-ALL-ENCOUNTERS")
             {
                 runner.SetStage("known_healing_members");
                 await runner.AssertRefinementIncumbentAsync(combatState, player);
+                if (request.ScenarioId == "NATIVE-HEALING-ALL-ENCOUNTERS")
+                    await runner.AssertKnownHealingPolicyAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId == "KNOWN-HEALING-OPENING")
+            {
+                runner.SetStage("known_healing_opening");
+                await runner.AssertOpeningPlanIncumbentAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId is "B015-T016-ORIGINAL-PREFIX" or "B015-T016-AFTERIMAGE-ROUTE")

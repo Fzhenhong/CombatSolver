@@ -11,7 +11,8 @@ namespace CombatSolver;
 
 internal static partial class StrategicHpRecoveryBound
 {
-    // Search policy requested in #135 follow-up: reserve healing from materialized
+    // All five native characters and every native encounter use the policy requested
+    // in #135 follow-up: reserve healing from materialized
     // sources. Random potion generation supplies no speculative healing allowance.
     // This is a policy estimate, separate from the closed semantic certificates.
     internal static bool CanUseKnownNativeHealingPolicy(CombatPredictionSimulator simulator, Player player)

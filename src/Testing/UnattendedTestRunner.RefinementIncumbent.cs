@@ -4,6 +4,8 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Relics;
 
 namespace CombatSolver;
 
@@ -18,7 +20,10 @@ internal sealed partial class UnattendedTestRunner
             live.Enemies.Single(), 12, null, null);
         await InjectCardAsync(live, player, new() { CardId = "STRIKE_SILENT", Pile = "Hand", UpgradeLevels = 1 });
         await InjectCardAsync(live, player, new() { CardId = "DEFEND_SILENT", Pile = "Hand", UpgradeLevels = 1 });
-        bool knownSourcePolicy = _request.ScenarioId == "KNOWN-HEALING-MEMBERS";
+        bool allNative = _request.ScenarioId == "NATIVE-HEALING-ALL-ENCOUNTERS";
+        bool knownSourcePolicy = allNative || _request.ScenarioId == "KNOWN-HEALING-MEMBERS";
+        if (allNative)
+            player.AddRelicInternal(ModelDb.Relic<PenNib>().ToMutable());
         if (knownSourcePolicy)
             await InjectCardAsync(live, player, new() { CardId = "ALCHEMIZE", Pile = "Exhaust" });
         SetEnergy(player, 3);
@@ -35,6 +40,7 @@ internal sealed partial class UnattendedTestRunner
             UseNoveltyPortfolio = false, IgnoreLongTermRewards = false,
             PotionPolicy = SolverPotionPolicy.Disabled,
             PotionStrategy = new(SolverPotionPolicy.Disabled, []),
+            RelicTargets = allNative ? [new(RelicCounterId.PenNib, 2, 2, 0, 10)] : [],
         };
         policy = policy with { Profile = policy.Profile with
         {
@@ -78,12 +84,24 @@ internal sealed partial class UnattendedTestRunner
                 null, control) != null)
             throw new InvalidOperationException("Refinement incumbent eligibility ignored disable/growth rules.");
 
+        if (allNative && (!CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)
+            || CombatSearchCoordinator.BuildRefinementPrimarySearchIncumbent(root,
+                policy with { RelicTargets = [new(RelicCounterId.PenNib, 2, 2, 1, 10)] }, null, control) != null
+            || candidate.PrimaryIncumbentBranchesPruned <= 0))
+            throw new InvalidOperationException($"Native counter-bound pruning did not execute or admitted a paid objective: "
+                + $"pruned={candidate.PrimaryIncumbentBranchesPruned}.");
+
         await InjectCardAsync(live, player, new() { CardId = "STRIKE_IRONCLAD", Pile = "Exhaust" });
         CombatRootSnapshot unknown = CombatRootSnapshot.Capture(live);
         if (unknown.CanCertifyRemainingHealing || !unknown.UsesKnownNativeHealingPolicy
             || CombatSearchCoordinator.BuildRefinementPrimarySearchIncumbent(unknown, policy, null, control) == null)
             throw new InvalidOperationException("Known native cards outside the closed set must inherit the policy bound.");
         _completedChecks.Add("RefinementIncumbent:NativeRoot:Dop2:StrictIncremental:ControlQuality:Inherited:GrowthGuard:KnownExhaustCard:LiveIsolation");
+        if (allNative)
+            _completedChecks.Add($"AllNativeHealing:{player.Character.Id.Entry}:{live.Encounter!.Id.Entry}:ZeroAllowanceCounter:"
+                + $"PaidAllowanceGuard:pruned={candidate.PrimaryIncumbentBranchesPruned}:"
+                + $"loss={control.ProjectedBattleHpLost}/{candidate.ProjectedBattleHpLost}:"
+                + $"transitions={control.TotalTransitionCount}/{candidate.TotalTransitionCount}");
         if (!knownSourcePolicy)
             await AssertOpeningPlanIncumbentAsync(live, player);
     }
@@ -95,6 +113,9 @@ internal sealed partial class UnattendedTestRunner
         await CreatureCmd.SetCurrentHp(live.Enemies.Single(), 36);
         foreach (string id in new[] { "SPEEDSTER", "ADRENALINE", "STRIKE_SILENT", "DEFEND_SILENT" })
             await InjectCardAsync(live, player, new() { CardId = id, Pile = "Hand", UpgradeLevels = 1 });
+        bool knownSourcePolicy = _request.ScenarioId == "KNOWN-HEALING-OPENING";
+        if (knownSourcePolicy)
+            await InjectCardAsync(live, player, new() { CardId = "ALCHEMIZE", Pile = "Exhaust" });
         SetEnergy(player, 3);
         CombatRootSnapshot root = CombatRootSnapshot.Capture(live);
         SolverDisplayNames displayNames = SolverDisplayNames.Capture(live);
@@ -127,7 +148,9 @@ internal sealed partial class UnattendedTestRunner
         }, original.Debug, original.PathObserver) };
         SolverResult candidate = await Task.Run(() => CombatSearchCoordinator.Solve(root,
             displayNames, damage, observed, deadline.Token, null));
-        if (!root.CanCertifyRemainingHealing || !control.Snapshot.AllEnemiesDead
+        if (!(root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy)
+            || knownSourcePolicy && root.CanCertifyRemainingHealing
+            || !control.Snapshot.AllEnemiesDead
             || control.Snapshot.PlayerDead || control.Snapshot.HasRisk
             || !candidate.Snapshot.AllEnemiesDead || candidate.Snapshot.PlayerDead
             || candidate.Snapshot.HasRisk || candidate.ProjectedBattleHpLost > control.ProjectedBattleHpLost

@@ -1,5 +1,7 @@
 # CombatSolver 架构与职责地图
 
+五角色、所有原版遭遇共用 `StrategicHpRecoveryBound.KnownSources` 的当前来源策略；角色/怪物身份不进入特殊名单。`CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)` 是零 HP 额度遗物目标的生命界准入，Retention 与协调器共享同一判断：封闭证书或已知来源政策、无有效卡牌成长目标、全部遗物额度为0。每条分支照常计算实际剩余回血，等血量跨回合候选保留。开局胜利界及宽度/能力成员只共享纯值结果并消费原请求预算。详见 [五角色推广](performance/native-healing-bound-generalization-20261003.md)。
+
 `Engine/Common/DynamicVarSetAccess` 独占 DynamicVarSet 内部字典访问。当前构建经一次反射和缓存委托读取，字段缺失或类型变化走公开枚举；委托构建异常直接失败。生产消费者只读，写入桥用于测试夹具；Windows/Bash 门禁共同禁止其他文件直接引用 `._vars`。召唤敌人的显示槽位顺序由 `SolverDisplayNames.Capture` 在主线程从模型或场景 Marker 冻结，未知槽位消费预测阵容插入顺序。
 
 `StrategicHpRecoveryBound.KnownSources` 提供原版单人搜索的已知回血来源策略，资格在 `CombatRootSnapshot.UsesKnownNativeHealingPolicy` 冻结。它保留已有再生、持有的回血药水、确定战后回血，以及时候未到、狂宴、可重复遗物回血和保命资源；随机炼药尚未生成时不给额外回血余量，实际生成的药水仍从分支槽读取。该估计与封闭语义证书分开，二者取较紧值；它不宣称随机生成下的严格可达上界。所有 Beam 成员在共用 Retention 入口消费该策略，宽度组合及能力续搜也据此取得既有无药胜利界。各成员仍独占转置、前沿、快照和预算，成长、偷窃、强制用药等资格门保持原规则。
