@@ -8369,7 +8369,8 @@
         "EarlyHpBound:NativeOfferingFullStateFork:EqualLossKept:StrictWorsePruned:UnknownExhaustSourceKept:ActiveRegenUnderDisabledKept:ParentLiveRngIsolation",
         "NativeOutcome:combatEnded=False:turn=1:hp=64:maxHp=80"
       ],
-      "instanceCleanup": "early-hp-native removed after completed process"
+      "instanceCleanup": "early-hp-native removed after completed process",
+      "configurationClarification": "The earlier direct fixture omitted searchProfile, so the constructor used SolverSearchProfile.Default for both control and candidate; policy.Profile Beam24/Nodes1200/10000ms was not their actual profile. DOP1/16, strict verification, 35-second cancellation and 120-second launcher deadline remained active. Successful behavior evidence is retained; production performance host explicitly passes profile and is unaffected."
     },
     "scope": "isolated runtime only: existing complete policy-qualified victory helper, strict HP-only pruning, no tie-turn bound, unknown sources retained, active regeneration retained under Disabled; no new component semantics",
     "runtimePromoted": false,
@@ -8379,6 +8380,66 @@
       "fixed full regression",
       "frozen native full deployment",
       "separate full-request early-prune counts and bound overhead"
+    ]
+  },
+  "smartOpeningVictoryWitnessContract": {
+    "baseComponentContract": "necroBossIsolatedCompositionContract",
+    "dllSha256": "3f096e157932b6aff9a320309f446f762c802de3a94225468b1d10e577de4044",
+    "sourceHashes": {
+      "src/Search/CombatBeamSolver.cs": "474252a9d3e6e51d992aff8e482e46e10f6f4f6166f499c408948cd37b00db8a",
+      "src/Search/CombatBeamSolver.EarlyHpBound.cs": "4ccc7dd4d71ac92df8df6b1defef0902fac2d70cd4fd93844758d7e1130b824f",
+      "src/Search/FrontierContinuationScheduler.cs": "29199233b9f64aa7aa8038c41f62a29a6ca76abcddab11d4b8ae9246b2966bb4",
+      "src/Search/CombatSearchCoordinator.Audits.cs": "dfb2c01301e15afbe5de6ce61e27c2e67b1e5ab63616612135b422b7a292d004",
+      "src/Testing/UnattendedTestRunner.SmartOpeningWitness.cs": "c6f760ee6687212669dd9042c9291adb4b086aca15daff346614bed0a9afcab1",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "22d90864ab0833616f4bf1fbed862ff3d57607ce0fdb9b691d7f3a9b6bd16323"
+    },
+    "nativeContract": {
+      "runId": "1336ac4aa23f4274be8a832dd37ac99e",
+      "status": "Passed",
+      "elapsedMilliseconds": 27440.6419,
+      "mainAssemblyHash": "3F096E157932B6AFF9A320309F446F762C802DE3A94225468B1D10E577DE4044",
+      "completedChecks": [
+        "SmartOpeningWitness:ActualNoPotionNoWin:ActualOptionalPotionVictoryRetained:SeededStrictDop1vs16:pruned=2:NoEligibilityCeiling:PolicyGuards:ParentLiveRngIsolation",
+        "SmartOpeningWitness:NativeCureAllCompleteStateEnergyDrawPotionCountRng:ParentForkIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=70:maxHp=80"
+      ],
+      "resultPath": ".local/general-healing-audit/smart-opening-witness-native-v3/result.json",
+      "instanceCleanup": "launcher removed owned instance",
+      "actualProfile": "explicit Beam24, Nodes1200, 10000ms for each posterior; actual no-potion control uses same explicit profile with Nodes1; DOP1 control and DOP16 candidate, strict incremental, 35sec cancellation/120sec launcher"
+    },
+    "failedNativeContracts": [
+      {
+        "runId": "6195dd299f1c48e398cc4a9ab5769c74",
+        "status": "Failed",
+        "elapsedMilliseconds": 27215.3744,
+        "mainAssemblyHash": "0DF0E61A4C317F4C50937B9F403887270EF8604BB615A641BE42D0449C0E07BA",
+        "completedChecks": [],
+        "error": "System.InvalidOperationException: Expected an actual completed no-potion search without victory.\n   at CombatSolver.UnattendedTestRunner.AssertSmartOpeningWitnessAsync(CombatState live, Player player)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()",
+        "resultPath": ".local/general-healing-audit/smart-opening-witness-native/result.json",
+        "instanceCleanup": "launcher removed owned instance"
+      },
+      {
+        "runId": "29898700515c4ba2863c34d819c58c6c",
+        "status": "Failed",
+        "elapsedMilliseconds": 27151.1838,
+        "mainAssemblyHash": "4BD9BDFC911AD51ABCBCB6EBC3F3E1768805D8F8B2D46B652C54ADDC8D5820FD",
+        "completedChecks": [],
+        "error": "System.InvalidOperationException: Expected actual no-potion no-win: won=True risk=False potions=0 scope=SearchCompletion boundary=None actions=DEFEND_IRONCLAD,,STRIKE_IRONCLAD\n   at CombatSolver.UnattendedTestRunner.AssertSmartOpeningWitnessAsync(CombatState live, Player player)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()",
+        "resultPath": ".local/general-healing-audit/smart-opening-witness-native-v2/result.json",
+        "instanceCleanup": "launcher removed owned instance"
+      }
+    ],
+    "fixtureCorrections": [
+      "Use explicit searchProfile for each direct CombatBeamSolver; constructor otherwise uses SolverSearchProfile.Default rather than policy.Profile. Previous attempts ran real complete winning no-potion searches instead of intended one-node incomplete search. No runtime or quality rule changed."
+    ],
+    "scope": "Isolated cross-solver complete optional-potion witness proof; actual bounded no-potion search did not win; no new component certification; zero-recovery qualification and exact-one layer only",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final serial interleaved comparison",
+      "fixed full regression including Queen blocker",
+      "frozen native full deployment",
+      "coordinator-total new-bound counters and actual bound overhead"
     ]
   }
 }
