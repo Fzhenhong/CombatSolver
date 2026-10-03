@@ -6763,5 +6763,549 @@
       "passesQuality": false,
       "scope": "single uninstrumented complete coordinator screen, not final acceptance; 16 loss on unfinished route is not a quality improvement over original winning 67-loss route"
     }
+  },
+  "researchSilentEarlyHpPlanSeed": {
+    "baseCommit": "21674720",
+    "reusedPotionComponentDllSha256": "439e6c80ae6400fd1935d694e8ce065b19e584fd4243936c0e95fa5bc11c2849",
+    "reusedEarlyHpPrototype": "early-victory-bound-provenance.json",
+    "mechanism": "same schedule, scores and budgets; explicit Stable/Forge composition plus strict HP-only early bound. A complete potion-free policy-qualified winner retained by coordinator seeds subsequent existing no-potion plan members through scalar bound; unknown and equal-HP branches survive.",
+    "sourceHashes": {
+      "src/Search/StrategicHpRecoveryBound.Components.cs": "9c8782588ae28486ca45f74252ea9f682f053c48163a1f099d5285693e06b069",
+      "src/Search/CombatBeamSolver.Retention.cs": "aca35fc10b211774490806d988d5d729b8c7be3e7ef440a95b0f5d9fda600d3d",
+      "src/Search/CombatBeamSolver.Phases.cs": "e07e1c4ee44157d4d6636a95fa7727a65294b5c72fb99e824f78269fd2ed3121",
+      "src/Search/CombatBeamSolver.EarlyHpBound.cs": "fb7eb67d2752fb64a40c4365bea5977642d564da58d78ccc009238984e2aad71",
+      "src/Testing/UnattendedTestRunner.SilentEarlyHp.cs": "c44c9a75c7d65fa22891d7ca8dadd1f95b26078beeca2de9fb25fa367d42ab99",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "1c4d99098d953cc7e5db1e11b2f620a3c17008738c32e6027d235fe4f4760e3b",
+      "src/Search/CombatBeamSolver.cs": "474252a9d3e6e51d992aff8e482e46e10f6f4f6166f499c408948cd37b00db8a",
+      "src/Search/FrontierContinuationScheduler.cs": "29199233b9f64aa7aa8038c41f62a29a6ca76abcddab11d4b8ae9246b2966bb4",
+      "src/Search/CombatSearchCoordinator.PlanSearch.cs": "63e91b8069e80b3df12d1544df3f1e24043d7b5dfdd0f67efb842e9445b39507"
+    },
+    "status": "native-passed-whole-request-speed-rejected",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final interleaved acceptance",
+      "fixed full regression",
+      "frozen native full deployment",
+      "full-root exclusive certification overhead",
+      "new runtime corpus certification coverage"
+    ],
+    "build": {
+      "seconds": 13.83,
+      "warnings": 0,
+      "errors": 0,
+      "variant": "v3"
+    },
+    "dllSha256": "c6bef5cadc9c3b50d6a12f90d5bb10c74336c8572b3e89819223290c2d3529d0",
+    "failedNativeContracts": [
+      {
+        "runId": "619b2f7ddbb340468d57dba8cafd6368",
+        "status": "Failed",
+        "elapsedMilliseconds": 27008.1717,
+        "mainAssemblyHash": "BC00AE33F1DD9456859F7352E1A527DF48F954E45FA6D44A5CD9F291E2AEC76F",
+        "completedChecks": [],
+        "error": "System.InvalidOperationException: Silent early HP composition failed: loss=0/0 updates=1 pruned=0\n   at CombatSolver.UnattendedTestRunner.AssertSilentEarlyHpAsync(CombatState live, Player player)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()",
+        "resultPath": ".local/general-healing-audit/silent-early-hp-native/result.json",
+        "instanceCleanup": "launcher removed instance",
+        "reason": "fixture found zero-loss victory but no strictly worse unfinished branch; no actual prune (updates1/pruned0)"
+      }
+    ],
+    "fixtureCorrection": "Added known non-healing Bloodletting to produce a real worse unfinished branch; actual complete no-potion control winner seeds candidate. No fictitious winner. Use existing BuildRefinementPrimarySearchIncumbent for strategic axis, keep initial player HP below maximum to exercise successive plan members, add actual coordinator transfer assertion.",
+    "buildHistory": [
+      {
+        "seconds": 20.68,
+        "warnings": 0,
+        "errors": 0,
+        "dllSha256": "bc00ae33f1dd9456859f7352e1a527df48f954e45fa6d44a5cd9f291e2aec76f"
+      },
+      {
+        "seconds": 14.05,
+        "warnings": 0,
+        "errors": 0,
+        "status": "compiled v2 before adding actual coordinator handoff contract; not run"
+      },
+      {
+        "seconds": 13.83,
+        "warnings": 0,
+        "errors": 0,
+        "variant": "v3",
+        "dllSha256": "c6bef5cadc9c3b50d6a12f90d5bb10c74336c8572b3e89819223290c2d3529d0"
+      }
+    ],
+    "nativeContract": {
+      "runId": "4fc9d3a11a1348dcb0069f4871171533",
+      "status": "Passed",
+      "elapsedMilliseconds": 28939.7468,
+      "mainAssemblyHash": "C6BEF5CADC9C3B50D6A12F90D5BB10C74336C8572B3E89819223290C2D3529D0",
+      "completedChecks": [
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=31:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanSeedHandoff:transfers=1:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/silent-early-hp-native-v3/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "profile": "Direct solvers explicit Beam24/1200 nodes/10000ms, DOP1 no new bound vs DOP16 actual qualified cross-solver seed, strict incremental; actual Coordinator Beam24/1200/20000ms with widths12/8; shared30sec cancellation, launcher120sec"
+    },
+    "performanceScreen": {
+      "configuration": "VeryHigh/DOP16/Smart/Coordinator/Portfolio/300000ms/production budget/NoGC16GiB",
+      "rows": {
+        "original": {
+          "resultPath": "/home/ltlly/Code/nmslmod/CombatSolver-perf-stage1-20261002/.local/stage1/regression/runs/dev-01-silent-elite-A1/harness-result.json",
+          "wallSeconds": 37.1302198,
+          "peakProcessWorkingSetBytes": 24652840960,
+          "comparisonQuality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "totalExpanded": 219282,
+          "totalTransitions": 1159429,
+          "rootMatchesCandidate": true,
+          "budgetMatchesCandidate": true
+        },
+        "f266": {
+          "resultPath": ".local/general-healing-audit/component-final-acceptance/runs/component-final-regression-dev-01-silent-elite/harness-result.json",
+          "wallSeconds": 22.0763772,
+          "peakProcessWorkingSetBytes": 11828596736,
+          "comparisonQuality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "totalExpanded": 109546,
+          "totalTransitions": 627623,
+          "rootMatchesCandidate": true,
+          "budgetMatchesCandidate": true
+        },
+        "candidate": {
+          "resultPath": ".local/general-healing-audit/silent-early-hp-screen/harness-result.json",
+          "wallSeconds": 20.2161496,
+          "peakProcessWorkingSetBytes": 11149651968,
+          "comparisonQuality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "totalExpanded": 102259,
+          "totalTransitions": 574344,
+          "rootMatchesCandidate": true,
+          "budgetMatchesCandidate": true
+        }
+      },
+      "speedupVsOriginal": 1.8366613096294062,
+      "peakChangeVsOriginalPercent": -54.773358632010584,
+      "passesSpeed": false,
+      "passesQuality": true,
+      "workAttributions": [
+        {
+          "Mechanism": "OpeningPowerRouteMember",
+          "ExpandedNodes": 61106,
+          "Transitions": 339735,
+          "ChoiceBranches": 132878,
+          "ElapsedMilliseconds": 6642.361800000001,
+          "WorkerAllocatedBytes": 12333816736,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 16
+        },
+        {
+          "Mechanism": "PlanCommitment",
+          "ExpandedNodes": 9769,
+          "Transitions": 50309,
+          "ChoiceBranches": 16180,
+          "ElapsedMilliseconds": 4022.081,
+          "WorkerAllocatedBytes": 2102669520,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 3
+        },
+        {
+          "Mechanism": "PrimaryBeam",
+          "ExpandedNodes": 4358,
+          "Transitions": 24431,
+          "ChoiceBranches": 9334,
+          "ElapsedMilliseconds": 1744.2908,
+          "WorkerAllocatedBytes": 939536704,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 1
+        },
+        {
+          "Mechanism": "RefinementBeam",
+          "ExpandedNodes": 19403,
+          "Transitions": 108041,
+          "ChoiceBranches": 40730,
+          "ElapsedMilliseconds": 3771.7592,
+          "WorkerAllocatedBytes": 3828378584,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 5
+        },
+        {
+          "Mechanism": "SmartPotionGradient",
+          "ExpandedNodes": 7623,
+          "Transitions": 51828,
+          "ChoiceBranches": 18898,
+          "ElapsedMilliseconds": 2355.1781,
+          "WorkerAllocatedBytes": 1944405136,
+          "Gen0Collections": 2,
+          "Gen1Collections": 2,
+          "Gen2Collections": 2,
+          "GcPauseMilliseconds": 3.845,
+          "MaxObservedGcPauseMilliseconds": 2.697,
+          "RecordedSolverCount": 2
+        }
+      ],
+      "selectedPruneCounters": {
+        "primaryIncumbentBranchesPruned": 347,
+        "primaryIncumbentUpdates": 1
+      },
+      "scope": "single complete uninstrumented screen, not final acceptance",
+      "ordinaryBoundDiagnostics": [
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=41 updates=2 pruned=17",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=41 updates=0 pruned=138",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=1 pruned=74",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=3 pruned=0",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=3 pruned=0"
+      ],
+      "ordinaryPlanSeedDiagnostics": [
+        "[CombatSolver/Test] PLAN_CERTIFIED_HP_INCUMBENT deficit=41 turn=5",
+        "[CombatSolver/Test] PLAN_CERTIFIED_HP_INCUMBENT deficit=41 turn=5"
+      ]
+    }
+  },
+  "researchSilentMemberHpSeed": {
+    "baseCommit": "21674720",
+    "priorPrototype": "silent-early-hp-provenance.json",
+    "priorDllSha256": "c6bef5cadc9c3b50d6a12f90d5bb10c74336c8572b3e89819223290c2d3529d0",
+    "mechanism": "same plans, ranking and budgets; additionally seed strict HP-only intermediate retention from existing qualified potion-free complete-victory incumbent in primary/refinement and opening power members. Caller retains winner; component, policy and branch unknown guards preserved.",
+    "sourceHashes": {
+      "src/Search/StrategicHpRecoveryBound.Components.cs": "9c8782588ae28486ca45f74252ea9f682f053c48163a1f099d5285693e06b069",
+      "src/Search/CombatBeamSolver.Retention.cs": "aca35fc10b211774490806d988d5d729b8c7be3e7ef440a95b0f5d9fda600d3d",
+      "src/Search/CombatBeamSolver.Phases.cs": "e07e1c4ee44157d4d6636a95fa7727a65294b5c72fb99e824f78269fd2ed3121",
+      "src/Search/CombatBeamSolver.EarlyHpBound.cs": "fb7eb67d2752fb64a40c4365bea5977642d564da58d78ccc009238984e2aad71",
+      "src/Testing/UnattendedTestRunner.SilentEarlyHp.cs": "2d49b7868c332b1c648c040914c02ea0bdf195412a265807eecb434114af8e3f",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "1c4d99098d953cc7e5db1e11b2f620a3c17008738c32e6027d235fe4f4760e3b",
+      "src/Search/CombatBeamSolver.cs": "474252a9d3e6e51d992aff8e482e46e10f6f4f6166f499c408948cd37b00db8a",
+      "src/Search/FrontierContinuationScheduler.cs": "29199233b9f64aa7aa8038c41f62a29a6ca76abcddab11d4b8ae9246b2966bb4",
+      "src/Search/CombatSearchCoordinator.PlanSearch.cs": "63e91b8069e80b3df12d1544df3f1e24043d7b5dfdd0f67efb842e9445b39507",
+      "src/Search/CombatSearchCoordinator.cs": "b44ba7132690ba29a8ce70c18b59961da4bb2e01fa5e335f0c7cc6bf18cd73f8",
+      "src/Search/CombatSearchCoordinator.PowerRoutes.cs": "32dc795c8e4c96b21ae48a091b4956bc5a4ce60e29ca56d00390367a94aa9c02"
+    },
+    "status": "native-passed-whole-request-speed-rejected",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final interleaved acceptance",
+      "fixed full regression",
+      "frozen native full deployment",
+      "all-root coverage and exclusive certification overhead"
+    ],
+    "build": {
+      "seconds": 27.66,
+      "warnings": 0,
+      "errors": 0
+    },
+    "dllSha256": "fe20001ea0d27ec942fd1236494f4b8bca25a2ac86280e76db51e4f652b981e6",
+    "nativeContract": {
+      "runId": "35d32dea0b714e2182b8e118cfa6aa50",
+      "status": "Passed",
+      "elapsedMilliseconds": 30992.0563,
+      "mainAssemblyHash": "FE20001EA0D27EC942FD1236494F4B8BCA25A2AC86280E76DB51E4F652B981E6",
+      "completedChecks": [
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=29:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/silent-member-hp-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "profile": "direct explicit Beam24/1200/10000ms DOP1 disabled vs DOP16 seeded strict; Coordinator 20000ms widths12/8; 30sec shared cancellation/120sec launcher",
+      "fixtureScope": "Mayhem added to exercise actual opening power continuations; Bloodletting supplies genuine worse unfinished branch; root HP60/70 preserves successive plans. Actual complete winner comes from DOP1 search and existing strategic eligibility helper."
+    },
+    "reusedSemanticEvidence": {
+      "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+      "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
+      "potionNativeRunId": "d99199c3d427412382a904ae17d31802",
+      "earlyHpUnknownEqualityPolicyNativeRunId": "b6d8528c2acb4fc396cc058c3ecf7feb",
+      "priorPlanHandoffNativeRunId": "4fc9d3a11a1348dcb0069f4871171533",
+      "scope": "same audited potion component and early strict HP mechanism; no new card/Power default admission. New transfer checked by current native fixture."
+    },
+    "performanceScreen": {
+      "configuration": "VeryHigh/DOP16/Smart/Coordinator/Portfolio/300000ms/production budget/NoGC16GiB",
+      "rows": {
+        "original": {
+          "resultPath": "/home/ltlly/Code/nmslmod/CombatSolver-perf-stage1-20261002/.local/stage1/regression/runs/dev-01-silent-elite-A1/harness-result.json",
+          "wallSeconds": 37.1302198,
+          "peakProcessWorkingSetBytes": 24652840960,
+          "comparisonQuality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "totalExpanded": 219282,
+          "totalTransitions": 1159429,
+          "rootMatchesCandidate": true,
+          "budgetMatchesCandidate": true
+        },
+        "f266": {
+          "resultPath": ".local/general-healing-audit/component-final-acceptance/runs/component-final-regression-dev-01-silent-elite/harness-result.json",
+          "wallSeconds": 22.0763772,
+          "peakProcessWorkingSetBytes": 11828596736,
+          "comparisonQuality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "totalExpanded": 109546,
+          "totalTransitions": 627623,
+          "rootMatchesCandidate": true,
+          "budgetMatchesCandidate": true
+        },
+        "priorPlanSeed": {
+          "resultPath": ".local/general-healing-audit/silent-early-hp-screen/harness-result.json",
+          "wallSeconds": 20.2161496,
+          "peakProcessWorkingSetBytes": 11149651968,
+          "comparisonQuality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "totalExpanded": 102259,
+          "totalTransitions": 574344,
+          "rootMatchesCandidate": true,
+          "budgetMatchesCandidate": true
+        },
+        "candidate": {
+          "resultPath": ".local/general-healing-audit/silent-member-hp-screen/harness-result.json",
+          "wallSeconds": 20.0380676,
+          "peakProcessWorkingSetBytes": 11155537920,
+          "comparisonQuality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999619974,
+            "CombatEndedTurn": 4,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "totalExpanded": 102259,
+          "totalTransitions": 574344,
+          "rootMatchesCandidate": true,
+          "budgetMatchesCandidate": true
+        }
+      },
+      "speedupVsOriginal": 1.8529840572051965,
+      "peakChangeVsOriginalPercent": -54.74948328227076,
+      "passesSpeed": false,
+      "passesQuality": true,
+      "workAttributions": [
+        {
+          "Mechanism": "OpeningPowerRouteMember",
+          "ExpandedNodes": 61106,
+          "Transitions": 339735,
+          "ChoiceBranches": 132878,
+          "ElapsedMilliseconds": 6737.6212,
+          "WorkerAllocatedBytes": 12345577136,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 16
+        },
+        {
+          "Mechanism": "PlanCommitment",
+          "ExpandedNodes": 9769,
+          "Transitions": 50309,
+          "ChoiceBranches": 16180,
+          "ElapsedMilliseconds": 4067.4694,
+          "WorkerAllocatedBytes": 2098771408,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 3
+        },
+        {
+          "Mechanism": "PrimaryBeam",
+          "ExpandedNodes": 4358,
+          "Transitions": 24431,
+          "ChoiceBranches": 9334,
+          "ElapsedMilliseconds": 1714.3197,
+          "WorkerAllocatedBytes": 932647672,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 1
+        },
+        {
+          "Mechanism": "RefinementBeam",
+          "ExpandedNodes": 19403,
+          "Transitions": 108041,
+          "ChoiceBranches": 40730,
+          "ElapsedMilliseconds": 3491.2479,
+          "WorkerAllocatedBytes": 3809370096,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 5
+        },
+        {
+          "Mechanism": "SmartPotionGradient",
+          "ExpandedNodes": 7623,
+          "Transitions": 51828,
+          "ChoiceBranches": 18898,
+          "ElapsedMilliseconds": 2359.3018,
+          "WorkerAllocatedBytes": 1945528920,
+          "Gen0Collections": 2,
+          "Gen1Collections": 2,
+          "Gen2Collections": 2,
+          "GcPauseMilliseconds": 4.085,
+          "MaxObservedGcPauseMilliseconds": 2.923,
+          "RecordedSolverCount": 2
+        }
+      ],
+      "ordinaryBoundAndSeedDiagnostics": [
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=41 updates=2 pruned=17",
+        "[CombatSolver/Test] PLAN_CERTIFIED_HP_INCUMBENT deficit=41 turn=5",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=41 updates=0 pruned=138",
+        "[CombatSolver/Test] PLAN_CERTIFIED_HP_INCUMBENT deficit=41 turn=5",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=1 pruned=74",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0",
+        "[CombatSolver/Test] POWER_CERTIFIED_HP_INCUMBENT deficit=40 turn=4",
+        "[CombatSolver/Test] EARLY_HP_INCUMBENT deficit=40 updates=0 pruned=0"
+      ],
+      "observedBoundPrunedSum": 229,
+      "selectedPruneCounters": {
+        "primaryIncumbentBranchesPruned": 347,
+        "primaryIncumbentUpdates": 1
+      },
+      "sameWorkAsPriorPlanSeed": true,
+      "scope": "single complete uninstrumented screen, no new workload reduction from additional member handoff; not final acceptance"
+    }
   }
 }

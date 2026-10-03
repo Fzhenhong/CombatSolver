@@ -119,3 +119,9 @@ TheInsatiable的初始行动明确给玩家生成六张FranticEscape，三张进
 ## 女王实际冻结根与前置计划合同（2026-10-04）
 
 隔离DLL`90c907a7…`复用女王组件原型的Components/CombatRootSnapshot同哈希源码，改动仅为既有前置计划采用当前严格回复证书。`QUEEN-OPENING-SCHEDULE` / `959cc284419f453eba8a119d10fb2752`，43.25秒Passed：真实Coordinator新认证根、前置/计划各一次、首个成员胜利界、DOP1/DOP16严格质量/父/live/RNG，以及SpectrumShift原生完整状态/Fork；实例删除。独立无Solve诊断首次确认该原型的实际冻结女王根证书成立、回复界0、完整根匹配，不把生产f266的BundleOfJoy拒绝沿用为此原型的拒绝，也不外推全语料覆盖。完整请求405.60秒NoWin，速度及质量失败，没有推广运行时资格；具体范围见配套JSON及[性能记录](component-healing-bound-20261003.md)。
+
+## 猎手无药完整见证的计划传递（2026-10-04）
+
+复用同一版本已通过的StableSerum留牌与Forge升级零回复闭包，不放宽未知初始来源/附件/生成资格。隔离DLL`c6bef5ca…`的`SILENT-EARLY-HP` / `4fc9d3a11a1348dcb0069f4871171533`在28.94秒Passed：真实完整无药胜利通过已有战略资格助手形成标量，严格DOP1/DOP16、实际31次回合内剪枝，真实Coordinator跨计划传递1次，并验证两种药水顺序/两项完整原生状态/Fork/父/live/RNG。直接搜索显式Beam24/1200节点/10000毫秒，Coordinator20000毫秒及宽度12/8；共享30秒取消、120秒启动器帽，实例删除。此前updates1/pruned0的27.01秒Failed保留，未执行v2不记为成功合同。整请求20.22秒仅原始1.837倍，未纳入生产或扩大7/29严格覆盖；逐次记录见配套JSON与[性能记录](component-healing-bound-20261003.md)。
+
+后续主/精炼及能力成员的隔离传递合同：DLL`fe20001e…`，`SILENT-EARLY-HP` / `35d32dea0b714e2182b8e118cfa6aa50`，30.99秒Passed。新增已审Mayhem以实际运行能力路线，DOP1/DOP16严格搜索29次剪枝，真实Coordinator计划/能力传递3/8次，原生两药水完整状态/Fork/父/live/RNG。复用同版本早期界政策/未知/同战损证据，不重复执行来源未变的成功合同。实际冻结整请求20.04秒仅原始1.853倍，节点和转移与上版一致，仍未纳入生产或扩张覆盖；结果及适用前提见配套JSON的`silentMemberHpSeedContract`与[性能记录](component-healing-bound-20261003.md)。

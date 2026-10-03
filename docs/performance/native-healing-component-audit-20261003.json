@@ -8505,5 +8505,127 @@
       "new schedule all-root quality coverage",
       "request-level exclusive bound overhead"
     ]
+  },
+  "silentEarlyHpPlanSeedContract": {
+    "baseCommit": "21674720",
+    "mechanism": "same schedule, scores and budgets; explicit Stable/Forge composition plus strict HP-only early bound. A complete potion-free policy-qualified winner retained by coordinator seeds subsequent existing no-potion plan members through scalar bound; unknown and equal-HP branches survive.",
+    "sourceHashes": {
+      "src/Search/StrategicHpRecoveryBound.Components.cs": "9c8782588ae28486ca45f74252ea9f682f053c48163a1f099d5285693e06b069",
+      "src/Search/CombatBeamSolver.Retention.cs": "aca35fc10b211774490806d988d5d729b8c7be3e7ef440a95b0f5d9fda600d3d",
+      "src/Search/CombatBeamSolver.Phases.cs": "e07e1c4ee44157d4d6636a95fa7727a65294b5c72fb99e824f78269fd2ed3121",
+      "src/Search/CombatBeamSolver.EarlyHpBound.cs": "fb7eb67d2752fb64a40c4365bea5977642d564da58d78ccc009238984e2aad71",
+      "src/Testing/UnattendedTestRunner.SilentEarlyHp.cs": "c44c9a75c7d65fa22891d7ca8dadd1f95b26078beeca2de9fb25fa367d42ab99",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "1c4d99098d953cc7e5db1e11b2f620a3c17008738c32e6027d235fe4f4760e3b",
+      "src/Search/CombatBeamSolver.cs": "474252a9d3e6e51d992aff8e482e46e10f6f4f6166f499c408948cd37b00db8a",
+      "src/Search/FrontierContinuationScheduler.cs": "29199233b9f64aa7aa8038c41f62a29a6ca76abcddab11d4b8ae9246b2966bb4",
+      "src/Search/CombatSearchCoordinator.PlanSearch.cs": "63e91b8069e80b3df12d1544df3f1e24043d7b5dfdd0f67efb842e9445b39507"
+    },
+    "dllSha256": "c6bef5cadc9c3b50d6a12f90d5bb10c74336c8572b3e89819223290c2d3529d0",
+    "build": {
+      "seconds": 13.83,
+      "warnings": 0,
+      "errors": 0,
+      "variant": "v3"
+    },
+    "failedNativeContracts": [
+      {
+        "runId": "619b2f7ddbb340468d57dba8cafd6368",
+        "status": "Failed",
+        "elapsedMilliseconds": 27008.1717,
+        "mainAssemblyHash": "BC00AE33F1DD9456859F7352E1A527DF48F954E45FA6D44A5CD9F291E2AEC76F",
+        "completedChecks": [],
+        "error": "System.InvalidOperationException: Silent early HP composition failed: loss=0/0 updates=1 pruned=0\n   at CombatSolver.UnattendedTestRunner.AssertSilentEarlyHpAsync(CombatState live, Player player)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()",
+        "resultPath": ".local/general-healing-audit/silent-early-hp-native/result.json",
+        "instanceCleanup": "launcher removed instance",
+        "reason": "fixture found zero-loss victory but no strictly worse unfinished branch; no actual prune (updates1/pruned0)"
+      }
+    ],
+    "nativeContract": {
+      "runId": "4fc9d3a11a1348dcb0069f4871171533",
+      "status": "Passed",
+      "elapsedMilliseconds": 28939.7468,
+      "mainAssemblyHash": "C6BEF5CADC9C3B50D6A12F90D5BB10C74336C8572B3E89819223290C2D3529D0",
+      "completedChecks": [
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=31:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanSeedHandoff:transfers=1:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/silent-early-hp-native-v3/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "profile": "Direct solvers explicit Beam24/1200 nodes/10000ms, DOP1 no new bound vs DOP16 actual qualified cross-solver seed, strict incremental; actual Coordinator Beam24/1200/20000ms with widths12/8; shared30sec cancellation, launcher120sec"
+    },
+    "fixtureCorrection": "Added known non-healing Bloodletting to produce a real worse unfinished branch; actual complete no-potion control winner seeds candidate. No fictitious winner. Use existing BuildRefinementPrimarySearchIncumbent for strategic axis, keep initial player HP below maximum to exercise successive plan members, add actual coordinator transfer assertion.",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final interleaved acceptance",
+      "fixed full regression",
+      "frozen native full deployment",
+      "full-root exclusive certification overhead",
+      "new runtime corpus certification coverage"
+    ],
+    "scope": "Stable/Forge proof reused from d99199c3d427412382a904ae17d31802 on same pinned DLL; native fixture demonstrates seed source eligibility, actual intermediate pruning and coordinator plan handoff; no new production/corpus certification claim"
+  },
+  "silentMemberHpSeedContract": {
+    "baseCommit": "21674720",
+    "priorPrototype": "silent-early-hp-provenance.json",
+    "mechanism": "same plans, ranking and budgets; additionally seed strict HP-only intermediate retention from existing qualified potion-free complete-victory incumbent in primary/refinement and opening power members. Caller retains winner; component, policy and branch unknown guards preserved.",
+    "sourceHashes": {
+      "src/Search/StrategicHpRecoveryBound.Components.cs": "9c8782588ae28486ca45f74252ea9f682f053c48163a1f099d5285693e06b069",
+      "src/Search/CombatBeamSolver.Retention.cs": "aca35fc10b211774490806d988d5d729b8c7be3e7ef440a95b0f5d9fda600d3d",
+      "src/Search/CombatBeamSolver.Phases.cs": "e07e1c4ee44157d4d6636a95fa7727a65294b5c72fb99e824f78269fd2ed3121",
+      "src/Search/CombatBeamSolver.EarlyHpBound.cs": "fb7eb67d2752fb64a40c4365bea5977642d564da58d78ccc009238984e2aad71",
+      "src/Testing/UnattendedTestRunner.SilentEarlyHp.cs": "2d49b7868c332b1c648c040914c02ea0bdf195412a265807eecb434114af8e3f",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "1c4d99098d953cc7e5db1e11b2f620a3c17008738c32e6027d235fe4f4760e3b",
+      "src/Search/CombatBeamSolver.cs": "474252a9d3e6e51d992aff8e482e46e10f6f4f6166f499c408948cd37b00db8a",
+      "src/Search/FrontierContinuationScheduler.cs": "29199233b9f64aa7aa8038c41f62a29a6ca76abcddab11d4b8ae9246b2966bb4",
+      "src/Search/CombatSearchCoordinator.PlanSearch.cs": "63e91b8069e80b3df12d1544df3f1e24043d7b5dfdd0f67efb842e9445b39507",
+      "src/Search/CombatSearchCoordinator.cs": "b44ba7132690ba29a8ce70c18b59961da4bb2e01fa5e335f0c7cc6bf18cd73f8",
+      "src/Search/CombatSearchCoordinator.PowerRoutes.cs": "32dc795c8e4c96b21ae48a091b4956bc5a4ce60e29ca56d00390367a94aa9c02"
+    },
+    "dllSha256": "fe20001ea0d27ec942fd1236494f4b8bca25a2ac86280e76db51e4f652b981e6",
+    "build": {
+      "seconds": 27.66,
+      "warnings": 0,
+      "errors": 0
+    },
+    "nativeContract": {
+      "runId": "35d32dea0b714e2182b8e118cfa6aa50",
+      "status": "Passed",
+      "elapsedMilliseconds": 30992.0563,
+      "mainAssemblyHash": "FE20001EA0D27EC942FD1236494F4B8BCA25A2AC86280E76DB51E4F652B981E6",
+      "completedChecks": [
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=29:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/silent-member-hp-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "profile": "direct explicit Beam24/1200/10000ms DOP1 disabled vs DOP16 seeded strict; Coordinator 20000ms widths12/8; 30sec shared cancellation/120sec launcher",
+      "fixtureScope": "Mayhem added to exercise actual opening power continuations; Bloodletting supplies genuine worse unfinished branch; root HP60/70 preserves successive plans. Actual complete winner comes from DOP1 search and existing strategic eligibility helper."
+    },
+    "reusedSemanticEvidence": {
+      "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+      "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
+      "potionNativeRunId": "d99199c3d427412382a904ae17d31802",
+      "earlyHpUnknownEqualityPolicyNativeRunId": "b6d8528c2acb4fc396cc058c3ecf7feb",
+      "priorPlanHandoffNativeRunId": "4fc9d3a11a1348dcb0069f4871171533",
+      "scope": "same audited potion component and early strict HP mechanism; no new card/Power default admission. New transfer checked by current native fixture."
+    },
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final interleaved acceptance",
+      "fixed full regression",
+      "frozen native full deployment",
+      "all-root coverage and exclusive certification overhead"
+    ],
+    "scope": "existing scalar complete no-potion primary/refinement/power witnesses passed into strict intermediate HP bound on component-certified roots; native actual plan/power handoff, no new default semantic qualification or production coverage"
   }
 }
