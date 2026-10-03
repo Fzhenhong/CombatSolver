@@ -2179,6 +2179,14 @@ foreach ($file in @('CombatBeamSolver.FinalPlanOrdering.cs', 'CombatBeamSolver.T
     }
 }
 
+$dynamicVarDirectAccess = & rg -l -F '._vars' (Join-Path $repositoryRoot 'src') --glob '!**/DynamicVarSetAccess.cs'
+if ($LASTEXITCODE -gt 1) {
+    throw 'DynamicVarSet field access scan failed.'
+}
+if ($dynamicVarDirectAccess) {
+    $violations.Add('DynamicVarSet._vars direct field access must go through DynamicVarSetAccess')
+}
+
 if ($violations.Count -gt 0) {
     $violations | ForEach-Object { Write-Error $_ }
     throw "Refactor boundary verification failed with $($violations.Count) violation(s)."
