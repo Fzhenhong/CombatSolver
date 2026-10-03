@@ -4,6 +4,8 @@
 
 历史记录见 [归档索引](archive/development/README.md)，0.48.1 批次见 [历史卷 10](archive/development/volume-10.md)。
 
+0.48.2的战斗状态与路线执行修复见[历史卷11](archive/development/volume-11.md)；日志站逐包处理及两份保留首因见[排查记录](issues/0.48.0-hardbugs-20261003.md)。
+
 ## 下一版本（开发中）
 
 尚无新增行为记录。巨斧机器人报告中未解决的内存耗尽、重生目标丢失及完整原包部署边界见 [排查记录](issues/axebot-reports-20261003.md)；旧更优世界线报告中无新增用药的搜索缺口仍待独立定位，证据保留在历史卷。

@@ -561,7 +561,7 @@ internal sealed partial class CombatBeamSolver
             {
                 if (replayFailed)
                     replayEvidence.Publish(policy.Diagnostics,
-                        cancellationToken.IsCancellationRequested ? "replay_cancelled" : "replay_failed", relicTriggerRecorder);
+                        ReplayCancellationToken.IsCancellationRequested ? "replay_cancelled" : "replay_failed", relicTriggerRecorder);
                 annotationRoot?.ReleaseSimulator();
             }
             if (annotationReplay.StateKey != finalSnapshot.StateKey
@@ -1007,13 +1007,13 @@ internal sealed partial class CombatBeamSolver
             routeAdoptionSeed = new SolverRouteAdoptionSeed(
                 candidateVersion,
                 adoptionActions,
-                () => MaterializeSelectedRoute(
+                () => MaterializeAdoptableRoute(() => MaterializeSelectedRoute(
                     ordering,
                     onlyDeathRoutesFound,
                     SolverResultScope.RouteAdoption,
                     candidateSearchedTurnLayers,
                     candidateTimeBudgetReached: false,
-                    routeAdoptionActions: adoptionActions));
+                    routeAdoptionActions: adoptionActions)));
             lastRoutePreviewAt = System.Environment.TickCount64;
         }
 
@@ -2389,15 +2389,17 @@ internal sealed partial class CombatBeamSolver
     private bool CanApplyFixedPrefixAction(SearchNode node, PlanAction action)
     {
         CombatPredictionSimulator simulator = (CombatPredictionSimulator)node.Snapshot.Simulator;
+        if (node.Snapshot.BoundaryReason != SearchBoundaryReason.None || !simulator.IsInProgress)
+            return false;
         SimulatedCombatState combat = (SimulatedCombatState)simulator.State.CombatState;
         if (action.Kind == PlanActionKind.EndTurn)
             return true;
         if (action.Kind == PlanActionKind.UsePotion)
         {
-            PotionModel? potion = combat.GetPotionAtSlot(_player, action.PotionSlot);
-            return potion != null
-                && string.Equals(potion.Id.Entry, action.PotionId, StringComparison.Ordinal)
-                && combat.IsPotionAvailable(_player, action.PotionSlot);
+            return EnumeratePlannedPotionActions(new ExpansionPlan(node, CardNameFirst: false))
+                .Any(candidate => candidate.Action.PotionSlot == action.PotionSlot
+                    && string.Equals(candidate.Action.PotionId, action.PotionId, StringComparison.Ordinal)
+                    && candidate.Action.TargetCombatId == action.TargetCombatId);
         }
 
         SimPlayerCombatState player = simulator.State.GetPlayerCombatState(_player);

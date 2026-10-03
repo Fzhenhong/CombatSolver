@@ -13,6 +13,8 @@ HeavenlyDrill 的 OnPlay 使用精确镜像，先解析分支 X 值及修正，�
 
 战利品、Adrenaline、Offering、Neurosurge 的完整 OnPlay 由 `CardDrawCardMirrors` 在共享注册表登记，按原版命令顺序处理铸造、扣血、返能、抽牌与能力施加。适配其效果时保留抽牌前后的边界：抽牌可以触发虚空失能量、自动出牌及满手限制。对应的 `CardEffectSpecRegistry` 后置补偿已经移除，第三方应在同一权威镜像内描述有序结算。
 
+苦难（Misery）的完整OnPlay在共享`CardOnPlayMirrors.Registry`登记：攻击前冻结有序减益实例及临时Power的金额调整，攻击后传播克隆。追加格挡的内部`CardEffectSpecRegistry.Apply`要求当前`CardPlay`，续执行用同一Fork上下文重映射；外部镜像同样应保留实际出牌身份。群体减益施加后逐目标完成金额变化Hook，再进入下一目标，抽牌和嵌套自动牌保持原生结算位置。
+
 ## 0. 先判断你要不要读下去
 
 内置遗物目标新增 MeatOnTheBone 半血目标与 1～3 优先级，仍属于 RelicCounterCatalog 的封闭表。CardEnchantmentId 是路线显示元数据，当前额外展示原版 Inky；不代表未知附魔已获得战斗模拟支持。

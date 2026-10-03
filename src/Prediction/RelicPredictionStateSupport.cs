@@ -92,7 +92,9 @@ internal static class RelicPredictionStateSupport
                 CaptureCounter(target, source._attacksPlayedThisTurn);
                 break;
             case (PaelsLegion target, PaelsLegion source):
-                _ = simulator.StateStore.GetReadOnly((AbstractModel)target, () => new PaelsLegionPredictionState(source));
+                _ = simulator.StateStore.GetReadOnly((AbstractModel)target, () => new PaelsLegionPredictionState(source,
+                    source._affectedCardPlay is { } play
+                    && ((SimulatedCombatState)simulator.State.CombatState).WasCardPlayFinishedBeforePrediction(play)));
                 break;
             case (PenNib target, PenNib source):
                 _ = simulator.StateStore.GetReadOnly((AbstractModel)target, () => new PenNibPredictionState(source));
@@ -304,7 +306,7 @@ internal static class RelicPredictionStateSupport
                         .Peek(value, static relic => new PaelsLegionPredictionState(relic));
                     fingerprint.Add(state.Cooldown);
                     fingerprint.Add(state.TriggeredBlockLastTurn);
-                    fingerprint.Add(state.AffectedCardPlay != null);
+                    fingerprint.Add(state.HasAffectedCardPlay);
                     break;
                 }
             case PenNib value:
@@ -530,7 +532,7 @@ internal static class RelicPredictionStateSupport
         };
 
     private static string PaelsLegionText(PaelsLegionPredictionState state)
-        => $"{state.Cooldown}:{Bool(state.TriggeredBlockLastTurn)}";
+        => $"{state.Cooldown}:{Bool(state.TriggeredBlockLastTurn)}:{Bool(state.HasAffectedCardPlay)}";
 
     private static string RainbowRingText(RainbowRingPredictionState state)
         => $"{state.AttacksPlayedThisTurn}:{state.SkillsPlayedThisTurn}:{state.PowersPlayedThisTurn}:{state.ActivationCountThisTurn}";

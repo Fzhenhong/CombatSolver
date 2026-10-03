@@ -2445,5 +2445,221 @@
     "procedure": "合并ce17a40，保留战略上下文双方变量；直接字段及回合前缀合同。",
     "observed": "合并上游ce17a40（0.38.0）后，保留双方战略上下文变量与各自消费者，文档冲突合并保留两批记录。正常Release零警告/错误，Bash/PowerShell结构门禁均90文件通过；STRATEGIC-CONTEXT-DEMAND / eae143ef4e3a4e32a23be62f060b937b Passed，END-TURN-CHOICE-REPLAY / 26494f1f7a1341a589f3a8ac35b54812 Passed。未重测性能，前述收益只属于原基线，不套用到上游新增语义后的产物。",
     "evidence": "docs/archive/performance/pr90-attempts-20260913.md"
+  },
+  "NATIVE-CHOOSE-OPEN-GATE": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.SILENT/ENCOUNTER.CHOMPERS_NORMAL，NATIVE-CHOOSE-OPEN-GATE，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "NativeChoose:ReopenedPage:NativeOpenGate:AcceptedIdentity；NativeChoose:CandidateOrderMismatch:PageRetained；NativeChoose:Skip:NativeAccepted",
+    "observed": "失败9ddd9db4268546d8a9901df6b6e2c6a1：System.InvalidOperationException: Native choose driver returned before the reopened page accepted JackOfAllTrades.\r；最终99fcd144f0a54855b91b17d2c523bc91 Passed，23.50秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Runtime/UnattendedTestRunner.NativeChoiceSurfaces.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "CALCULATED-GAMBLE-ORDERED-DISCARD": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.SILENT/ENCOUNTER.CHOMPERS_NORMAL，CALCULATED-GAMBLE-ORDERED-DISCARD，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "CalculatedGamble:OrderedDiscard:NineCardHand:FourteenCardDraw:NestedSly:Relics:TwoExhaustedInstances:Native:Fork",
+    "observed": "最终fde97e1259f14f3785da09d1d3b1c8b6 Passed，32.01秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "FROZEN-LIGHTNING-CHANNELS": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.DEFECT/ENCOUNTER.MECHA_KNIGHT_ELITE，FROZEN-LIGHTNING-CHANNELS，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "FrozenLightning:RootBeforeNativeAdvance:ThreeBranchChannels:Voltaic:NativeFullState:Fork",
+    "observed": "最终2b84ba4f29e040beb90d67c8c4135e5f Passed，25.66秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "REPORT-ROUND-IMBALANCED": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.NECROBINDER/ENCOUNTER.BOWLBUGS_NORMAL，REPORT-ROUND-IMBALANCED，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "REPORT-ROUND-IMBALANCED",
+    "observed": "最终9a57db29c3074e77a3eed74a61d24a9a Passed，32.68秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.ReportRound.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "SECOND-WIND-REPORT-ROOT": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.DECIMILLIPEDE_ELITE，SECOND-WIND-REPORT-ROOT，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "SecondWind:NestedDraw:ThreeEnemies:Reattach:Native:Fork",
+    "observed": "失败416a37d5d91e448784ddf2bc3536bb47：System.InvalidOperationException: SECOND-WIND-REPORT-ROOT.THUNDERCLAP 一步模拟与真实行动不一致；首个差异：field=E0.hp expected={12} actual={42}\r；最终72d8b0a8afca4b34bfffd3b62934f2bf Passed，32.67秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "GROUP-DEBUFF-REACTIVE-DRAW": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.NECROBINDER/ENCOUNTER.CHOMPERS_NORMAL，GROUP-DEBUFF-REACTIVE-DRAW，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "GroupDebuff:FourSources:Vicious:Hellraiser:PerTargetEffects:Native:Fork",
+    "observed": "失败dd57fdf540c941aba6cc7146ced466c4：System.InvalidOperationException: GROUP-DEBUFF-REACTIVE-DRAW.SHOCKWAVE 一步模拟与真实行动不一致；首个差异：none\r；最终749d07146e794926b05aab629d136865 Passed，61.16秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "CONSTRUCT-REAPER-ARTIFACT": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.NECROBINDER/ENCOUNTER.CONSTRUCT_MENAGERIE_NORMAL，CONSTRUCT-REAPER-ARTIFACT，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "ReaperForm:Osty:Artifact:PenNib:MultiTargetDoom:TimesUp:RouteRisk13:NativeTurn:Fork",
+    "observed": "失败830f843415c940d4a7943cb53399cbf9：System.InvalidOperationException: CONSTRUCT-REAPER-ARTIFACT.MISERY 一步模拟与真实行动不一致；首个差异：field=P[5] expected={1:DOOM_POWER=36/0[]} actual={2:STRENGTH_POWER=4/0[]} expected_count=11 act；最终d57b75f8d6d643b48f6316af432c0481 Passed，39.98秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "FIXED-PREFIX-POTION-POLICY": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，FIXED-PREFIX-POTION-POLICY，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "FixedPotionPrefix:Disabled:Quota:EarliestTurn:Target:Protect:RequiredPair",
+    "observed": "失败ea980c051f3a44929ebaf9c25ab25aee：System.InvalidOperationException: Fixed potion prefix policy failed: disabled potion use\r；最终5e650223cc7546d896f206c10bd98f8a Passed，22.28秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Search/UnattendedTestRunner.FixedPrefixOutcomes.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "FIXED-PREFIX-TURN-OUTCOMES": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，FIXED-PREFIX-TURN-OUTCOMES，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "FixedPrefixOutcomes:NodeOwnedBeforeProjection:RawFallbackSoldDelta:ExistingOutcomePreserved；FixedPrefixContinuations:IndependentPrefixOracle:FullStateText:Turn:ForecastOffset:Order；FixedPrefixOutcomes:ThreeTurns:ZeroAndPositiveLoss:PartialTail:Terminal:Empty:InvalidSuffix:RootUnchanged；FixedPrefixOutcomes:SevenTables:CacheRoundtrip:InvalidCachePreserved:ImportAndContinuationRejected:MissingLossNotZero；FixedPrefixOutcomes:NativeThreeTurnContinuation:LiveEndTurnRiskMatches:ReuseAndDisplayTotals；FixedPrefixContinuations:N4:IndependentPrefixOracle:FullStateText:Turn:ForecastOffset:RootUnchanged；FixedPrefixContinuations:N8:IndependentPrefixOracle:FullStateText:Turn:ForecastOffset:RootUnchanged；FixedPrefixContinuations:N17:IndependentPrefixOracle:FullStateText:Turn:ForecastOffset:RootUnchanged",
+    "observed": "最终75437f09fab94d62b82336e2cc2af221 Passed，44.71秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Search/UnattendedTestRunner.FixedPrefixOutcomes.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "MIRRORED-HOOK-FILTER": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，MIRRORED-HOOK-FILTER，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "MirroredHookFilter:Methods=62:Models=1671:OrderDuplicatesExternalForkInvalidationPatchRefreshSharedLayoutsSegmentsNoAnchorEffectivePrefixReuse",
+    "observed": "最终dd238590831d4fc5b0a862ea2589ea07 Passed，47.64秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.MirroredHookFilter.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "FROZEN-ROOT-LISTENERS": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，FROZEN-ROOT-LISTENERS，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "FrozenRootRunListeners:ParentChildGrandchild:CardMutation:PowerRemap",
+    "observed": "最终92375939aa64442b8b489ec81f5f9624 Passed，45.21秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.FrozenRootListeners.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "CALCULATED-HISTORY-FREEZE": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，CALCULATED-HISTORY-FREEZE，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "CalculatedHistory:SixReaders:NativeAdvance:Parent:Sibling:Fork:BranchIncrement",
+    "observed": "最终0e251ee661f24c399ed18697c9e66ee3 Passed，23.41秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.LogicBugBatch.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "VOID-FORM-TURN-CHOICES": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.REGENT/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，VOID-FORM-TURN-CHOICES，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "VoidForm:ForcedTurn:Tyranny:Stratagem:FullReplay:ExecutionContinuation:Native",
+    "observed": "最终52eb373400cf4154959105a39ebac915 Passed，31.60秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.LogicBugBatch.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "FLATTEN-MUSIC-BOX-ENTRY": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.NECROBINDER/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，FLATTEN-MUSIC-BOX-ENTRY，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "FlattenMusicBox:NativeCloneEntry:OrderedCostLayers:Fork",
+    "observed": "最终85219286175447c8bb0a28b4e371e66e Passed，23.17秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.LogicBugBatch.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "SEEKER-ORDERED-OPTIONS": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，SEEKER-ORDERED-OPTIONS，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "SeekerStrike:RandomSample:FilteredPileOrder:DuplicateInstances:Native:Fork",
+    "observed": "失败01da2e3ba70e44d4a60b8018922a788e：System.InvalidOperationException: Seeker candidates differ from the native filtered draw-pile order.\r；最终2fa365c9cfb346cb946b356030be11d7 Passed，23.49秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.OrderedSelection.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "RITUAL-TEMPORARY-STRENGTH": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，RITUAL-TEMPORARY-STRENGTH，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "Ritual:TemporaryStrength:BothListenerOrders:Native:Fork",
+    "observed": "失败89ac521a2a794c35b80b15278fb18d6d：System.InvalidOperationException: Ritual.TemporaryStrengthOrder:False 一步模拟与真实行动不一致；首个差异：field=P[0] expected={0:STRENGTH_POWER=1/0[]} actual={0:RITUAL_POWER=1/0[]} expected_count=2 ；最终e6dbee4c63964b12b2de0493dde79f73 Passed，27.02秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.OrderedSelection.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "NOXIOUS-RAMPART-ORDER": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.TURRET_OPERATOR_WEAK，NOXIOUS-RAMPART-ORDER，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "NoxiousFumes:SleightOfFlesh:PerTargetDamage:BeforeRampart:Native:Fork",
+    "observed": "失败f1713e9840ec4e84bbcc6ca273889a59：System.InvalidOperationException: NoxiousFumes.SleightOfFleshBeforeRampart 一步模拟与真实行动不一致；首个差异：field=E1.hp expected={41} actual={32}\r；最终d3bf363e7ede4c329633476dcdbb2f35 Passed，25.52秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.OrderedSelection.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "EVIL-EYE-EXHAUST-HISTORY": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，EVIL-EYE-EXHAUST-HISTORY，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "EvilEye:ExhaustedHistory:SingleAndDoubleBlock:Native",
+    "observed": "失败c40a9d0550b64e04bf0fc7b43a53044c：System.InvalidOperationException: EVIL-EYE-EXHAUST-HISTORY.EvilEye:EVIL_EYE 一步模拟与真实行动不一致；首个差异：field=block expected={45} actual={54}\r；最终e82fd9610dbc46b8883ee8aa3609e322 Passed，25.72秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.OrderedSelection.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "BLOCK-SPEC-CARD-PLAY-IDENTITY": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，BLOCK-SPEC-CARD-PLAY-IDENTITY，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "BlockSpecIdentity:DeathsDoor:Glitterstream:Unmovable:Native:Fork",
+    "observed": "最终b87b54a38fb04bc6bc6267e56a44e371 Passed，25.84秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.OrderedSelection.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "ROUTE-ADOPTION-LIFETIME": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，ROUTE-ADOPTION-LIFETIME，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "RouteAdoption:PublishedPreview:ExpiredPass:ActiveRequest:ExactActions",
+    "observed": "最终602a34d3a6954e7987515ad8e003a213 Passed，23.14秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.LogicBugBatch.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "PAELS-LEGION-FINISHED-REFERENCE": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.SILENT/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，PAELS-LEGION-FINISHED-REFERENCE，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "PaelsLegion:FinishedNativeReference:FrozenRoot:LaterBlock:Cooldown:Native:Fork",
+    "observed": "失败d6c44ccfbe9e4296bcf14558b3472dc0：System.InvalidOperationException: Cannot fork Pael's Legion during card-play resolution.\r；最终efa60d3c846f49ffa55c8d513bb3e2fa Passed，23.64秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "END-TURN-RISK-LOSS-ACCOUNTING": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.DEFECT/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，END-TURN-RISK-LOSS-ACCOUNTING，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "EndTurnRisk:DamageLossAxis:Revival:FinalHp:Native",
+    "observed": "失败37bdabd521cf4fd7ba7579ef15cb9162：System.InvalidOperationException: End-turn risk and route loss differ: 16/4; hp=38/22.\r；最终561bb22639aa446d91d3d531711e573e Passed，27.46秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "MAKE-IT-SO-FULL-HAND": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.REGENT/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，MAKE-IT-SO-FULL-HAND，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "MakeItSo:MusicBox:FullHand:OrderedReturns:Native:Fork",
+    "observed": "失败778939bdc0aa4bb3bf7fb375f91306f6：System.InvalidOperationException: MAKE-IT-SO-FULL-HAND.MASTER_OF_STRATEGY 一步模拟与真实行动不一致；首个差异：field=H[9] expected={MAKE_IT_SO+1/False:0/False:-1/0/False/False/False/True/False/-:0:0/；最终0c83cce4e34244ca9af503848b4709db Passed，25.37秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardInstanceLifecycles.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "CARD-COST-IDENTITY-CONTRACT": {
+    "status": "Passed",
+    "level": "HeadlessNativeMechanismContract",
+    "procedure": "CHARACTER.IRONCLAD/ENCOUNTER.FUZZY_WURM_CRAWLER_WEAK，CARD-COST-IDENTITY-CONTRACT，120秒上限、串行及CleanupInstanceOnExit。",
+    "expected": "CardCostIdentity:comparisons=11:nativeTurnAndPlayCleanup:stars:fork:choice:continuation",
+    "observed": "最终65bcb61bc6d34f5f8d04dd21b64e6aa0 Passed，45.39秒；完整断言按场景执行，实例已清理。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.CardCostIdentity.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "DAMPEN-REACTIVE-ROCKET-PUNCH": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateAndForkContract",
+    "procedure": "共享首因单效果严格差分，120秒上限，CleanupInstanceOnExit。",
+    "expected": "逐实例有序状态、费用/升级或生成历史、父根及Fork一致。",
+    "observed": "2180067a1f424092b3617d4da6c59a77 Passed；实际输出与实例清理已在批次前段确认。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.DampenDeath.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "DAMPEN-REACTIVE-MELANCHOLY": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateAndForkContract",
+    "procedure": "共享首因单效果严格差分，120秒上限，CleanupInstanceOnExit。",
+    "expected": "逐实例有序状态、费用/升级或生成历史、父根及Fork一致。",
+    "observed": "1eb75a3bf3144624a8c744445ed4e4f8 Passed；实际输出与实例清理已在批次前段确认。",
+    "evidence": "src/Testing/Contracts/Combat/UnattendedTestRunner.DampenDeath.cs; docs/issues/0.48.0-hardbugs-20261003.md"
+  },
+  "RADIANT-PEARL-ENTRY": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateAndForkContract",
+    "procedure": "共享首因单效果严格差分，120秒上限，CleanupInstanceOnExit。",
+    "expected": "逐实例有序状态、费用/升级或生成历史、父根及Fork一致。",
+    "observed": "afd4056a2fff4fb4aef3a17d76496efd Passed；实际输出与实例清理已在批次前段确认。",
+    "evidence": "src/Testing/Regressions/Reports/UnattendedTestRunner.LogicBugBatch.cs; docs/issues/0.48.0-hardbugs-20261003.md"
   }
 }
