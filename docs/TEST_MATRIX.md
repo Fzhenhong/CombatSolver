@@ -59,3 +59,5 @@ Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。该
 `COMPONENT-HEALING-BOUND` / `7aad45400e0a4cbab3cf1c090805e494` 与 `COMPONENT-SMART-BOUND` / `1f1fe45db2ec480d98516b063f9a8a38` Passed：四项完整原生用药状态、再生叠加/禁药/额度、全部牌堆和永久牌组未知来源拒绝、父子/live/RNG；完整无药胜利及Smart精确层7次/开局后续2次实际剪枝、政策门禁、DOP2严格增量与协调器。120秒帽，实例删除；前置失败与未达两倍原型保留。源码相同的合同复用至拟提交DLL `f266bf00…`，两根最终ABBA完成，目标根中位67.48倍且质量一致/峰值−91.87%；完整29根固定回归完成，女王交错对照候选两次NoWin，质量阻断保留；受试体补充ABBA中位3.00倍/战损26→24/峰值+6.86%通过，原单次+10.76%样本保留，未称全回归通过。复跑和范围见[组合上界](performance/component-healing-bound-20261003.md)。
 
 `COMPONENT-FINAL-DEV10-FROZEN-DEPLOY` / `19c246e2aa6b401780644c1f498d10f8` 原生结果Passed，完整初始根与离线B1相等，14战损/0瓶/2回合、无意外重算；启动器清理退出码1，独立确认PID及私有实例不存在。隔离研究 `COMPONENT-SILENT-POTIONS` / `d99199c3d427412382a904ae17d31802` 的两项完整用药状态/Fork/双顺序差分Passed，但无插桩整请求初筛23.49秒未改善，原型未纳入生产版本。详见上方组合上界报告及JSON。
+
+女王追加组件合同 `81f5705b0d3c481e954b7f1a014ce638` Passed，但完整初筛298.77秒NoWin。隔离只读续接Fork的原生16线程合同 `654a913c7a7c48e9b94721bd868bbcb9`、搜索收尾 `ce76832c0c0a48aab8fe3a6440b87baf`、严格增量 `c97962ac8ab3488f95004f7558bd2153` 均Passed并清理实例；完整初筛女王294.85秒Win67/0/T12，未达两倍、未完成固定回归，未纳入生产源码。
