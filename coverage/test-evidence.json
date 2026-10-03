@@ -42,10 +42,10 @@
   "AXEBOT-JOSS-DEFERRED-FORK": {
     "status": "Passed",
     "level": "HeadlessRootStateAndForkContract",
-    "procedure": "金纸根含1次已计数与2次延迟消耗，捕获后推进live，核对父子/兄弟、指纹与续用文本。",
+    "procedure": "金纸根含1次已计数与2次延迟消耗，捕获后推进live，核对父子/兄弟、指纹与续用文本；追加零待结算分支与非零分支的区分及消费。",
     "expected": "延迟计数从主线程根冻结，在StateStore按值Fork；各分支只消费自身计数一次，live保持。",
-    "observed": "e7c0363924e74211b043ebfaca50ac0c Passed；根计数、live推进隔离、父子/兄弟Fork、指纹/续用文本及逐分支消费通过。初次e3faadd893c74974af6060628bbf13ec在测试自身的隔离域内捕获根，触发Power显示变量保护；修正测试捕获时点后通过。",
-    "evidence": "coverage/unattended/axebot-joss-deferred-relics.json; src/Testing/UnattendedTestRunner.JossPaperDeferred.cs; docs/issues/axebot-reports-20261003.md"
+    "observed": "e7c0363924e74211b043ebfaca50ac0c Passed；根计数、live推进隔离、父子/兄弟Fork、指纹/续用文本及逐分支消费通过。初次e3faadd893c74974af6060628bbf13ec在测试自身的隔离域内捕获根，触发Power显示变量保护；修正测试捕获时点后通过。指纹零状态兼容修复的6bf2b7299eae440ba42c87d18f27f290 Passed，新增零/非零分支区分、消费与父子隔离；未运行完整原生战斗。",
+    "evidence": "coverage/unattended/axebot-joss-deferred-relics.json; src/Testing/UnattendedTestRunner.JossPaperDeferred.cs; docs/issues/axebot-reports-20261003.md; docs/performance/gold-max-hp-healing-20261003.md"
   },
   "AXEBOT-TRANSFORM-SENTINEL": {
     "status": "Passed",

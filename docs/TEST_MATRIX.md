@@ -47,3 +47,7 @@ Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。该
 合入 `56b6d6ee` 后，`GOLD-HEALING-MECHANISMS`、`MAX-HP-HEALING-CALLBACKS`、`FEED-MAX-HP-CAP` 分别以 `c68a0c923fa84f48b9f4ce1ee9f68831`、`1e611f0aa1624d908d7c4f07d893fde4`、`de2062aa4fc847f98b7293a8d848d22b` Passed。覆盖 24 项检查，包含完整状态/RNG、父子与 live 隔离、未知回调拒绝、金币修正、真实致命出牌/用药、最大生命封顶和 HP 阈值回调。Release 构建零警告/错误。具体原生前提、复跑方法、失败夹具记录与性能待验收项见[金币与最大生命回复链](performance/gold-max-hp-healing-20261003.md)。
 
 `RELIC-MAX-HP-HEALING-BOUNDS` 的 `35f61a69acf74cc3b6cc56f6e5269f8d` 原生回调负基线保持 Failed（已知界 0、实际回复 1）。修复后 `b16bb21caa4441bda3f931705fc0dddd` Passed：ChosenCheese / DarkstonePeriapt 的原生回调、完整状态/RNG、父分支/live 隔离及各自熔化排除，共四项。IRONCLAD、50/80、120 秒帽，不运行 Solve；不代表完整战斗结束派发或永久牌组变更已模拟。复跑使用同名 scenario 与上述初始生命参数，Linux/PowerShell 各自原生无人测试入口，必须带实例清理。
+
+固定 29 根 / `6f4d8f6e` 回归保留亡灵投影 10→17 战损的拒绝结果及储君首领 +40.04% 峰值样本。旧路线 88 前缀完整状态不变，金纸零待结算计数改变了指纹；候选修复保留零状态的原键并显式编码非零计数。`AXEBOT-JOSS-DEFERRED-FORK` / `6bf2b7299eae440ba42c87d18f27f290` Passed，覆盖原有非零父子计数和新增零计数区分、逐分支消费及隔离；参数沿用上方金纸夹具，120 秒帽、清理实例，不运行 Solve。最终无插桩交错对照四轮均为 10 战损/2 瓶/12 回合，峰值最大值增加 2.48%；只有该根进入修改的金纸分支，其余 28 根复用未受影响证据。储君首领兼容宿主交错对照峰值增加 1.48%，接口不兼容的失败对照不计入验收。完整来源、逐项结果与限制见[专题证据](performance/gold-max-hp-healing-20261003.md)。
+
+拟提交 DLL `89a8e2c2…` 的受试体无插桩串行交错四轮全部获胜；基线 146.40/153.18 秒、26 战损/0 瓶，候选 47.58/48.32 秒、24 战损/0 瓶。中位提速 3.12 倍，保守最慢候选仍为 3.03 倍；最大候选峰值/最小基线峰值增加 7.68%，离线门槛通过。完整根、牌序/RNG、配置、预算和目录一致；原生整场部署仍未完成，不扩大到其他慢根。
