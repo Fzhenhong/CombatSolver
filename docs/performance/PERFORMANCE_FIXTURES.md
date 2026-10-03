@@ -14,7 +14,7 @@ Silent样例可直接脱离原始问题包运行；Necrobinder旧白名单投影
 - 排除：存档、RNG、遗物、药水、Power、日志、路径、平台和环境信息。
 
 ```bash
-./tools/run-unattended-test.sh \
+./tools/testing/run-unattended-test.sh \
   --scenario-id SEARCH-PERF-SILENT-LARGE-DECK-5S \
   --character-id SILENT \
   --seed SEARCH_PERF_SILENT_LARGE_DECK \
@@ -55,7 +55,7 @@ Runner 同时断言 VeryHigh 的 Beam `54/135`、节点 `10000/50000`、出牌�
 - 边界：这是战前白名单投影，不能作为原生战斗逐动作 replay。
 
 ```bash
-./tools/run-unattended-test.sh \
+./tools/testing/run-unattended-test.sh \
   --scenario-id SEARCH-PERF-NECROBINDER-POTION-QUICK \
   --character-id NECROBINDER \
   --seed SEARCH_PERF_NECROBINDER_POTION \

@@ -55,7 +55,7 @@ Windows 11 / .NET 9.0.19，独立静音无头进程；每场两份基线、两�
 GC 工具直接链接生产源码，无需游戏：
 
 ```sh
-dotnet run --project tools/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- diagnostic-failure
+dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- diagnostic-failure
 ```
 
 其余模式为无参数、`scopes`、`recovery`、`recovery-lifecycle`、`checkpoint`。真实 CLR 场景需要空闲内存，避免与性能实验同时运行。

@@ -139,7 +139,7 @@
     },
     "notPerformanceComparison": true,
     "workloadCommandWithoutTemporaryInstrumentation": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-BACKEND-AUDIT-BASELINE",
       "--character-id",

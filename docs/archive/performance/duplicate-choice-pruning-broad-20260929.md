@@ -35,7 +35,7 @@
 ```bash
 DOTNET_TieredCompilation=0 OFFLINE_HARNESS_COMBATSOLVER_DLL=<baseline-or-candidate.dll> \
 perf stat -x, -e cycles:u,instructions:u,branches:u,branch-misses:u -o <out>/perf-stat.csv -- \
-dotnet tools/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
+dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
   --request <request.json> --out <out> --label <label> --profile High \
   --beam 48 --nodes 2000 --dop 1 --budget-ms 30000 --search-mode Evaluate
 ```

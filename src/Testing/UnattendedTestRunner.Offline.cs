@@ -5,7 +5,7 @@ using MegaCrit.Sts2.Core.Runs;
 namespace CombatSolver;
 
 /// <summary>
-/// 离线搜索宿主（<c>tools/OfflineSearchHarness</c>）的入口。宿主是一个不启动 Godot 的普通
+/// 离线搜索宿主（<c>tools/search/OfflineSearchHarness</c>）的入口。宿主是一个不启动 Godot 的普通
 /// .NET 进程，需要做两件在游戏内由无人测试协议主机和 <c>ScenarioBuilder</c> 做的事：
 /// 按无人测试的口径设一次搜索预算开关，以及按生成场景的顺序注入跑局装备。
 /// 这里把这两件事转出去，方法体仍然是原来那些——宿主不复刻、也不再用反射去写私有成员。

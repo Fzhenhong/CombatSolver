@@ -85,7 +85,7 @@ Hook索引将不超过64个监听器的每种单Hook参与位置编译为位图�
 
 ```bash
 OFFLINE_HARNESS_SHUFFLE_WITNESS=1 \
-  dotnet tools/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
+  dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
   --request coverage/unattended/duplicate-choice-pruning-dense-20260929.json \
   --out /tmp/combat-shuffle-witness --label shuffle-witness --milestone M1
 ```

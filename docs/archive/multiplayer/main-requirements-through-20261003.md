@@ -303,12 +303,12 @@ P2 可按机制小批完成并立即验证，不等待全部内容写完才测�
 
 ```powershell
 dotnet build CombatSolver.csproj -c Release -p:CopyModOnBuild=false
-pwsh -NoProfile -File tools/verify-refactor-boundaries.ps1
+pwsh -NoProfile -File tools/inspection/verify-refactor-boundaries.ps1
 ```
 
 ```bash
 dotnet build CombatSolver.csproj -c Release -p:CopyModOnBuild=false
-./tools/verify-refactor-boundaries.sh
+./tools/inspection/verify-refactor-boundaries.sh
 ```
 
 多人建局、联机编排和内容测试参数在 P0/P1 实现并跑通后补入实际命令。普通 `dotnet` 离线宿主只用于搜索指标，不能代替原版结算和联机验收；无头耗时不能外推可见帧率。

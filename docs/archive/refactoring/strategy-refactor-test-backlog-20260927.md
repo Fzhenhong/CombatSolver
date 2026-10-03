@@ -24,7 +24,7 @@
 ## 本轮已取得的直接证据
 
 - `dotnet build CombatSolver.csproj -c Release`：0 警告 0 错误。
-- `pwsh -NoProfile -File tools/verify-refactor-boundaries.ps1`：`REFACTOR_BOUNDARIES_OK search_files=219`。
+- `pwsh -NoProfile -File tools/inspection/verify-refactor-boundaries.ps1`：`REFACTOR_BOUNDARIES_OK search_files=219`。
 - `CombatSearchCoordinator.cs`：约 3,032 → 2,596 行；`CombatSearchCoordinator.PostSearch.cs` 709 行。
 
 这三项只证明“能编译、结构门禁未破”，**不是行为等价证据**。

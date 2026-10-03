@@ -193,7 +193,7 @@
           "[CombatSolver/Test] ACTION turn=8 kind=EndTurn"
         ],
         "normalizedCommand": [
-          "./tools/run-unattended-test.sh",
+          "./tools/testing/run-unattended-test.sh",
           "--character-id",
           "NECROBINDER",
           "--seed",
@@ -518,7 +518,7 @@
           "[CombatSolver/Test] ACTION turn=10 kind=EndTurn"
         ],
         "normalizedCommand": [
-          "./tools/run-unattended-test.sh",
+          "./tools/testing/run-unattended-test.sh",
           "--character-id",
           "NECROBINDER",
           "--seed",

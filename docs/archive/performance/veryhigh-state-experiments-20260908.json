@@ -13,7 +13,7 @@
     "sequence": "fresh process per variant; cold fixed-short warmup then fixed-short measured request; no overlapping compilation or benchmark"
   },
   "baselineCommand": [
-    "./tools/run-unattended-test.sh",
+    "./tools/testing/run-unattended-test.sh",
     "--scenario-id",
     "VH-STATE-FIXED-WORK",
     "--character-id",

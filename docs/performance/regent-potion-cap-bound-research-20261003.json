@@ -129,7 +129,7 @@
     }
   ],
   "launcherFix": {
-    "path": "tools/run-unattended-test.sh",
+    "path": "tools/testing/run-unattended-test.sh",
     "sha256": "6386ad0727c85b09afe21eae5f831d558c0fb5f03144ea60202d93d1fea483f0",
     "scope": "retain and validate 2D initial enemy state logs instead of adding a third array dimension",
     "checks": "bash -n; native complete frozen root and deployment"

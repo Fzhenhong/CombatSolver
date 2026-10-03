@@ -59,7 +59,7 @@ EQ10 / FULL40 历史根在该工作树不可得，未执行；本轮 28 组不�
 复跑离线对照（DLL 两侧均需支持固定夹具入口）：
 
 ```bash
-python3 tools/OfflineSearchHarness/run_loop_boundaries.py \
+python3 tools/search/OfflineSearchHarness/run_loop_boundaries.py \
   --suite coverage/unattended/loop-final-20260921/suite.json \
   --baseline-dll <a8a90e74-DLL> --candidate-dll <candidate-DLL> --out <new-directory>
 # 针对最终四根 ABBA：追加 --cases letter-replay-cap estimate-margin history-banshee-hand history-banshee-drawn --abba

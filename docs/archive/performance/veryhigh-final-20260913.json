@@ -35,7 +35,7 @@
       },
       "selectedResultFields": {},
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-FINAL-FULL-NECRO-PROJECTED",
         "--character-id",
@@ -130,7 +130,7 @@
       },
       "selectedResultFields": {},
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-FINAL-SCREEN-HUGE-DECK",
         "--character-id",
@@ -200,7 +200,7 @@
       },
       "selectedResultFields": {},
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-FINAL-SCREEN-QUEEN",
         "--character-id",
@@ -376,7 +376,7 @@
       },
       "selectedResultFields": {},
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-FINAL-FULL-SOUL-NEXUS",
         "--character-id",

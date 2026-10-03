@@ -14,20 +14,20 @@
 
 ## 官方简中名称读取方法
 
-官中名称以当前目标版本游戏目录中的 `SlayTheSpire2.pck` 为唯一依据。项目使用的游戏目录通常记录在 `local.props` 的 `Sts2Dir`；查询时把该目录下的 PCK 路径传给 Windows 的 `tools/read-game-localization.ps1 -PckPath` 或 Linux 的 `tools/read-game-localization.sh --pck-path`。两套脚本都解析 Godot PCK 文件表，只读取 `localization/zhs/*.json` 并用 JSON 键精确查询；不能再用二进制文本行号推断简中/繁中区间。脚本各自带有平台默认路径，也可显式传入 PCK 路径。工具只读 PCK，不生成或改写本文档。
+官中名称以当前目标版本游戏目录中的 `SlayTheSpire2.pck` 为唯一依据。项目使用的游戏目录通常记录在 `local.props` 的 `Sts2Dir`；查询时把该目录下的 PCK 路径传给 Windows 的 `tools/inspection/read-game-localization.ps1 -PckPath` 或 Linux 的 `tools/inspection/read-game-localization.sh --pck-path`。两套脚本都解析 Godot PCK 文件表，只读取 `localization/zhs/*.json` 并用 JSON 键精确查询；不能再用二进制文本行号推断简中/繁中区间。脚本各自带有平台默认路径，也可显式传入 PCK 路径。工具只读 PCK，不生成或改写本文档。
 
 Windows（PowerShell 7）：
 
 ```powershell
 # 查询怪物名、行动名和 Power 名。
-pwsh -NoProfile -Command "& .\tools\read-game-localization.ps1 -PckPath 'D:\Steam\steamapps\common\Slay the Spire 2\SlayTheSpire2.pck' -Key ([string[]]@('AXEBOT.name','AXEBOT.moves.HAMMER_UPPERCUT.title','STEAM_ERUPTION_POWER.title'))"
+pwsh -NoProfile -Command "& .\tools\inspection\read-game-localization.ps1 -PckPath 'D:\Steam\steamapps\common\Slay the Spire 2\SlayTheSpire2.pck' -Key ([string[]]@('AXEBOT.name','AXEBOT.moves.HAMMER_UPPERCUT.title','STEAM_ERUPTION_POWER.title'))"
 ```
 
 Linux（Bash）：
 
 ```bash
 # 查询怪物名、行动名和 Power 名。
-./tools/read-game-localization.sh \
+./tools/inspection/read-game-localization.sh \
   --key AXEBOT.name \
   --key AXEBOT.moves.HAMMER_UPPERCUT.title \
   --key STEAM_ERUPTION_POWER.title

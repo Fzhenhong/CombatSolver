@@ -6,7 +6,7 @@
 
 两侧固定 High、beam 90、nodes 250000、分支 48/28/36、Coordinator、Smart、DOP 1、600 秒软预算。每侧一个进程；运行前拒绝已有游戏/宿主，期间不构建，结束后核对 DLL 哈希。时间截断或任一根失败会中止验收，不计为相同。
 
-先分别构建基线 DLL、改动 DLL 和改动侧 `tools/OfflineSearchHarness`，再在本仓库执行：
+先分别构建基线 DLL、改动 DLL 和改动侧 `tools/search/OfflineSearchHarness`，再在本仓库执行：
 
 ```sh
 python3 coverage/equivalence/before-side-turn-start-0433/run.py \

@@ -90,7 +90,7 @@ GC/锁trace覆盖约50.798秒，包含建局与搜索后的尾部。搜索指标
 可重跑最小根合同（普通root夹具无该Power时不会运行此扩展，因此必须保留注入条件）：
 
 ```bash
-./tools/run-unattended-test.sh --scenario-id BACKEND-SWORD-SAGE-ROOT --character-id REGENT --encounter-id FUZZY_WURM_CRAWLER_WEAK --seed BACKEND_ROOT_SWORD_SAGE --clear-run-deck --clear-player-piles --cards-json '[{"cardId":"SOVEREIGN_BLADE","pile":"Hand","treatAsDeckCard":true}]' --powers-json '[{"powerId":"SWORD_SAGE_POWER","target":"Player","amount":2}]' --verify-combat-root-snapshot --stop-after-combat-root-snapshot-assertion --timeout-seconds 120
+./tools/testing/run-unattended-test.sh --scenario-id BACKEND-SWORD-SAGE-ROOT --character-id REGENT --encounter-id FUZZY_WURM_CRAWLER_WEAK --seed BACKEND_ROOT_SWORD_SAGE --clear-run-deck --clear-player-piles --cards-json '[{"cardId":"SOVEREIGN_BLADE","pile":"Hand","treatAsDeckCard":true}]' --powers-json '[{"powerId":"SWORD_SAGE_POWER","target":"Player","amount":2}]' --verify-combat-root-snapshot --stop-after-combat-root-snapshot-assertion --timeout-seconds 120
 ```
 
 本轮未改并行、评分或分支保留规则，也未新增结构所有权；不追加无关整场或全覆盖门禁。没有可见Steam、Windows游戏、完整原生战斗或增量搜索验收。

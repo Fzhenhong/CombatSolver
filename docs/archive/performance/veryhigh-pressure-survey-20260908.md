@@ -58,7 +58,7 @@ RSS按100ms采样，可能漏掉更短尖峰；累计分配不是同时占用。
 以下从仓库根执行。`<固定构建目录>`必须含同一版本的DLL和manifest，每次请求都显式指定。移除`--force-short-search-only`即可重跑正常配置；仍保持120秒总期限。
 
 ```bash
-./tools/run-unattended-test.sh \
+./tools/testing/run-unattended-test.sh \
   --scenario-id VH-PRESSURE-NECRO-PROJECTED \
   --character-id NECROBINDER --seed SEARCH_PERF_NECROBINDER_POTION \
   --encounter-id AEONGLASS_BOSS --ascension 10 --act-index-for-test 2 \

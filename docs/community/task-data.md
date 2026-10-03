@@ -35,13 +35,13 @@ B016 从 2026-10-02 16:37（北京时间）的新快照继续整理，固定 703
 - 默认一个主题一包；第二包只补充不同调用链或关键边界。重复样本舍弃，允许漏掉，不追求全量分发。
 - 后续分发检索到已有主题，直接删除该报告服务器 ZIP 和后台报告记录并跳过，不补材料、不重新发布。发布、丢弃重复与修复验收分别记账。
 
-分类工具为 [classify-community-reports.py](../../tools/classify-community-reports.py)，接受维护者导出的 JSON 快照，输出诊断组、优化排名和每份报告归属：
+分类工具为 [classify-community-reports.py](../../tools/community/classify-community-reports.py)，接受维护者导出的 JSON 快照，输出诊断组、优化排名和每份报告归属：
 
 ```sh
-python tools/classify-community-reports.py --reports .local/community-tasks/reports.private.json --output .local/community-tasks/classification.private.json
+python tools/community/classify-community-reports.py --reports .local/community-tasks/reports.private.json --output .local/community-tasks/classification.private.json
 ```
 
-基础分类工具仅生成症状桶，不证明共同根因。发布选择用 [select-community-diagnostics.py](../../tools/select-community-diagnostics.py)，默认过滤 0.47.x，并读取[主题登记表](theme-registry.json)。已有主题输出固定报告 ID、删除原因及 GitHub 代表材料回执；其余候选继续静态分析。泛型异常匹配需结合调用方证据，避免把所有空引用或集合错误视为同一原因。
+基础分类工具仅生成症状桶，不证明共同根因。发布选择用 [select-community-diagnostics.py](../../tools/community/select-community-diagnostics.py)，默认过滤 0.47.x，并读取[主题登记表](theme-registry.json)。已有主题输出固定报告 ID、删除原因及 GitHub 代表材料回执；其余候选继续静态分析。泛型异常匹配需结合调用方证据，避免把所有空引用或集合错误视为同一原因。
 
 ## 下载和公开副本
 
@@ -63,10 +63,10 @@ python tools/classify-community-reports.py --reports .local/community-tasks/repo
 
 `community-task-index.json` 保存当前 0.47.x 报告归属、主题、代表和批次，也保留历史条目及迁移状态。`theme-registry.json` 是稳定机制、匹配规则、证据等级和已发布资料去向的维护入口。认领单位仍为整批，PR 按主题编号记录进展。
 
-[export-community-bundle.py](../../tools/export-community-bundle.py) 生成公开副本，清理 `report.json` 和 `diagnostics/` 中的昵称、联系方式、玩家统计字段及个人路径。**`replay/*` 保留原字节**，用于保存牌序、RNG、模型身份、原生状态与录制事件；发布材料静态检查中的单人玩家 `net_id` 均为游戏测试身份 1。公开副本的 ZIP 字节与原包不同。
+[export-community-bundle.py](../../tools/community/export-community-bundle.py) 生成公开副本，清理 `report.json` 和 `diagnostics/` 中的昵称、联系方式、玩家统计字段及个人路径。**`replay/*` 保留原字节**，用于保存牌序、RNG、模型身份、原生状态与录制事件；发布材料静态检查中的单人玩家 `net_id` 均为游戏测试身份 1。公开副本的 ZIP 字节与原包不同。
 
 ```sh
-python tools/export-community-bundle.py .local/raw/REPORT.zip .local/public/REPORT.zip
+python tools/community/export-community-bundle.py .local/raw/REPORT.zip .local/public/REPORT.zip
 ```
 
 导出前拒绝路径穿越、链接、加密和游戏程序集；静态核对回放条目与原包一致。导出检查只证明资料处理范围，实际可恢复性由认领者运行工具判断。
@@ -79,11 +79,11 @@ python tools/export-community-bundle.py .local/raw/REPORT.zip .local/public/REPO
 
 任务队列 #202 的“认领者”列以各批次 Issue 的 Assignee 为准：空缺显示“未认领”，已指派显示 `[用户名](https://github.com/用户名)`。在批次回复 `认领` 或 `认领 B012 整批` 自动认领本人，回复 `取消认领` 自动释放该批次；同一人可以同时认领多个批次，已有负责人时保持当前指派。具体规则见[贡献指南](../../CONTRIBUTING.md)。
 
-[community-claims.yml](../../.github/workflows/community-claims.yml) 监听新回复、指派、标签及批次状态变更，调用 [sync-community-claims.py](../../tools/sync-community-claims.py)。新增批次账本推送也触发同步。队列位置由发布账本的 `queueIssueNumber` 与 `queueIssueUrl` 记录。工作流只更新队列表格中的认领者与完成状态；主入口 #171 只保存隐藏的 `combatsolver-community-claims` 回复进度标记，用户设置的标题和手写正文保留。
+[community-claims.yml](../../.github/workflows/community-claims.yml) 监听新回复、指派、标签及批次状态变更，调用 [sync-community-claims.py](../../tools/community/sync-community-claims.py)。新增批次账本推送也触发同步。队列位置由发布账本的 `queueIssueNumber` 与 `queueIssueUrl` 记录。工作流只更新队列表格中的认领者与完成状态；主入口 #171 只保存隐藏的 `combatsolver-community-claims` 回复进度标记，用户设置的标题和手写正文保留。
 
 批次状态标签以实际 Assignee 为准：有负责人为“已认领”，无负责人为“待认领”，移除旧“待定位”及相反的认领状态标签，保留其他标签。完成状态按批次 Issue 记录：以 completed 原因关闭为“已完成”，开放为“未完成”，取消或迁移等关闭原因为“已关闭（未完成）”。每次处理尚未消费的回复，更新队列成功后再保存入口进度，队列合并或重试时保留认领顺序。
 
-维护者可以用 `python tools/sync-community-claims.py --dry-run` 预览，或手动运行 GitHub Actions 的 **Community batch claims** 工作流恢复同步。脚本使用已登录的 `gh` 或 Actions 的 `GITHUB_TOKEN`，权限为读取仓库与写入 Issue；不需要日志后台凭据。
+维护者可以用 `python tools/community/sync-community-claims.py --dry-run` 预览，或手动运行 GitHub Actions 的 **Community batch claims** 工作流恢复同步。脚本使用已登录的 `gh` 或 Actions 的 `GITHUB_TOKEN`，权限为读取仓库与写入 Issue；不需要日志后台凭据。
 
 发布流程固化在 [combatsolver-community-tasks skill](../../.agents/skills/combatsolver-community-tasks/SKILL.md)。清理有两个时点：GitHub 发布成功后清理实际代表包，或者分发检索确认已有主题时直接丢弃重复包。删除固定 ID 对应磁盘/COS ZIP 和后台报告记录，原因与 GitHub 去向保存在发布账本。此前仅清理 ZIP 的 465 条报告已全部补删后台记录，其中含 342 条 0.47.x 重复主题报告。
 
@@ -91,4 +91,4 @@ B016 发布后已删除五个代表及 17 条已有主题重复报告，共 22 �
 
 Q003～Q007 发布后已删除 25 个代表报告及 59 份同主题重复报告，共 84 条后台记录和 84 个服务器 ZIP；累计已清理 571 条后台记录及服务器 ZIP。本轮本地暂存的 65 个 ZIP 与私人快照、临时发布文件也已删除。公开资料保留在 GitHub，清理回执已写入索引与账本。
 
-[publication-ledger.json](publication-ledger.json) 保存当前主题批次、历史迁移和清理回执。清理工具 [retire-community-archives.py](../../tools/retire-community-archives.py) 在日志服务容器读取固定清单，支持 dry-run；`published` 表示已发布代表清理，`duplicate_theme` 表示重复主题删除跳过，后者还校验真实报告版本属于 0.47.x。
+[publication-ledger.json](publication-ledger.json) 保存当前主题批次、历史迁移和清理回执。清理工具 [retire-community-archives.py](../../tools/community/retire-community-archives.py) 在日志服务容器读取固定清单，支持 dry-run；`published` 表示已发布代表清理，`duplicate_theme` 表示重复主题删除跳过，后者还校验真实报告版本属于 0.47.x。

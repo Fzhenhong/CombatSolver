@@ -3045,7 +3045,7 @@
   ],
   "reproductionCommands": {
     "compare-a1-short": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-COMPARE-A1-SHORT",
       "--character-id",
@@ -3098,7 +3098,7 @@
       "--force-short-search-only"
     ],
     "compare-a1-full": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-COMPARE-A1-FULL",
       "--character-id",
@@ -3150,7 +3150,7 @@
       ".local/admitted-jobs-20260908/compare-a1-full"
     ],
     "compare-c1-short": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-COMPARE-C1-SHORT",
       "--character-id",
@@ -3203,7 +3203,7 @@
       "--force-short-search-only"
     ],
     "compare-c1-full": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-COMPARE-C1-FULL",
       "--character-id",
@@ -3255,7 +3255,7 @@
       ".local/admitted-jobs-20260908/compare-c1-full"
     ],
     "primary-final-policy": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "ADMITTED-PRIMARY-FINAL-POLICY-FORK",
       "--character-id",
@@ -3301,7 +3301,7 @@
       "--verify-fork-boundaries"
     ],
     "verify-a-sentinel": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "ADMITTED-VERIFY-A-SENTINEL",
       "--character-id",
@@ -3353,7 +3353,7 @@
       ".local/admitted-jobs-20260908/verify-a-sentinel"
     ],
     "verify-c-sentinel": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "ADMITTED-VERIFY-C-SENTINEL",
       "--character-id",
@@ -3405,7 +3405,7 @@
       ".local/admitted-jobs-20260908/verify-c-sentinel"
     ],
     "verify-a-lowgc": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "ADMITTED-VERIFY-A-LOWGC",
       "--character-id",
@@ -3458,7 +3458,7 @@
       ".local/admitted-jobs-20260908/verify-a-lowgc"
     ],
     "verify-c-lowgc": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "ADMITTED-VERIFY-C-LOWGC",
       "--character-id",

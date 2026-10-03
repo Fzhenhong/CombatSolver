@@ -34,13 +34,13 @@
 
 ## 离线观测器
 
-新增 `tools/OfflineSearchHarness/EquivalenceProbe.cs`，仅显式设置环境变量时安装宿主内的Harmony观察补丁。生产Mod不包含该工具。它不改方法返回值，输出 `equivalence-probe.json`，只保留分离出的键、标量和有限例子，不保存节点或模型；每个求解器最多20,000个两步索引，超限计数并停止新增。
+新增 `tools/search/OfflineSearchHarness/EquivalenceProbe.cs`，仅显式设置环境变量时安装宿主内的Harmony观察补丁。生产Mod不包含该工具。它不改方法返回值，输出 `equivalence-probe.json`，只保留分离出的键、标量和有限例子，不保存节点或模型；每个求解器最多20,000个两步索引，超限计数并停止新增。
 
 ```bash
 OFFLINE_HARNESS_EQUIVALENCE_PROBE=1 \
 OFFLINE_HARNESS_COMBATSOLVER_DLL=<baseline-or-candidate.dll> \
 DOTNET_TieredCompilation=0 \
-dotnet tools/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
+dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
   --request coverage/unattended/duplicate-choice-pruning-dense-20260929.json \
   --out <out> --label equivalence-probe --profile High \
   --beam 48 --nodes 500 --dop 1 --budget-ms 30000 --search-mode Evaluate

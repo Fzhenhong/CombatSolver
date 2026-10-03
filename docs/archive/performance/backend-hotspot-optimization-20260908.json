@@ -1191,7 +1191,7 @@
   ],
   "commands": {
     "baseline-short": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-BASELINE-SHORT",
       "--character-id",
@@ -1244,7 +1244,7 @@
       "--force-short-search-only"
     ],
     "routegroup-short": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-ROUTEGROUP-SHORT",
       "--character-id",
@@ -1297,7 +1297,7 @@
       "--force-short-search-only"
     ],
     "baseline-full": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-BASELINE-FULL",
       "--character-id",
@@ -1349,7 +1349,7 @@
       "<evidence-directory>/baseline-full"
     ],
     "routegroup-full": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-ROUTEGROUP-FULL",
       "--character-id",
@@ -1401,7 +1401,7 @@
       "<evidence-directory>/routegroup-full"
     ],
     "final-policy": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "HOTSPOT-FINAL-POLICY",
       "--character-id",
@@ -1446,7 +1446,7 @@
       "<evidence-directory>/final-policy"
     ],
     "final-native": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "HOTSPOT-FINAL-NATIVE",
       "--character-id",

@@ -35,7 +35,7 @@
     "src/Search/CombatBeamSolver.StateEvaluation.cs"
   ],
   "benchmarkFixtureCommand": [
-    "./tools/run-unattended-test.sh",
+    "./tools/testing/run-unattended-test.sh",
     "--scenario-id",
     "HOTSPOT-PROBE-COUNTS",
     "--character-id",
@@ -7478,7 +7478,7 @@
         },
         "selectedResultFields": {},
         "command": [
-          "./tools/run-unattended-test.sh",
+          "./tools/testing/run-unattended-test.sh",
           "--scenario-id",
           "VH-HOTSPOT-FINAL-FULL-NECRO-PROJECTED",
           "--character-id",
@@ -7569,7 +7569,7 @@
         },
         "selectedResultFields": {},
         "command": [
-          "./tools/run-unattended-test.sh",
+          "./tools/testing/run-unattended-test.sh",
           "--scenario-id",
           "VH-HOTSPOT-FINAL-SCREEN-HUGE-DECK",
           "--character-id",
@@ -7639,7 +7639,7 @@
         },
         "selectedResultFields": {},
         "command": [
-          "./tools/run-unattended-test.sh",
+          "./tools/testing/run-unattended-test.sh",
           "--scenario-id",
           "VH-HOTSPOT-FINAL-SCREEN-QUEEN",
           "--character-id",
@@ -7815,7 +7815,7 @@
         },
         "selectedResultFields": {},
         "command": [
-          "./tools/run-unattended-test.sh",
+          "./tools/testing/run-unattended-test.sh",
           "--scenario-id",
           "VH-HOTSPOT-FINAL-FULL-SOUL-NEXUS",
           "--character-id",

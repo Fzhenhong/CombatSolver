@@ -16,7 +16,7 @@ PR基于main `0552b33`，仅提取缓存代码、直接合同、职责约束与�
 # local.props指定本机Sts2DataDir、RitsuLibDir，并设置CopyModOnBuild=false。
 dotnet run --project tools/RitsuTargetTypeLookupChecks -c Release -p:NuGetAudit=false
 dotnet build CombatSolver.csproj -c Release -p:CopyModOnBuild=false -p:NuGetAudit=false
-pwsh -NoProfile -File tools/verify-refactor-boundaries.ps1
+pwsh -NoProfile -File tools/inspection/verify-refactor-boundaries.ps1
 ```
 
 合同直接patch本机Ritsu实际回调，覆盖精确原语义、静态正负查询、live旁路、动态晚创建、2000次并发检查和可卸载程序集。原研究预热后10万次缺失查询分配18400000→0 B；首次冷路径断言因448 B运行时开销失败，失败保留后改用预热同工作量对照。

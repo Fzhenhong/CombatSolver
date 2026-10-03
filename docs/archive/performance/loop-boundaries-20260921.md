@@ -116,7 +116,7 @@
 基线 DLL 必须具备上一轮共享的固定夹具注入入口；不能直接拿未适配的旧发行 DLL 比较。`--out` 必须不存在，进程串行运行，差异／失败保留并返回非零，不能自动解释为退化。`--abba --cases letter-replay-cap` 用于复核反例。
 
 ```bash
-python3 tools/OfflineSearchHarness/run_loop_boundaries.py \
+python3 tools/search/OfflineSearchHarness/run_loop_boundaries.py \
   --baseline-dll .local/loop-comparison/baseline/CombatSolver.dll \
   --candidate-dll .godot/mono/temp/bin/Release/CombatSolver.dll \
   --out .local/loop-boundaries-rerun

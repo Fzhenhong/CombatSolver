@@ -47,7 +47,7 @@
 原生最小合同（Linux；另一项只替换scenario-id）：
 
 ```bash
-./tools/run-unattended-test.sh --scenario-id CARD-COST-IDENTITY-CONTRACT \
+./tools/testing/run-unattended-test.sh --scenario-id CARD-COST-IDENTITY-CONTRACT \
   --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK \
   --enemy-current-hp 999 --initial-player-hp 80 --initial-player-max-hp 80 \
   --relics-json '[]' --stop-after-combat-root-snapshot-assertion \
@@ -58,13 +58,13 @@
 
 ```bash
 OFFLINE_HARNESS_DUPLICATE_CHOICES=measure \
-dotnet tools/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
+dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
   --request coverage/unattended/duplicate-choice-pruning-dual-20260929.json \
   --out .local/duplicate-pruning/reproduce --label duplicate-choice \
   --nodes 300 --beam 24 --dop 1 --budget-ms 15000
 
 DOTNET_TieredCompilation=0 OFFLINE_HARNESS_DUPLICATE_CHOICES=builders \
-dotnet tools/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
+dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll \
   --out .local/duplicate-pruning/builders --label duplicate-builders --milestone M1
 ```
 

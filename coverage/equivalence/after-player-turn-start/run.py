@@ -22,7 +22,7 @@ if workspace.exists():raise SystemExit('批次目录已存在；不自动重跑'
 workspace.mkdir(parents=True)
 requests=sorted(r for r in args.corpus.glob('*-request.json') if r.name.split('-')[0] in ('EQ','FULL','GA'))
 assert {g:sum(r.name.startswith(g+'-') for r in requests) for g in ('EQ','FULL','GA')}==dict(EQ=10,FULL=40,GA=10)
-tools=repo/'tools/OfflineSearchHarness'
+tools=repo/'tools/search/OfflineSearchHarness'
 harness=tools/'bin/Release/net9.0/OfflineSearchHarness.dll'
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 files=[args.base_dll.resolve(),args.new_dll.resolve(),harness]

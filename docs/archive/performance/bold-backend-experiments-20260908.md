@@ -36,7 +36,7 @@
 ## 可重跑的基线输入
 
 ```bash
-./tools/run-unattended-test.sh \
+./tools/testing/run-unattended-test.sh \
   --scenario-id BOLD-BACKEND-BASELINE \
   --character-id NECROBINDER --seed SEARCH_PERF_NECROBINDER_POTION \
   --encounter-id AEONGLASS_BOSS --ascension 10 --act-index-for-test 2 \

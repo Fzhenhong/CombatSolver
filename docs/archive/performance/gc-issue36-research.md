@@ -89,7 +89,7 @@ common=(--sts2-game-root "$pilot_root/game"
   --stop-after-initial-solver-result-assertion --timeout-seconds 120 --exit-on-complete)
 
 COMBATSOLVER_HEADLESS_ROOT="$pilot_root/runtime-silent" \
-  ./tools/run-unattended-test.sh "${common[@]}" \
+  ./tools/testing/run-unattended-test.sh "${common[@]}" \
   --scenario-id GC36-SILENT-250-GC --character-id SILENT \
   --seed SEARCH_PERF_SILENT_LARGE_DECK --encounter-id AEONGLASS_BOSS \
   --ascension 5 --act-index-for-test 2 --enemy-current-hp 512 \
@@ -100,7 +100,7 @@ COMBATSOLVER_HEADLESS_ROOT="$pilot_root/runtime-silent" \
   --potion-policy-for-test Disabled --enable-no-gc-region-for-test 0
 
 COMBATSOLVER_HEADLESS_ROOT="$pilot_root/runtime-necro" \
-  ./tools/run-unattended-test.sh "${common[@]}" \
+  ./tools/testing/run-unattended-test.sh "${common[@]}" \
   --scenario-id GC36-NECRO-250-SMART-NOGC4 --character-id NECROBINDER \
   --seed SEARCH_PERF_NECROBINDER_POTION \
   --run-snapshot-path coverage/unattended/search-performance-necrobinder-potion-heavy-run-snapshot.json \

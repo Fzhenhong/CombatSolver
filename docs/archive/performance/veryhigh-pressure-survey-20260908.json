@@ -116,7 +116,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-SCREEN-KNIGHTS",
         "--character-id",
@@ -277,7 +277,7 @@
         "reason=after_parallel_wave allocated=10566021040 limit=10666666664 projected_memory_load=32573429680 system_memory_limit=53760955335 system_pressure_dominates=false parent_reserve=100663296 prune_floor=67108864 prune_bytes_per_input=10766 expanded=3749 turn_layer=4 play_depth=7"
       ],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-SCREEN-QUEEN",
         "--character-id",
@@ -440,7 +440,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-SCREEN-TEST-SUBJECT",
         "--character-id",
@@ -602,7 +602,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-SCREEN-AEONGLASS-RANDOM",
         "--character-id",
@@ -770,7 +770,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-SCREEN-NECRO-PROJECTED",
         "--character-id",
@@ -930,7 +930,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-SCREEN-HUGE-DECK",
         "--character-id",
@@ -1081,7 +1081,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-NATIVE-INFESTED",
         "--character-id",
@@ -1232,7 +1232,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-NATIVE-PHANTASMAL",
         "--character-id",
@@ -1383,7 +1383,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-NATIVE-SOUL-NEXUS",
         "--character-id",
@@ -1534,7 +1534,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-NATIVE-EXOSKELETONS",
         "--character-id",
@@ -1696,7 +1696,7 @@
         "reason=after_parallel_wave allocated=10566048672 limit=10666666664 projected_memory_load=43262770080 system_memory_limit=53760955335 system_pressure_dominates=false parent_reserve=100663296 prune_floor=67108864 prune_bytes_per_input=17721 expanded=5061 turn_layer=3 play_depth=3"
       ],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-FULL-NECRO-PROJECTED",
         "--character-id",
@@ -1855,7 +1855,7 @@
       },
       "memoryCheckpoints": [],
       "command": [
-        "./tools/run-unattended-test.sh",
+        "./tools/testing/run-unattended-test.sh",
         "--scenario-id",
         "VH-PRESSURE-FULL-SOUL-NEXUS",
         "--character-id",

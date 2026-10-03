@@ -4,7 +4,7 @@
 
 起点为用户新整理的 `fork/chore/code-hygiene`：`43e5942`，独立工作树 `CombatSolver-debt` / `chore/tech-debt`。没有写入主检出、hygiene、potion-odds、base-0410、游戏目录或真实存档。继承上一轮对研究工具、反射入口、设置迁移、InlineArray 的裁决，不重新把这些列为待删候选。本文前半部分在生产代码修改前生成；后半部分随提交补齐证据。
 
-完整清单在本工作树 `.local/debt/before/`；复跑入口见 [CodeDebt](../../../tools/CodeDebt/README.md)。原始 SARIF 为 `.local/debt/analyzer.sarif`，诊断日志为 `.local/debt/analyzer.log`。工具与源码各自分开计数；历史性能和原生游戏记录不冒充本轮验收。
+完整清单在本工作树 `.local/debt/before/`；复跑入口见 [CodeDebt](../../../tools/inspection/CodeDebt/README.md)。原始 SARIF 为 `.local/debt/analyzer.sarif`，诊断日志为 `.local/debt/analyzer.log`。工具与源码各自分开计数；历史性能和原生游戏记录不冒充本轮验收。
 
 ## 1. 十项静态分析
 

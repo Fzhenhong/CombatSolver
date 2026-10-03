@@ -1271,7 +1271,7 @@
   ],
   "commands": {
     "baseline-full": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-BASELINE-FULL",
       "--character-id",
@@ -1317,7 +1317,7 @@
       "--keep-game-open"
     ],
     "final-full": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-PRESSURE-FINAL-FULL",
       "--character-id",
@@ -1363,7 +1363,7 @@
       "--keep-game-open"
     ],
     "final-policy": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-POTION-FINAL-POLICY",
       "--character-id",
@@ -1402,7 +1402,7 @@
       "--keep-game-open"
     ],
     "final-native": [
-      "./tools/run-unattended-test.sh",
+      "./tools/testing/run-unattended-test.sh",
       "--scenario-id",
       "VH-POTION-FINAL-NATIVE",
       "--character-id",

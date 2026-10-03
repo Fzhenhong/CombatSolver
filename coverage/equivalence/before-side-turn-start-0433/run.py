@@ -36,7 +36,7 @@ requests=sorted(inputs.glob('*-request.json'))
 assert {prefix:sum(r.name.startswith(prefix+'-') for r in requests) for prefix in ('EQ','FULL','GA')}==dict(EQ=10,FULL=40,GA=10)
 workspace=args.workspace.resolve()
 workspace.mkdir(parents=True,exist_ok=True)
-tools=repo/'tools/OfflineSearchHarness'
+tools=repo/'tools/search/OfflineSearchHarness'
 harness=tools/'bin/Release/net9.0/OfflineSearchHarness.dll'
 def digest(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 files=[args.base_dll.resolve(),args.new_dll.resolve(),harness]

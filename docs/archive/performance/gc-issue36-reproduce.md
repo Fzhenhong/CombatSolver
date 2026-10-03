@@ -76,10 +76,10 @@ gc36_necro=(--character-id NECROBINDER --seed SEARCH_PERF_NECROBINDER_POTION
   --potion-policy-for-test Smart)
 
 COMBATSOLVER_HEADLESS_ROOT="$gc36_output/silent" \
-  ./tools/run-unattended-test.sh "${gc36_common[@]}" "${gc36_mode[@]}" \
+  ./tools/testing/run-unattended-test.sh "${gc36_common[@]}" "${gc36_mode[@]}" \
   "${gc36_silent[@]}" --scenario-id GC36-REPRO-SILENT
 COMBATSOLVER_HEADLESS_ROOT="$gc36_output/necro" \
-  ./tools/run-unattended-test.sh "${gc36_common[@]}" "${gc36_mode[@]}" \
+  ./tools/testing/run-unattended-test.sh "${gc36_common[@]}" "${gc36_mode[@]}" \
   "${gc36_necro[@]}" --scenario-id GC36-REPRO-NECRO
 ```
 
@@ -133,9 +133,9 @@ $gc36Necro = @{
     EnemyCurrentHp = 526; InitialPlayerHp = 41; CardsJson = '[]'
     PotionPolicyForTest = 'Smart'
 }
-& ./tools/run-unattended-test.ps1 @gc36Common @gc36Silent -ScenarioId GC36-REPRO-SILENT
+& ./tools/testing/run-unattended-test.ps1 @gc36Common @gc36Silent -ScenarioId GC36-REPRO-SILENT
 Copy-Item (Join-Path $gc36Data 'combat_solver_test_result.json') (Join-Path $gc36Output 'silent-result.json')
-& ./tools/run-unattended-test.ps1 @gc36Common @gc36Necro -ScenarioId GC36-REPRO-NECRO
+& ./tools/testing/run-unattended-test.ps1 @gc36Common @gc36Necro -ScenarioId GC36-REPRO-NECRO
 Copy-Item (Join-Path $gc36Data 'combat_solver_test_result.json') (Join-Path $gc36Output 'necro-result.json')
 ```
 
@@ -150,7 +150,7 @@ gc36_behavior="$gc36_output/behavior"
 mkdir -p "$gc36_behavior/data/SlayTheSpire2"
 cp coverage/unattended/gc-issue36-pilot-settings.json "$gc36_behavior/data/SlayTheSpire2/combat_solver_settings.json"
 COMBATSOLVER_HEADLESS_ROOT="$gc36_behavior" \
-  ./tools/run-unattended-test.sh "${gc36_common[@]}" "${gc36_silent[@]}" \
+  ./tools/testing/run-unattended-test.sh "${gc36_common[@]}" "${gc36_silent[@]}" \
   --scenario-id GC36-FINAL-BOUNDARIES --search-max-degree-of-parallelism-for-test 2 \
   --enable-no-gc-region-for-test 0 --no-gc-region-budget-gigabytes-for-test 4 \
   --verify-fork-boundaries --verify-search-policy-snapshot
@@ -161,14 +161,14 @@ Copy-Item coverage/unattended/gc-issue36-pilot-settings.json (Join-Path $gc36Dat
 $gc36Common.SearchMaxDegreeOfParallelismForTest = 2
 $gc36Common.EnableNoGcRegionForTest = 0
 $gc36Common.NoGcRegionBudgetGigabytesForTest = 4
-& ./tools/run-unattended-test.ps1 @gc36Common @gc36Silent -ScenarioId GC36-FINAL-BOUNDARIES -VerifyForkBoundaries -VerifySearchPolicySnapshot
+& ./tools/testing/run-unattended-test.ps1 @gc36Common @gc36Silent -ScenarioId GC36-FINAL-BOUNDARIES -VerifyForkBoundaries -VerifySearchPolicySnapshot
 ```
 
 [Aeonglass 两步 native fixture](../../../coverage/unattended/gc-aeonglass-preview-ownership.json) 同时检查实际结算、普通牌 preview 身份、Wither 更新及兄弟分支隔离：
 
 ```bash
 COMBATSOLVER_HEADLESS_ROOT="$gc36_output/aeonglass" \
-  ./tools/run-unattended-test.sh --sts2-game-root "$GC36_GAME_ROOT" \
+  ./tools/testing/run-unattended-test.sh --sts2-game-root "$GC36_GAME_ROOT" \
   --ritsu-workshop-root "$GC36_RITSU_ROOT" --scenario-id GC36-AEONGLASS-PREVIEW-OWNERSHIP \
   --encounter-id LivingFogNormal --clear-player-piles \
   --cards-json '[{"cardId":"STRIKE_IRONCLAD","pile":"Hand"}]' \
@@ -177,7 +177,7 @@ COMBATSOLVER_HEADLESS_ROOT="$gc36_output/aeonglass" \
 ```
 
 ```powershell
-& ./tools/run-unattended-test.ps1 -Sts2GameRoot $env:GC36_GAME_ROOT -RitsuWorkshopRoot $env:GC36_RITSU_ROOT `
+& ./tools/testing/run-unattended-test.ps1 -Sts2GameRoot $env:GC36_GAME_ROOT -RitsuWorkshopRoot $env:GC36_RITSU_ROOT `
   -ScenarioId GC36-AEONGLASS-PREVIEW-OWNERSHIP -EncounterId LivingFogNormal -ClearPlayerPiles `
   -CardsJson '[{"cardId":"STRIKE_IRONCLAD","pile":"Hand"}]' `
   -MonsterMoveChecksPath coverage/unattended/gc-aeonglass-preview-ownership.json -TimeoutSeconds 120 -ExitOnComplete
@@ -189,6 +189,6 @@ COMBATSOLVER_HEADLESS_ROOT="$gc36_output/aeonglass" \
 
 NoGC 生命周期旧构建缺字段时记录 null；普通 GC 的 `SharedProcessWindow` 不能声称只属于该请求，独占 NoGC scope 才有准入前后冻结归因。`noGcRegionRolloverCount` 不等于全部 NoGC restart 次数。
 
-普通 GC 自适应已经从生产撤回，源码及临时接线见 [ExperimentalAdaptiveGc](../../../tools/ExperimentalAdaptiveGc/README.md)。其单次 A/B 需要相同最终组合的静态 DOP 控制；判读时保留每 Solve 的完成窗口、探测、拒绝/接受、最终容量与未完成探测数。本轮 Silent 有有效窗口但无探测，Necrobinder 一次降核探测遭拒绝；不能凭没有事件或单次耗时推断稳定收益。
+普通 GC 自适应已经从生产撤回，源码及临时接线见 [ExperimentalAdaptiveGc](https://github.com/Torch1230/CombatSolver/blob/556e72994303e45ca2b2833aa09ba793d1b096cb/tools/ExperimentalAdaptiveGc/README.md)。其单次 A/B 需要相同最终组合的静态 DOP 控制；判读时保留每 Solve 的完成窗口、探测、拒绝/接受、最终容量与未完成探测数。本轮 Silent 有有效窗口但无探测，Necrobinder 一次降核探测遭拒绝；不能凭没有事件或单次耗时推断稳定收益。
 
 当前启动器默认从本 worktree 的 Release 目录读取 DLL，并从仓库根读取 manifest；冻结 A/B 构建可用 `--combat-solver-build-dir` / `-CombatSolverBuildDir` 指向同时含两者的目录（Windows 还需该构建的 MemoryCleaner）。源码游戏目录只作为私有快照的输入。不要为性能对照启用 parallel；它只用于正确性与吞吐检查。

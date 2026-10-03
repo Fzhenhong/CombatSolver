@@ -78,11 +78,11 @@ T019 实际使用[多人实验提交 f1461c7d](https://github.com/Torch1230/Comb
 本机使用隔离macOS启动器执行；Windows/Linux公共入口可按以下参数复跑（这两平台本轮未执行；完整Mod身份需另按当地隔离实例流程配置）：
 
 ```bash
-./tools/run-unattended-test.sh --scenario-id B015-T016-ORIGINAL-PREFIX --character-id SILENT --encounter-id AXEBOTS_NORMAL --checkpoint-archive-path .local/issue-bundles/174/raw/B015/T016/reports/e63cd12543994bb08b9497e45839005c.zip --checkpoint-selector start --replay-mode RestoreOnly --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id B015-T016-ORIGINAL-PREFIX --character-id SILENT --encounter-id AXEBOTS_NORMAL --checkpoint-archive-path .local/issue-bundles/174/raw/B015/T016/reports/e63cd12543994bb08b9497e45839005c.zip --checkpoint-selector start --replay-mode RestoreOnly --timeout-seconds 120 --cleanup-instance-on-exit
 ```
 
 ```powershell
-pwsh -NoProfile -File tools/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGINAL-PREFIX -CharacterId SILENT -EncounterId AXEBOTS_NORMAL -CheckpointArchivePath .local/issue-bundles/174/raw/B015/T016/reports/e63cd12543994bb08b9497e45839005c.zip -CheckpointSelector start -ReplayMode RestoreOnly -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId B015-T016-ORIGINAL-PREFIX -CharacterId SILENT -EncounterId AXEBOTS_NORMAL -CheckpointArchivePath .local/issue-bundles/174/raw/B015/T016/reports/e63cd12543994bb08b9497e45839005c.zip -CheckpointSelector start -ReplayMode RestoreOnly -TimeoutSeconds 120 -CleanupInstanceOnExit
 ```
 
 ### T016 后处理因果复现与修复

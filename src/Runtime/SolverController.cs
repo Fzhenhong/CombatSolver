@@ -487,7 +487,7 @@ internal static partial class SolverController
 
     /// <summary>
     /// 显示服务器名字的取值口。游戏内一律是默认值（直接问 Godot），
-    /// 只有 tools/OfflineSearchHarness 这种不启动 Godot 的进程会把它换成固定的 "headless"。
+    /// 只有 tools/search/OfflineSearchHarness 这种不启动 Godot 的进程会把它换成固定的 "headless"。
     /// </summary>
     internal static Func<string> DisplayServerNameProvider { get; set; } = static () => DisplayServer.GetName();
 

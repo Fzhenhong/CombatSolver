@@ -34,7 +34,7 @@ Runtime 的 `CanRecord` 在帧更新、入队及跑局启动入口识别已结�
 | 同输入 T018 修改前，runId=b015-t018-before | Failed；Run statistics queue capacity exceeded；请求21.97秒 |
 | 同输入 T018 修改后，runId=b015-t018-after | Passed；请求25.15秒；300次后续事件、快照失效及源文件保留断言通过 |
 | 最终行为源码 Release 构建 | 0警告/0错误 |
-| `dotnet run --project tools/RunStatisticsTests/RunStatisticsTests.csproj -c Release` | streaks/gaps/abandonment/dedup/persistence/historical separation/recovery合同通过 |
+| `dotnet run --project tools/testing/checks/RunStatisticsTests/RunStatisticsTests.csproj -c Release` | streaks/gaps/abandonment/dedup/persistence/historical separation/recovery合同通过 |
 
 两个请求均使用120秒总预算，夹具与输入相同，仅runId和证据目录不同。macOS隔离启动器保留在 `.local/run-macos.py`，实际命令：
 
