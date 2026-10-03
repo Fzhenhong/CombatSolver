@@ -26,7 +26,7 @@ Windows PowerShell 7 配置阶段实跑：旧实现保留四项非零音量；�
 
 ## 下一版本（开发中）：社区批次 B014（2026-10-02，Refs #173）
 
-2026-10-02 社区批次 B014 修复（Refs #173）：T012 显示名槽位序按原生场景 Marker 冻结并对未知槽位回退插入序，修复 GremlinMercNormal 召唤 `sneaky` 的 KeyNotFoundException；T011 单人预测怪构造跳过原版多人生命缩放空调用，避免搜索 worker 执行第三方 Harmony postfix；两项均有最小夹具的修改前失败/修改后通过及同策略搜索回归。T014 改为经 `DynamicVarSetAccess` 缓存委托读取 DynamicVarSet 内部字典（字段缺失回退公开枚举），28 处直访全部收口，新增 `DYNAMIC-VAR-BRIDGE` 夹具与结构门禁；固定哨兵 3×2 对照无质量退化，耗时差 +1.5% 小于基线组内极差。T013 代表包为 RebalancedSpire 第三方环境，按规则归档排除；T015 代表包为 0.47.2 续用戳格式，运行复现被阻塞，静态链路定位到 `AuditSmartPotionUse → SearchSmartPotionGradient` 起点断言，保留为未验证项。本轮未提升版本、未发包、未部署可见 Mod。
+2026-10-02 社区批次 B014 修复（Refs #173）：T012 显示名槽位序按原生场景 Marker 冻结并对未知槽位回退插入序，修复 GremlinMercNormal 召唤 `sneaky` 的 KeyNotFoundException；T011 单人预测怪构造跳过原版多人生命缩放空调用，避免搜索 worker 执行第三方 Harmony postfix；两项均有最小夹具的修改前失败/修改后通过及同策略搜索回归。T014 改为经 `DynamicVarSetAccess` 缓存委托读取 DynamicVarSet 内部字典（字段缺失回退公开枚举），28 处直访全部收口，新增 `DYNAMIC-VAR-BRIDGE` 夹具与结构门禁；固定哨兵 3×2 对照无质量退化，耗时差 +1.5% 小于基线组内极差。T013 代表包为 RebalancedSpire 第三方环境，按规则归档排除；T015 修复 Smart 审计起点：`OPENING_TARGET_VARIANT` 预审计块缺无药门，带插入药前缀的 continuation 会把 flag=false 的带药主路线交给 Smart 梯度；现在插入药或 Smart 无强制指令下的带药主路线统一重派生无药基线再审计，旧包续用戳在测试端增加同形态 legacy 容错后复现（`c1a76452` Failed → `75d9d046` Passed）。本轮未提升版本、未发包、未部署可见 Mod。
 
 2026-10-02 部分重战斗场景性能优化：保留出牌续执行参与过滤、安全边界、受限原生治疗上界、完整无药胜利共享及提前开局／回合边界续搜。四场阶段ABBA的保守提速为2.336～5.544倍，战损未增加、内核峰值门槛通过；不同阶段数字不代表整理到当前上游后的统一复测。未纳入约3.1%的伤害目标过滤原型和撤回实验。正式合并前须完成提交版本29根完整极高／并行度16的质量和内存回归。配置、范围和局限见[阶段报告](performance/veryhigh-dop16-20261001.md)。
 
