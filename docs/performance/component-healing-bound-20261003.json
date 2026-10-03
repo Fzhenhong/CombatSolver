@@ -88,7 +88,7 @@
     ]
   },
   "schemaVersion": 1,
-  "status": "stage PR for review; target and TestSubject ABBA pass; Queen victory control running; not deployed",
+  "status": "stage PR for review; target and TestSubject ABBA pass; Queen control complete with quality blocker; not deployed",
   "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
   "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
   "rootCoverage": {
@@ -2276,8 +2276,7 @@
     }
   ],
   "unverified": [
-    "Queen victory regression: qualified 89 versus final f266 ABBA pending",
-    "Native complete target deployment pending",
+    "Queen victory regression: qualified 89/final f266 ABBA complete, A1 and both Bs NoWin, A2 Win; root quality blocker unresolved",
     "Remaining original slow roots not all at least 2x",
     "Full recursive source audit and universal component closure incomplete"
   ],
@@ -2416,6 +2415,255 @@
           }
         }
       ]
+    },
+    {
+      "scene": "screen-queen",
+      "baseline": "qualified 89a8e2c2",
+      "allRootsEqual": true,
+      "qualityAccepted": false,
+      "sourceQualificationUnchanged": true,
+      "componentRejection": "initial-card:BundleOfJoy",
+      "samples": [
+        {
+          "arm": "A1",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-queen-regression-control-A1/result.json",
+          "wallSeconds": 295.3990638,
+          "peakProcessWorkingSetBytes": 23188516864,
+          "quality": {
+            "won": false,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 22,
+            "strategicHpDeficit": 22,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 557,
+            "score": -5240020,
+            "combatEndedTurn": null,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        },
+        {
+          "arm": "B1",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-queen-regression-control-B1/result.json",
+          "wallSeconds": 312.2666544,
+          "peakProcessWorkingSetBytes": 23863881728,
+          "quality": {
+            "won": false,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 27,
+            "strategicHpDeficit": 27,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 546,
+            "score": -5430020,
+            "combatEndedTurn": null,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        },
+        {
+          "arm": "B2",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-queen-regression-control-B2/result.json",
+          "wallSeconds": 300.39089,
+          "peakProcessWorkingSetBytes": 22717661184,
+          "quality": {
+            "won": false,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 22,
+            "strategicHpDeficit": 22,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 557,
+            "score": -5240020,
+            "combatEndedTurn": null,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        },
+        {
+          "arm": "A2",
+          "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-regression-blocker-controls/runs/component-queen-regression-control-A2/result.json",
+          "wallSeconds": 293.4970874,
+          "peakProcessWorkingSetBytes": 22151069696,
+          "quality": {
+            "won": true,
+            "outstandingStolenResource": 0,
+            "projectedBattleHpLost": 67,
+            "strategicHpDeficit": 67,
+            "potionStrategicCost": 0,
+            "projectedBattlePotionCount": 0,
+            "enemyHp": 0,
+            "score": 9997619913,
+            "combatEndedTurn": 12,
+            "theftPolicy": null,
+            "survives": true,
+            "deathSaveUseCount": 0,
+            "growthHpCredit": 0,
+            "growthRewardCount": 0
+          }
+        }
+      ],
+      "finding": "A1 NoWin, B1 NoWin, B2 NoWin, A2 Win67/0/T12; failure also reproduced on qualified baseline, candidate still fails required original-root quality; cause unproven."
     }
-  ]
+  ],
+  "nativeFrozenTargetDeployment": {
+    "runId": "19c246e2aa6b401780644c1f498d10f8",
+    "candidateDllSha256": "f266bf00e97852baf8b72fdf459bf7f0582e052549827145b2126d9ac27c7447",
+    "status": "Passed",
+    "nativeResultPath": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-final-native-frozen/result.json",
+    "sameFrozenRoot": true,
+    "openingPath": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-final-native-frozen/generated-scenario.opening.json",
+    "offlineControlPath": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-final-acceptance/runs/component-final-dev-10-ironclad-monster-B1/result.json",
+    "outcome": {
+      "initialHp": 80,
+      "finalHp": 66,
+      "hpLost": 14,
+      "hpHealed": 0,
+      "selfDamage": 0,
+      "combatEnded": true,
+      "survived": true,
+      "finalEnemyHp": 0,
+      "potions": [],
+      "unattributedHpLoss": 0
+    },
+    "finishedTurn": 2,
+    "nativeAfterCombatHp": 72,
+    "solverTotalElapsedMilliseconds": 3540.6555,
+    "fullFixtureElapsedMilliseconds": 32203.1831,
+    "unexpectedReplans": 0,
+    "launcherExitCode": 1,
+    "launcherCleanupAnomaly": "claimed headless process identity became indeterminate; pid=3353549",
+    "processAbsentAfterRun": true,
+    "ownedInstanceAbsentAfterRun": true,
+    "performanceAcceptance": false
+  },
+  "nativeVariantDeployment": {
+    "runId": "d7a13dbeb2e7491d93b76c632d1b3801",
+    "status": "Passed",
+    "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-final-native/result.json",
+    "rootDifference": "Only player HP: native generated 64 versus frozen 80; not the frozen target proof",
+    "outcome": {
+      "initialHp": 64,
+      "finalHp": 64,
+      "hpLost": 0,
+      "hpHealed": 0,
+      "selfDamage": 0,
+      "combatEnded": true,
+      "survived": true,
+      "finalEnemyHp": 0,
+      "potions": [
+        {
+          "potionId": "COLORLESS_POTION",
+          "targetCombatId": 0,
+          "turn": 1,
+          "slotIndex": 0,
+          "origin": "solver"
+        }
+      ],
+      "unattributedHpLoss": 0
+    },
+    "finishedTurn": 1,
+    "launcherExitCode": 0,
+    "instanceRemoved": true,
+    "performanceAcceptance": false
+  },
+  "researchSilentPotionExtension": {
+    "scope": "Isolated research prototype only; no production source or PR qualification change",
+    "baseCandidateDllSha256": "f266bf00e97852baf8b72fdf459bf7f0582e052549827145b2126d9ac27c7447",
+    "prototypeDllSha256": "439e6c80ae6400fd1935d694e8ce065b19e584fd4243936c0e95fa5bc11c2849",
+    "sourceProvenance": [
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Potions.StableSerum",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-next-audit/Models.Potions.StableSerum.cs",
+        "sha256": "bc8c04c6b99d6c5d5ee9dee3350da408bf0b4048b337a42273675dee53a005d4",
+        "seconds": 5.367149985861033,
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Potions.BlessingOfTheForge",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-next-audit/Models.Potions.BlessingOfTheForge.cs",
+        "sha256": "4367941a97af28ea5ca877f02d6f80f81d3a01523be07d7a875ae3cab14fc0e4",
+        "seconds": 1.0717927410732955,
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Models.Powers.RetainHandPower",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/powers/RetainHandPower.cs",
+        "sha256": "c568e905b308efec8fd508cefdf282f6db4a97bb12ca9c357c53713cc1bc1eda",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
+        "scope": "Reused current-version C58 native source; no new extraction"
+      },
+      {
+        "type": "MegaCrit.Sts2.Core.Commands.CardCmd",
+        "source": "/home/ltlly/Code/nmslmod/CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/CardCmd.cs",
+        "sha256": "53881d18655f059049b0bec0f3100d421c2fddd13e389c02553ea4946e301337",
+        "gameDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+        "gameMvid": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
+        "scope": "Reused current-version C58 native source; no new extraction"
+      }
+    ],
+    "reviewedMechanisms": [
+      {
+        "source": "StableSerum.OnUse",
+        "target": "target player, single-player certificate only",
+        "timing": "manual potion use",
+        "effect": "Apply RetainHandPower, native Repeat base value 2",
+        "count": "one application per consumed dose; no HP increase",
+        "reachable": "materialized potion; no new potion acquisition permitted by component closure",
+        "dependencies": "RetainHandPower.ShouldFlush only retains owner hand; AfterSideTurnEnd decrements amount; parent Power lifecycle/callbacks and accepted root listeners remain audited"
+      },
+      {
+        "source": "BlessingOfTheForge.OnUse",
+        "target": "target player hand cards",
+        "timing": "manual potion use",
+        "effect": "CardCmd.Upgrade each upgradable current hand card",
+        "count": "one traversal per consumed dose; cannot add or acquire cards",
+        "reachable": "materialized potion; all initial and generated cards plus attachments still require certificate",
+        "dependencies": "CardCmd.Upgrade only calls UpgradeInternal/FinalizeUpgradeInternal then presentation; upgrades of permitted card/attachment classes reuse same-version C58 and existing initial-card review, unknown cards remain rejected"
+      }
+    ],
+    "native": {
+      "runId": "d99199c3d427412382a904ae17d31802",
+      "status": "Passed",
+      "elapsedMilliseconds": 27001.9229,
+      "completedChecks": [
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=70:maxHp=70"
+      ],
+      "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-silent-native/result.json",
+      "instanceRemoved": true,
+      "solveInvoked": false
+    },
+    "failedLauncherAttempts": [
+      "absolute --headless-instance rejected before startup",
+      "custom build output missing manifest rejected before startup; supplied exact test artifacts and ran once"
+    ],
+    "performance": {
+      "status": "screen failed original 2x target; research only",
+      "result": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/component-silent-performance/runs/component-silent-dev01-screen/result.json",
+      "sameRoot": true,
+      "sameQuality": true,
+      "wallSeconds": 23.4915194,
+      "peakProcessWorkingSetBytes": 20358701056,
+      "comparisonToF266Seconds": 22.0763772,
+      "originalBaselineSeconds": 37.1302198,
+      "speedupBelowTwo": true,
+      "originalSingleSampleSpeedup": 1.5805797474300447,
+      "smartEligibilityPrunes": 262,
+      "note": "Exact Smart gradient work falls 12448 to 7623 expanded nodes, but whole request screen 23.49 seconds versus prior f266 22.08 seconds; native proof retained, runtime extension not accepted."
+    }
+  }
 }
