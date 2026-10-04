@@ -64,6 +64,12 @@ internal static class PredictionModHookSubscriberInertness
 
     private static readonly ConcurrentDictionary<Type, (bool Inert, string Overrides)> Cache = new();
 
+    internal static bool IsCombatHook(string methodName)
+    {
+        string name = StripAccessorPrefix(methodName);
+        return !NonHookMemberNames.Contains(name) && !PredictionInertHookNames.Contains(name);
+    }
+
     /// <summary>
     /// 订阅器类型是否与战斗无关。<paramref name="overriddenHooks"/> 返回沿继承链收集到的全部
     /// <see cref="AbstractModel"/> hook 覆写名（逗号分隔，用于日志）。
@@ -113,7 +119,7 @@ internal static class PredictionModHookSubscriberInertness
         string overrides = string.Join(",", hooks);
         foreach (string hook in hooks)
         {
-            if (!PredictionInertHookNames.Contains(hook))
+            if (IsCombatHook(hook))
                 return (false, overrides);
         }
         return (true, overrides);

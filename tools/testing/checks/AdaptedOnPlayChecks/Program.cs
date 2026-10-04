@@ -23,6 +23,7 @@ void Reject<T>(Action action, string message) where T : Exception
 }
 if (args.Contains("--empty"))
 {
+    ModManager.Mods.Add(new() { manifest = new() { id = "BetterVanillaSTS2", affectsGameplay = true } });
     Check(AdaptedCardOnPlayMirrors.CaptureLiveStamp() is null, "Empty registration added configuration state.");
     Check(PredictionModPatchAudit.CaptureCardOnPlay([new TestCard()]) is null, "Empty registration created a root selection table.");
     Console.WriteLine($"ADAPTED_ONPLAY_EMPTY_OK checks={checks}");
@@ -95,7 +96,7 @@ try
     Reject<PredictionUnsupportedException>(() => PredictionModPatchAudit.CaptureCardOnPlay(cards), "Registered unknown source accepted.");
     AssemblyInfo.Unknown = false;
     ModManager.Mods.Add(new() { manifest = new() { id = "WheelchairSpire" } });
-    Reject<IncompatibleGameplayModException>(() => PredictionModPatchAudit.CaptureCardOnPlay(cards), "Denied mod bypassed audit.");
+    Check(PredictionModPatchAudit.CaptureCardOnPlay(cards) is not null, "Loaded mod identity changed compatible combat admission.");
     ModManager.Mods.Clear();
     harmony.Patch(target, prefix: new HarmonyMethod(extra));
     Reject<PredictionUnsupportedException>(() => PredictionModPatchAudit.CaptureCardOnPlay(cards), "Additional same-owner patch accepted.");
@@ -124,6 +125,9 @@ try
     MethodInfo otherTarget = AdaptedCardOnPlayMirrors.ResolveOnPlay(typeof(OtherCard))!;
     harmony.Patch(otherTarget, prefix: new HarmonyMethod(extra));
     Reject<IncompatibleGameplayModException>(() => PredictionModPatchAudit.CaptureCardOnPlay([new OtherCard()]), "Unregistered foreign target accepted.");
+    AssemblyInfo.Neutral = true;
+    Reject<IncompatibleGameplayModException>(() => PredictionModPatchAudit.CaptureCardOnPlay([new OtherCard()]), "Declared-neutral combat patch accepted.");
+    AssemblyInfo.Neutral = false;
     Check(!snapshot.TryInvoke(new(), new(new OtherCard()), new(), out _),
         "Old root read a newly installed generated-type patch.");
     AdaptedOnPlaySnapshot generatedPatchRoot = PredictionModPatchAudit.CaptureCardOnPlay(cards)!;
@@ -152,6 +156,49 @@ try
     harmony.Patch(moveNext, prefix: new HarmonyMethod(extra));
     Reject<PredictionUnsupportedException>(() => AdaptedCardOnPlayMirrors.CaptureLiveStamp(), "Async body patch did not reject stale plans.");
     harmony.Unpatch(moveNext, extra);
+    MethodInfo numbers = AccessTools.PropertyGetter(typeof(CardModel), "CanonicalVars")!;
+    harmony.Patch(numbers, prefix: new HarmonyMethod(extra));
+    foreach (bool neutral in new[] { false, true })
+    {
+        AssemblyInfo.Neutral = neutral;
+        Reject<IncompatibleGameplayModException>(() => PredictionModPatchAudit.ValidateCombatModelPatches(cards),
+            "Changed combat numbers accepted.");
+    }
+    harmony.Unpatch(numbers, extra);
+    MethodInfo merchant = Method(typeof(AbstractModel), "ModifyMerchantPrice");
+    harmony.Patch(merchant, prefix: new HarmonyMethod(extra));
+    PredictionModPatchAudit.ValidateCombatModelPatches(cards);
+    checks++;
+    harmony.Unpatch(merchant, extra);
+    ShopRelic shopRelic = new();
+    MethodInfo shopNumbers = AccessTools.PropertyGetter(typeof(ShopRelic), "CanonicalVars")!;
+    harmony.Patch(shopNumbers, prefix: new HarmonyMethod(extra));
+    PredictionModPatchAudit.ValidateCombatModelPatches([shopRelic]);
+    checks++;
+    harmony.Unpatch(shopNumbers, extra);
+    MethodInfo upgrade = Method(typeof(CardModel), "UpgradeInternal");
+    MethodInfo varsBridge = Method(typeof(BaseLib.Patches.Utils.UpgradeInternalPatch), "InsertVarUpgrade");
+    object variable = new();
+    live.DynamicVars.Add("Damage", variable);
+    BaseLib.Extensions.DynamicVarExtensions.DynamicVarUpgrades.Add(variable, null);
+    harmony.Patch(upgrade, transpiler: new HarmonyMethod(varsBridge));
+    PredictionModPatchAudit.ValidateCombatModelPatches(cards);
+    checks++;
+    BaseLib.Extensions.DynamicVarExtensions.DynamicVarUpgrades[variable] = 3m;
+    Reject<IncompatibleGameplayModException>(() => PredictionModPatchAudit.ValidateCombatModelPatches(cards),
+        "Framework variable upgrade changed combat numbers without rejection.");
+    BaseLib.Extensions.DynamicVarExtensions.DynamicVarUpgrades[variable] = null;
+    MethodInfo modifierBridge = Method(typeof(BaseLib.Abstracts.UpgradeModifiers), "UpgradeModifiersOnCard");
+    harmony.Patch(upgrade, postfix: new HarmonyMethod(modifierBridge));
+    PredictionModPatchAudit.ValidateCombatModelPatches(cards);
+    checks++;
+    PredictionModModelSupport.AttachedModifiers = true;
+    Reject<IncompatibleGameplayModException>(() => PredictionModPatchAudit.ValidateCombatModelPatches(cards),
+        "Active framework modifier bridge accepted.");
+    PredictionModModelSupport.AttachedModifiers = false;
+    harmony.Unpatch(upgrade, varsBridge);
+    harmony.Unpatch(upgrade, modifierBridge);
+    live.DynamicVars.Clear();
     Console.WriteLine($"ADAPTED_ONPLAY_OK checks={checks}");
 }
 finally
@@ -159,6 +206,7 @@ finally
     harmony.UnpatchAll(owner);
     ModManager.Mods.Clear();
     AssemblyInfo.Unknown = false;
+    AssemblyInfo.Neutral = false;
 }
 
 internal class TestCard : CardModel
@@ -204,4 +252,10 @@ internal class AsyncCard : CardModel
         await Task.Yield();
         Value++;
     }
+}
+
+internal class ShopRelic : RelicModel
+{
+    protected int CanonicalVars => 50;
+    public override void ModifyMerchantPrice() { }
 }

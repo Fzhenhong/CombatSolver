@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using MegaCrit.Sts2.Core.Modding;
 
 namespace CombatSolver.Engine.Common.Mirrors;
 
@@ -313,12 +312,6 @@ internal sealed class MethodMirrorRegistry<TBase, TContext>(MirrorMethodSpec met
         {
             result = new LookupResult(MirrorDispatchKind.NotOverridden, null);
         }
-        else if (TryGetMod(overrideMethod, out var mod) && mod.manifest?.affectsGameplay is false)
-        {
-            Entry.Logger.Info(
-                $"Mirror for {method.Name} ignored unsupported {type.FullName} from non-gameplay mod {mod.manifest?.id}.");
-            result = new LookupResult(MirrorDispatchKind.Ignored, null);
-        }
         else if (_strictInferrer?.Invoke(type, overrideMethod) is { } exactHandler)
         {
             result = new LookupResult(MirrorDispatchKind.Handled, exactHandler);
@@ -337,20 +330,6 @@ internal sealed class MethodMirrorRegistry<TBase, TContext>(MirrorMethodSpec met
         }
 
         return result;
-    }
-
-    private static bool TryGetMod(MethodInfo overrideMethod, [NotNullWhen(true)] out Mod? mod)
-    {
-        var declaringType = overrideMethod.DeclaringType;
-        if (declaringType is null)
-        {
-            mod = null;
-            return false;
-        }
-
-        // StS2 v0.109.0 centralizes base-game, mod, and test mock type lookup here.
-        mod = AssemblyInfo.ModForType(declaringType, out var isBaseGame);
-        return !isBaseGame && mod is not null;
     }
 
     private void ValidateOverride(Type type)

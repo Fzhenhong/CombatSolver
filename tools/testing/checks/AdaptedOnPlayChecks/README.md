@@ -9,4 +9,6 @@ dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayCheck
 
 使用目标游戏自带的 `0Harmony.dll`。链接生产补丁审计、组合登记、标准方法 registry 和 descriptor；`TestContracts.cs` 只提供游戏模型、Mod 来源、trace 与模拟器的最小外壳。真实 Harmony 对托管卡牌安装／卸载补丁，核对替换和前后缀组合效果、精确匹配、配置变更与冻结分派。内层补丁、同类重复方法及 async MoveNext 属拒绝合同。
 
+兼容性合同还覆盖 BetterVanillaSTS2 的加载身份、商店 Hook 与遗物数值放行、原版数值补丁拒绝，以及声明 `affects_gameplay: false` 的未适配战斗补丁拒绝。BaseLib 桥接外壳验证空修饰器、空升级额度放行和实际贡献拒绝。`--empty` 验证未登记适配时的加载身份；普通模式验证生产门禁与已登记组合共存。
+
 不验证真实战斗数值、游戏 async 调度、完整 simulator Fork 或控制器实际部署；配置失配的检测通过标记变化验证，Runtime 接线由结构门禁约束。不含计时或性能 A/B。

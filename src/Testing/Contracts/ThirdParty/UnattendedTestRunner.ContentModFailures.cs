@@ -37,7 +37,7 @@ internal sealed partial class UnattendedTestRunner
             { id = "TestContentMod", name = "Content [Test]", affectsGameplay = true } };
         try
         {
-            AssertKnownGameplayModBoundary();
+            AssertCombatModBoundary(combat);
             MonsterModel monster = combat.Enemies[0].Monster!;
             AssemblyInfo.MockTypes[monster.GetType()] = (mod, false);
             AssertBoundary(() => PredictionModPatchAudit.ValidateMonsterModels([monster]));
@@ -106,7 +106,7 @@ internal sealed partial class UnattendedTestRunner
                 varsField.SetValue(canonical, canonicalVars);
                 varsField.SetValue(attached, attachedVars);
             }
-            _completedChecks.Add("RootContent:KnownMod:Monster:MissingAttackDamage:CallbackOverlap:OwnerBoundPower:Source:UploadClassification");
+            _completedChecks.Add("RootContent:CombatModBoundary:Monster:MissingAttackDamage:CallbackOverlap:OwnerBoundPower:Source:UploadClassification");
         }
         finally { AssemblyInfo.MockTypes = previousMocks; LocManager.Instance.SetLanguage(language); }
 
@@ -171,6 +171,7 @@ internal sealed partial class UnattendedTestRunner
                 () => GoldGainedMirrors.AfterGain(model, gold),
             })
             {
+                mod.manifest!.affectsGameplay = false;
                 try
                 {
                     action();

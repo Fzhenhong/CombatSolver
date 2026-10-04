@@ -34,6 +34,11 @@ internal static class RitsuEmptyCapabilityFastPath
     {
         if (!SimulationNotificationIsolation.IsActive)
             return false;
+        return HasEmptyCapabilities(model);
+    }
+
+    internal static bool HasEmptyCapabilities(AbstractModel model)
+    {
         if (ModelCapabilities.TryGet(model, out ModelCapabilitySet? capabilities))
             return capabilities.Count == 0;
         Type modelType = model.GetType();

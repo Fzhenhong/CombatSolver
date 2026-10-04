@@ -6,6 +6,27 @@
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
+## 0.49.3 战斗兼容性边界（2026-10-04）
+
+托管 `AdaptedOnPlayChecks` 普通模式最终 49 项、`--empty` 2 项 Passed。覆盖加载身份、真实 Harmony 组合、原版数值拒绝、商店 Hook 和遗物数值放行、非 gameplay 声明，以及 BaseLib 空升级桥接和实际贡献边界。
+
+```powershell
+dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录>
+dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录> -- --empty
+```
+
+原生三项 Passed：
+
+| 场景 | runId | 秒 | 直接证据 |
+| --- | --- | --- | --- |
+| `ROOT-CONTENT-SOURCES` | `3cd7ec96ae094e63b66cfe68dc1c55b8` | 24.913 | 商店删牌入口放行，原版数值、继承 Hook、怪物和意图来源拒绝，战斗状态保持 |
+| `CONTENT-MOD-FAILURES` | `20e28be96c83465789cc9266fd5b5c42` | 24.396 | 八个声明为非 gameplay 的战斗回调拒绝，计算变量、eng/zhs/zht 和上传分类 |
+| `PR18-FOREIGN-ONPLAY-BOUNDARY` | `453fc5c44e2b4a5483c553ab543557e6` | 23.548 | 后装 OnPlay、async MoveNext、未知来源、卸载、状态保持与一次原版部署 |
+
+原生入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId <表内场景> -TimeoutSeconds 120 -CleanupInstanceOnExit`。ROOT、CONTENT 使用 `-EnemyCurrentHp 1000`，CONTENT 另加 `-VerifyPredictionFailureBoundaries`；PR18 使用 `-EnemyCurrentHp 1`。
+
+Bash 使用同名 scenario 和对应长参数。本轮采用已提交 Executor 的隔离构建；临时启动器使用现有映像查询入口，保留进程身份与租约检查。各次实例已删除，环境阻塞、临时辅助及未验证项见 [开发历史卷 16](archive/development/volume-16.md#验证与范围)。原生证据采用 RitsuLib；后续 BaseLib 空桥接扩展由托管合同覆盖，原始第三方完整栈未运行。
+
 ## 移动运行库内存回收（2026-10-04）
 
 `portable-runtime` 先在原回收逻辑复现 Mono 同形的 API 拒绝，修复后 5 项 Passed。直接链接生产代码并注入被拒绝的按类型 GC 信息接口，验证一次检测后不再调用、普通检查点及不可分割提交续行、取消、自动及手动真实阻塞回收、不可用暂停观测和其他异常继续传播。
