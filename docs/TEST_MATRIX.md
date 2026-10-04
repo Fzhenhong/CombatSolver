@@ -6,8 +6,8 @@
 
 ## Q002 旧费用层恢复与女王样例（2026-10-04）
 
-O001 原包后续检查点：修改前 `317a1464939346af89cf0ca2b4b5abde` 事件30失败；完整费用证据迁移后 `a68f84cd88194fac94a61d3b848b86f8` Passed（86.20s），83事件至T12/HP76，原生二进制、全部续用及保存费用层一致。旧格式选择事件30/35/70，不代表完整获胜。
-B014/T015 原版储君女王报告 `ba79d87499a4455bbba4a51baf381eea`：修正前 `dc932ebf39d34de1af68b2fdeb35db79` 首个可操作状态的临时星能层失败；嵌套字段解析修正后 `73a44262f64943caa7601cf167c40988` Passed（17.09s），开战/首个可操作状态/原生二进制/全部费用层严格一致，实例删除。它是另一场战斗，不能替代 O002 原包的123→55同根验收。复跑使用 `-CheckpointArchivePath <原报告ZIP> -CheckpointSelector start -ReplayMode RestoreOnly -HeadlessFastModeForTest Instant -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 为对应 `--checkpoint-archive-path`、`--checkpoint-selector`、`--replay-mode`、`--headless-fast-mode-for-test`、`--timeout-seconds`、`--cleanup-instance-on-exit`。
+O001 原包后续检查点：修改前 `317a1464939346af89cf0ca2b4b5abde` 事件30失败；完整费用证据迁移后 `a68f84cd88194fac94a61d3b848b86f8` Passed（86.20s），83事件至T12/HP76，原生二进制、全部续用及保存费用层一致。旧格式选择事件30/35/70。T12自主5秒搜索 `4033201f172c4fc784c22ec5fe541a8f` 与原生 `d502fbe6806a4d09a8f908b76148a030` 均Passed（29.23/33.58s），完整根/政策/8步动作一致，T13累计9损获胜，计划外重算0；原生账本72+13治疗−9损=76，前缀含T2玩家虚弱药水1瓶，续打未新增用药。不是开局自主发现。
+B014/T015 原版储君女王报告 `ba79d87499a4455bbba4a51baf381eea`：修正前 `dc932ebf39d34de1af68b2fdeb35db79` 首个可操作状态的临时星能层失败；嵌套字段解析修正后 `73a44262f64943caa7601cf167c40988` Passed（17.09s），开战/首个可操作状态/原生二进制/全部费用层严格一致。原开局固定30,000ms/Beam60/120,000节点/DOP8正常 `bcfd7fda57cb414781059d1e897c5305` 与原生 `76a94a8704fa43e8aa8e6ab0e1fd4255` Passed（47.37/53.14s）：同完整根/政策/动作，T6实际16损/无药获胜、HP75→59、计划外重算0；实例均删除。它是另一场战斗，不能替代 O002 原包的123→55同根验收。恢复复跑使用 `-CheckpointArchivePath <原报告ZIP> -CheckpointSelector start -ReplayMode RestoreOnly -HeadlessFastModeForTest Instant -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 使用对应长参数，搜索/部署需另提供该显式诊断政策。
 费用与选择边界 `REPLAY-BOUNDARY-CONTRACT` run `884c35b87ac94e77b1632914fd34001a` Passed（20.20s），覆盖旧格式证据门、能量/星能费用、持续时间、选牌来源/原生身份/私有字段差异拒绝及临时星能非零费用和独立清除条件。完整调查范围见[Q002](issues/q002-route-quality.md#o002-其他女王材料筛选2026-10-04)。
 
 ## Q002 O004 原预算与开局补搜隔离（2026-10-04）
