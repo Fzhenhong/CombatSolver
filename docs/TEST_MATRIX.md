@@ -6,6 +6,61 @@
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
+## 0.49.3 框架与局外 Mod 兼容性（2026-10-04）
+
+托管 `AdaptedOnPlayChecks` 普通模式 41 项、`--empty` 5 项 Passed。覆盖 BetterVanillaSTS2、BaseLib、RitsuLib 加载身份、gameplay-neutral 框架准入、真实 Harmony 完整组合和未适配 gameplay OnPlay 拒绝。
+
+```powershell
+dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录>
+dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录> -- --empty
+```
+
+原生验证使用安装的 BaseLib 3.4.7 DLL/PCK/manifest 与 RitsuLib，进入同一私有游戏快照：
+
+| 场景 | runId | 秒 | 直接证据 |
+| --- | --- | --- | --- |
+| `ROOT-CONTENT-SOURCES` | `791612a7355141518541227c3216270b` | 25.556 | 真实商店删牌入口放行，怪物和意图来源拒绝，根与真实战斗状态保持 |
+| BaseLib 最小准入 + `PR18-FOREIGN-ONPLAY-BOUNDARY` | `2781b571a8a04df2841924fba091511e` | 23.821 | Passed；真实修饰器根、Owner、Fork 隔离、原有 OnPlay 门禁与一次原版求解部署 |
+| BaseLib 完整合同 + `PR18-FOREIGN-ONPLAY-BOUNDARY` | `646fb5504eb445efbaa14fe8068f84b0` | 23.892 | Passed；原生生成牌状态键、五种牌堆及离堆的监听生命周期，原有完整修饰器合同、OnPlay 边界和一次原版求解部署 |
+
+原生入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId <表内场景> -TimeoutSeconds 120 -CleanupInstanceOnExit`。ROOT 使用 `-EnemyCurrentHp 1000`；PR18 使用 `-EnemyCurrentHp 1 -VerifyBaseLibCardModifierBoundary`。早先的最小准入样本通过临时 fixture 限定根、Owner 与 Fork，输出独立的 `BaseLibRootAdmission` 标记；当前完整合同输出 `BaseLibCardModifierBoundary` 与 `BaseLibGeneratedClone:NativeState:Created:Hand:Draw:Discard:Exhaust:Play:Removed`。
+
+此前完整 BaseLib 修饰器合同 Failed，runId `71984ec7e337460da825c98566898474`，22.033 秒，原文保留在 [历史卷 17](archive/development/volume-17.md#验证与范围)。本轮拆分断言的失败基线 runId `ef33630d6b52447b9279fefce87117e2`，21.952 秒，定位为入堆前的 listener 预期；生成牌修饰器和重置字段通过。当前合同按真实 BaseLib 的牌堆生命周期对照，完整通过；根因和范围见 [历史卷 18](archive/development/volume-18.md#baselib-生成牌回归合同2026-10-04)。
+
+Bash 使用同名 scenario 和对应长参数。本轮使用已提交 Executor 的隔离构建；临时启动器将 BaseLib 原包加入私有快照，并使用现有映像查询入口。进程身份、租约与退出清理检查保持，各次实例已删除。验证来源与未验证项见 [开发历史卷 17](archive/development/volume-17.md#验证与范围)，源码 `6a073d9e` 的历史验证见 [历史卷 16](archive/development/volume-16.md#验证与范围)。
+
+## 移动运行库内存回收（2026-10-04）
+
+`portable-runtime` 先在原回收逻辑复现 Mono 同形的 API 拒绝，修复后 5 项 Passed。直接链接生产代码并注入被拒绝的按类型 GC 信息接口，验证一次检测后不再调用、普通检查点及不可分割提交续行、取消、自动及手动真实阻塞回收、不可用暂停观测和其他异常继续传播。
+
+```bash
+dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- portable-runtime
+```
+
+桌面实际 CLR 相邻合同 `default-commit` 2 项、`checkpoint` 1 项、`diagnostic-failure` 8 项、`recovery-lifecycle` 3 项 Passed。模式均由同一 GC 工具运行，方法见[工具入口](../tools/testing/checks/CombatSolver.GcPolicyChecks/README.md)。
+
+原生 `B013-DEFAULT-GC-LIMIT` Passed，runId `ac4ee495b5ad48158c0d709a49b0abd2`，22.883 秒；包含限额、真实回收续行、退出和暂停观测缺失时的工作量累计。PowerShell 入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId B013-DEFAULT-GC-LIMIT -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 对应 `tools/testing/run-unattended-test.sh --scenario-id B013-DEFAULT-GC-LIMIT --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit`。实例已删除。
+
+原 Android 设备与原包整场回放未执行；来源、失败基线及验证范围见[开发记录](archive/development/volume-15.md#移动运行库内存回收2026-10-04)。
+
+## 0.49.1 日志站硬逻辑（2026-10-04）
+
+强制结束回合选牌、群体 Power、死亡金币回调、延迟能量／等离子球、开局小刀、回合末自动出牌、行动意图、资源隔离、反应格挡和界面归属的原生差分见 [逐类验收](issues/0.49.1-hardbugs-20261004.md#原生验收证据)。该记录保留失败基线、runId、复跑入口、第三方边界及未验证项；生产部署合同包含增量验证和计划外重算断言。
+
+## 0.49.2 内容性 Mod 失败分类（2026-10-04）
+
+`CONTENT-MOD-FAILURES` 与 `VerifyPredictionFailureBoundaries` 同进程 Passed，runId `849fb38580474f7881c05d113beef5d3`，24.505 秒。合同直接调用五个回合阶段、三个金币回调与计算型变量的生产拒绝入口，断言确认的第三方来源、原生回调保持未执行、包装异常、eng/zhs/zht 的 Mod 名称与方括号转义、四类失败账本仅记录暂未适配且不触发上传。原版、共享计算框架与运行库失败继续提示诊断上传；平台接口错误保留主失败类别。
+
+```powershell
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId CONTENT-MOD-FAILURES -EnemyCurrentHp 1000 -VerifyPredictionFailureBoundaries -TimeoutSeconds 120 -CleanupInstanceOnExit
+```
+
+```bash
+./tools/testing/run-unattended-test.sh --scenario-id CONTENT-MOD-FAILURES --enemy-current-hp 1000 --verify-prediction-failure-boundaries --timeout-seconds 120 --cleanup-instance-on-exit
+```
+
+来源与验证边界见 [开发历史卷 14](archive/development/volume-14.md)。最终行为源码在版本同步前通过；后续只改版本元数据和文档，采用最终 Release 构建。测试启动器已删除实例，未执行可见 Steam 弹窗排版验收或第三方原包整场回放。
+
 ## 0.49.1 内存提交回归（2026-10-04）
 
 `CombatSolver.GcPolicyChecks` 直接编译生产 Runtime 内存代码。`default-commit` 在未改生产代码时 Failed：显式回退后分配上限仍有效；修复后 2 项 Passed，覆盖普通检查点保留限额、不可分割提交完成回收后续行、后续请求重新建立限额与取消保持原准入。

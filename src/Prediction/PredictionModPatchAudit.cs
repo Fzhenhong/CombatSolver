@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using CombatSolver.Engine.Common;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -13,7 +14,7 @@ namespace CombatSolver;
 /// </summary>
 /// <remarks>
 /// Mirrors read live model data, so third-party patches to canonical data (energy cost, dynamic vars, keywords,
-/// rarity) are followed automatically except for explicitly rejected gameplay mods. A replaced <see cref="CardModel.OnPlay"/>
+/// rarity) are followed automatically. A replaced <see cref="CardModel.OnPlay"/>
 /// is different in kind: <c>CardOnPlayInferrer</c> reads the original, unpatched IL by design, and the
 /// bespoke mirrors are keyed on the vanilla card type. The engine therefore keeps executing the vanilla recipe it
 /// was written against and silently produces a route for a card the game no longer plays that way, which the
@@ -21,8 +22,6 @@ namespace CombatSolver;
 /// </remarks>
 internal static class PredictionModPatchAudit
 {
-    private static readonly string[] IncompatibleModIds = ["WheelchairSpire", "PengoTarot", "BetterCharacterRelics"];
-
     internal readonly record struct ForeignPatch(string ModId, string ModName, string Description);
 
     /// <summary>
@@ -37,7 +36,6 @@ internal static class PredictionModPatchAudit
 
     internal static AdaptedOnPlaySnapshot? CaptureCardOnPlay(IEnumerable<CardModel> cards)
     {
-        ValidateLoadedMods(ModManager.GetLoadedMods());
         bool adapted = AdaptedCardOnPlayMirrors.Seal();
         Dictionary<Type, AdaptedCardOnPlayMirrors.Registration?>? selections = adapted ? [] : null;
         HashSet<Type> checkedTypes = [];
@@ -100,28 +98,44 @@ internal static class PredictionModPatchAudit
                     ForeignPatch? foreign = TryDescribeForeignPatch(patch, target);
                     firstForeign ??= foreign;
                 }
+        if (target.GetCustomAttribute<AsyncStateMachineAttribute>()?.StateMachineType is { } stateMachine)
+        {
+            MethodInfo moveNext = AccessTools.Method(stateMachine, "MoveNext")
+                ?? throw new PredictionUnsupportedException($"Async OnPlay state machine has no MoveNext: {type.FullName}.");
+            if (Harmony.GetPatchInfo(moveNext) is { } asyncPatches)
+                foreach (var group in AdaptedCardOnPlayMirrors.Groups(asyncPatches))
+                    foreach (Patch patch in group.Patches)
+                    {
+                        if (TryDescribeForeignPatch(patch, moveNext) is not { } foreign) continue;
+                        throw new IncompatibleGameplayModException(foreign.ModId, foreign.ModName, foreign.Description, "combat");
+                    }
+        }
         return adapted ? AdaptedCardOnPlayMirrors.Select(type, target, patches) : null;
     }
 
-    internal static void ValidateLoadedMods(IEnumerable<Mod> mods)
+    internal static void ValidateMonsterModels(IEnumerable<MonsterModel> monsters)
     {
-        foreach (Mod mod in mods)
+        foreach (MonsterModel monster in monsters)
         {
-            string? incompatibleId = IncompatibleModIds.FirstOrDefault(id =>
-                string.Equals(mod.manifest?.id, id, StringComparison.OrdinalIgnoreCase)
-                || mod.assemblies.Any(assembly => string.Equals(
-                    assembly.GetName().Name, id, StringComparison.OrdinalIgnoreCase)));
-            if (incompatibleId is null)
-                continue;
-            throw new IncompatibleGameplayModException(
-                mod.manifest?.id ?? string.Empty,
-                mod.manifest?.name ?? incompatibleId,
-                $"{incompatibleId} gameplay changes",
-                "combat");
+            _ = AssemblyInfo.ModForType(monster.GetType(), out bool isBaseGame);
+            if (!isBaseGame)
+                throw PredictionUnsupportedException.ForContent(
+                    $"Monster AI and move effects require a prediction implementation: {monster.GetType().FullName}.", monster.GetType());
+            RejectForeignPatches([AccessTools.Method(monster.GetType(), "GenerateMoveStateMachine")]);
         }
     }
 
-    private static ForeignPatch? TryDescribeForeignPatch(Patch patch, MethodInfo target)
+    internal static void RejectForeignPatches(IEnumerable<MethodBase> methods)
+    {
+        foreach (MethodBase target in methods.Distinct())
+            if (Harmony.GetPatchInfo(target) is { } patches)
+                foreach (var group in AdaptedCardOnPlayMirrors.Groups(patches))
+                    foreach (Patch patch in group.Patches)
+                        if (TryDescribeForeignPatch(patch, target) is { } foreign)
+                            throw new IncompatibleGameplayModException(foreign.ModId, foreign.ModName, foreign.Description, "combat");
+    }
+
+    private static ForeignPatch? TryDescribeForeignPatch(Patch patch, MethodBase target)
     {
         Type? patchType = patch.PatchMethod.DeclaringType;
         if (patchType == null)
