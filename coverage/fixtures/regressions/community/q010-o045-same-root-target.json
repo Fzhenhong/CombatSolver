@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scenarioId": "Q010-O045-SAME-ROOT-TARGET",
-  "description": "O045 虱虫之祖：A 类回归夹具，达成的改善值具有内存档条件性。窄内存档（GC_SEARCH_ALLOCATION_LIMIT≈1.30GB、No-GC 弃区 24%）从 combat_start 同根得 1 战损、第 5 回合、1 瓶，与包内改善记录（:3，第 1 回合、已损 0）同根可比；宽内存档（≈2.32GB、弃区 44%）beam60 精炼成员得运行，零药最优由 20 改善到 14，其 strategic 净差 8 低于药水门槛 9，MaximumSmartPotionUses 返回 0 使整层药水搜索被跳过，实得 14 战损、第 7 回合、0 瓶（runId d67f8317705a4a9b9d355b8ce3996756 与同参数复跑 e3632e589f2b4ef4939c49a661a2c931）。本夹具按裁决保持锁窄档实测值 1，宽档 Failed 保留、不改断言；复跑须声明 NoGC/系统内存档。只断言终值：实测首段第 4 张是 BASH、包内改善是 STOKE，卡集不同，不断言路线同构。",
+  "description": "O045 虱虫之祖：A 类回归夹具，达成的改善值具有内存档条件性。窄内存档（GC_SEARCH_ALLOCATION_LIMIT≈1.30GB、No-GC 弃区 24%）从 combat_start 同根得 1 战损、第 5 回合、1 瓶，与包内改善记录（:3，第 1 回合、已损 0）同根可比；宽内存档（≈2.32GB、弃区 44%）index=1 的 beam60 普通宽度成员（非精炼成员）得运行，零药最优由 20 改善到 14，其 strategic 净差 8 低于药水门槛 9，MaximumSmartPotionUses 返回 0 使整层药水搜索被跳过，实得 14 战损、第 7 回合、0 瓶（runId d67f8317705a4a9b9d355b8ce3996756 与同参数复跑 e3632e589f2b4ef4939c49a661a2c931）。本夹具按裁决保持锁窄档实测值 1，宽档 Failed 保留、不改断言；复跑须声明 NoGC/系统内存档。只断言终值：实测首段第 4 张是 BASH、包内改善是 STOKE，卡集不同，不断言路线同构。",
   "characterId": "IRONCLAD",
   "encounterId": "LOUSE_PROGENITOR_NORMAL",
   "seed": "T3NDR7S6HYD8",

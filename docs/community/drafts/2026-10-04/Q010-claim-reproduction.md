@@ -83,7 +83,7 @@ O044 实测 projHP=5、0 瓶、endTurn=6、`unavoidable_hp_lost=5`、`score=1000
 
 ## 同根夹具首次执行结果（2026-10-04）
 
-四条夹具串行执行（单实例锁，逐条完成再下一条），均带 `-CleanupInstanceOnExit`、`-CheckpointSelector start`、`-ReplayMode SearchOnly`、`Instant`、300 秒上限；断言参数逐项取自夹具 JSON。
+四条夹具串行执行（单实例锁，逐条完成再下一条），均带 `-CleanupInstanceOnExit`、`-CheckpointSelector start`、`-ReplayMode SearchOnly`、`Instant`；断言参数逐项取自夹具 JSON。四份夹具的 `timeoutSeconds=300` 超出 AGENTS.md 第 8 节「单个 unattended 请求默认不超过 120 秒」的口径，登记理由：该值**跟随各包内录制政策的软预算**（`policy.json` 的 `recordedPolicy.profile.softTimeBudgetMilliseconds` 与 `executedPolicy` 相等，五包分别 120000/300000/180000/300000/180000ms，最长 300000ms），不是为本轮排障临时放大——首次执行四次的 launcher 墙钟 28.7–40.0 秒全部远低于 300 秒上限，无一次接近超时；若压到 120 秒，O042/O044（包内软预算 300000ms）就不再是同政策同预算对照。
 
 | 主题 | runId | 判定 | 战损 | endTurn | boundary | 瓶 | 省血/卖血 | score | 墙钟 ms | total_expanded / total_transitions / total_elapsed_ms |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -96,9 +96,9 @@ O044 实测 projHP=5、0 瓶、endTurn=6、`unavoidable_hp_lost=5`、`score=1000
 
 ### O045 失败：判据缺口的可复现实测，不是退化
 
-失败原文「首轮路线使用药水 0 瓶，预期为 1 瓶」，同参数复跑结论一致（同 `score`、同终值）。两侧可证同输入同政策：`rootContinuationStamp` 长 3776 字符、SHA256 均为 `F95E3DA5A9F50626FE74A5FF1302BB12B97690FD4924BBD3E31722E9252AD006`；`policy.json` 的 `executedPolicy` 逐字段无差异；`request.json` 的 seed/ascension/encounter/act/`enemyCurrentHp`/`checkpointSelector`/`replayMode`/`headlessFastModeForTest`/`stopFlag` 全同。生产侧 `git diff 4533f6bb..HEAD -- src tools` 为空；但认领者四次运行时刻（00:56–01:05）早于该基点提交（01:34），两侧证据都不记录所加载 `CombatSolver.dll` 的哈希，所以**二进制等价属推断**（由同基点与三条主题终值/`score`/路线逐位相同支撑），不是哈希对账；下面这条因果链完全取自本轮日志，不依赖该推断：
+失败原文「首轮路线使用药水 0 瓶，预期为 1 瓶」，同参数复跑结论一致（同 `score`、同终值）。两侧可证同输入同政策：`rootContinuationStamp` 长 3776 字符、SHA256 均为 `F95E3DA5A9F50626FE74A5FF1302BB12B97690FD4924BBD3E31722E9252AD006`；`policy.json` 的 `executedPolicy` 逐字段无差异；`request.json` 的 seed/ascension/encounter/act/`enemyCurrentHp`/`checkpointSelector`/`replayMode`/`headlessFastModeForTest`/`stopFlag` 全同。二进制等价经哈希对账成立：12 次运行（本轮六次：三条 Passed 各一次、O045 两次、O044 复跑一次；认领者六次：O041/O042/O044/O045 各一次加 O043 两次）的 `result.json.mainAssemblyHash` 全部为 `7E306914E10A62FAF737D9B412EEE88773AE0E02DFEF1282A4528FDA1660A610`（字段定义 `src/Testing/Host/UnattendedTestProtocol.cs:530-531`，加载程序集的 SHA256），与 `mods/CombatSolver` 部署件及当前 Release 产物逐位相同；基点 `4533f6bb` 为 2026-10-03T17:34:53Z，认领者四份夹具主题的运行在 2026-10-04T00:56–01:05Z（O043 两次在 01:06Z/01:29Z），均晚于基点约 7.4–8 小时。下面这条因果链取自本轮日志：
 
-1. 本轮墙 2319212440（认领者 1296864492），beam 60 的有界精炼成员不再被 `SkippedMemoryHeadroom` 拦下，于是真的跑了：`ran=3 compared=2`（认领者 `ran=1 compared=1`）。
+1. 本轮墙 2319212440（认领者 1296864492），index=1 的 **beam 60 普通宽度成员**（`bounded_refinement`/`offensive_refinement`/`power_commitment`/`second_rank_band`/`base_score_only` 全 False）不再被 `SkippedMemoryHeadroom` 拦下，于是真的跑了：`ran=3 compared=2`（认领者 `ran=1 compared=1`）；真正的有界精炼成员是 index=5（beam 36、`bounded_refinement=True`），它跑了但以 `NodeLimitNotTerminal` 结束、`compared=False` 未参与比较。
 2. 多跑成员把**零药最优**从 20 改善到 14（`POLICY_BASELINE` 本轮 `20, 14, wonFalse:0`，认领者 `20, 0`），选中成员由 index 0（beam 90、战损 20）换成 index 1（beam 60、战损 14）。
 3. 战损 14 的 strategic 净差为 8，低于门槛 `firstPaidPotionHpRequired=9`（本轮 `potion_reward=Unknown/-/credit=0`，无替代治疗抵免）→ `MaximumSmartPotionUses`（`src/Search/CombatSearchCoordinator.cs:1009-1052`）返回 0 → Smart 梯度在 `src/Search/CombatSearchCoordinator.Audits.cs:859-865` 以 `stop=no_potion_acceptable maximum=0` 直接返回，**整层药水搜索被跳过** → 终值停在零药 14。
 4. 认领者侧零药只有 20，门槛通过，梯度 layer=1 搜出 1 瓶省血 19、整场战损 1 的路线并选中。
@@ -118,7 +118,7 @@ O044 实测 projHP=5、0 瓶、endTurn=6、`unavoidable_hp_lost=5`、`score=1000
 O041 与 O042 的共同线索是 beam 宽度组合的精炼成员几乎全部被内存门限拦下（O041 `members=5 ran=2 compared=1`，O042 `members=6 ran=2 compared=2`）。逐位复算后 `src/Search/BeamWidthPortfolioGate.cs:86-118` 的算术与它拿到的输入一致，**判定为环境保守而非逻辑过严**：六条判据按序 ProvenZeroDamage → FrontierExhausted → 时间份额 → 节点余量 → 时间余量 → 内存余量（`:98-116`，第 6 条在 `:111-116`），成本按 `ceil(base×w×3/(baseW×2))` 外推（`:63-71`），墙由 `src/Runtime/SearchGcPolicy.cs:2098-2101` 的 `min(sob/5*4, region/4*3)` 算得 O042 1283575704、O041 1241302252，与日志逐位吻合。输入侧三处值得维护者决定是否单独立项：
 
 1. **成本侧与余量侧用了不同起点的分配量。** 门控用基线成员**自己那一段**的分配增量外推每个成员的成本（`src/Search/CombatSearchCoordinator.BeamPortfolio.cs:120,139-140`），却拿 `SearchMemoryPressureSignal.RemainingBytes`（`src/Runtime/SearchMemoryPressureSignal.cs:113-117,157-177`，**自区域配置时刻起**的累计分配）当余量。O042 基线自报 `allocated_delta=1063386616`，是整面分配墙 1283575704 的 82.9%，而反推出的判拒时刻余量只有约 0.64–1.06 GB（`remaining ∈ [638031970, 1063386616)`：54 宽放行给下界、90 宽拒绝给上界）⇒ 凡宽度 ≥ 基线宽度的成员必然被拒，这是结构性而非偶发内存紧张。O041 同构：60 宽成员外推成本 1229477958 为其墙 1241302252 的 99.05%，差 11824294 字节被拒（`remaining ∈ [491791184, 1229477958)`）。
-2. **有界精炼成员被显著高估。** `src/Search/BeamWidthPortfolio.cs:284-285` 把它的节点预算压到 `totalExpanded / 8`（O042 为 7026/8 = 878，与日志 `nodes=878` 一致），实际只分配 113047992 字节，而门控按宽度线性外推给它的预算是 638031970 字节，高估约 56 倍；第 6 条实际只在「宽度 ≥ 基线」上生效。
+2. **有界精炼成员被显著高估。** `src/Search/BeamWidthPortfolio.cs:284-285` 把它的节点预算压到 `totalExpanded / 8`（O042 为 7026/8 = 878，与日志 `nodes=878` 一致），实际只分配 113047992 字节，而门控按宽度线性外推给它的预算是 638031970 字节，高估约 5.6 倍（638031970/113047992=5.64）；第 6 条实际只在「宽度 ≥ 基线」上生效。
 3. **`unavoidable_hp_lost` 缺协议断言字段。** 无人测试的 `ExpectedInitial*` 只有 `soldHp`/`soldHpAtMost`/`hpLostAtMost` 一类，被迫受击分量只出现在 `RESULT` 诊断行（`src/Runtime/SolverDiagnostics.cs:209`），「战损构成」这类断言只能靠人工对账；若要机器化，需要新增 `ExpectedInitialUnavoidableHpLost`，属 `src/Testing` 生产协议改动，不在本批范围。
 
 两者的直接环境诱因是 NoGC 区域被系统内存压力拒开：`GC_NO_GC_REGION_DECLINED percent_of_configured=24`，配置 16 GB 只能保留 3.95 GB → `IsNoGcRegionBudgetWorthEntering` 主动弃区（`src/Runtime/SearchGcPolicy.cs:520-545`）→ 中途区域重建后墙降到 1.28 GB（`physical_load` 8.6→10.6 GB、`system_limit` 12.56 GB）。**同一诱因在本轮以反方向出现**：弃区比例 44%、墙升到 2.3 GB，于是 O045 变差而 O041/O042 不变，说明门限松紧在当前判据下都不单调。本轮**不改生产代码**，理由：AGENTS.md 第 1 节禁止用扩大 Beam、节点、时间或 No-GC 预算掩盖问题，而门限校准属口径改动、需要独立的「同根质量无退化 + 耗时无明显增加」哨兵；且 O042 的最终结果并不出自被拦的精炼成员，而出自不经该门限的 `DEFERRED_OPENING_POWER` 补查（`src/Search/CombatSearchCoordinator.cs:564-601`），放宽门限对本批两个主题的收益未经证实。
@@ -134,7 +134,7 @@ O041 与 O042 的共同线索是 beam 宽度组合的精炼成员几乎全部被
 - 本批无生产代码改动，因此没有「修改前失败 / 修改后通过」同输入对照；质量无退化的直接证据是 `git diff` 在 `src` 与 `tools` 为空，加上 O044 同根同政策跨内存档重跑的终值、`score` 与路线全同。
 - 「未改目标哨兵」在本批没有对应物（没有任何搜索策略代码改动，`src`/`tools` 的 diff 为空就是该哨兵的定义性证据）。「严格关闭内存门限」的同根对照未单独构建，已由本轮天然 A/B 替代闭合（O042 `ran=3` vs `ran=2` 结果不变、O045 `ran=3` 使结果变差）。成对耗时只到 SearchOnly 搜索与 launcher 墙钟两个口径（见上表），未做同一进程内的严格交替计时。
 - O045 的宽档失败只在这台机器复现（分配墙约为认领者的 1.8 倍）。未在认领者那档余量下重跑以证明「余量窄即 Passed」——该侧证据来自认领者产物，非本轮执行。**结论：O045 的 1 在高余量机器上不可达；夹具保持锁 1、保持 Failed、不改断言。**
-- 认领者侧所加载二进制与本轮等价属推断（运行时刻早于声明基点、两侧证据均不记录 DLL 哈希），已在 O045 小节标注。
+- 二进制等价已由 12 次运行的 `mainAssemblyHash` 对账确认（同一哈希 `7E306914E10A62FA…60A610`），不再是未验证项。
 - O042 的「被迫受击 = 1」已按 diagnostics 对账成立（1 + sold 4 = 5），但夹具断不到它，字段缺失登记为工作项 3。
 - 五个主题均未执行 `DeploySolver` 原生部署，未做成对耗时对照；PR 保持 Draft、等维护者对口径的答复，部署对照不属于本批收口条件。未运行可见 Steam 会话，无 FPS 与帧时间结论（headless 数据不替代可见性能口径）。
 - 定位报告 `.local/tool-tasks/q010/O041-analysis.md`、`O042-analysis.md` 与验收汇总 `.local/tool-tasks/q010/verification.md` 按仓库规则在任务结束后清理，结论已全部并入本文件与本 PR 正文；证据以登记的 runId 与 `coverage/evidence/test-evidence.json` 为准。
