@@ -81,11 +81,15 @@ internal static class BeamWidthPortfolioGate
         ArgumentOutOfRangeException.ThrowIfNegative(baselineCost);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(baselineNodes);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(memberNodes);
-        long numerator = baselineCost * memberNodes * SafetyNumerator;
-        long denominator = baselineNodes * SafetyDenominator;
-        if (numerator / Math.Max(1, denominator) >= long.MaxValue / 2)
+        // 先判溢出再乘，否则保护会写成死代码：配额可达数十万、成本可达 GB 级，乘积有实际越界空间。
+        if (baselineCost > long.MaxValue / SafetyNumerator / Math.Max(1, memberNodes))
             return long.MaxValue;
-        return (numerator + denominator - 1) / denominator;
+        if (baselineNodes > long.MaxValue / SafetyDenominator)
+            return long.MaxValue;
+        long denominator = baselineNodes * SafetyDenominator;
+        long numerator = baselineCost * memberNodes * SafetyNumerator;
+        // 用 (n-1)/d + 1 做向上取整，避免 n + d - 1 再溢出一次。
+        return numerator == 0 ? 0 : (numerator - 1) / denominator + 1;
     }
 
     /// <summary>
