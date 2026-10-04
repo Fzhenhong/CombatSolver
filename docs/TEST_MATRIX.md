@@ -151,7 +151,7 @@ L0：原生回复审计工具迁入tools/inspection后构建和真实DLL扫描�
 
 回复证明扩展研究：有限再生旧门禁预期失败3f3afd5a…，候选2e84b06a…Passed（精确7／后续2次剪枝）；5bf5eec3…保留可回复分支及未知消耗堆Feed。沙漏10c7a7e1…Passed（六次出牌、三种敌人行动、九份完整状态、16 Fork、四堆未知拒绝）；PR215储君组合8faef194…成本与未知边界、0875367f…实际无药先导／账本／DOP2严格隔离Passed。普通完整请求初筛仍未达到性能或资源质量门槛，未作最终ABBA、固定回归或部署；失败夹具、构建、逐次结果及范围见[补充研究](performance/pr215-recovery-proof-research-20261005.md)。
 
-储君成本研究：Fork缓存 `2898db5d6e904adb8a406ed414c4a664` / `0240805e1a3048df8a82f0dc3c4b8936` Passed；零成长HP计价强制回合 `472a181e6cf24dd48605b6bc098c99bc` / `c8f30d1aca664f0788df5e3f67ad6a83` Passed，包含16实际工作分支、原生完整差分与前向结果单次消费。两候选整请求分别ACCA无收益/内存超门槛及单次16.00秒未达两倍，未作新的固定回归或部署。完整采样、失败与逐次记录见[成本研究](performance/regent-search-cost-research-20261005.md)。
+储君成本研究：Fork缓存 `2898db5d6e904adb8a406ed414c4a664` / `0240805e1a3048df8a82f0dc3c4b8936` Passed；零成长HP计价强制回合 `472a181e6cf24dd48605b6bc098c99bc` / `c8f30d1aca664f0788df5e3f67ad6a83` Passed，包含16实际工作分支、原生完整差分与前向结果单次消费。参与掩码布局 `fdfebc03d724493897c66f47704d30ed` / `36b2a663a51347bdb3b05656ea09d794` Passed，初筛16.12秒、工作/质量不变、分配−5.21%。三候选整请求仍未达两倍：Fork缓存ACCA无收益/内存超门槛，强制回合单次16.00秒，未作新的固定回归或部署。完整采样、失败与逐次记录见[成本研究](performance/regent-search-cost-research-20261005.md)。
 
 [全药水审计](performance/native-potion-recovery-certificates-20261004.md)记录64种有效原版药水的分类及58种有条件零回复准入；`14eef45cfeb04fc7bb137f9cec2a8c08` 最小原生合同Passed，全部64种实际用药及最终闭包未完成。[魂枢证据](performance/soul-nexus-0491-research-20261004.md)记录严格Continuation恢复、拟提交版本完整请求ABBA：上游311.39／315.50秒，候选96.02／96.66秒，中位数3.254倍，最差峰值降低50.75%，战损19→6、药水0→1、回合8→5，遗物计数目标满足数2→1；完整原生二进制仍未验证。四次搜索合同Passed，最后上游启动器退出1的身份确认异常及进程/实例清理单列。完整原生部署 `85a6c2eaf9ff495fafba556392362d86` Passed，第5回合63/70生命、StrengthPotion、非预期重算0。其他27个固定根同版本串行回归全部通过：完整根/预算/政策相等，24胜/原有3 NoWin保持，战损、保命、追回及同战损次级目标无退化，峰值最大+7.503%。女王两根按用户暂停要求排除，不能称原29根全量通过。
 

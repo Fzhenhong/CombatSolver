@@ -2590,5 +2590,1382 @@
     "No final ACCA or fixed regression for zero-credit prototype: original twofold goal failed screening.",
     "No new deployment, live Steam performance, complete unknown/revival/regen mechanism regression or global resource acceptance.",
     "Existing Regent-combination Necrobinder cost70/P1 to cost115/P2 resource failure retained."
-  ]
+  ],
+  "allStackAllocationAttribution": {
+    "scope": "All confirmed allocation stack groups in this retained trace; weighted bytes not objects/CPU/retained heap",
+    "stackCount": 87902,
+    "confirmedBytes": 12719783016,
+    "groupedBytes": 12719783016,
+    "nearestOwnedGroups": [
+      {
+        "method": "CombatSolver.Engine.Common.PredictionUtils.CloneModelForSimulation(!!0)",
+        "estimatedBytes": 1462508360,
+        "sampleStack": [
+          "MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVarSet..ctor(class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar>)",
+          "MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVarSet.Clone(class MegaCrit.Sts2.Core.Models.AbstractModel)",
+          "MegaCrit.Sts2.Core.Models.PowerModel.DeepCloneFields()",
+          "CombatSolver.Engine.Common.PredictionUtils.CloneModelForSimulation(!!0)",
+          "CombatSolver.SimulatedCombatState.ForkPower(class MegaCrit.Sts2.Core.Models.PowerModel,class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 941197152,
+        "sampleStack": [
+          "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.Common.MirroredHookListenerFilter.Filter(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)",
+        "estimatedBytes": 779742944,
+        "sampleStack": [
+          "CombatSolver.Engine.Common.MirroredHookListenerFilter.Filter(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictedCardExtensions.HasKeyword(class CombatSolver.Engine.Common.PredictedCard,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionState,value class MegaCrit.Sts2.Core.Entities.Cards.CardKeyword)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.Common.SimCardPile.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 732770840,
+        "sampleStack": [
+          "CombatSolver.Engine.Common.SimCardPile.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.GetBaseHookListeners()",
+        "estimatedBytes": 456650464,
+        "sampleStack": [
+          "CombatSolver.SimulatedCombatState.GetBaseHookListeners()",
+          "CombatSolver.SimulatedCombatState.GetEffectiveHookListeners()",
+          "CombatSolver.SimulatedCombatState.GetActiveHookListeners()",
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.AfterCardDrawn(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,bool)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Draw(class MegaCrit.Sts2.Core.Entities.Players.Player,int32,bool)",
+          "CombatSolver.CombatBeamSolver.ContinuePlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class PlayerStartProgress,value class PlayerStartStage,class CombatSolver.CombatBeamSolver,class RoundReplayCheckpointCapture,class CombatSolver.SearchPerformanceMetrics)",
+          "CombatSolver.CombatBeamSolver.AdvanceRoundPlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class CombatSolver.TurnStartChoiceCursor,bool,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+        "estimatedBytes": 360861920,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)",
+          "CombatSolver.CombatBeamSolver+AdmittedExpansionJob.Execute(class ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane.Run()"
+        ]
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].EnsureWritable()",
+        "estimatedBytes": 360392016,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32].Initialize(int32)",
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]..ctor(class System.Collections.Generic.IDictionary`2<!0,!1>,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].EnsureWritable()",
+          "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].set_Item(!0,!1)",
+          "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionCardExecutionSink.RecordCardPlayStarted(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+        "estimatedBytes": 287359224,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)",
+          "CombatSolver.CombatBeamSolver+AdmittedExpansionJob.Execute(class ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+        "estimatedBytes": 235705320,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.RankBest(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>,int32,bool,bool,bool,class System.Action`1<value class GlobalRetentionDecision>)",
+        "estimatedBytes": 213163424,
+        "sampleStack": [
+          "System.Linq.Lookup`2[System.Int32,System.__Canon].Create(class System.Collections.Generic.IEnumerable`1<!1>,class System.Func`2<!1,!0>,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "System.Linq.Enumerable+GroupByIterator`2[System.__Canon,System.Int32].ToArray()",
+          "System.Linq.Enumerable+OrderedIterator`2[System.__Canon,System.Int32].MoveNext()",
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.RankBest(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>,int32,bool,bool,bool,class System.Action`1<value class GlobalRetentionDecision>)",
+          "CombatSolver.CombatBeamSolver.Prune(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass631_0.<SolveCore>g__PruneAtMemoryBoundary|22(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>,int32,class System.String,int32,int32)",
+          "CombatSolver.CombatBeamSolver.SolveCore()",
+          "CombatSolver.CombatBeamSolver.Solve()"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 201819392,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.__Canon].Initialize(int32)",
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.__Canon]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.CaptureEnergyRefundWindow(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,value class CombatSolver.StrategicEffectContext,bool)",
+        "estimatedBytes": 157160400,
+        "sampleStack": [
+          "MegaCrit.Sts2.Core.Entities.Cards.CardEnergyCost.GetWithModifiers(value class MegaCrit.Sts2.Core.Entities.Cards.CostModifiers)",
+          "CombatSolver.CombatBeamSolver.CaptureEnergyRefundWindow(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,value class CombatSolver.StrategicEffectContext,bool)",
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.StrategicEffectContext.Build(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,int32,int32,int32,value class CombatSolver.StrategicEffectRequirements,bool)",
+        "estimatedBytes": 135608056,
+        "sampleStack": [
+          "CombatSolver.StrategicEffectContext.Build(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,int32,int32,int32,value class CombatSolver.StrategicEffectRequirements,bool)",
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.TryDamageTarget(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>&)",
+        "estimatedBytes": 127717008,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.TryDamageTarget(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>&)",
+          "CombatSolver.MonsterMoveSemantics.DamagePlayer(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,int32)",
+          "CombatSolver.MonsterMoveSemantics.ApplyForecastMove(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.ForecastMove,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class System.Collections.Generic.ISet`1<unsigned int32>,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.ForkHistoryCourseCards(class System.Collections.Generic.Dictionary`2<class MegaCrit.Sts2.Core.Entities.Players.Player,class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 126756624,
+        "sampleStack": [
+          "CombatSolver.SimulatedCombatState.ForkHistoryCourseCards(class System.Collections.Generic.Dictionary`2<class MegaCrit.Sts2.Core.Entities.Players.Player,class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.BranchMonsterAi.CurrentMove(class CombatSolver.BranchMonsterAiState,class CombatSolver.SimulatedCombatState)",
+        "estimatedBytes": 113433176,
+        "sampleStack": [
+          "CombatSolver.BranchMonsterAi.CurrentMove(class CombatSolver.BranchMonsterAiState,class CombatSolver.SimulatedCombatState)",
+          "CombatSolver.SimulatedCombatState.CurrentMonsterMoves()",
+          "CombatSolver.CombatBeamSolver.ProjectHpAfterThreat(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState)",
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyHpLost(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,value class MegaCrit.Sts2.Core.Hooks.HpLossHookPhase,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>&,class System.Func`2<class MegaCrit.Sts2.Core.Models.AbstractModel,bool>)",
+        "estimatedBytes": 94888432,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyHpLost(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,value class MegaCrit.Sts2.Core.Hooks.HpLossHookPhase,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>&,class System.Func`2<class MegaCrit.Sts2.Core.Models.AbstractModel,bool>)",
+          "CombatSolver.CombatBeamSolver.ProjectHpAfterThreat(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState)",
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.Common.PredictedCard.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 91669120,
+        "sampleStack": [
+          "CombatSolver.Engine.Common.PredictedCard.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.Common.SimCardPile.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Draw(class MegaCrit.Sts2.Core.Entities.Players.Player,int32,bool)",
+        "estimatedBytes": 91575800,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Draw(class MegaCrit.Sts2.Core.Entities.Players.Player,int32,bool)",
+          "CombatSolver.CombatBeamSolver.ContinuePlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class PlayerStartProgress,value class PlayerStartStage,class CombatSolver.CombatBeamSolver,class RoundReplayCheckpointCapture,class CombatSolver.SearchPerformanceMetrics)",
+          "CombatSolver.CombatBeamSolver.AdvanceRoundPlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class CombatSolver.TurnStartChoiceCursor,bool,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.RecordDamageReceived(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult)",
+        "estimatedBytes": 90620328,
+        "sampleStack": [
+          "System.Collections.Generic.HashSet`1[System.__Canon].Initialize(int32)",
+          "System.Collections.Generic.HashSet`1[System.__Canon].AddIfNotPresent(!0,int32&)",
+          "CombatSolver.SimulatedCombatState.RecordDamageReceived(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.TryDamageTarget(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>&)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Damage(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+          "CombatSolver.SimulatedCombatState.ContinueRelicsAfterPlayerTurnStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Players.Player,class CombatSolver.TurnStartChoiceCursor,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.RelicModel>,int32,int32,bool)",
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.AfterPlayerTurnStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Players.Player,class CombatSolver.TurnStartChoiceCursor)",
+          "CombatSolver.CombatBeamSolver.ContinuePlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class PlayerStartProgress,value class PlayerStartStage,class CombatSolver.CombatBeamSolver,class RoundReplayCheckpointCapture,class CombatSolver.SearchPerformanceMetrics)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.CanPlay(class CombatSolver.Engine.Common.PredictedCard,int32&,int32&)",
+        "estimatedBytes": 87841592,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.CanPlay(class CombatSolver.Engine.Common.PredictedCard,int32&,int32&)",
+          "CombatSolver.CombatBeamSolver.CalculateReachableHandPotential(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState)",
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ExecuteAttack(class MegaCrit.Sts2.Core.Commands.Builders.AttackCommand)",
+        "estimatedBytes": 86975864,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ExecuteAttack(class MegaCrit.Sts2.Core.Commands.Builders.AttackCommand)",
+          "CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.GeneralCardMirrors.GeneralAttackOnPlay(class MegaCrit.Sts2.Core.Models.CardModel,class CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrorContext)",
+          "CombatSolver.Engine.Common.Mirrors.MethodMirrorRegistry`2[System.__Canon,System.__Canon].Invoke(!0,!1)",
+          "CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrors.Invoke(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.SelectActionCandidates(class CombatSolver.SearchNode,class System.Collections.Generic.List`1<value class ActionCandidate>)",
+        "estimatedBytes": 86432488,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver.SelectActionCandidates(class CombatSolver.SearchNode,class System.Collections.Generic.List`1<value class ActionCandidate>)",
+          "CombatSolver.CombatBeamSolver.CommitExpansionBatch(class CombatSolver.SearchNode,class ExpansionBatch,class System.Action`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+<>c__DisplayClass19_0.<Evaluate>b__0(int32,class ExpansionBatch)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.<EvaluateQueuedParents>g__CommitReadyParents|3_1(value class <>c__DisplayClass3_0&)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.EvaluateQueuedParents(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.Evaluate(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)",
+          "CombatSolver.CombatBeamSolver.SolveCore()",
+          "CombatSolver.CombatBeamSolver.Solve()"
+        ]
+      },
+      {
+        "method": "CombatSolver.PredictionCoverage+<CollectUniqueGaps>d__1.MoveNext()",
+        "estimatedBytes": 85932496,
+        "sampleStack": [
+          "System.Collections.Generic.HashSet`1[System.ValueTuple`4[System.__Canon,System.__Canon,System.__Canon,System.Boolean]].Resize(int32,bool)",
+          "System.Collections.Generic.HashSet`1[System.ValueTuple`4[System.__Canon,System.__Canon,System.__Canon,System.Boolean]].Resize()",
+          "System.Collections.Generic.HashSet`1[System.ValueTuple`4[System.__Canon,System.__Canon,System.__Canon,System.Boolean]].AddIfNotPresent(!0,int32&)",
+          "System.Collections.Generic.HashSet`1[System.ValueTuple`4[System.__Canon,System.__Canon,System.__Canon,System.Boolean]].Add(!0)",
+          "CombatSolver.PredictionCoverage+<CollectUniqueGaps>d__1.MoveNext()",
+          "System.Collections.Generic.SegmentedArrayBuilder`1[System.__Canon].AddNonICollectionRangeInlined(class System.Collections.Generic.IEnumerable`1<!0>)",
+          "System.Linq.Enumerable.<ToArray>g__EnumerableToArray|314_0(class System.Collections.Generic.IEnumerable`1<!!0>)",
+          "System.Linq.Enumerable+OrderedIterator`1[System.__Canon].ToList()"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver+<ResolvePrimaryCardChoiceLayer>d__383.MoveNext()",
+        "estimatedBytes": 82839888,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver+<ResolvePrimaryCardChoiceLayer>d__383.MoveNext()",
+          "CombatSolver.CombatBeamSolver+<ResolvePrimaryCardChoiceBranches>d__381.MoveNext()",
+          "CombatSolver.CombatBeamSolver.AddResolvedCardCandidates(class CombatSolver.SearchNode,value class PreparedCardAction,class System.Collections.Generic.IEnumerable`1<value class System.ValueTuple`2<class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot>>,class ExpansionBatch)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)",
+          "CombatSolver.CombatBeamSolver+AdmittedExpansionJob.Execute(class ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane.Run()"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.CommitExpansionBatch(class CombatSolver.SearchNode,class ExpansionBatch,class System.Action`1<class CombatSolver.SearchNode>)",
+        "estimatedBytes": 80796472,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver.CommitExpansionBatch(class CombatSolver.SearchNode,class ExpansionBatch,class System.Action`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+<>c__DisplayClass19_0.<Evaluate>b__0(int32,class ExpansionBatch)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.<EvaluateQueuedParents>g__CommitReadyParents|3_1(value class <>c__DisplayClass3_0&)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.EvaluateQueuedParents(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.Evaluate(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)",
+          "CombatSolver.CombatBeamSolver.SolveCore()",
+          "CombatSolver.CombatBeamSolver.Solve()",
+          "CombatSolver.FrontierContinuationScheduler.Dispatch(class CombatSolver.ContinuationSearchRequest)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.Common.PredictionStateStore.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 80268552,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.__Canon]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.Engine.Common.PredictionStateStore.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.ForkCardDictionary(class System.Collections.Generic.Dictionary`2<class CombatSolver.Engine.Common.PredictedCard,int32>,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 79945744,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.SimulatedCombatState.ForkCardDictionary(class System.Collections.Generic.Dictionary`2<class CombatSolver.Engine.Common.PredictedCard,int32>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+        "estimatedBytes": 73446272,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedEndTurn(class CombatSolver.SearchNode,class System.Object,class PrimaryChoiceReplayFrontier)",
+          "CombatSolver.CombatBeamSolver+AdmittedExpansionJob.Execute(class ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane.Run()"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.CreatePlannedCardChild(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot)",
+        "estimatedBytes": 72086496,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver.CreatePlannedCardChild(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.AddResolvedCardCandidates(class CombatSolver.SearchNode,value class PreparedCardAction,class System.Collections.Generic.IEnumerable`1<value class System.ValueTuple`2<class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot>>,class ExpansionBatch)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)",
+          "CombatSolver.CombatBeamSolver+AdmittedExpansionJob.Execute(class ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane.Run()"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.CurrentMonsterMoves()",
+        "estimatedBytes": 69499464,
+        "sampleStack": [
+          "CombatSolver.SimulatedCombatState.CurrentMonsterMoves()",
+          "CombatSolver.CombatBeamSolver.BuildThreatFocus(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState)",
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.BuildCandidate(class CombatSolver.SimulationSnapshot,class CombatSolver.SimulationSnapshot,class CombatSolver.SearchNode,value class MegaCrit.Sts2.Core.Entities.Cards.CardType,value class System.Nullable`1<unsigned int32>)",
+        "estimatedBytes": 69490216,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver.BuildCandidate(class CombatSolver.SimulationSnapshot,class CombatSolver.SimulationSnapshot,class CombatSolver.SearchNode,value class MegaCrit.Sts2.Core.Entities.Cards.CardType,value class System.Nullable`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.CommitExpansionBatch(class CombatSolver.SearchNode,class ExpansionBatch,class System.Action`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+<>c__DisplayClass19_0.<Evaluate>b__0(int32,class ExpansionBatch)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.<EvaluateQueuedParents>g__CommitReadyParents|3_1(value class <>c__DisplayClass3_0&)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.EvaluateQueuedParents(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.Evaluate(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)",
+          "CombatSolver.CombatBeamSolver.SolveCore()",
+          "CombatSolver.CombatBeamSolver.Solve()"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.Record(!!0)",
+        "estimatedBytes": 66209656,
+        "sampleStack": [
+          "System.Collections.Generic.List`1[System.__Canon]..ctor(int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.Record(!!0)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)"
+        ]
+      },
+      {
+        "method": "CombatSolver.ForkableList`1[System.__Canon].System.Collections.Generic.IEnumerable<T>.GetEnumerator()",
+        "estimatedBytes": 65142240,
+        "sampleStack": [
+          "CombatSolver.ForkableList`1[System.__Canon].System.Collections.Generic.IEnumerable<T>.GetEnumerator()",
+          "System.Linq.Enumerable.Any(class System.Collections.Generic.IEnumerable`1<!!0>,class System.Func`2<!!0,bool>)",
+          "CombatSolver.StrategicHpRecoveryBound.ComponentHealingUpperBound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Players.Player,int32,bool,value class System.Nullable`1<int32>,class CombatSolver.PotionStrategySnapshot,value class CombatSolver.SolverPotionPolicy)",
+          "CombatSolver.CombatBeamSolver.RemainingHealingPotentialCore(class CombatSolver.SimulationSnapshot,bool)",
+          "CombatSolver.CombatBeamSolver.ApplyPrimaryIncumbentBoundCore(class System.Collections.Generic.List`1<class CombatSolver.SearchNode>,value class CombatSolver.PrimarySearchIncumbent,int32&,value class CombatSolver.BossHpRelief,bool,class System.Func`2<class CombatSolver.SimulationSnapshot,int32>,int32&,bool,bool)",
+          "CombatSolver.CombatBeamSolver.ApplyPrimaryIncumbentBound(class System.Collections.Generic.List`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver.Prune(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass631_0.<SolveCore>g__PruneAtMemoryBoundary|22(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>,int32,class System.String,int32,int32)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ProcessDamageResults(class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource)",
+        "estimatedBytes": 64074856,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ProcessDamageResults(class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource)",
+          "CombatSolver.MonsterMoveSemantics.DamagePlayer(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,int32)",
+          "CombatSolver.MonsterMoveSemantics.ApplyForecastMove(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.ForecastMove,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class System.Collections.Generic.ISet`1<unsigned int32>,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+        "estimatedBytes": 63312032,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+          "CombatSolver.CorePowerSupport.FlushPlayerHandAtTurnEnd(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class MegaCrit.Sts2.Core.Entities.Players.Player)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedEndTurn(class CombatSolver.SearchNode,class System.Object,class PrimaryChoiceReplayFrontier)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CorePowerSupport.ApplyCardPowers(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,int32,value class System.Decimal,int32,class System.Collections.Generic.ISet`1<unsigned int32>)",
+        "estimatedBytes": 61610608,
+        "sampleStack": [
+          "CombatSolver.CorePowerSupport.ApplyCardPowers(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,int32,value class System.Decimal,int32,class System.Collections.Generic.ISet`1<unsigned int32>)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyDamage(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+        "estimatedBytes": 59804008,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyDamage(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+          "CombatSolver.CombatBeamSolver.ProjectHpAfterThreat(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState)",
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.MonsterMoveSemantics.ApplyForecastMove(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.ForecastMove,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class System.Collections.Generic.ISet`1<unsigned int32>,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>)",
+        "estimatedBytes": 59485120,
+        "sampleStack": [
+          "CombatSolver.MonsterMoveSemantics.ApplyForecastMove(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.ForecastMove,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class System.Collections.Generic.ISet`1<unsigned int32>,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedEndTurn(class CombatSolver.SearchNode,class System.Object,class PrimaryChoiceReplayFrontier)",
+          "CombatSolver.CombatBeamSolver+AdmittedExpansionJob.Execute(class ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayTailExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,value class CardPlayTailStage,int32)",
+        "estimatedBytes": 59385672,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayTailExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,value class CardPlayTailStage,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.GeneralCardMirrors.GeneralAttackOnPlay(class MegaCrit.Sts2.Core.Models.CardModel,class CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrorContext)",
+        "estimatedBytes": 58630976,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.GeneralCardMirrors.GeneralAttackOnPlay(class MegaCrit.Sts2.Core.Models.CardModel,class CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrorContext)",
+          "CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardEffectRecipe.Continue(class MegaCrit.Sts2.Core.Models.CardModel,class CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrorContext,int32)",
+          "CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardEffectRecipe.Execute(class MegaCrit.Sts2.Core.Models.CardModel,class CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrorContext)",
+          "CombatSolver.Engine.Common.Mirrors.MethodMirrorRegistry`2[System.__Canon,System.__Canon].Invoke(!0,!1)",
+          "CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrors.Invoke(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.AdvanceRoundPlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class CombatSolver.TurnStartChoiceCursor,bool,class RoundReplayCheckpointCapture)",
+        "estimatedBytes": 57995248,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]..ctor(int32,class System.Collections.Generic.IEqualityComparer`1<!0>)",
+          "CombatSolver.CombatBeamSolver.AdvanceRoundPlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class CombatSolver.TurnStartChoiceCursor,bool,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.ComputeStandPat(class CombatSolver.SearchNode)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.Common.PredictedCard+PreviewStorage.RegisterIdentity(class MegaCrit.Sts2.Core.Models.CardModel,class MegaCrit.Sts2.Core.Models.CardModel)",
+        "estimatedBytes": 56465872,
+        "sampleStack": [
+          "System.Runtime.CompilerServices.ConditionalWeakTable`2+Container[System.__Canon,System.__Canon].Resize(int32)",
+          "System.Runtime.CompilerServices.ConditionalWeakTable`2[System.__Canon,System.__Canon].GetValueLocked(!0,class CreateValueCallback<!0,!1>)",
+          "CombatSolver.Engine.Common.PredictedCard+PreviewStorage.RegisterIdentity(class MegaCrit.Sts2.Core.Models.CardModel,class MegaCrit.Sts2.Core.Models.CardModel)",
+          "CombatSolver.Engine.Common.PredictedCard.get_MutablePreview()",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.GetEffectiveHookListeners()",
+        "estimatedBytes": 54478032,
+        "sampleStack": [
+          "CombatSolver.SimulatedCombatState.GetEffectiveHookListeners()",
+          "CombatSolver.SimulatedCombatState.GetActiveHookListeners()",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictedCardExtensions.HasKeyword(class CombatSolver.Engine.Common.PredictedCard,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionState,value class MegaCrit.Sts2.Core.Entities.Cards.CardKeyword)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+        "estimatedBytes": 53936456,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          "CombatSolver.CombatBeamSolver.EvaluatePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CorePowerSupport.TriggerTransientSideTurnEndPowers(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,value class MegaCrit.Sts2.Core.Combat.CombatSide,class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>)",
+        "estimatedBytes": 53616216,
+        "sampleStack": [
+          "CombatSolver.CorePowerSupport.TriggerTransientSideTurnEndPowers(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,value class MegaCrit.Sts2.Core.Combat.CombatSide,class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>)",
+          "CombatSolver.CorePowerSupport.TriggerPlayerRegularSideTurnEndEffects(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>,int32)",
+          "CombatSolver.PlayerTurnEndLifecycle.RunPhaseTwo(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>,int32)",
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class CombatSolver.Engine.Common.PredictedCard,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+        "estimatedBytes": 52979824,
+        "sampleStack": [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class CombatSolver.Engine.Common.PredictedCard,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardResultExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Players.Player,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,value class CardResultStage)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          "CombatSolver.CombatBeamSolver.Replay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class RoundReplayCheckpoint,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class ContinuationCapture)",
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0.<ReplayAction>b__0()",
+          "CombatSolver.SearchTransitionGuard.Execute(class CombatSolver.PlanAction,value class CombatSolver.StateFingerprint,int32,class System.Func`1<!!0>)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.AnnotateTurnOutcomes(class System.Collections.Generic.List`1<class CombatSolver.SearchNode>)",
+        "estimatedBytes": 52100136,
+        "sampleStack": [
+          "CombatSolver.CombatBeamSolver.AnnotateTurnOutcomes(class System.Collections.Generic.List`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver.SolveCore()",
+          "CombatSolver.CombatBeamSolver.Solve()",
+          "CombatSolver.FrontierContinuationScheduler.Dispatch(class CombatSolver.ContinuationSearchRequest)",
+          "CombatSolver.CombatSearchCoordinator.TryRunPlanMember(class CombatSolver.SearchPassContext,class CombatSolver.FrontierContinuationScheduler,class CombatSolver.PlanCommitment,value class PlanMemberExecution,class CombatSolver.SolverResult&)",
+          "CombatSolver.CombatSearchCoordinator.RunDeferredPowerPlanSearchPass(class CombatSolver.SearchPassContext,class CombatSolver.SolverResult)",
+          "CombatSolver.CombatSearchCoordinator.RunPostSearchPasses(class CombatSolver.SearchPassContext,class CombatSolver.SolverResult,class System.Collections.Generic.List`1<class CombatSolver.PlanAction[]>,class CombatSolver.SearchInteractionState,class System.Func`1<class CombatSolver.SolverResult>)",
+          "CombatSolver.CombatSearchCoordinator+<>c__DisplayClass13_0.<Solve>g__RunPostSearch|3(class CombatSolver.SolverResult)"
+        ]
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.ForkCardList(class System.Collections.Generic.List`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 49567736,
+        "sampleStack": [
+          "CombatSolver.SimulatedCombatState.ForkCardList(class System.Collections.Generic.List`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+          "CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)"
+        ]
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.TryAcceptTransposition(class CombatSolver.SearchNode)",
+        "estimatedBytes": 49291360,
+        "sampleStack": [
+          "System.Collections.Generic.Dictionary`2[CombatSolver.StateFingerprint,System.__Canon].Resize(int32,bool)",
+          "System.Collections.Generic.Dictionary`2[CombatSolver.StateFingerprint,System.__Canon].TryInsert(!0,!1,value class System.Collections.Generic.InsertionBehavior)",
+          "CombatSolver.CombatBeamSolver.TryAcceptTransposition(class CombatSolver.SearchNode)",
+          "CombatSolver.CombatBeamSolver.CommitExpansionBatch(class CombatSolver.SearchNode,class ExpansionBatch,class System.Action`1<class CombatSolver.SearchNode>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+<>c__DisplayClass19_0.<Evaluate>b__0(int32,class ExpansionBatch)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.<EvaluateQueuedParents>g__CommitReadyParents|3_1(value class <>c__DisplayClass3_0&)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.EvaluateQueuedParents(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)",
+          "CombatSolver.CombatBeamSolver+ParallelExpansionExecutor.Evaluate(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Action`2<int32,class ExpansionBatch>)"
+        ]
+      }
+    ],
+    "selectedInclusive": [
+      {
+        "method": "CombatSolver.Engine.Common.PredictionUtils.CloneModelForSimulation(!!0)",
+        "estimatedBytes": 1462508360
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.ForkPower(class MegaCrit.Sts2.Core.Models.PowerModel,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedBytes": 937908480
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].EnsureWritable()",
+        "estimatedBytes": 360392016
+      },
+      {
+        "method": "CombatSolver.CombatBeamSolver.CaptureEnergyRefundWindow(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,value class CombatSolver.StrategicEffectContext,bool)",
+        "estimatedBytes": 193195584
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].set_Item(!0,!1)",
+        "estimatedBytes": 178337584
+      },
+      {
+        "method": "CombatSolver.SimulatedCombatState.ResetTurnCounter(class CombatSolver.ForkableDictionary`2<!!0,int32>&,!!0)",
+        "estimatedBytes": 71208976
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].Fork()",
+        "estimatedBytes": 30378128
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.Int32].EnsureWritable()",
+        "estimatedBytes": 14508552
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,System.__Canon].set_Item(!0,!1)",
+        "estimatedBytes": 9806176
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,System.__Canon].EnsureWritable()",
+        "estimatedBytes": 9806176
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.Int32].set_Item(!0,!1)",
+        "estimatedBytes": 9285112
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.Int32].Remove(!0)",
+        "estimatedBytes": 5436640
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.Int32],System.__Canon].Fork()",
+        "estimatedBytes": 1812200
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.Int32].Fork()",
+        "estimatedBytes": 1492400
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,System.__Canon].Fork()",
+        "estimatedBytes": 1385800
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.Int32].get_Keys()",
+        "estimatedBytes": 1279200
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,CombatSolver.SimulatedCombatState+StatefulRelicState].Fork()",
+        "estimatedBytes": 1066000
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.Int32],System.__Canon].set_Item(!0,!1)",
+        "estimatedBytes": 855384
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.Int32],System.__Canon].EnsureWritable()",
+        "estimatedBytes": 855384
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,CombatSolver.PredictedDeathPhase]..ctor()",
+        "estimatedBytes": 106600
+      },
+      {
+        "method": "CombatSolver.ForkableDictionary`2[System.__Canon,CombatSolver.PredictedDeathPhase].set_Item(!0,!1)",
+        "estimatedBytes": 106600
+      }
+    ]
+  },
+  "maskLayoutPrototype": {
+    "preparation": {
+      "base": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/source",
+      "baseDll": "0fa5b354cc0b82e8d63aa4b35bdf78f6469c1ef767f9a57cfe7743f6216aeaef",
+      "source": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hook-mask-layout-20261005/source",
+      "scope": "same immutable mask order; model receivers/order remain branch-owned; pending PR215 table unchanged",
+      "copyModOnBuild": false,
+      "productionIntegrated": false,
+      "nativePending": false,
+      "performancePending": false,
+      "preparationNotes": [
+        "Initial build succeeded; before testing changed bounded TLS metadata cache entries to value storage to avoid allocation on collisions."
+      ],
+      "dllSha256": "721b241259ece20ebeeaade68adcaadf8a1e983303b04414b449acb6a6a467e6",
+      "build": {
+        "seconds": 14.27,
+        "warnings": 0,
+        "errors": 0,
+        "copyModOnBuild": false
+      },
+      "nativeRecords": {
+        "native-contract": {
+          "processReusable": false,
+          "processId": 191299,
+          "reusedProcess": false,
+          "developmentStrategyScriptHash": null,
+          "developmentStrategyParametersHash": null,
+          "mainAssemblyHash": "721B241259ECE20EBEEAADE68ADCAADF8A1E983303B04414B449ACB6A6A467E6",
+          "schemaVersion": 1,
+          "runId": "fdfebc03d724493897c66f47704d30ed",
+          "scenarioId": "MIRRORED-HOOK-FILTER",
+          "status": "Passed",
+          "stage": "passed",
+          "characterId": "CHARACTER.REGENT",
+          "encounterId": "ENCOUNTER.THE_INSATIABLE_BOSS",
+          "seed": "HOOK_MASK_LAYOUT_20261005",
+          "startedAtUtc": "2026-10-04T23:38:38.8011087+00:00",
+          "elapsedMilliseconds": 29779.4647,
+          "mainThread": true,
+          "combatEnded": true,
+          "startedTurn": 1,
+          "finishedTurn": 1,
+          "managedHeapBytes": 100575632,
+          "managedFragmentedBytes": 8091384,
+          "workingSetBytes": 1534214144,
+          "privateMemoryBytes": 18629459968,
+          "solverMetrics": {
+            "gcLifecycle": {
+              "forcedCollections": 0,
+              "noGcStartAttempts": 1,
+              "noGcStarts": 1,
+              "noGcEndAttempts": 0,
+              "noGcEnds": 0,
+              "noGcRestarts": 0,
+              "noGcLosses": 0
+            },
+            "gcLifecycleAttribution": "ExclusiveSearchScope",
+            "boundary": "None",
+            "selectedExpanded": 1,
+            "selectedTransitions": 5,
+            "selectedChoiceBranches": 0,
+            "roundReplayPrefixCaptures": 0,
+            "roundReplayPrefixReuses": 0,
+            "executionChoiceCaptures": 0,
+            "executionChoiceReuses": 0,
+            "cardChoicePrefixAttempts": 0,
+            "cardChoicePrefixCaptures": 0,
+            "cardChoicePrefixReuses": 0,
+            "cardChoicePrefixFallbacks": 0,
+            "potionChoicePrefixForks": 0,
+            "potionChoicePrefixCaptures": 0,
+            "potionChoicePrefixReuses": 0,
+            "potionChoicePrefixFallbacks": 0,
+            "choiceReplayAttempts": 0,
+            "choiceReplayBudgetExhaustions": 0,
+            "choiceBranchesDroppedByBudget": 0,
+            "cycleReplayAttempts": 0,
+            "cycleReplayActions": 0,
+            "totalCycleReplayActions": 0,
+            "cycleReplayVictories": 0,
+            "cycleReplayContinuations": 0,
+            "cycleStoppedUnproductive": 0,
+            "cycleStoppedRepetitionBudget": 0,
+            "cycleStoppedFamilyBudget": 0,
+            "cycleStoppedExitBudget": 0,
+            "turnLayerBudgetStops": 0,
+            "turnLayerTimeBudgetStops": 0,
+            "turnLayerNodeBudgetStops": 0,
+            "cycleRegionsDetected": 0,
+            "cycleRegionCandidatesConsidered": 0,
+            "cycleRegionCandidatesAdmitted": 0,
+            "cycleRegionCandidatesDropped": 0,
+            "cycleRegionProgressEpochs": 0,
+            "cycleRegionProbeCandidatesAdmitted": 0,
+            "cycleRegionProgressCandidatesAdmitted": 0,
+            "cycleRegionMaxActionFamilies": 0,
+            "orderedMutationCandidatesAdmitted": 0,
+            "orderedMutationLeaseExpiredBudget": 0,
+            "orderedMutationOrdinaryFallbacks": 0,
+            "orderedMutationColdAtomicCommitted": 0,
+            "orderedMutationColdAtomicRejected": 0,
+            "totalExpanded": 1,
+            "totalTransitions": 5,
+            "totalChoiceBranches": 0,
+            "elapsedMilliseconds": 156.3207,
+            "totalElapsedMilliseconds": 177.3814,
+            "searchWorkAttributions": [
+              {
+                "mechanism": "PrimaryBeam",
+                "expandedNodes": 1,
+                "transitions": 5,
+                "choiceBranches": 0,
+                "elapsedMilliseconds": 177.3814,
+                "workerAllocatedBytes": 2895928,
+                "gen0Collections": 0,
+                "gen1Collections": 0,
+                "gen2Collections": 0,
+                "gcPauseMilliseconds": 0,
+                "maxObservedGcPauseMilliseconds": 0,
+                "recordedSolverCount": 1
+              }
+            ],
+            "workerAllocatedBytes": 2699096,
+            "totalWorkerAllocatedBytes": 2895928,
+            "totalGen0Collections": 0,
+            "totalGen1Collections": 0,
+            "totalGen2Collections": 0,
+            "totalGcPauseMilliseconds": 0,
+            "maxGcPauseMilliseconds": 0,
+            "maxParallelConcurrency": 5,
+            "parallelActionReplayWaves": 1,
+            "parallelActionReplayWorkItems": 4,
+            "maxParallelActionReplayConcurrency": 4,
+            "deferredRoundChoiceActions": 0,
+            "deferredRoundChoiceLayerWidthTotal": 0,
+            "maxDeferredRoundChoiceLayerWidth": 0,
+            "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+            "deferredRoundChoiceFinitePrimaryLayers": 0,
+            "deferredRoundChoiceFinitePendingFallbacks": 0,
+            "parallelRoundChoiceReplayWaves": 0,
+            "parallelRoundChoiceReplayWorkItems": 0,
+            "maxParallelRoundChoiceReplayConcurrency": 0,
+            "searchedTurns": 1,
+            "shufflesCrossed": 0,
+            "score": 10002249999,
+            "projectedBattleHpLost": 0,
+            "potionCount": 0,
+            "potionUses": [],
+            "onlyDeathRoutes": false,
+            "finalHp": 75,
+            "finalEnemyHp": 0,
+            "combatEndedTurn": 1,
+            "capturedAtElapsedMilliseconds": 29527.8192,
+            "firstRoutePublishedMilliseconds": 237.6975,
+            "portfolioMembers": [
+              {
+                "beamWidth": 40,
+                "secondRankBand": false,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 120000,
+                "ran": true,
+                "selected": true,
+                "compared": true,
+                "skippedReason": null,
+                "expandedNodes": 1,
+                "transitionCount": 5,
+                "termination": "None",
+                "terminal": true,
+                "won": true,
+                "battleHpLost": 0,
+                "potionCount": 0,
+                "elapsedMilliseconds": 180,
+                "allocatedBytes": 3056056,
+                "managedHeapBytesAfter": 100394704,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 90,
+                "secondRankBand": false,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 60,
+                "secondRankBand": true,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 60,
+                "secondRankBand": false,
+                "baseScoreOnly": true,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 24,
+                "secondRankBand": false,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": true,
+                "boundedRefinement": true
+              }
+            ],
+            "powerRouteMembers": [],
+            "peakManagedHeapBytes": 100394704,
+            "managedLiveBytes": 104270608,
+            "managedHeapBytes": 100575632,
+            "managedFragmentedBytes": 8091384,
+            "workingSetBytes": 1475940352,
+            "earlyTurnExploration": null,
+            "privateMemoryBytes": 18576924672,
+            "configuredNoGcRegionEnabled": true,
+            "configuredNoGcRegionBudgetBytes": 16000000000,
+            "gcLatencyMode": "NoGCRegion",
+            "noGcRegionActive": true,
+            "noGcRegionBudgetBytes": 16000000000,
+            "noGcRegionRolloverCount": 0
+          },
+          "replayVerification": null,
+          "generatedScenario": null,
+          "stageTimings": [
+            {
+              "stage": "created",
+              "startedMilliseconds": 0,
+              "durationMilliseconds": 1.5687
+            },
+            {
+              "stage": "strategy_load",
+              "startedMilliseconds": 1.5687,
+              "durationMilliseconds": 5.298500000000001
+            },
+            {
+              "stage": "game_startup",
+              "startedMilliseconds": 6.8672,
+              "durationMilliseconds": 13027.7812
+            },
+            {
+              "stage": "start_run",
+              "startedMilliseconds": 13034.6484,
+              "durationMilliseconds": 10782.7907
+            },
+            {
+              "stage": "inject_run_relics",
+              "startedMilliseconds": 23817.4391,
+              "durationMilliseconds": 1.5240999999987253
+            },
+            {
+              "stage": "enter_encounter",
+              "startedMilliseconds": 23818.9632,
+              "durationMilliseconds": 2017.430800000002
+            },
+            {
+              "stage": "wait_player_turn",
+              "startedMilliseconds": 25836.394,
+              "durationMilliseconds": 2.569899999998597
+            },
+            {
+              "stage": "inject_state",
+              "startedMilliseconds": 25838.9639,
+              "durationMilliseconds": 82.72479999999996
+            },
+            {
+              "stage": "mirrored_hook_filter",
+              "startedMilliseconds": 25921.6887,
+              "durationMilliseconds": 3105.744300000002
+            },
+            {
+              "stage": "full_auto",
+              "startedMilliseconds": 29027.433,
+              "durationMilliseconds": 123.0661
+            },
+            {
+              "stage": "wait_combat_end",
+              "startedMilliseconds": 29150.4991,
+              "durationMilliseconds": 519.3859999999986
+            },
+            {
+              "stage": "cleanup",
+              "startedMilliseconds": 29669.8851,
+              "durationMilliseconds": 104.4961000000003
+            },
+            {
+              "stage": "passed",
+              "startedMilliseconds": 29774.3812,
+              "durationMilliseconds": 5.242099999999482
+            }
+          ],
+          "completedChecks": [
+            "MirroredHookFilter:Methods=63:Models=1672:OrderDuplicatesExternalForkInvalidationPatchRefreshSharedLayoutsSegmentsNoAnchorEffectivePrefixReuseEquivalentMasks",
+            "NativeOutcome:combatEnded=True:turn=1:hp=75:maxHp=75"
+          ],
+          "error": null,
+          "finishedAtUtc": "2026-10-04T23:39:08.5803529+00:00"
+        },
+        "native-strict": {
+          "processReusable": false,
+          "processId": 194544,
+          "reusedProcess": false,
+          "developmentStrategyScriptHash": null,
+          "developmentStrategyParametersHash": null,
+          "mainAssemblyHash": "721B241259ECE20EBEEAADE68ADCAADF8A1E983303B04414B449ACB6A6A467E6",
+          "schemaVersion": 1,
+          "runId": "36b2a663a51347bdb3b05656ea09d794",
+          "scenarioId": "COMPONENT-REGENT-INCUMBENT-COMBO",
+          "status": "Passed",
+          "stage": "passed",
+          "characterId": "CHARACTER.REGENT",
+          "encounterId": "ENCOUNTER.THE_INSATIABLE_BOSS",
+          "seed": "HOOK_MASK_LAYOUT_20261005",
+          "startedAtUtc": "2026-10-04T23:40:26.2170052+00:00",
+          "elapsedMilliseconds": 27151.3045,
+          "mainThread": true,
+          "combatEnded": false,
+          "startedTurn": 1,
+          "finishedTurn": 1,
+          "managedHeapBytes": 90029112,
+          "managedFragmentedBytes": 11742736,
+          "workingSetBytes": 1520128000,
+          "privateMemoryBytes": 1645035520,
+          "solverMetrics": null,
+          "replayVerification": null,
+          "generatedScenario": null,
+          "stageTimings": [
+            {
+              "stage": "created",
+              "startedMilliseconds": 0,
+              "durationMilliseconds": 1.5743
+            },
+            {
+              "stage": "strategy_load",
+              "startedMilliseconds": 1.5743,
+              "durationMilliseconds": 5.2328
+            },
+            {
+              "stage": "game_startup",
+              "startedMilliseconds": 6.8071,
+              "durationMilliseconds": 13402.5432
+            },
+            {
+              "stage": "start_run",
+              "startedMilliseconds": 13409.3503,
+              "durationMilliseconds": 10769.008800000001
+            },
+            {
+              "stage": "inject_run_relics",
+              "startedMilliseconds": 24178.3591,
+              "durationMilliseconds": 2.1140999999988708
+            },
+            {
+              "stage": "enter_encounter",
+              "startedMilliseconds": 24180.4732,
+              "durationMilliseconds": 2010.2489999999998
+            },
+            {
+              "stage": "wait_player_turn",
+              "startedMilliseconds": 26190.7222,
+              "durationMilliseconds": 2.601599999998143
+            },
+            {
+              "stage": "inject_state",
+              "startedMilliseconds": 26193.3238,
+              "durationMilliseconds": 102.11030000000028
+            },
+            {
+              "stage": "component_regent_incumbent_combo",
+              "startedMilliseconds": 26295.4341,
+              "durationMilliseconds": 731.0383000000002
+            },
+            {
+              "stage": "cleanup",
+              "startedMilliseconds": 27026.4724,
+              "durationMilliseconds": 119.16690000000017
+            },
+            {
+              "stage": "passed",
+              "startedMilliseconds": 27145.6393,
+              "durationMilliseconds": 5.849500000000262
+            }
+          ],
+          "completedChecks": [
+            "RecoveryIncumbentCombination:StrictRootZero:OldNativeEffectsReused:NewUnionAndOwnerGuards:CompleteNoPotionPilot:RequestLedger:Dop2StrictIncremental:ParentLiveRngIsolation",
+            "NativeOutcome:combatEnded=False:turn=1:hp=75:maxHp=75"
+          ],
+          "error": null,
+          "finishedAtUtc": "2026-10-04T23:40:53.3681247+00:00"
+        }
+      },
+      "setupFailures": [
+        "Screen runner first invocation used output-dir instead of required workspace; refused before launching search; corrected only CLI."
+      ],
+      "screenSummary": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hook-mask-layout-20261005/screen-summary.json",
+      "goalPassed": false
+    },
+    "screen": {
+      "scope": "single screening, no diagnostic flags; not final acceptance",
+      "candidate": {
+        "wallSeconds": 16.1212161,
+        "peakProcessWorkingSetBytes": 10953125888,
+        "comparisonQuality": {
+          "Won": true,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 40,
+          "StrategicHpDeficit": 40,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 0,
+          "Score": 9999753969,
+          "CombatEndedTurn": 6,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "budget": {
+          "Profile": "VeryHigh",
+          "BeamWidth": 135,
+          "MaxExpandedNodes": 500000,
+          "MaxCardBranchesPerNode": 72,
+          "MaxPileChoiceBranchesPerAction": 42,
+          "MaxHandChoiceBranchesPerAction": 54,
+          "MaxDegreeOfParallelism": 16,
+          "BudgetMilliseconds": 300000,
+          "EarlyTurnExplorationDepth": 0,
+          "EarlyTurnExplorationBudgetMilliseconds": 0,
+          "PotionPolicy": "Smart",
+          "SearchMode": "Coordinator",
+          "UsePortfolio": true,
+          "fixedSearchBudget": false,
+          "enableNoGcRegion": true,
+          "noGcRegionBudgetGigabytes": 16
+        },
+        "root": "turn=1 round=1 phase=Play side=Player energy=3 hp=75/75 hand=[PREP_TIME,STRIKE_REGENT,CALAMITY,CRESCENT_SPEAR,FURNACE,GAMMA_BLAST] draw=20 discard=0 relics=[DIVINE_RIGHT,MERCURY_HOURGLASS,VEXING_PUZZLEBOX,MEMBERSHIP_CARD] enemies=[THE_INSATIABLE#1:338/341@LIQUIFY_GROUND_MOVE] total_floor=1 act_floor=0",
+        "pruneCounters": {
+          "boundary": "None",
+          "selectedExpanded": 4583,
+          "selectedTransitions": 20743,
+          "selectedChoiceBranches": 1110,
+          "totalExpanded": 79490,
+          "totalTransitions": 311838,
+          "totalChoiceBranches": 5362,
+          "choiceReplayAttempts": 1110,
+          "choiceReplayBudgetExhaustions": 0,
+          "choiceBranchesDroppedByBudget": 0,
+          "roundReplayPrefixCaptures": 0,
+          "dominatedActionsPruned": 1,
+          "topQueueActionsDropped": 0,
+          "actionAdmissionRepresentativesProtected": 0,
+          "duplicateCardBranchesPruned": 2263,
+          "shuffleBranchesPruned": 0,
+          "soldHpBranchesPruned": 0,
+          "primaryIncumbentBranchesPruned": 350,
+          "primaryIncumbentUpdates": 1,
+          "replayCount": 2,
+          "forkCount": 20743,
+          "reusedNodeSnapshots": 5123,
+          "transpositionBranchesPruned": 1005,
+          "repeatableNoProgressBranchesPruned": 0,
+          "standPatProbes": 2069,
+          "transitionCacheHits": 0,
+          "roundReplayPrefixReuses": 0,
+          "cycleRegionsDetected": 0,
+          "cycleRegionCandidatesConsidered": 0,
+          "cycleRegionCandidatesAdmitted": 0,
+          "cycleRegionCandidatesDropped": 0,
+          "cycleRegionProgressEpochs": 0,
+          "cycleRegionProbeCandidatesAdmitted": 0,
+          "cycleRegionProgressCandidatesAdmitted": 0,
+          "cycleRegionMaxActionFamilies": 0,
+          "orderedMutationCandidatesAdmitted": 0,
+          "orderedMutationLeaseExpiredBudget": 0,
+          "orderedMutationOrdinaryFallbacks": 0,
+          "orderedMutationColdAtomicCommitted": 0,
+          "orderedMutationColdAtomicRejected": 0,
+          "deferredRoundChoiceActions": 262,
+          "deferredRoundChoiceLayerWidthTotal": 1110,
+          "maxDeferredRoundChoiceLayerWidth": 32,
+          "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+          "deferredRoundChoiceFinitePrimaryLayers": 262,
+          "deferredRoundChoiceFinitePendingFallbacks": 0,
+          "parallelActionReplayWaves": 163,
+          "parallelActionReplayWorkItems": 12980,
+          "maxParallelActionReplayConcurrency": 16,
+          "parallelRoundChoiceReplayWaves": 47,
+          "parallelRoundChoiceReplayWorkItems": 1618,
+          "maxParallelRoundChoiceReplayConcurrency": 16,
+          "maxParallelConcurrency": 16,
+          "searchedTurns": 6,
+          "shufflesCrossed": 1,
+          "score": 9999753969,
+          "projectedBattleHpLost": 40,
+          "potionCount": 0,
+          "onlyDeathRoutes": false,
+          "finalHp": 35,
+          "finalEnemyHp": 0,
+          "combatEndedTurn": 6,
+          "transpositionCount": 17407,
+          "expandedTranspositionCount": 4583,
+          "transpositionLimitBypasses": 0,
+          "standPatCacheCount": 2069,
+          "threatProjectionCacheCount": 8,
+          "coverageCacheCount": 8
+        }
+      },
+      "sameRoot": true,
+      "sameBudget": true,
+      "samePolicies": true,
+      "sameQuality": true,
+      "sameWork": true,
+      "workerAllocatedBytes": 12272251760,
+      "baselineWorkerAllocatedBytes": 12946731928,
+      "allocationRatio": 0.947903442216078,
+      "speedupVsOriginal": 1.2454535238194593,
+      "speedupVsFoundationSingle": 1.0105647675053497,
+      "goalPassed": false,
+      "finalSerialControlPending": true
+    },
+    "patch": "docs/performance/fixtures/hook-mask-layout-research-20261005.patch"
+  }
 }
