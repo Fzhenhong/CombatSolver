@@ -4,9 +4,9 @@
 
 **建议优先修复 Bug 批次，再处理更优世界线优化批次。** 优化任务先确认模拟与部署正确，再在同根、同政策、同预算下比较路线质量。
 
-## 本地审核任务
+## 最新发布批次
 
-[2026-10-04 的更优世界线任务稿](drafts/2026-10-04/README.md)包含 Q008～Q010，共15个新遭遇主题、15个代表包。按0.44.0及以上报告的折算战损改善量从高到低选择，范围9～3 HP；每主题记录前后预计总用药、额外瓶数、折算公式和静态证据。当前阶段为本地资料审核，后续社区资料发布使用审核后的批次正文和材料。
+[2026-10-04 的更优世界线任务资料](../archive/community/2026-10-04-worldlines/README.md)包含 Q008～Q010，共15个新遭遇主题、15个代表包。按0.44.0及以上报告的折算战损改善量降序选择，三批总量分别为34、25、19 HP；每主题记录前后预计总用药、额外瓶数、折算公式和静态证据。算法首因与当前版本实际收益由认领者验证。
 
 ## 已发布材料与历史素材
 
@@ -32,6 +32,7 @@ B016 从 2026-10-02 16:37（北京时间）的新快照继续整理，固定 703
 
 ## 去重口径与验证状态
 
+- 世界线任务按大、小主题混排，每批最多两个大任务，其余用小任务补齐五主题；分档、配比和排序见[社区任务发布规则](../../.agents/skills/combatsolver-community-tasks/SKILL.md#世界线任务组批)。
 - 报告/session 去重后，继续读取最早异常、第一处状态分叉和源码，按所有权、执行阶段及共同调用链归并主题。
 - 卡名、回合号、牌堆位置和包装异常不能作为拆主题依据。选牌回放、路线材料化、原生选择和回合准备等共享入口先按机制调查，不逐卡派发。
 - 同报错行不证明同根因。证据分为静态因果已定位、共同机制首因待证、证据不足；最后一类直接跳过。不同已证实首因可在主题内补充子问题。
@@ -49,7 +50,7 @@ python tools/community/classify-community-reports.py --reports .local/community-
 
 ## 下载和公开副本
 
-当前提供9个批次、45个主题、53个代表包。Q004、Q005已弃用，关闭议题与原始静态证据保存在发布账本的历史记录中。
+当前提供12个批次、60个主题、68个代表包。Q004、Q005已弃用，关闭议题与原始静态证据保存在发布账本的历史记录中。
 
 资料存放在独立 [community-tasks-2026-10-02 Release](https://github.com/Torch1230/CombatSolver/releases/tag/community-tasks-2026-10-02)，Release 正文提供各批次议题与整批下载：
 
@@ -59,13 +60,16 @@ python tools/community/classify-community-reports.py --reports .local/community-
 - [B015：T016～T020](https://github.com/Torch1230/CombatSolver/issues/174)，5 个代表包。
 - [B016：T021～T025](https://github.com/Torch1230/CombatSolver/issues/182)，5 个代表包。
 - [Q002：O001～O005](https://github.com/Torch1230/CombatSolver/issues/150)，5 个代表包。
-- [Q003：O006～O010](https://github.com/Torch1230/CombatSolver/issues/183)，5 个代表包。
-- [Q006：O021～O025](https://github.com/Torch1230/CombatSolver/issues/186)，5 个代表包。
-- [Q007：O026～O030](https://github.com/Torch1230/CombatSolver/issues/187)，5 个代表包。
+- [Q003：O006～O010](https://github.com/Torch1230/CombatSolver/issues/183)，5 个代表包，总折算改善 69 HP。
+- [Q006：O021～O025](https://github.com/Torch1230/CombatSolver/issues/186)，5 个代表包，总折算改善 24 HP。
+- [Q007：O026～O030](https://github.com/Torch1230/CombatSolver/issues/187)，5 个代表包，总折算改善 10 HP。
+- [Q008：O031～O035](https://github.com/Torch1230/CombatSolver/issues/208)，5 个代表包，总折算改善 34 HP。
+- [Q009：O036～O040](https://github.com/Torch1230/CombatSolver/issues/209)，5 个代表包，总折算改善 25 HP。
+- [Q010：O041～O045](https://github.com/Torch1230/CombatSolver/issues/210)，5 个代表包，总折算改善 19 HP。
 
 批次 ZIP 按主题编号分目录，包含 `theme.json`、`static-evidence.json` 和 `reports/*.zip`。把代表报告 ZIP 交给回放入口。旧十项批次已经迁移，关闭只表示归并；旧 ZIP 和排名 CSV 保留历史用途，当前认领以五主题批次为准。
 
-`community-task-index.json` 保存当前 0.47.x 报告归属、主题、代表和批次，也保留历史条目及迁移状态。`theme-registry.json` 是稳定机制、匹配规则、证据等级和已发布资料去向的维护入口。认领单位仍为整批，PR 按主题编号记录进展。
+`community-task-index.json` 保存各批次的报告归属、主题、代表和批次，也保留历史条目及迁移状态。`theme-registry.json` 是稳定机制、匹配规则、证据等级和已发布资料去向的维护入口。认领单位仍为整批，PR 按主题编号记录进展。
 
 [export-community-bundle.py](../../tools/community/export-community-bundle.py) 生成公开副本，清理 `report.json` 和 `diagnostics/` 中的昵称、联系方式、玩家统计字段及个人路径。**`replay/*` 保留原字节**，用于保存牌序、RNG、模型身份、原生状态与录制事件；发布材料静态检查中的单人玩家 `net_id` 均为游戏测试身份 1。公开副本的 ZIP 字节与原包不同。
 
@@ -96,3 +100,5 @@ B016 发布后已删除五个代表及 17 条已有主题重复报告，共 22 �
 Q003～Q007 发布后已删除 25 个代表报告及 59 份同主题重复报告，共 84 条后台记录和 84 个服务器 ZIP；累计已清理 571 条后台记录及服务器 ZIP。本轮本地暂存的 65 个 ZIP 与私人快照、临时发布文件也已删除。公开资料保留在 GitHub，清理回执已写入索引与账本。
 
 [publication-ledger.json](publication-ledger.json) 保存当前主题批次、历史迁移和清理回执。清理工具 [retire-community-archives.py](../../tools/community/retire-community-archives.py) 在日志服务容器读取固定清单，支持 dry-run；`published` 表示已发布代表清理，`duplicate_theme` 表示重复主题删除跳过，后者还校验真实报告版本属于 0.47.x。
+
+Q008～Q010 发布后，15个代表报告及对应服务器 ZIP 已按发布回执删除，本地三个批次 ZIP 暂存已清理。累计社区资料清理586条后台记录和服务器 ZIP；逐报告回执保存在[发布记录](../archive/community/2026-10-04-worldlines/publication-cleanup.json)。

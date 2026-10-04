@@ -58,6 +58,8 @@ Windows 启动器补齐 Steam 账号配置向私有 `default/1` 的复制，修�
 
 0.49.1 紧急修复定稿见 [历史卷 13](archive/development/volume-13.md)，玩家说明见 [0.49.1 更新日志](releases/0.49.1-RELEASE_NOTES.md)。
 
+0.49.2 全平台发布定稿见 [历史卷 15](archive/development/volume-15.md)，内容性 Mod 提示初始记录见 [历史卷 14](archive/development/volume-14.md)，玩家说明见 [0.49.2 更新日志](releases/0.49.2-RELEASE_NOTES.md)。
+
 ## 下一版本（开发中）
 
-暂无新增行为变化。
+当前没有待发布的行为改动。

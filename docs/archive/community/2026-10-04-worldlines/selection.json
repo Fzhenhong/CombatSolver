@@ -27,7 +27,12 @@
       "fileName": "Q008.zip",
       "sizeBytes": 1276803,
       "title": "[更优世界线 Q008] 总折算战损改善量：34 HP",
-      "totalPotionAdjustedHpReduction": 34
+      "totalPotionAdjustedHpReduction": 34,
+      "issueNumber": 208,
+      "issueUrl": "https://github.com/Torch1230/CombatSolver/issues/208",
+      "assetId": 608215726,
+      "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q008.zip",
+      "assetSizeBytes": 1276803
     },
     {
       "batchId": "Q009",
@@ -42,7 +47,12 @@
       "fileName": "Q009.zip",
       "sizeBytes": 1375656,
       "title": "[更优世界线 Q009] 总折算战损改善量：25 HP",
-      "totalPotionAdjustedHpReduction": 25
+      "totalPotionAdjustedHpReduction": 25,
+      "issueNumber": 209,
+      "issueUrl": "https://github.com/Torch1230/CombatSolver/issues/209",
+      "assetId": 608215805,
+      "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q009.zip",
+      "assetSizeBytes": 1375656
     },
     {
       "batchId": "Q010",
@@ -57,7 +67,12 @@
       "fileName": "Q010.zip",
       "sizeBytes": 1403699,
       "title": "[更优世界线 Q010] 总折算战损改善量：19 HP",
-      "totalPotionAdjustedHpReduction": 19
+      "totalPotionAdjustedHpReduction": 19,
+      "issueNumber": 210,
+      "issueUrl": "https://github.com/Torch1230/CombatSolver/issues/210",
+      "assetId": 608215993,
+      "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q010.zip",
+      "assetSizeBytes": 1403699
     }
   ],
   "themes": [
@@ -989,5 +1004,6 @@
     }
   ],
   "cleanupReceipt": "retention.json",
-  "verification": "static_only"
+  "verification": "static_only",
+  "publishedAt": "2026-10-03T17:23:19.099830+00:00"
 }
