@@ -36,7 +36,7 @@ dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolv
 同一夹具在窄档（弃区 24%）与宽档（44%）会给出不同终值，O045 实测窄档 1 战损 / 1 瓶、宽档 14 战损 / 0 瓶，
 O041/O042/O044 跨档不变。
 
-四份夹具的 `timeoutSeconds=300` 高于本文件第 8 节引用的 120 秒默认口径：该值跟随各包内录制的
+四份夹具的 `timeoutSeconds=300` 高于 AGENTS.md 第 8 节的 120 秒默认口径：该值跟随各包内录制的
 `softTimeBudgetMilliseconds`（五包分别 120000/300000/180000/300000/180000ms，最长 300000ms），属
 同政策同预算对照而非放大预算；首次执行四次的 launcher 墙钟 28.7–40.0 秒均远低于该上限，无一次接近超时。
 压到 120 秒会使包内软预算 300000ms 的 O042/O044 不再是同预算对照。
