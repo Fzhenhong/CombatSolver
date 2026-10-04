@@ -38,6 +38,8 @@ Linux：
 
 ## 旧包
 
+0.48.0 前录制的选牌/continuation 可能缺少派生 `cost-state` 文本，而详细 `replay-state` 已保存完整费用层。仅在游戏模块匹配、目标材料包含全部有序费用字段时，允许按旧格式比较选择的已记录字段；目标必须同时通过原始 native-state、全部 continuation 和逐牌有序能量/星能费用对账。缺失字段、错误费用或失效条件仍失败；新格式始终精确比较，不修改原 ZIP 或生产状态键。结果用 `legacyCostLayersVerified`、`legacyChoiceCostEvents` 明确迁移范围。临时星能费用的嵌套字段单独解析费用值及出牌/回合末清除标志，保留顺序。
+
 兼容旧 v1 索引、无索引 ZIP、已解压包和汇总 ZIP。保持 metadata、replay-state、native-state、run-state 原有目录，分别校验，不再同名覆盖。旧开战包从原生跑局存档加载，在首次抽牌前恢复检查点，到原始导出生命周期再对账。
 
 0.33.8 起外层问题包采用 [报告协议 v2](BUG_REPORT_PROTOCOL.md)：根目录 report.json、diagnostics/、replay/。索引入口为 replay/checkpoint.json，旧包仍从 combat-solver/checkpoint.json 读取。检查点索引自身仍为 schemaVersion 2；路径变化不改变原生事件或恢复语义。批量下载含 index.json、反馈汇总.csv 和 reports/<报告ID>.zip；CheckpointTool 同时接受新旧汇总包与解压目录。

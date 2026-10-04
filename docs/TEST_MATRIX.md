@@ -4,6 +4,12 @@
 
 历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
 
+## Q002 旧费用层恢复与女王样例（2026-10-04）
+
+O001 原包后续检查点：修改前 `317a1464939346af89cf0ca2b4b5abde` 事件30失败；完整费用证据迁移后 `a68f84cd88194fac94a61d3b848b86f8` Passed（86.20s），83事件至T12/HP76，原生二进制、全部续用及保存费用层一致。旧格式选择事件30/35/70，不代表完整获胜。
+B014/T015 原版储君女王报告 `ba79d87499a4455bbba4a51baf381eea`：修正前 `dc932ebf39d34de1af68b2fdeb35db79` 首个可操作状态的临时星能层失败；嵌套字段解析修正后 `73a44262f64943caa7601cf167c40988` Passed（17.09s），开战/首个可操作状态/原生二进制/全部费用层严格一致，实例删除。它是另一场战斗，不能替代 O002 原包的123→55同根验收。复跑使用 `-CheckpointArchivePath <原报告ZIP> -CheckpointSelector start -ReplayMode RestoreOnly -HeadlessFastModeForTest Instant -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 为对应 `--checkpoint-archive-path`、`--checkpoint-selector`、`--replay-mode`、`--headless-fast-mode-for-test`、`--timeout-seconds`、`--cleanup-instance-on-exit`。
+费用与选择边界 `REPLAY-BOUNDARY-CONTRACT` run `884c35b87ac94e77b1632914fd34001a` Passed（20.20s），覆盖旧格式证据门、能量/星能费用、持续时间、选牌来源/原生身份/私有字段差异拒绝及临时星能非零费用和独立清除条件。完整调查范围见[Q002](issues/q002-route-quality.md#o002-其他女王材料筛选2026-10-04)。
+
 ## Q002 O004 原预算与开局补搜隔离（2026-10-04）
 
 旧基线证据见[阶段归档](archive/testing/q002-pre-0492-validation-20261004.md#q002-o004-原预算与开局补搜隔离2026-10-04)；新版复验见[Q002](issues/q002-route-quality.md#0492-迁移与当前验收2026-10-04)。
