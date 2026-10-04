@@ -1352,6 +1352,15 @@ internal sealed partial class CombatBeamSolver
         int hp = player.CurrentHp;
         int block = player.Block;
         SimulatedCombatState simulatedCombat = (SimulatedCombatState)simulator.State.CombatState;
+        // Sandpit expires after enemy turn start and forces death before the attack intent.
+        // Block and one-shot death saves cannot make standing pat survive that boundary.
+        foreach (PowerModel power in simulatedCombat.EffectivePowers())
+        {
+            if (power is SandpitPower { Amount: 1 } sandpit
+                && ReferenceEquals(sandpit.Target, _player.Creature)
+                && simulator.State.GetCreature(sandpit.Owner).IsAlive)
+                return new ThreatProjection(0, 0, 0);
+        }
         Creature? osty = simulatedCombat.GetOsty(_player);
         int ostyHp = osty == null ? 0 : simulator.State.GetCreature(osty).CurrentHp;
         ProjectedHpLossModifiers? projectedModifiers =
@@ -1419,6 +1428,13 @@ internal sealed partial class CombatBeamSolver
 
     internal int ProjectDiagnosticHits(SimulationSnapshot snapshot, Creature attacker, params int[] hits)
         => ProjectDiagnosticThreat(snapshot, attacker, hits).Hp;
+
+    internal (int Hp, int DeathSaveUseCount, int DeathSaveHpRestored) ProjectDiagnosticEnemyTurn(SimulationSnapshot snapshot)
+    {
+        ThreatProjection threat = ProjectHpAfterThreat((CombatPredictionSimulator)snapshot.Simulator,
+            snapshot.Simulator.State.GetCreature(_player.Creature));
+        return (threat.Hp, threat.DeathSaveUseCount, threat.DeathSaveHpRestored);
+    }
 
     internal (int Hp, int DeathSaveUseCount, int DeathSaveHpRestored) ProjectDiagnosticThreat(
         SimulationSnapshot snapshot,
