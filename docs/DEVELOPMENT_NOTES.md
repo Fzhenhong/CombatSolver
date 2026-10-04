@@ -28,3 +28,11 @@
 `PowerDynamicVarMaterializationGuardPatch`。`PowerDynamicVarWarmup.RegisterAdaptedCanonicalPower` 让适配层
 显式担保某个第三方 Power 的规范实例可以在主线程物化，建根时随原版一起物化，每局一次；物化失败照常抛出。
 默认范围不变，没有登记时行为与此前一致。
+
+### 原版怪物出招表补丁的适配声明
+
+`PredictionModPatchAudit.RegisterAdaptedMonsterMachine(Type, string modId)` 让适配层逐个声明某 mod 对某原版怪物
+`GenerateMoveStateMachine` 的补丁已适配。`RejectForeignPatches` 只对出招表方法、且仅对登记的
+（出招表的声明类型，mod id）组合放行，声明类型可以是被多个怪物继承的抽象基类；其他 mod、其他审计方法及第三方怪物的整体门禁不变。
+没有登记时行为与此前一致。动机：平衡尖塔改写了 45 个原版怪物的出招表，0.49.2 起几乎每场都停在
+「求解器暂未适配此内容性 Mod」，而其适配层已逐条核对招式效果与条件分支。

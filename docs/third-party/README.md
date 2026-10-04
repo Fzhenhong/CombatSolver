@@ -44,7 +44,7 @@ Power 的原版克隆会重置 `_internalData`。跨根保留的数据必须从�
 
 规范 Power 的动态变量预热默认只访问原版来源。第三方 CanonicalVars 可以依赖附着后的 Owner；实际战斗实例仍在主线程物化，后台消费捕获值。规范实例和战斗实例的生命周期必须分别处理。第三方 Power 只要可能在搜索中第一次被施加，克隆规范实例时就会撞上后台禁止惰性创建显示变量的守卫；适配层确认其规范实例能在主线程物化后，用 `PowerDynamicVarWarmup.RegisterAdaptedCanonicalPower(Type)`（或泛型重载）登记，建根时随原版一起物化，失败照常抛出。
 
-第三方怪物当前没有完整 AI／行动登记合同，根捕获按 MonsterModel 的实际来源拒绝；修改原版 GenerateMoveStateMachine 的玩法补丁也需要对应合同。AttackIntent 必须提供可捕获的 DamageCalc；缺失时审计意图类型、构造器及原生意图计算补丁，不生成零伤害。确认来源时使用暂未适配提示，来源未知时保留明确的类型与行动诊断。BetterVanillaSTS2 的 TargetedStrengthPower 已由原包证明替换原版语义，属于已确认的玩法边界。
+第三方怪物当前没有完整 AI／行动登记合同，根捕获按 MonsterModel 的实际来源拒绝。修改原版 GenerateMoveStateMachine 的玩法补丁默认同样拒绝；出招表是模拟直接读取的活状态机，换顺序、条件或招式集合会自动跟随，适配层补齐招式效果与写死的条件分支后，用 `PredictionModPatchAudit.RegisterAdaptedMonsterMachine(Type monsterType, string modId)` 逐个声明「该 mod 对该原版怪物出招表的补丁已适配」，审计只放行登记的（出招表声明类型，mod id）组合，声明类型可以是被多个怪物继承的抽象基类，其他 mod 的补丁及意图构造器、GetSingleDamage 等审计不受影响。AttackIntent 必须提供可捕获的 DamageCalc；缺失时审计意图类型、构造器及原生意图计算补丁，不生成零伤害。确认来源时使用暂未适配提示，来源未知时保留明确的类型与行动诊断。BetterVanillaSTS2 的 TargetedStrengthPower 已由原包证明替换原版语义，属于已确认的玩法边界。
 
 原版卡牌异步 OnPlay 的 MoveNext 和 OnPlay 方法本体分别审计；现有 OnPlay 登记不覆盖 MoveNext 补丁。外部回调在已有 pending choice 时只能恢复同一选择；请求另一来源的选择会在写入前失败并保留原 pending。预见、伤害后抽牌和洗牌选择相互嵌套时，适配器必须停止当前派发并保存剩余程序阶段。基础卡牌／框架不能替代活动内容模型的来源。
 
