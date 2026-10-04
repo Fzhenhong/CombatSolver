@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scenarioId": "Q010-O044-SAME-ROOT-TARGET",
-  "description": "O044 熟睡派对：A 类回归夹具。当前源码从 combat_start 同根即得 5 战损，等于审核稿改善值；只断言终值，不断言路线同构。包内改善记录（:3，第 2 回合、已损 5）不是同根基准，本夹具不依赖它。",
+  "description": "O044 熟睡派对：A 类回归夹具。当前源码从 combat_start 同根即得 5 战损，等于审核稿改善值，且跨内存档稳定（窄档 GC_SEARCH_ALLOCATION_LIMIT≈1.28GB/No-GC 弃区 24% 与宽档≈2.33GB/44% 均得 5、第 6 回合、0 瓶，score 10001829972 逐位相同）；只断言终值，不断言路线同构。包内改善记录（:3，第 2 回合、已损 5）不是同根基准，本夹具不依赖它。",
   "characterId": "REGENT",
   "encounterId": "SLUMBERING_BEETLE_NORMAL",
   "seed": "4KZ3X1LMFMCB",
