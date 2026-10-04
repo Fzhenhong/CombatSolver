@@ -86,3 +86,8 @@ Smart跨搜索见证研究：`SMART-OPENING-WITNESS` / `1336ac4aa23f4274be8a832d
 猎手成员见证：`SILENT-EARLY-HP` / `35d32dea0b714e2182b8e118cfa6aa50`，30.99秒Passed，同SILENT/NIBBITS_WEAK/种子与固定小预算，共享30秒取消/启动器120秒，实例删除。Mayhem促使实际能力成员执行，严格DOP1/DOP16真实见证、29次剪枝、Coordinator计划/能力传递3/8次，药水顺序/完整原生状态/Fork/父/live/RNG通过。完整初筛20.04秒、原始1.853倍，工作数与前原型完全相同，未纳入生产或继续交错/完整回归/冻结整场，见[报告](performance/component-healing-bound-20261003.md)。
 
 快照填充：DLL`72376d66…`，`SILENT-EARLY-HP` / `78168715494e435fa9e3cd13c0908902`，30.09秒Passed，SILENT/NIBBITS_WEAK及既有固定种子、小预算/30秒取消/120秒启动器帽/实例删除。非空四牌堆、DOP1旧填充对DOP16新填充严格差分、35次剪枝、原生两药水顺序/完整状态/Fork/父/live/RNG。完整初筛22.48秒未达2倍，不纳入生产。另硬件CPU诊断25466样本/丢失0与状态诊断2011次跨成员记录无差异均单独保留；后者非原生缓存合同，插桩改变工作，尚需纯度/完整状态与Fork证明，见[报告](performance/component-healing-bound-20261003.md)。
+
+
+读取纯度：`TRANSITION-CAPTURE-PURITY` / `ab368a6c0cea437ca416f2b96c644398`，DLL`cfdb2689…`、27.33秒Passed，SILENT/NIBBITS_WEAK/999生命、种子`TRANSITION_CAPTURE_PURITY_20261004`。非空四牌堆、重复完整状态/history/快照捕获对未读取未来动作、16份串行Fork后并行读取/HP修改、三项原生动作/父/live/RNG。原生20秒取消/启动器120秒/实例删除；未运行Coordinator或性能。
+
+释放态转移缓存：`TRANSITION-DONATION-MEMO` / `08730d3bad504b0f8083496fc4a5986e`，DLL`8191ade5…`、27.37秒Passed，同SILENT/NIBBITS_WEAK/999生命，种子`TRANSITION_DONATION_MEMO_20261004`。三次miss/51次实际hit、16路独立HP修改/完整history及快照、两槽FIFO/根/setup/政策/取消/Dispose隔离、三项原生状态。接线版DLL`ee447e01…`、run`5285e6187c8948cbba341dbfc6bb6ad7`、31.44秒Passed；增加真实Coordinator显式Beam24/1200节点/10000毫秒、20000毫秒宽12/8，DOP16严格增量1899hit、3/8计划/能力传递、32剪枝、完整无药胜利和两原生药水/父/live/RNG。共享搜索30秒取消/原生20秒/启动器120秒，实例均删除；准备与构建失败单独保留。无插桩完整请求22.99秒未达两倍；诊断命中率与时间不计性能验收。未纳入生产或部署，全部来源闭包/字节界/交错/全回归未验证，见[报告](performance/component-healing-bound-20261003.md)。

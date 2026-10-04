@@ -8217,6 +8217,350 @@
       "bounded memory and eviction/concurrency ownership",
       "native strict full-state cache-vs-original differential",
       "complete request performance and final interleaved/full regression"
-    ]
+    ],
+    "followupMemoryGateAnalysis": {
+      "method": "read existing outputs only, no rerun",
+      "originalResult": ".local/general-healing-audit/silent-member-hp-screen/harness-result.json",
+      "diagnosticResult": ".local/general-healing-audit/transition-state-silent-diagnostic/harness-result.json",
+      "refinementMemberDelta": [
+        {
+          "index": 0,
+          "normal": {
+            "BeamWidth": 135,
+            "ExpandedNodes": 4358,
+            "TransitionCount": 24431,
+            "ManagedHeapBytesAfter": 3077792560,
+            "SkippedReason": null
+          },
+          "diagnostic": {
+            "BeamWidth": 135,
+            "ExpandedNodes": 4358,
+            "TransitionCount": 24431,
+            "ManagedHeapBytesAfter": 5136344336,
+            "SkippedReason": null
+          }
+        },
+        {
+          "index": 1,
+          "normal": {
+            "BeamWidth": 90,
+            "ExpandedNodes": 3005,
+            "TransitionCount": 17152,
+            "ManagedHeapBytesAfter": 3699935896,
+            "SkippedReason": null
+          },
+          "diagnostic": {
+            "BeamWidth": 90,
+            "ExpandedNodes": 3005,
+            "TransitionCount": 17152,
+            "ManagedHeapBytesAfter": 6077293800,
+            "SkippedReason": null
+          }
+        },
+        {
+          "index": 2,
+          "normal": {
+            "BeamWidth": 203,
+            "ExpandedNodes": 6179,
+            "TransitionCount": 33630,
+            "ManagedHeapBytesAfter": 4873826392,
+            "SkippedReason": null
+          },
+          "diagnostic": {
+            "BeamWidth": 203,
+            "ExpandedNodes": 6179,
+            "TransitionCount": 33630,
+            "ManagedHeapBytesAfter": 8176168696,
+            "SkippedReason": null
+          }
+        },
+        {
+          "index": 3,
+          "normal": {
+            "BeamWidth": 135,
+            "ExpandedNodes": 4229,
+            "TransitionCount": 25521,
+            "ManagedHeapBytesAfter": 5784220096,
+            "SkippedReason": null
+          },
+          "diagnostic": {
+            "BeamWidth": 135,
+            "ExpandedNodes": 4229,
+            "TransitionCount": 25521,
+            "ManagedHeapBytesAfter": 9917449880,
+            "SkippedReason": null
+          }
+        },
+        {
+          "index": 4,
+          "normal": {
+            "BeamWidth": 135,
+            "ExpandedNodes": 4255,
+            "TransitionCount": 21364,
+            "ManagedHeapBytesAfter": 6537799120,
+            "SkippedReason": null
+          },
+          "diagnostic": {
+            "BeamWidth": 135,
+            "ExpandedNodes": 0,
+            "TransitionCount": 0,
+            "ManagedHeapBytesAfter": 0,
+            "SkippedReason": "MemoryHeadroomInsufficient"
+          }
+        },
+        {
+          "index": 5,
+          "normal": {
+            "BeamWidth": 54,
+            "ExpandedNodes": 1735,
+            "TransitionCount": 10374,
+            "ManagedHeapBytesAfter": 6907271360,
+            "SkippedReason": null
+          },
+          "diagnostic": {
+            "BeamWidth": 54,
+            "ExpandedNodes": 0,
+            "TransitionCount": 0,
+            "ManagedHeapBytesAfter": 0,
+            "SkippedReason": "MemoryHeadroomInsufficient"
+          }
+        }
+      ],
+      "cause": "instrumentation increased managed heap; original memory admission skipped base-score and bounded-offensive members with MemoryHeadroomInsufficient; explains -5990 nodes/-31738 transitions; not optimization",
+      "firstPowerDelta": {
+        "prefix": "SPEEDSTER",
+        "expanded": 81,
+        "transitions": 374,
+        "cause": "unresolved; original and diagnostic first certified incumbent were both deficit40/turn4"
+      },
+      "scope": "capture purity proved separately only for limited native setup; whole diagnostic workload differs"
+    }
+  },
+  "researchTransitionCapturePurity": {
+    "baseCommit": "d403d41b",
+    "runtimeTemplate": "silent-member-hp-src",
+    "purpose": "native purity and retained template fork contract, no cache or production optimization",
+    "sourceHashes": {
+      "src/Search/CombatBeamSolver.TransitionCaptureContract.cs": "0c5ed59e8f3c2dc12456fbf9ad007482c16eb858dd2b9748acc2e27a1f1325e8",
+      "src/Testing/UnattendedTestRunner.TransitionCapturePurity.cs": "3983d2ccaa9e10dda1de977cacce3b35bc9d7d93b59b556bccc46e95aeec0ef1",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "dc4c848d7198e27b1b9b2fa82211178370f828755a305458995e234254a56cb5"
+    },
+    "status": "native-purity-and-template-fork-contract-passed",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "complete private-source audit for cache identity",
+      "exact root/action/policy cache key",
+      "bounded template retention and eviction",
+      "cache native differential and full request acceptance"
+    ],
+    "buildHistory": [
+      {
+        "seconds": 20.99,
+        "warnings": 0,
+        "errors": 0,
+        "executed": false,
+        "reason": "scope reviewed before native run; narrow notification isolation to simulation operations"
+      }
+    ],
+    "build": {
+      "seconds": 13.7,
+      "warnings": 0,
+      "errors": 0
+    },
+    "dllSha256": "cfdb2689f11f7a502dd97497de6c354a8a2159f02b52144cdee8d94181c2a84f",
+    "nativeContract": {
+      "runId": "ab368a6c0cea437ca416f2b96c644398",
+      "status": "Passed",
+      "elapsedMilliseconds": 27333.9707,
+      "mainAssemblyHash": "CFDB2689F11F7A502DD97497DE6C354A8A2159F02B52144CDEE8D94181C2A84F",
+      "completedChecks": [
+        "TransitionCapturePurity:RepeatedFullHistoryAndSnapshotProperties:ObservedVsUnobservedFutureActions:AdrenalineDefendMayhem:SixteenOwnedForks:IndependentHpMutation:TemplateParentLiveRngIsolated",
+        "TransitionCapturePurity:ThreeNativeFullStates:DrawRngBlockAndPower:ParentForkIsolation:NoCoordinatorBudgetOrCache",
+        "NativeOutcome:combatEnded=False:turn=1:hp=70:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/transition-capture-purity-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "configuration": "SILENT/NIBBITS_WEAK/999hp/TRANSITION_CAPTURE_PURITY_20261004; 120sec launcher, native20sec cancellation; no coordinator or performance measurement",
+      "scope": "repeated full-state/history/snapshot property capture; observed-vs-control future actions,16 separately owned serial forks used in parallel with HP mutation,3 complete native state checks; limited source/turn coverage"
+    }
+  },
+  "researchTransitionDonationMemo": {
+    "baseCommit": "d403d41b",
+    "runtimeTemplate": "transition-capture-purity-src",
+    "purpose": "isolated released-state transition memo; production unchanged",
+    "status": "rejected-single-full-request-screen-not-twofold",
+    "runtimePromoted": false,
+    "deployed": false,
+    "sourceHashes": {
+      "src/Search/SearchTransitionDonationMemo.cs": "ff70a7208ba518eb304805b0ed64b16046df64e165262cd0a67e75336c140957",
+      "src/Search/SearchPolicySnapshot.cs": "13c5bdc421741b0b003a1aa203008b59610eb20aefaaca3c470146499e0ae2c8",
+      "src/Search/CombatPlan.cs": "2613d8e212e0634bec85c6bd48531ae0bdfcc9a48d1ad736c99358a95a2f0939",
+      "src/Search/CombatSearchCoordinator.cs": "cded5d3bdc8a1d279f7c22bef021705ff96b035e18c74df80a992e9a85e1dfd8",
+      "src/Search/CombatBeamSolver.Expansion.Replay.cs": "13e600a88fad078db60cb0c8c2c412ea36186938ea2186630d19a6139f8bd638",
+      "src/Search/CombatBeamSolver.TransitionCaptureContract.cs": "60169e8a2b5c8b21afddea8195f1fdf36e7e3f3353da65a8ed2ac281b805634f",
+      "src/Search/CombatBeamSolver.ParallelExpansion.cs": "f631eb85ea7a8f27ca1b4dc819828ca1942d3266f6389d5b23410f9da2245a84",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "9107e51ec34612297cebc1abe52adbd8afc1fd9f83d177f1cea5fc0487a5a163",
+      "src/Testing/UnattendedTestRunner.TransitionDonationMemo.cs": "d89f366377a3067fb52a6c82ab2e66e7261ed8e9509cb4728bc9304a814407d0",
+      "src/Testing/UnattendedTestRunner.SilentEarlyHp.cs": "3fd827040a1ae0fb7b0686d6a9df30f87ad9e88ac3774877231c00dbeefce162"
+    },
+    "preparationHistory": [
+      {
+        "status": "Failed",
+        "reason": "script incorrectly required a single Stopwatch initializer; preparation only partially applied; corrected sequentially before any execution"
+      },
+      {
+        "status": "Failed",
+        "reason": "companion copy used incorrect MemoryCleaner.dll filename after manifest copied; corrected actual CombatSolver.MemoryCleaner.exe and copied remaining licenses; native launcher requires DLL/manifest and already started with these"
+      }
+    ],
+    "buildHistory": [
+      {
+        "revision": "v1",
+        "status": "Failed",
+        "seconds": 25.67,
+        "warnings": 0,
+        "errors": 1,
+        "reason": "CS0136 nested action variable name"
+      },
+      {
+        "revision": "v2",
+        "status": "Failed",
+        "seconds": 11.32,
+        "warnings": 0,
+        "errors": 2,
+        "reason": "fixture executor used nonexistent timing/observation fields"
+      },
+      {
+        "revision": "v3",
+        "status": "Failed",
+        "seconds": 11.41,
+        "warnings": 0,
+        "errors": 2,
+        "reason": "fixture executor used nonexistent stage method and local variable; corrected to existing SetStage and Observation"
+      },
+      {
+        "revision": "v4",
+        "seconds": 13.82,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "keyScope": "request/root identity; exact serialized action prefix/action; same policy instance; parent state/turn/action/history/deaths; effective potion policy/limits",
+    "retention": "4096 entries/65536 path links/history<=64, FIFO; byte-bound not proven",
+    "unverified": [
+      "complete permitted-source root/action/policy identity closure",
+      "exact retained-state byte bound",
+      "final interleaved performance acceptance",
+      "fixed full regression",
+      "native frozen target whole-battle deployment"
+    ],
+    "build": {
+      "revision": "v5",
+      "seconds": 13.99,
+      "warnings": 0,
+      "errors": 0
+    },
+    "dllSha256": "ee447e01fbbe238f7c06a06e32750042f17b77e8c4a990e09855e04124072b33",
+    "nativeContractConfiguration": "SILENT/NIBBITS_WEAK/999HP/TRANSITION_DONATION_MEMO_20261004; strict full replay; memo entries2; three cards/51hits/16parallel mutable forks;120sec launcher; no coordinator/performance;v5 adds actual strict Coordinator plan/power cache hits with explicit budgets and native potions after direct cache contract",
+    "nativeContractHistory": [
+      {
+        "runId": "08730d3bad504b0f8083496fc4a5986e",
+        "status": "Passed",
+        "elapsedMilliseconds": 27369.5828,
+        "mainAssemblyHash": "8191ADE5C6E54B7B1E10D1D3540EB1AD66DACE5C08250A757BABC3C9326005EC",
+        "completedChecks": [
+          "TransitionDonationMemo:ThreeStrictReplayMisses:51ActualCacheHits:FullHistorySnapshotState:16ParallelOwnedForksWithIndependentHpMutation:ParentLiveRngIsolated:TwoEntryFifoEviction:RootSetupPolicyCancellationAndDisposeIsolation",
+          "TransitionDonationMemo:ThreeNativeFullStates:DrawRngBlockPower:StrictReplayStillEnabled:NoCoordinatorBudgetOrPerformanceMeasurement",
+          "NativeOutcome:combatEnded=False:turn=1:hp=70:maxHp=70"
+        ],
+        "error": null,
+        "resultPath": ".local/general-healing-audit/transition-donation-native/result.json",
+        "launcherExitCode": 0,
+        "instanceCleanup": "launcher removed owned instance",
+        "scope": "Three direct action transitions;51 actual cache hits;16 parallel full replay siblings per action with HP mutation;2-entry FIFO;root/setup/policy/cancellation/disposal;3 actual native states; not coordinator or performance"
+      }
+    ],
+    "nativeContract": {
+      "runId": "5285e6187c8948cbba341dbfc6bb6ad7",
+      "status": "Passed",
+      "elapsedMilliseconds": 31443.4085,
+      "mainAssemblyHash": "EE447E01FBBE238F7C06A06E32750042F17B77E8C4A990E09855E04124072B33",
+      "completedChecks": [
+        "TransitionDonationMemo:ThreeStrictReplayMisses:51ActualCacheHits:FullHistorySnapshotState:16ParallelOwnedForksWithIndependentHpMutation:ParentLiveRngIsolated:TwoEntryFifoEviction:RootSetupPolicyCancellationAndDisposeIsolation",
+        "TransitionDonationMemo:ThreeNativeFullStates:DrawRngBlockPower:StrictReplayStillEnabled:NoCoordinatorBudgetOrPerformanceMeasurement",
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=32:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "TransitionDonationMemo:ActualCoordinatorStrictDop16:cacheHits=1899:CompleteWinnerNoAdditionalLossOrPotion:ActualPlanPowerMembers:LiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/transition-donation-coordinator-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "scope": "51 direct actual hits/16 mutable forks/FIFO etc; strict actual Coordinator 1899hits/3plan+8power handoffs/full victory;2 native potions and3 native cards;limited native setup,notperformance"
+    },
+    "performanceScreen": {
+      "resultPath": ".local/general-healing-audit/transition-donation-silent-screen/harness-result.json",
+      "logPath": ".local/general-healing-audit/transition-donation-silent-screen.log",
+      "wallSeconds": 22.9873737,
+      "peakProcessWorkingSetBytes": 18508062720,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQuality": true,
+      "work": {
+        "TotalExpanded": 102259,
+        "TotalTransitions": 574344
+      },
+      "originalBaselineWallSeconds": 37.1302198,
+      "originalSpeedup": 1.6152441024613438,
+      "relativeResearchRuntimeMemoryRatio": 1.659091910468805,
+      "cacheActivation": "cache active: separate streaming diagnostic recorded 12921 hits; not a performance counter capture for the earlier screen",
+      "scope": "single uninstrumented full Coordinator request screen only; no interleaved acceptance/regression"
+    },
+    "cacheDiagnostic": {
+      "resultPath": ".local/general-healing-audit/transition-donation-silent-diagnostic/harness-result.json",
+      "logPath": ".local/general-healing-audit/transition-donation-silent-diagnostic.log",
+      "stats": {
+        "attempts": 193555,
+        "hits": 12921,
+        "donations": 156384,
+        "evictions": 152288,
+        "rejected": 0,
+        "retained": 4096,
+        "paths": 19376
+      },
+      "hitFractionOfAttempts": 0.06675621916251195,
+      "hitFractionOfAllTransitions": 0.022496970456729763,
+      "wallSeconds": 21.3086836,
+      "work": {
+        "TotalExpanded": 102259,
+        "TotalTransitions": 574344
+      },
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQuality": true,
+      "sameWorkAsScreen": true,
+      "scope": "streaming diagnostics only to resolve actual activation/hit/eviction counts; elapsed not acceptance"
+    },
+    "decision": "Do not promote or deploy;23sec screen not2x. Cache active but2.25% of all transitions hit in separate diagnostic,6.68% eligible attempts;4096 templates repeatedly evicted. No isolated attribution of allocator/key/lock/retention cost from one screen."
   }
 }
