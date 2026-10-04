@@ -16,6 +16,24 @@ dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolv
 
 相邻真实 CLR 回归：`default-entry` 2 项、`recovery-lifecycle` 3 项 Passed，包含实际 NoGC 退出与恢复、显式退出持续生效及诊断失败清理。每项设有 15 或 20 秒截止时间。未重放 18 份原包整场，也没有可见 Steam 或低内存宿主性能结论；[排查记录](issues/0.49.0-memory-commit-regression-20261004.md)保留固定报告身份与触发窗口。
 
+## 社区批次 Q010 同根夹具（2026-10-04，Refs #210）
+
+四份输入在 `coverage/fixtures/regressions/community/q010-o04{1,2,4,5}-same-root-*.json`，
+从各主题原包的 `combat_start` 同根起搜，只锁终值，不断言路线同构。审核稿改善值 12/1/8/5
+（O041/O042/O043/O044）录于中途检查点，不同根，因此不作为断言目标；
+可比性与录制检查点见 [Q010 复现记录](community/drafts/2026-10-04/Q010-claim-reproduction.md)。
+
+复跑入口是 `tools/testing/run-unattended-test.ps1`（Bash：`tools/testing/run-unattended-test.sh`），
+公共参数 `-CheckpointSelector start -ReplayMode SearchOnly -HeadlessFastModeForTest Instant
+-StopAfterInitialSolverResultAssertion -TimeoutSeconds 300 -CleanupInstanceOnExit`，再按夹具传
+`-ScenarioId`、`-CheckpointArchivePath` 与各主题的断言参数（逐项取自夹具 JSON）。这些命令依赖
+不入库的原包 ZIP 与本机 RitsuLib 路径，因此不写进下方矩阵启动器清单。本轮**未执行**这四条：
+预期值取自认领者的 `SearchOnly` 同根产物，首次执行与哨兵在整批验收记录，结构化证据在
+`coverage/evidence/test-evidence.json` 保持 `Pending`。
+
+O042 的「被迫受击 = 1」分量没有协议断言字段（只有 `RESULT … unavoidable_hp_lost=` 诊断行，
+`src/Runtime/SolverDiagnostics.cs:209`），需在验收时按 diagnostics 对账。
+
 ## PR #203 的机制合同
 
 金币、最大生命回复与遗物间接回复的贡献者证据见 [专题记录](performance/gold-max-hp-healing-20261003.md)。独立场景为 `GOLD-HEALING-MECHANISMS`、`MAX-HP-HEALING-CALLBACKS`、`FEED-MAX-HP-CAP`、`RELIC-MAX-HP-HEALING-BOUNDS` 和 `AXEBOT-JOSS-DEFERRED-FORK`，均从平台原生无人入口运行，使用 IRONCLAD、FUZZY_WURM_CRAWLER_WEAK、120 秒上限及实例清理。原作者结果与本轮合并验证分别记账。
