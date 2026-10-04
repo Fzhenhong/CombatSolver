@@ -1,91 +1,60 @@
-# 损血剪枝补丁档案
+# Shared HP-loss incumbent pruning
 
-保存日期：2026-10-04。适配版本：CombatSolver 0.49.1，游戏 0.111.0。
-上游基线：`4b5537d00`；共享界限提交：`77b94682f`；等值截断提交：`72e6ec856`。
-此处保存源码补丁及验证口径；不含 DLL，不自动应用，不代表新上游已经兼容。
+This single-player change targets repeated work after an eligible complete victory is known: unavoidable early damage followed by safe turns, and fast victories rediscovered by portfolio members. Baseline: upstream 5d28a1cfa (0.49.3).
 
-新增第三层：[偷窃桶内剪枝](theft-buckets.md) 与 `03-theft-buckets.patch`，基于 `9c9e975a1` 应用；它解除下文第一、二层的保资源总旁路，改为保守资源下界选桶，并保护被偷回血牌。前三层不是同一个上游基线，升级时逐层核对，不能直接把第三层套到原版0.49.1。
+## Scope and safety
 
-第四层：[成长与遗物目标桶](resource-buckets.md) 与 `04-resource-buckets.patch`，基于 `aeb66fba1`；扩展次数向量/目标掩码，明确未来收益上界与未知回退，解除第一、二层对有认证成长闭包及遗物目标的总旁路。部分目标桶的存储不代表所有未终局节点都能按当前目标桶截断。
+PrimaryIncumbentTable stores completed, hard-policy-compliant victories by outstanding stolen resources, explicit potion uses, per-source growth count vector, and satisfied relic target mask. Different growth sources and relic combinations remain separate; scalar HP witnesses cannot replace resource-target witnesses.
 
-第五层：[各成长目标独立消费基准](growth-targets.md) 与 `05-growth-targets.patch`，基于 `8060330a2`；在纯成长目标下按分支剩余机会逐桶消费正战损基准，复制对象耗尽后重新认证，所有可能目标都无改进才停止公共展开。
+Coordinator members share pure-value bounds through frozen policy, retaining independent simulators, frontiers and transpositions. Live combat sessions carry one executable potion-free witness only when the full root continuation stamp, damage ledger and policy match. Changed input invalidates it. Victory publication occurs at the serial commit boundary.
 
-## 要解决的浪费
+Potion buckets are consumed only when explicit use is closed by member policy or the maximum-use limit. HP lower bounds retain future healing, death protection, post-combat healing and boss HP relief. Unknown sources keep the upstream conservative allowance. Stolen healing cards remain possible recovery sources.
 
-前几回合已有不可避免的战损，后续几乎不再损血时，搜索仍可能展开许多不能改善损血的路线。速胜路线已找到时，等待整个动作层结束才更新界限，也会继续支付无效展开成本。不同组合成员、能力开局路线、药水审计及同根重复请求若各自保留胜利基准，还会重复探索已经被其他成员证明无法改善的分支。
+PreserveResources looks up a lower bound on final unrecovered resources, subtracting resources recoverable from living enemies. It does not use the current missing-card count directly. Missing compatible witnesses preserve expansion.
 
-本补丁保存已找到且符合政策的完整胜利作为见证，用候选未来最乐观的战略生命缺口与见证比较。它不预测动作可交换性，也不合并语义等价节点。
+Growth caps require a separate narrow original-content closure: exhausting growth sources, audited basic cards/statuses/curses, selected relics and powers. Generation, exhaust recovery, unknown callbacks and live growth-copying opportunities reject certification. Opportunity metadata alone is not a cap.
 
-## 算法与取舍
+For pure growth targets, each possible final source-count vector consumes its own witnessed victory. Shared expansion stops only when every possible vector is bounded. Missing witnesses or more than 256 combinations preserve expansion. Growth/relic mixtures retain the optimistic final-bucket path, without claiming complete independent enumeration of relic outcomes.
 
-1. 延用上游 `StrategicHpLowerBound`、未来治疗来源分析和生成牌池闭包。不能只按当前已经损血裁剪：未来回血、死亡保护、战后回血、首领生命恢复等必须按现有规则计入。
-2. 第一层补丁共享胜利界限。表按失窃资源和显式药水使用次数分组；各成员通过冻结政策传递同一表。
-3. 跨请求只在完整根 ContinuationStamp、损血账本和相关政策一致时传递零药胜利见证。根或政策变化重建表；不能只传一个标量到不同战斗状态。
-4. 药水层只有在当前成员禁止用药，或已达到显式药水上限等封闭条件时，才能消费该层共享界限。不能用零药路线随意裁剪仍可喝药回血的节点。
-5. 第二层补丁让普通合格完整胜利在串行动作提交处立即收紧界限，后续动作层即可使用；仍须通过既有胜利资格及硬规则。
-6. 无遗物目标时，对尚未终局、无风险节点启用等值截断：候选最乐观缺口大于或等于胜利缺口即停止展开。已有终局不会因为新等值规则被删除。
+DualWield remains uncertified while a growth object can be copied. Once no usable growth object remains, copying ordinary cards cannot reopen growth, and branch certification can resume. Fork isolation is tested.
 
-概念伪代码（真实政策判断以所附代码为准）：
+## Equality tradeoff
 
-```text
-on eligible completed victory:
-    tighten compatible incumbent
-on retaining an unfinished safe node:
-    if growth/theft/relic/potion gates permit:
-        optimisticDeficit = existing strategic HP lower bound
-        prune if optimisticDeficit >= compatible victory deficit
-```
+Eligible unfinished, risk-free branches may stop when their optimistic strategic HP deficit equals a compatible completed victory. This prioritizes reduced search work over finding an earlier victory with identical resource outcome and HP loss. It is not a proof that the original complete ordering or every finite-Beam result is preserved. New equality pruning leaves completed candidates intact.
 
-等值截断是用户明确接受的次级目标取舍：可能舍弃损血相同但更早获胜的路线，不能称为保留原全序最优的无损剪枝。成长目标和资源保留政策继续走保护门；存在遗物目标时不启用新增等值规则。未知治疗机制不能当作无治疗。不同正药水层之间的泛化支配、全部成长类别共享未实现。
+No action commutativity prediction, pile-order masking or multiplayer pruning is included.
 
-## 代码位置与可用补丁
+## Reproduction
 
-| 文件 | 职责 |
-| --- | --- |
-| `src/Search/PrimaryIncumbentTable.cs` | 分层共享、界限收紧、零药可执行见证 |
-| `src/Search/SearchPolicySnapshot.cs`、`CombatBeamSolver.cs` | 共享表接线及诊断开关 |
-| `src/Search/CombatSearchCoordinator.cs` | 成员共享、见证发布和复用 |
-| `src/Search/CombatBeamSolver.Retention.cs` | 下界比较、药水封闭门、成长/资源保护、等值截断 |
-| `src/Search/CombatBeamSolver.Phases.cs` | 胜利串行提交后立即更新 |
-| `src/Runtime/SolverController.cs`、`SolverControllerSessions.cs` | 同根同政策会话作用域 |
-| `tools/search/OfflineSearchHarness/` | 共享开关、边界回归及离线对照入口 |
+Build CombatSolver.csproj and tools/search/OfflineSearchHarness/OfflineSearchHarness.csproj in Release. Installed game/RitsuLib paths come from local.props; personal paths do not belong in committed requests.
 
-- [第一层：共享界限](01-shared-incumbents.patch)：`4b5537d00 → 77b94682f`，源码及相关测试工具。
-- [第二层：等值截断与即时收紧](02-equal-loss-cutoff.patch)：`003075499 → 72e6ec856`，适合上游已具备等价共享机制时定向参考。
-- [完整补丁](combined-0.49.1.patch)：`4b5537d00 → 72e6ec856`，仅源码及测试工具，不包含旧测试文档。
+Run the harness with --check-primary-incumbents for shared table contracts, or --check-early-turn-continuation-bound for existing continuation contracts.
 
-两个分层补丁按顺序使用与完整补丁二选一，不能重复叠加。当前适配树已通过完整补丁、第二层补丁的 `git apply --reverse --check`，证明保存内容对应已安装代码；没有为档案另建工作树进行正向应用、构建或重复战斗测试。
+Set OFFLINE_HARNESS_RESOURCE_BUCKET_CHECKS=1 and run --request coverage/fixtures/scenarios/state/royalties-resource-0170.json --milestone M1 for resource contracts. Set OFFLINE_HARNESS_THEFT_BUCKET_CHECKS=1 on an Ironclad combat for theft contracts. These are shadow-state assertions, not native actual/simulated acceptance.
 
-## 更新上游时如何判断是否还需要补丁
+OFFLINE_HARNESS_RESOURCE_SETTINGS reads a test-only JSON containing GrowthBudgets, RelicStrategyEnabled and RelicCounterRules, for example {"growthBudgets":{"royalties":5}}. Other settings stay CLI-controlled; player settings are not modified.
 
-先在新上游记录基线提交，读更新说明和源码，不以“已有损血剪枝”这个名称判断完成。
+--disable-shared-incumbents retains new member-local equality behavior, so it is not the entire upstream baseline. --verify-shared-incumbent-reuse checks same-root reuse and policy invalidation on small Coordinator requests. --verify-incremental performs complete prefix replay and is excluded from performance samples.
 
-| 检查项 | 上游需具备的实际行为 |
-| --- | --- |
-| 治疗下界 | 生成牌池、未知来源、战后回血及特殊生命结算保守处理 |
-| 即时发布 | 普通完整胜利在动作串行提交处更新，下一个动作层可消费 |
-| 共享范围 | 组合成员、能力路线及药水审计在兼容范围共享见证 |
-| 药水隔离 | 显式用药分层，未封闭层不错误消费界限 |
-| 会话作用域 | 根/政策/损血账本改变失效，同根携带可执行见证 |
-| 等值截断 | 非终局安全节点使用等值比较，并明确更早胜利取舍 |
-| 政策保护 | 成长、偷窃、遗物、强制药水、死亡保护资格保持 |
+## Evidence and limits
 
-全部覆盖且代表样本通过时停用本地补丁；只覆盖部分时重新生成最小差异。上游没有等值截断不一定是缺陷，也可能刻意保留更早胜利排序。
+Rebased validation is recorded in [the test matrix](../../TEST_MATRIX.md). Historical 0.49.1 results included expanded nodes 28,956 to 17,802 on the restored Infested Prisms root and 5,669 to 3,964 on a growth-copy fixture. These are prior-version evidence, not new 0.49.3 measurements.
 
-在新的干净适配分支先运行 `git apply --check docs/strategy/hp-loss-pruning/combined-0.49.1.patch`；失败就逐职责重新移植，禁止强行覆盖旧文件。即使检查成功，仍需重新读码验证门禁与新的状态字段。验收后记录新基线、补丁提交、原生恢复和质量/工作量数据，再刷新档案；不得把本版成功记录写作新版本通过。
+Offline comparisons do not prove native automatic deployment, visible Steam frame time, all growth sources, all positive potion tiers or global optimality. The upstream comparison harness receives the same test-only resource-settings loader; upstream production source is unchanged.
 
-## 本版证据与复测要求
+## 单人共享损血剪枝（2026-10-05）
 
-相关已执行记录见 [测试矩阵](../../TEST_MATRIX.md) 与 [开发笔记](../../DEVELOPMENT_NOTES.md)。共享界限回归20项、既有早回合回归143项通过；两个定向离线根分别展开18→7、10→3，保持损血/药水/胜利回合。回血后击杀及 Smart 零药同损血哨兵通过。Release 构建零警告/错误，代码此前已本地部署。
+基线 `5d28a1cfa`（0.49.3），游戏 0.111.0 / RitsuLib 0.6.5。候选主项目及离线宿主 Release 构建均 0 警告、0 错误。初次构建缺 net48 引用程序集，使用本机已有 NuGet 引用包的 FrameworkPathOverride 后构建成功；未修改上游构建配置。
 
-感染棱柱问题包 `028fcf779f434ecf90c8be2843eef2c9` 本轮原生开战恢复及完整根对账通过。基线 `003075499` 与补丁 `72e6ec856`，SearchOnly、固定60秒、DOP1、Beam200、No-GC关闭，两侧均未触发预算边界：
+本轮共享表20项、既有早回合界143项、成长资源35项、偷窃边界10项全部通过。成长小根的增量完整前缀回放及同根共享见证续用、政策变化失效检查通过。这些不是原生 actual/simulated 整场验收。
 
-| 指标 | 基线 | 补丁 |
-| --- | --- | --- |
-| 预测战损 / 药水 / 获胜回合 | 26 / 0 / 5 | 22 / 0 / 5 |
-| 总展开 / 状态转移 | 28956 / 116656 | 17802 / 75453 |
-| 搜索耗时 | 13.322秒 | 10.068秒 |
+独立 .NET 进程、Coordinator及组合开启、Disabled、DOP1、牌堆掩码0、No-GC关闭；两侧均 Boundary=None。上游仅在测试宿主移入相同 resource-settings 读取方法，生产源码保持基线；没有用关闭共享表代替整个上游基线。
 
-展开减少38.5%，本次耗时减少24.4%。这是单次观察；Beam 改变候选竞争后可能找到更好路线，不证明稳定提速或全局最优。原包预算500秒，本次统一改60秒；隔离宿主缺包内QuickSL等附加组件，两侧环境相同、游戏模块匹配。未执行原生整场部署，也不是可见Steam性能数据。
+| 固定根 | 相同终局 | 展开：上游 → 候选 | 转移：上游 → 候选 | 单次搜索秒：上游 → 候选 |
+| --- | --- | --- | --- | --- |
+| Royalties 成长 | 胜利、收益1次/额度5、战损0、零药、第1回合 | 7572 → 11 | 20336 → 43 | 5.66 → 0.60 |
+| NotYet 回血哨兵 | 胜利、先回血再击杀、战损0、零药、第1回合 | 243 → 243 | 527 → 527 | 0.62 → 0.72 |
 
-完整本机证据在忽略目录 `.local/issue-bundles/028fcf779f434ecf90c8be2843eef2c9/`，包括原生恢复、两侧完整结果、政策、日志及 comparison-summary.json；ZIP和完整日志不进入源码提交。更新复测必须覆盖不可避免早期战损、速胜、未来治疗/生成治疗、Smart保药、强制用药与药水层切换、成长/遗物/偷窃目标、死亡保护、根/政策变更失效。比较同根同政策同预算的完整请求质量、展开/转移、耗时和分配，不只看选中成员。
+成长根：REGENT / FUZZY_WURM_CRAWLER_WEAK / GROWTHBUCKET20261004，飞升0、敌HP6、玩家75/75、能量3、原生遗物。清空牌组与牌堆，手牌永久Royalties、2张StrikeRegent、4张DefendRegent；抽牌堆5张StrikeRegent。测试设置 `{"growthBudgets":{"royalties":5}}`。Beam45、20000节点、20000ms。回血根使用 `coverage/fixtures/scenarios/state/not-yet-heal-resource-0170.json`，Beam20、12000节点、20000ms。完整命令与边界入口见[复跑说明](#reproduction)。
+
+耗时是单次离线观察，回血哨兵本次多0.10秒，不能称为所有场景提速。未执行原问题包恢复、完整原生自动部署、可见Steam性能、全部成长来源及正数药水档整场验证。本机产物保存在忽略目录 `.local/pr-validation/`。
