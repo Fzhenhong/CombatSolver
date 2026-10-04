@@ -1,105 +1,150 @@
 # CombatSolver 测试入口
 
-按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下记录保留取得证据时的源码和范围，不能视作本轮重新通过。
+按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。
 
-历史记录见 [归档索引](archive/testing/README.md)。
+历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
 
-## 倾泻与手空效果边界（2026-10-03）
+0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
-`CASCADE-EMPTY-HAND-NATIVE` 使用报告 d9c106 的倾泻前牌堆顺序及 Shuffle 完整内部状态，单独保留倾泻+和无尽陀螺；无需恢复原包中的重生个体及历史 Power 施加者。未改行为源码上的 `cc37414e00274b6baaf0d877a60e3ac9` 出现原生/模拟手牌偏差；选择痛击的 `e3bac4a083574686b1e9d018ccc23f80` 复现 `NativeChoicePlanMismatchException`，计划 BASH+1、原生仅 STRIKE_IRONCLAD。修复后 `53ba69afa54544f3a1322b42367d5e90` Passed：嵌套坚毅原生页面完成，完整 continuation（有序牌堆、逐实例状态、Power、怪物和九条 RNG）一致；完整动作回放与执行检查点恢复、完成后 Fork、live 不变对账通过。该场景不运行 Solve，不带增量搜索开关，不代表原包整场部署通过。
+## 0.49.1 内存提交回归（2026-10-04）
 
-复跑：`tools/run-unattended-test.ps1 -ScenarioId CASCADE-EMPTY-HAND-NATIVE -EnemyCurrentHp 1000 -HeadlessFastModeForTest Instant -DeploymentFastModeForTest Instant -DeploymentInterActionDelaySecondsForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Linux 入口使用同名 scenario 的 GNU 风格参数。详细基线和局限见 [报告记录](issues/axebot-reports-20261003.md)。
+`CombatSolver.GcPolicyChecks` 直接编译生产 Runtime 内存代码。`default-commit` 在未改生产代码时 Failed：显式回退后分配上限仍有效；修复后 2 项 Passed，覆盖普通检查点保留限额、不可分割提交完成回收后续行、后续请求重新建立限额与取消保持原准入。
 
-`EFFECT-SCOPE-ADJACENT-CONTRACT` 的 `260511f79ef34d9393ef2d5f6b07f672` Passed（37.4秒）。同请求完成无尽陀螺配合Havoc、普通牌、重放牌的三项原生完整状态/RNG差分和效果内普通 Fork 拒绝；五种嵌套执行续接（Havoc/Cascade/DrawPrefix/Repeat/Decisions）的重捕获、全候选、DOP2、原生状态；手动自身选牌的兄弟修改/取消/异常与原生差分；九种药水的原生完整 continuation 和正式候选续接合同。复跑使用相同参数，仅替换 ScenarioId。未运行完整 Solve 或整场自动部署。
+```bash
+dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- default-commit
+```
 
-## 巨斧机器人近期报告（2026-10-03）
+相邻真实 CLR 回归：`default-entry` 2 项、`recovery-lifecycle` 3 项 Passed，包含实际 NoGC 退出与恢复、显式退出持续生效及诊断失败清理。每项设有 15 或 20 秒截止时间。未重放 18 份原包整场，也没有可见 Steam 或低内存宿主性能结论；[排查记录](issues/0.49.0-memory-commit-regression-20261004.md)保留固定报告身份与触发窗口。
 
-当前主线 `7df1f048` / 0.48.0 上建立三项失败基线。最终通过五项原生完整状态/RNG差分及一项根/Fork合同：金纸+音乐盒在回合末生成虚无复制牌；压缩+两张间隔状态牌的燃料顺序；子弹时间后的 FOLLY 临时星能清理；原力+逐张变牌；SEANCE 抽牌堆选牌变换；金纸延迟计数在根、live推进、父子/兄弟、指纹和续用中的隔离。
+## PR #203 的机制合同
 
-| 场景 | 最终 runId | 范围 |
-|---|---|---|
-| AXEBOT-JOSS-FINAL | `26b7755643d241f091c62f57c9f75a3a` | 原生回合末完整状态/RNG |
-| AXEBOT-COMPACT-FINAL | `b45e21f166d042f1ae59079d001e375d` | 原生有序手牌/生成牌/状态/RNG |
-| AXEBOT-FOLLY-FINAL | `896d94be19b9473e988aa997fc30c2c7` | 原生回合末完整费用层/状态/RNG |
-| AXEBOT-TRANSFORM-FINAL | `8512e36aecd74d93a15f3adb34502190` | 原力与SEANCE两项原生完整差分 |
-| AXEBOT-JOSS-DEFERRED-FORK | `e7c0363924e74211b043ebfaca50ac0c` | 根冻结、live推进、指纹/续用、父子/兄弟及逐分支消费 |
+金币、最大生命回复与遗物间接回复的贡献者证据见 [专题记录](performance/gold-max-hp-healing-20261003.md)。独立场景为 `GOLD-HEALING-MECHANISMS`、`MAX-HP-HEALING-CALLBACKS`、`FEED-MAX-HP-CAP`、`RELIC-MAX-HP-HEALING-BOUNDS` 和 `AXEBOT-JOSS-DEFERRED-FORK`，均从平台原生无人入口运行，使用 IRONCLAD、FUZZY_WURM_CRAWLER_WEAK、120 秒上限及实例清理。原作者结果与本轮合并验证分别记账。
 
-复跑在仓库根目录使用 `tools/run-unattended-test.ps1`：前三项分别传 `coverage/unattended/axebot-joss-late-ethereal.json`（IRONCLAD）、`axebot-compact-order.json`（DEFECT）、`axebot-folly-star-cleanup.json`（SILENT）至 `-MonsterMoveChecksPath`；变牌哨兵使用 `axebot-transform-sentinel.json`（IRONCLAD）。均为 `-EncounterId MockMonsterEncounter -TimeoutSeconds 120 -ExitOnComplete -CleanupInstanceOnExit`。Fork 合同使用精确 `-ScenarioId AXEBOT-JOSS-DEFERRED-FORK -RelicsPath coverage/unattended/axebot-joss-deferred-relics.json`，其他参数相同。没有运行搜索，因此不带增量搜索开关。
+金币和回复合同同时传 `-EvidenceDirectory .local/validation/pr203/<场景>`（Bash：`--evidence-directory`），初始生命为 50/80。金纸合同还传 `-RelicsPath coverage/fixtures/regressions/axebot/axebot-joss-deferred-relics.json`（Bash：`--relics-path`）。搜索阶段顺序合同为 `KNOWN-HEALING-MEMBERS` 和 `KNOWN-HEALING-OPENING`，使用 SILENT；受影响的固定前缀合同使用 IRONCLAD，强制结束回合牌合同使用 REGENT。
 
-Release 编译零警告/错误，`REFACTOR_BOUNDARIES_OK search_files=246`。该战斗修复阶段的覆盖工具曾拒绝既有 `PassedWithDocumentedBoundaries` / `PassedWithDocumentedPerformanceRegression` 状态，临时补足解析后又遇 `InfusedCore` 重复构造；当时临时修改已撤回。后续覆盖工具修复结果见下节。完整问题包部署、全场零重算和性能未验证；首轮倾泻包中途缺历史 applier ID 1、原生录制恢复停在输入26，最小重建请求120秒超时，未扩大时间帽；后续单动作修复见上节。详细失败基线及材料边界见 [报告记录](issues/axebot-reports-20261003.md)。本轮创建的无头实例均按清理开关删除。
+## 当前矩阵命令
 
-## 文档维护验证（2026-10-03）
+矩阵启动器只读取本节的平台原生命令；历史记录不作为自动执行清单。以下两项分别检查倾泻手空边界与相邻效果作用域，不运行整场搜索。需要当前游戏及 RitsuLib 路径，矩阵启动器统一管理实例并在结束时清理。
 
-主线 419 份 Markdown、1573 个本地链接和锚点通过；多人分支 400 份、1545 个链接通过；独立日志服务 14 份、30 个链接通过。当前指南与活动记录的长度门槛通过。主线与多人分支 Release 构建均为零警告/错误，主线 Windows 结构门禁通过（246 个 Search 文件）。
+```powershell
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId CASCADE-EMPTY-HAND-NATIVE -EnemyCurrentHp 1000 -HeadlessFastModeForTest Instant -DeploymentFastModeForTest Instant -DeploymentInterActionDelaySecondsForTest 0 -TimeoutSeconds 120
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId EFFECT-SCOPE-ADJACENT-CONTRACT -EnemyCurrentHp 1000 -HeadlessFastModeForTest Instant -DeploymentFastModeForTest Instant -DeploymentInterActionDelaySecondsForTest 0 -TimeoutSeconds 120
+```
 
-两条分支 CoverageCatalog 实际生成，`--verify-state-fields --verify-branch-state-reads` 通过。主线仍有注能核心一个 active exact Hook 缺运行证据；多人分支该目录未报运行证据缺口。目录生成消费历史证据，本次没有运行原生战斗、性能或全量 verify，不扩大旧结果的适用范围。
-
-金币回调负基线 `88843d10d5b94471ad61d36d0efd20f4` 保持 Failed；合并后修复的独立原生证据见下节。
-
-## 0.48.0合入研究分支与前置计划搜索回归（2026-10-03）
-
-合入上游 `a789aad2`，Release构建及Bash结构门禁通过。五角色 `NATIVE-HEALING-ALL-ENCOUNTERS` 各一次 Passed，开局原生合同另一次 Passed。四根 VeryHigh/DOP16 完整筛查的根续用戳及目录指纹与原始基线一致；储君女王423.57秒未获胜，质量门槛拒绝，宿主Passed不等于质量通过。隔离单变量对照恢复300.61秒/67战损/0瓶完整胜利。
-
-最终修复候选恢复原认证根的提前计划资格，保留通用胜利界消费。`KNOWN-HEALING-OPENING` / `7241445571bb49179e4d56b071892aa6` 和储君 `NATIVE-HEALING-ALL-ENCOUNTERS` / `e15b0024740e403a922963721bf705f8` 严格原生合同 Passed；Bash/PowerShell门禁均 `search_files=246`。最终29根回归完成：26个原始获胜根均保留胜利、3个原始未获胜根保持未获胜，战损没有超过原始基线。受试体单次内存超限记录保留，最终ABBA对照提速3.06倍、峰值+6.95%、战损26→24；其原生全程部署等待第一张Automation后超时，未列为原生验收完成。猎手首领47/62战损波动另有四次对照记录，结果与限制见[合并检查](performance/upstream-0480-merge-check-20261003.md)。回复入口扫描工具构建及已知直接/间接来源清单断言通过，不替代原生语义差分；其余审计未完成项见[第一阶段来源审计](performance/native-health-source-audit-20261003.md)。
-
-## 金币、最大生命与 HP 回调（2026-10-03）
-
-合入 `56b6d6ee` 后，`GOLD-HEALING-MECHANISMS`、`MAX-HP-HEALING-CALLBACKS`、`FEED-MAX-HP-CAP` 分别以 `c68a0c923fa84f48b9f4ce1ee9f68831`、`1e611f0aa1624d908d7c4f07d893fde4`、`de2062aa4fc847f98b7293a8d848d22b` Passed。覆盖 24 项检查，包含完整状态/RNG、父子与 live 隔离、未知回调拒绝、金币修正、真实致命出牌/用药、最大生命封顶和 HP 阈值回调。Release 构建零警告/错误。具体原生前提、复跑方法、失败夹具记录与性能待验收项见[金币与最大生命回复链](performance/gold-max-hp-healing-20261003.md)。
-
-`RELIC-MAX-HP-HEALING-BOUNDS` 的 `35f61a69acf74cc3b6cc56f6e5269f8d` 原生回调负基线保持 Failed（已知界 0、实际回复 1）。修复后 `b16bb21caa4441bda3f931705fc0dddd` Passed：ChosenCheese / DarkstonePeriapt 的原生回调、完整状态/RNG、父分支/live 隔离及各自熔化排除，共四项。IRONCLAD、50/80、120 秒帽，不运行 Solve；不代表完整战斗结束派发或永久牌组变更已模拟。复跑使用同名 scenario 与上述初始生命参数，Linux/PowerShell 各自原生无人测试入口，必须带实例清理。
-
-固定 29 根 / `6f4d8f6e` 回归保留亡灵投影 10→17 战损的拒绝结果及储君首领 +40.04% 峰值样本。旧路线 88 前缀完整状态不变，金纸零待结算计数改变了指纹；候选修复保留零状态的原键并显式编码非零计数。`AXEBOT-JOSS-DEFERRED-FORK` / `6bf2b7299eae440ba42c87d18f27f290` Passed，覆盖原有非零父子计数和新增零计数区分、逐分支消费及隔离；参数沿用上方金纸夹具，120 秒帽、清理实例，不运行 Solve。最终无插桩交错对照四轮均为 10 战损/2 瓶/12 回合，峰值最大值增加 2.48%；只有该根进入修改的金纸分支，其余 28 根复用未受影响证据。储君首领兼容宿主交错对照峰值增加 1.48%，接口不兼容的失败对照不计入验收。完整来源、逐项结果与限制见[专题证据](performance/gold-max-hp-healing-20261003.md)。
-
-拟提交 DLL `89a8e2c2…` 的受试体无插桩串行交错四轮全部获胜；基线 146.40/153.18 秒、26 战损/0 瓶，候选 47.58/48.32 秒、24 战损/0 瓶。中位提速 3.12 倍，保守最慢候选仍为 3.03 倍；最大候选峰值/最小基线峰值增加 7.68%，离线门槛通过。完整根、牌序/RNG、配置、预算和目录一致；原生整场部署仍未完成，不扩大到其他慢根。
-
-[组件与间接回调审计](performance/native-healing-component-audit-20261003.md)追加当前 DLL 的44项具体效果和80项来源哈希，以及45项战斗结束、18类怪物直接造牌、62种直接施加Power的定位证据。没有新增运行时认证或原生合同；静态无生命路径不能判为安全。此批只做L0文档/数据口径检查，完整可达性、组件证书及认证开销仍未完成。
-
-[根覆盖诊断](performance/native-healing-root-coverage-20261003.json)使用已验证`89a8e2c2…`捕获29个原固定根，不执行Solve；全部根文本与既有回归一致，live不变。严格剩余环境资格6/29、已知来源策略29/29；先有的两个目标诊断直接复用。旧回归的主胜利界计数按E44原DLL来源复用，不能称为新证书或协调器总剪枝。隔离宿主首轮编译缺少Dispose入口、首轮CLI误用`--output`的失败均未启动搜索；修正仅在忽略目录的诊断代码。此时新组件尚未准入；后续新增组件合同、拒绝统计及独立认证开销见下条。
-
-`COMPONENT-HEALING-BOUND` / `7aad45400e0a4cbab3cf1c090805e494` 与 `COMPONENT-SMART-BOUND` / `1f1fe45db2ec480d98516b063f9a8a38` Passed：四项完整原生用药状态、再生叠加/禁药/额度、全部牌堆和永久牌组未知来源拒绝、父子/live/RNG；完整无药胜利及Smart精确层7次/开局后续2次实际剪枝、政策门禁、DOP2严格增量与协调器。120秒帽，实例删除；前置失败与未达两倍原型保留。源码相同的合同复用至拟提交DLL `f266bf00…`，两根最终ABBA完成，目标根中位67.48倍且质量一致/峰值−91.87%；完整29根固定回归完成，女王交错对照候选两次NoWin，质量阻断保留；受试体补充ABBA中位3.00倍/战损26→24/峰值+6.86%通过，原单次+10.76%样本保留，未称全回归通过。复跑和范围见[组合上界](performance/component-healing-bound-20261003.md)。
-
-`COMPONENT-FINAL-DEV10-FROZEN-DEPLOY` / `19c246e2aa6b401780644c1f498d10f8` 原生结果Passed，完整初始根与离线B1相等，14战损/0瓶/2回合、无意外重算；启动器清理退出码1，独立确认PID及私有实例不存在。隔离研究 `COMPONENT-SILENT-POTIONS` / `d99199c3d427412382a904ae17d31802` 的两项完整用药状态/Fork/双顺序差分Passed，但无插桩整请求初筛23.49秒未改善，原型未纳入生产版本。详见上方组合上界报告及JSON。
-
-女王追加组件合同 `81f5705b0d3c481e954b7f1a014ce638` Passed，但完整初筛298.77秒NoWin。隔离只读续接Fork的原生16线程合同 `654a913c7a7c48e9b94721bd868bbcb9`、搜索收尾 `ce76832c0c0a48aab8fe3a6440b87baf`、严格增量 `c97962ac8ab3488f95004f7558bd2153` 均Passed并清理实例；完整初筛女王294.85秒Win67/0/T12，未达两倍、未完成固定回归，未纳入生产源码。
-
-隔离普通/回合Fork合同 `60011a63755b40da868b8b09c3fdd444` Passed并清理实例：非空历史尾部封存、16线程完整状态/RNG、子修改和父/live隔离、原生出牌/抽牌、非严格/严格搜索收尾。完整请求初筛女王300.29秒Win67/0/T12、猎手精英24.27秒Win40/0/T4，均未达两倍；没有最终交错或完整固定回归，不纳入生产源码。
-
-隔离变量表复制合同 `691669b8c7c844d4aed28279c79f7f08` 及具体对象许可合同 `9d30b70de8034ef487d335be285f1a30` Passed并清理实例，覆盖原生模型/变量状态、0/1/2/4/9变量、拥有者、并发克隆、元数据、未知补丁/字段桥回退及live/RNG。完整请求A/B/对象许可初筛23.62/23.44/23.61秒，工作数、Win40/0/T4相同，无实质收益且未达原始两倍；无最终交错或完整回归，未纳入生产源码。
-
-隔离跨成员转移诊断三次结果保留。最终同前缀哈希/动作数/历史长度分组124617次跨成员重复，无记录标签差异；宽松分组326次历史差异。只统计机会，未验证完整状态复用或性能。储君首领六项新类型和四项同DLL复用来源的源码审查已完成，后续隔离组合资格、原生/Fork合同及性能初筛见下一条；见上述回复上界与组件审计报告。
-
-储君首领组件研究：`COMPONENT-REGENT-BOSS` / `642030889ba7496f9ddfb01e2bd90b69`，30.21秒Passed，原生初始/生成来源、两药水、遗物回调、Frantic及流沙强制死亡、完整状态/Fork/父/live/RNG；通知研究：`HYBRID-MAILBOX-CONTRACT` / `8e59254a56f04f9c872d9d3ad0b56ef8`，60.08秒Passed，串行/并行、严格增量、DOP2/16取消/异常与部分工作排空。实例均删除。各自无插桩完整初筛16.76/22.01秒未达原始2倍，通知单次峰值相对f266增加75.55%；未纳入生产，未做最终交错/全固定回归/目标整场，见[报告](performance/component-healing-bound-20261003.md)。
-
-分配研究：`ALLOCATION-LAYOUT-CONTRACT` / `9bf3158cf4d24fbfad0be546d27f1827`，34.77秒Passed，原始怪物指纹排序、键新增/值覆盖、不可变键表Fork、完整父/live/RNG、63监听方法组/1672模型、串行/并行及严格增量。初次`00640b97736c47c38801e82e8f34ce49`因旧GoldCallbacks断言Failed，方法组修正仅在隔离夹具，两个实例均删除。女王无插桩完整初筛295.85秒NoWin、原始1.05倍，未纳入生产或继续交错/回归/目标整场，见[报告](performance/component-healing-bound-20261003.md)。
+```bash
+./tools/testing/run-unattended-test.sh --scenario-id CASCADE-EMPTY-HAND-NATIVE --enemy-current-hp 1000 --headless-fast-mode-for-test Instant --deployment-fast-mode-for-test Instant --deployment-inter-action-delay-seconds-for-test 0 --timeout-seconds 120
+./tools/testing/run-unattended-test.sh --scenario-id EFFECT-SCOPE-ADJACENT-CONTRACT --enemy-current-hp 1000 --headless-fast-mode-for-test Instant --deployment-fast-mode-for-test Instant --deployment-inter-action-delay-seconds-for-test 0 --timeout-seconds 120
+```
 
 
-亡灵首领：`COMPONENT-NECRO-BOSS` / `c8a5cb87dfca4d52ab527d77f496a877`，29.18秒Passed，NECROBINDER/THE_INSATIABLE_BOSS/9999生命，种子`COMPONENT_NECRO_BOSS_20261004`、120秒帽/清理实例；仅最小差分，不运行Solve。两药水、临时力量、八次出牌/召唤/变牌重放/遗物、首领状态生成与玩家/Osty强制死亡，完整状态/Fork/父/live/RNG；首次药水错误目标、第二次主选择SourceId错误的Failed分别保留。完整请求初筛42.37秒未达2倍，未纳入生产，见[报告](performance/component-healing-bound-20261003.md)。
+## 0.48.0 硬错误机制合同
 
-提前完整胜利见证研究：`EARLY-HP-BOUND` / `b6d8528c2acb4fc396cc058c3ecf7feb`，27.79秒Passed，IRONCLAD/NIBBITS_WEAK/999生命、种子`EARLY_HP_BOUND_20261004`、120秒帽/实例删除。覆盖原生Offering、严格DOP1/DOP16完整搜索、真实胜利保留/1次更新/4次剪枝、同战损保留、未知Feed消耗来源、禁药已有再生及政策门禁/父/live/Fork/RNG。DLL`6aad0784…`完整亡灵首领初筛40.96秒未达2倍，未纳入生产或追加交错/全固定回归/目标整场；详见[报告](performance/component-healing-bound-20261003.md)。
+这些场景各自停止在共享首因或必要跨回合边界。完整runId、失败基线和未验证项见[历史卷13](archive/testing/volume-13.md)，逐包分类见[问题记录](issues/0.48.0-hardbugs-20261003.md)。
 
-Smart跨搜索见证研究：`SMART-OPENING-WITNESS` / `1336ac4aa23f4274be8a832dd37ac99e`，27.44秒Passed，IRONCLAD/NIBBITS_WEAK/999生命、种子`SMART_OPENING_WITNESS_20261004`。直接搜索显式Beam24/1200节点/10000毫秒、无药控制1节点，DOP1/DOP16严格差分、实际未获胜基线/完整一瓶胜利、2次剪枝、政策门禁与原生CureAll完整状态/Fork/父/live/RNG；35秒取消、120秒启动器帽/实例删除。此前两次夹具未传`searchProfile`而Failed并清理，旧EARLY-HP-BOUND实际Default配置同步澄清，不重跑成功证据。完整初筛42.86秒未达2倍，未纳入运行时或部署，见[报告](performance/component-healing-bound-20261003.md)。
+```powershell
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId NATIVE-CHOOSE-OPEN-GATE -CharacterId SILENT -EncounterId CHOMPERS_NORMAL -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId CALCULATED-GAMBLE-ORDERED-DISCARD -CharacterId SILENT -EncounterId CHOMPERS_NORMAL -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId FROZEN-LIGHTNING-CHANNELS -CharacterId DEFECT -EncounterId MECHA_KNIGHT_ELITE -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId REPORT-ROUND-IMBALANCED -CharacterId NECROBINDER -EncounterId BOWLBUGS_NORMAL -InitialPlayerHp 200 -InitialPlayerMaxHp 200 -ClearPlayerHand -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId SECOND-WIND-REPORT-ROOT -CharacterId IRONCLAD -EncounterId DECIMILLIPEDE_ELITE -InitialRoundNumber 3 -InitialPlayerTurnNumber 3 -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId GROUP-DEBUFF-REACTIVE-DRAW -CharacterId NECROBINDER -EncounterId CHOMPERS_NORMAL -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId CONSTRUCT-REAPER-ARTIFACT -CharacterId NECROBINDER -EncounterId CONSTRUCT_MENAGERIE_NORMAL -InitialRoundNumber 3 -InitialPlayerTurnNumber 3 -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId FIXED-PREFIX-POTION-POLICY -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId FIXED-PREFIX-TURN-OUTCOMES -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId MIRRORED-HOOK-FILTER -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId FROZEN-ROOT-LISTENERS -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId CALCULATED-HISTORY-FREEZE -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId VOID-FORM-TURN-CHOICES -CharacterId REGENT -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId FLATTEN-MUSIC-BOX-ENTRY -CharacterId NECROBINDER -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId SEEKER-ORDERED-OPTIONS -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId RITUAL-TEMPORARY-STRENGTH -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId NOXIOUS-RAMPART-ORDER -CharacterId IRONCLAD -EncounterId TURRET_OPERATOR_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId EVIL-EYE-EXHAUST-HISTORY -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId BLOCK-SPEC-CARD-PLAY-IDENTITY -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId ROUTE-ADOPTION-LIFETIME -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId PAELS-LEGION-FINISHED-REFERENCE -CharacterId SILENT -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId END-TURN-RISK-LOSS-ACCOUNTING -CharacterId DEFECT -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId MAKE-IT-SO-FULL-HAND -CharacterId REGENT -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId CARD-COST-IDENTITY-CONTRACT -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId DAMPEN-REACTIVE-ROCKET-PUNCH -CharacterId DEFECT -EncounterId KNIGHTS_ELITE -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId DAMPEN-REACTIVE-MELANCHOLY -CharacterId NECROBINDER -EncounterId KNIGHTS_ELITE -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools\testing\run-unattended-test.ps1 -ScenarioId RADIANT-PEARL-ENTRY -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
+```
 
-女王前置调度研究：`QUEEN-OPENING-SCHEDULE` / `959cc284419f453eba8a119d10fb2752`，43.25秒Passed，REGENT/QUEEN_BOSS、种子`QUEEN_OPENING_SCHEDULE_20261004`，Coordinator显式Beam12/2000节点/20000毫秒、DOP1关闭新门与DOP16开启、严格增量0新增战损/0瓶，前置/计划各一次与首成员见证、SpectrumShift原生完整状态/Fork/父/live/RNG。35秒取消、120秒启动器帽/实例删除。另一次无Solve诊断确认实际冻结女王根严格证书成立；无插桩完整请求405.60秒NoWin，未达质量和速度门槛，未纳入生产，见[报告](performance/component-healing-bound-20261003.md)。
+```bash
+./tools/testing/run-unattended-test.sh --scenario-id NATIVE-CHOOSE-OPEN-GATE --character-id SILENT --encounter-id CHOMPERS_NORMAL --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id CALCULATED-GAMBLE-ORDERED-DISCARD --character-id SILENT --encounter-id CHOMPERS_NORMAL --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id FROZEN-LIGHTNING-CHANNELS --character-id DEFECT --encounter-id MECHA_KNIGHT_ELITE --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id REPORT-ROUND-IMBALANCED --character-id NECROBINDER --encounter-id BOWLBUGS_NORMAL --initial-player-hp 200 --initial-player-max-hp 200 --clear-player-hand --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id SECOND-WIND-REPORT-ROOT --character-id IRONCLAD --encounter-id DECIMILLIPEDE_ELITE --initial-round-number 3 --initial-player-turn-number 3 --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id GROUP-DEBUFF-REACTIVE-DRAW --character-id NECROBINDER --encounter-id CHOMPERS_NORMAL --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id CONSTRUCT-REAPER-ARTIFACT --character-id NECROBINDER --encounter-id CONSTRUCT_MENAGERIE_NORMAL --initial-round-number 3 --initial-player-turn-number 3 --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id FIXED-PREFIX-POTION-POLICY --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id FIXED-PREFIX-TURN-OUTCOMES --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id MIRRORED-HOOK-FILTER --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id FROZEN-ROOT-LISTENERS --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id CALCULATED-HISTORY-FREEZE --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id VOID-FORM-TURN-CHOICES --character-id REGENT --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id FLATTEN-MUSIC-BOX-ENTRY --character-id NECROBINDER --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id SEEKER-ORDERED-OPTIONS --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id RITUAL-TEMPORARY-STRENGTH --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id NOXIOUS-RAMPART-ORDER --character-id IRONCLAD --encounter-id TURRET_OPERATOR_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id EVIL-EYE-EXHAUST-HISTORY --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id BLOCK-SPEC-CARD-PLAY-IDENTITY --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id ROUTE-ADOPTION-LIFETIME --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id PAELS-LEGION-FINISHED-REFERENCE --character-id SILENT --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id END-TURN-RISK-LOSS-ACCOUNTING --character-id DEFECT --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id MAKE-IT-SO-FULL-HAND --character-id REGENT --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id CARD-COST-IDENTITY-CONTRACT --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id DAMPEN-REACTIVE-ROCKET-PUNCH --character-id DEFECT --encounter-id KNIGHTS_ELITE --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id DAMPEN-REACTIVE-MELANCHOLY --character-id NECROBINDER --encounter-id KNIGHTS_ELITE --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+./tools/testing/run-unattended-test.sh --scenario-id RADIANT-PEARL-ENTRY --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit
+```
 
-猎手跨计划见证：`SILENT-EARLY-HP` / `4fc9d3a11a1348dcb0069f4871171533`，28.94秒Passed，SILENT/NIBBITS_WEAK、种子`SILENT_EARLY_HP_20261004`、敌血999且夹具降至6、玩家60/70；直接搜索显式Beam24/1200节点/10000毫秒，Coordinator20000毫秒及宽度12/8，共享30秒取消/启动器120秒/实例删除。严格DOP1关闭新界对DOP16真实无药胜利标量、31次实际剪枝、Coordinator计划传递1次、两药水顺序/完整原生状态/Fork/父/live/RNG。首次updates1/pruned0的Failed与未执行v2分开保留。完整初筛20.22秒、原始1.837倍，未纳入生产或继续此版交错/全回归/目标整场；见[报告](performance/component-healing-bound-20261003.md)。
+## 社区批次 B013 回归夹具（2026-10-03，Refs #172）
 
-猎手成员见证：`SILENT-EARLY-HP` / `35d32dea0b714e2182b8e118cfa6aa50`，30.99秒Passed，同SILENT/NIBBITS_WEAK/种子与固定小预算，共享30秒取消/启动器120秒，实例删除。Mayhem促使实际能力成员执行，严格DOP1/DOP16真实见证、29次剪枝、Coordinator计划/能力传递3/8次，药水顺序/完整原生状态/Fork/父/live/RNG通过。完整初筛20.04秒、原始1.853倍，工作数与前原型完全相同，未纳入生产或继续交错/完整回归/冻结整场，见[报告](performance/component-healing-bound-20261003.md)。
+以下为贡献者在 PR #204 记录的结果，与本轮验证分别记账。五个主题的独立机制回归在 `src/Testing/Regressions/Community/B013*Checks.cs`，命令统一为
+`tools/testing/run-unattended-test.ps1 -ScenarioId <ID> -TimeoutSeconds 120 -CleanupInstanceOnExit`（角色/遭遇按夹具要求，详见 PR #204）：
 
-快照填充：DLL`72376d66…`，`SILENT-EARLY-HP` / `78168715494e435fa9e3cd13c0908902`，30.09秒Passed，SILENT/NIBBITS_WEAK及既有固定种子、小预算/30秒取消/120秒启动器帽/实例删除。非空四牌堆、DOP1旧填充对DOP16新填充严格差分、35次剪枝、原生两药水顺序/完整状态/Fork/父/live/RNG。完整初筛22.48秒未达2倍，不纳入生产。另硬件CPU诊断25466样本/丢失0与状态诊断2011次跨成员记录无差异均单独保留；后者非原生缓存合同，插桩改变工作，尚需纯度/完整状态与Fork证明，见[报告](performance/component-healing-bound-20261003.md)。
+- `B013-BLOCK-DECIMAL-BOUNDARY`（T010，格挡乘法 Decimal 边界）：修改前 `dec22b8f` Failed（栈同报告）→ 修改后 `e2757311`/`a23dcf21` Passed；代表包 DOP1 哨兵路线与展开/转移一致。
+- `B013-FIXED-PREFIX-TERMINAL-BOUNDARY`（T008，固定前缀越过锁定终局）：`971ccdd1` Failed → `0b3f96a6` Passed；代表包哨兵 22809/129762、终局一致。
+- `B013-FIXED-PREFIX-TURN-END-CARD`（T007，结束回合卡固定前缀）：`eb64242d` Failed → `899ef881` Passed。
+- `B013-RADIANT-PEARL-HAND-DRAW`（T006，抽牌前遗物生成对账）：`cd227ff6` Failed → `15c80923` Passed；代表包 SearchOnly 失配 → `TURN_SETUP_STATE_MATCH`。
+- `B013-DEFAULT-GC-LIMIT`（T009，默认 GC 请求分配边界）：`6ac0f466` Failed（`limit=long.MaxValue`）→ `7c6f3b83` Passed。
+
+变基到 0.48.1（`2ead87d9`）后五夹具复跑 Passed：`0f19174f` / `57e2086d` / `9d7173af` / `3892e307` / `fdfc8734`。代表包哨兵在新基线：T010 DOP1 与旧基线逐字段一致（展开 7426、转移 77129、4 回合胜、finalHp 71），耗时 3458.9ms；T009/T006 代表包 7 回合胜、finalHp 88、boundary None（展开 26194、转移 190351，路线随上游搜索改动微调）。
+
+完整修改前后、哨兵与未验证项见 PR #204；批次状态与剩余项（T007 第二样本未复现）同样记录在该 PR。
+
+## PR #203、#204 合并验收（2026-10-04）
+
+以下为本轮直接运行结果；全部使用120秒上限和实例清理，已通过的请求未重复运行。无头验证停在对应机制边界。
+
+| 场景 | runId | 结果与范围 |
+| --- | --- | --- |
+| `GOLD-HEALING-MECHANISMS` | `3bc7928290c343cca88248c0c28dd95e` | Passed；金币修正、三个回调、完整原生状态/RNG和父分支隔离 |
+| `MAX-HP-HEALING-CALLBACKS` | `cd6549478924451882fc600e67724a53` | Passed；最大生命实际增量、封顶与回复回调的原生差分 |
+| `FEED-MAX-HP-CAP` | `ddcf661e391c4013a0aa87861f8542f3` | Passed；两次致命出牌的实际增量与成长计数 |
+| `RELIC-MAX-HP-HEALING-BOUNDS` | `bee94b31824d449e8f7e9fa55cbe94f5` | Passed；两项直接原生遗物回调与熔化来源排除 |
+| `AXEBOT-JOSS-DEFERRED-FORK` | `0fd9902a8a594e36a0a9fbf533ceee65` | Passed；根计数、零状态指纹、父子/兄弟Fork与逐分支消费 |
+| `KNOWN-HEALING-MEMBERS` | `fab7a8170a3942e9920e09fa466aa34e` | Passed；严格增量、DOP2、控制质量、成长门与live隔离 |
+| `B013-FIXED-PREFIX-TERMINAL-BOUNDARY` | `5b097fd5f17745a0868a6b49d7af3b37` | Passed；终局前缀截断与可交付胜利 |
+| `B013-FIXED-PREFIX-TURN-END-CARD` | `c778f285a52a4b9fbbe0e370688e6ec1` | Passed；强制结束回合卡的固定前缀推进 |
+| `B013-RADIANT-PEARL-HAND-DRAW` | `ca904a20eafd43b690d8c824f60e2069` | Passed；抽牌前生成的原生数量、升级与归属对账 |
+| `B013-DEFAULT-GC-LIMIT` | `3e440c65f9564b5ea6a65d094521b8d7` | Passed；限额、真实Gen2回收续搜、退出清理与CLR模式 |
+| `KNOWN-HEALING-OPENING` | `3fecd35f80a34cb792a43ca3b5bc3b1c` | Passed；非认证根延后计划、单次执行与控制质量 |
+| `FIXED-PREFIX-TURN-OUTCOMES` | `b18d23d1829b4438a557a5f75acf6425` | Passed；独立前缀完整状态oracle、多回合结果与终局截断 |
+| `B013-BLOCK-DECIMAL-BOUNDARY` | `b556026e627c4153bb3d2bf23948a095` | Passed；原生虚弱倍率、完整状态/RNG；模拟96/95/200层与零格挡 |
+
+真实CLR工具：`default-entry` 2项、`diagnostic-failure` 8项、`scopes` 8项 Passed。入口失败基线为日志抛错后信号仍启用；修复后同异常传播、信号清理及后续独占准入均通过。
+
+失败记录：首次无头启动在私有进程身份检查处失败并清理，未进入游戏测试，原因未确定；金币首轮14项对账已通过，但缺EvidenceDirectory导致产物写入失败；金纸首轮缺遗物输入。补齐请求参数后仅重跑失败请求，成功记录在上表。固定前缀09f94286012d420d81242f480ebd1803仍执行旧的终局拒绝断言，合同更新为开局探测和完整搜索共同截断，并断言终局动作数及回合。新增格挡夹具初次编译因原生调用参数及私有setter失败，修正后Release零警告/错误。
+
+L0：原生回复审计工具迁入tools/inspection后构建和真实DLL扫描通过。CoverageCatalog重新生成3035项目录，状态字段未分类为0；`--verify-state-writes`仍因既有InfusedCore.AfterSideTurnStart缺运行证据失败（1项）。PowerShell结构检查247文件通过，工具检查290文件/37项目通过，文档427文件/1635链接及覆盖目录检查通过。额外Bash结构检查因运行耗时停止，未完成；两平台脚本静态语法检查通过。
+
+范围：本轮没有重跑作者长预算全根性能筛查，没有验证低内存玩家宿主、原生整场部署或可见Steam性能；原作者失败与未验证项保留在所属报告。
 
 
-读取纯度：`TRANSITION-CAPTURE-PURITY` / `ab368a6c0cea437ca416f2b96c644398`，DLL`cfdb2689…`、27.33秒Passed，SILENT/NIBBITS_WEAK/999生命、种子`TRANSITION_CAPTURE_PURITY_20261004`。非空四牌堆、重复完整状态/history/快照捕获对未读取未来动作、16份串行Fork后并行读取/HP修改、三项原生动作/父/live/RNG。原生20秒取消/启动器120秒/实例删除；未运行Coordinator或性能。
+## 性能研究分支验收记录（2026-10-04）
 
-释放态转移缓存：`TRANSITION-DONATION-MEMO` / `08730d3bad504b0f8083496fc4a5986e`，DLL`8191ade5…`、27.37秒Passed，同SILENT/NIBBITS_WEAK/999生命，种子`TRANSITION_DONATION_MEMO_20261004`。三次miss/51次实际hit、16路独立HP修改/完整history及快照、两槽FIFO/根/setup/政策/取消/Dispose隔离、三项原生状态。接线版DLL`ee447e01…`、run`5285e6187c8948cbba341dbfc6bb6ad7`、31.44秒Passed；增加真实Coordinator显式Beam24/1200节点/10000毫秒、20000毫秒宽12/8，DOP16严格增量1899hit、3/8计划/能力传递、32剪枝、完整无药胜利和两原生药水/父/live/RNG。共享搜索30秒取消/原生20秒/启动器120秒，实例均删除；准备与构建失败单独保留。无插桩完整请求22.99秒未达两倍；诊断命中率与时间不计性能验收。未纳入生产或部署，全部来源闭包/字节界/交错/全回归未验证，见[报告](performance/component-healing-bound-20261003.md)。
-
-
-EndTurn复用三项最小合同：`ROUND-DONATION-MEMO`/`a44b0ff7cc3f438490b0cd3f3e7d6262`、`ROUND-CAPTURE-DONATION-MEMO`/`e11c31daf629480ba8f489b674107cfe`、`ROUND-HISTORY-DONATION-MEMO`/`f55af80fdb6649aeaaf36eb799728f5b`，33.56/33.12/35.31秒Passed，SILENT/NIBBITS_WEAK、敌血999、各固定种子；直接搜索Beam24/1200节点/10000毫秒、Coordinator20000毫秒/宽12和8、DOP16严格，搜索30秒/原生20秒取消、启动器120秒、私有实例全部删除。前两项34directhit/两项原生EndTurn，末项85hit/五项原生EndTurn/history83；Mayhem自动牌/洗牌/敌方/RNG、完整history及快照、16路独立改血Fork/父live、保留容量及政策边界，真实Coordinator1079/1132/1204hit和完整无药胜利/两原生药水通过。长历史首版`6a5f5e9870e54d85877b40822bb340bf`恰好64条、覆盖断言Failed且清理，未算新范围通过。三版无插桩完整请求22.89/21.62/21.09秒均未达两倍；独立诊断与构键计时不计性能，未知确定性/所有权/字节界和最终回归未验证，不纳入生产，见[报告](performance/component-healing-bound-20261003.md)。
-
-
-FIFO EndTurn：DLL`acd543c1…`、`ROUND-FIFO-DONATION-MEMO`/`cf35dfddee9d4a7d82cb7d657895b3c4`、34.60秒Passed，SILENT/NIBBITS_WEAK/敌血999/种子`ROUND_FIFO_DONATION_MEMO_20261004`；直接Beam24/1200节点/10000毫秒，Coordinator20000毫秒/宽12和8，严格DOP16，搜索30秒/原生20秒取消、启动器120秒/实例删除。五项真实EndTurn/history81、85hit/16改血Fork/父liveRNG、最老FIFO淘汰及重算miss完整状态、777实际Coordinator命中/3计划8能力见证/35剪枝、两原生药水保持；完整请求21.15秒未达2倍，诊断不计验收，未纳入生产。另45个AfterCombatEnd正文及11依赖仅静态来源/通知链阅读，不计为原生差分、组件认证或速度通过，见[报告](performance/component-healing-bound-20261003.md)。
-
-
-女王历史路线诊断：专用`recorded-route-probe-host` v2构建2.58秒0警告/错误；原始A1的85项结构化route/evidence从原DLL及f266完整根重放，两次进程退出0，root与历史匹配、Win67/0瓶/13回合、玩家13/80、父/live不变，最终continuation和公开快照属性无差异。原档比较回合12差异保留；首宿主在根前缺旧DLL setter退出1，不是路线失效。只调用Replay，不调用Solve、不注入正常incumbent；不是原生游戏差分或性能/质量回归验收，见[报告](performance/component-healing-bound-20261003.md)。
-
-
-重场景组合隔离合同：引用索引 `0be04b532fdb4e788922ed4448498870`、稀疏派发 `e535ce52b11746c48101aeafe1b8673e`、局部上界融合 `cf341fdaa0fe4f58bc7a2278f0b87509`、连续引用查询 `bc7180ceba514cc58e1fc7c2a0e56d4c`、晚回合界 `ce571546bf1c4813a0e7493abaa2ecfa`、最早回合界 `dfb110e10f13446d9c3e185978004538` 均Passed。SILENT/NIBBITS_WEAK固定种子/敌血999，直接Beam24/1200节点/10000毫秒、Coordinator20000毫秒/宽12和8、严格DOP1/16、搜索30秒取消/启动器120秒/私有实例清理；涉及实际原生状态、父/live/RNG和独占Fork。回合界补充Defend＋EndTurn及Poison未知拒绝，首夹具旧动作缓存失败保留。ReadyToRun单列同合同通过；所有初筛未达整请求2倍，完整回调证明及最终回归未完成，无生产推广。详细逐项输入、DLL/证据及限制见[组合研究](performance/heavy-scene-compositions-20261004.md)。
+组件回复界及 Smart 原生合同通过，固定29根回归仍保留女王质量阻断；用户暂停丢路调查，未称全回归通过。完整实测、所有失败及未验证项见[组合上界](performance/component-healing-bound-20261003.md)、[原生组件审计](performance/native-healing-component-audit-20261003.md)和[组合研究](performance/heavy-scene-compositions-20261004.md)。合并前各合同、runId、平台清理与初筛范围完整保留于[固定提交的测试记录](https://github.com/ltlly/CombatSolver/blob/1bea4f8a/docs/TEST_MATRIX.md)。

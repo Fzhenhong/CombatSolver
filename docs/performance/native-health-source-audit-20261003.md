@@ -6,7 +6,7 @@
 
 - 游戏 `v0.111.0`，提交 `41cef1ea`，安装目录 `data_sts2_linuxbsd_x86_64/sts2.dll`。
 - DLL SHA-256：`2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f`；MVID：`8a76776c-0ce1-4d4f-90bd-8cce653dad8e`。
-- 工具 [HealingSourceAudit](../../tools/HealingSourceAudit/README.md) 读取 IL 元数据，不执行游戏代码。扫描 9,760 个含嵌套类型、51,602 个方法，其中 50,816 个有方法体；保存 339,688 条静态方法/委托引用和 2,657 条异步方法映射。
+- 工具 [HealingSourceAudit](../../tools/inspection/HealingSourceAudit/README.md) 读取 IL 元数据，不执行游戏代码。扫描 9,760 个含嵌套类型、51,602 个方法，其中 50,816 个有方法体；保存 339,688 条静态方法/委托引用和 2,657 条异步方法映射。
 - 11 个生命命令/内部入口有 103 条直接引用、75 个来源类型；两项生命私有字段有 8 条写入，全部位于 `Creature`，没有取址指令。另保存 312 个选定回复回调定义、8,340 个模型虚方法和301条 Hook 调用引用。后两项覆盖金币、永久牌组、召唤及侧回合等间接入口，数量是调查覆盖率，不能当作语义认证率。
 - 原始 IL 清单、114 次原生类型提取和提取文件哈希保存在忽略目录 `.local/general-healing-audit/`；提交的 JSON 保留直接入口引用及提取来源元数据，不提交游戏源码。
 - 既有 [C58 语义审计](regent-potion-cap-bound-semantic-audit-20261003.json) 使用相同 DLL 哈希，其八个规范池、545 张可生成卡、178 种 Power 的结论仅在原来单人、原生池、解锁与扩展限制成立时复用。它不是全部原版内容或所有回调的认证。

@@ -121,6 +121,9 @@ internal sealed partial class SimulatedCombatState
         int amount,
         Creature? applier);
 
+    private delegate void ApplyClonedPowerDelegate(SimulatedCombatState combat, PowerModel prototype,
+        Creature target, int amount, Creature? applier);
+
     private delegate void ApplyTemporaryStrengthLossDelegate(
         SimulatedCombatState combat,
         Creature target,
@@ -137,6 +140,9 @@ internal sealed partial class SimulatedCombatState
         .GetMethods(BindingFlags.Instance | BindingFlags.Public)
         .Single(method => method.Name == nameof(Apply) && method.IsGenericMethodDefinition);
     private static readonly ConcurrentDictionary<Type, ApplyPowerDelegate> ApplyPowerDelegates = new();
+    private static readonly MethodInfo GenericApplyClonedPowerMethod = typeof(SimulatedCombatState)
+        .GetMethod(nameof(ApplyClonedPowerCore), BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly ConcurrentDictionary<Type, ApplyClonedPowerDelegate> ApplyClonedPowerDelegates = new();
     private static readonly MethodInfo GenericTemporaryStrengthLossMethod = typeof(SimulatedCombatState)
         .GetMethods(BindingFlags.Instance | BindingFlags.Public)
         .Single(method => method.Name == nameof(ApplyTemporaryStrengthLoss)
@@ -647,12 +653,12 @@ internal sealed partial class SimulatedCombatState
         => ApplyWithBeforeApplied<T>(target, amount, applier, null);
 
     private int ApplyWithBeforeApplied<T>(Creature target, int amount, Creature? applier, Action<int>? beforeApplied,
-        Action<int, PowerModel>? afterAmountChanged = null)
+        Action<int, PowerModel>? afterAmountChanged = null, T? prototype = null)
         where T : PowerModel
     {
         if (amount == 0 || !CanReceivePredictedPowers(target))
             return 0;
-        T incoming = CreatePowerForApplication<T>(target, null, applier);
+        T incoming = CreatePowerForApplication<T>(target, prototype?.Target, applier, prototype);
         amount = ModifyPowerAmountForRelics(incoming, target, amount, applier);
         if (incoming.GetTypeForAmount(amount) == MegaCrit.Sts2.Core.Entities.Powers.PowerType.Debuff
             && ConsumeArtifact(target))
@@ -716,6 +722,17 @@ internal sealed partial class SimulatedCombatState
             GenericApplyMethod.MakeGenericMethod(type).CreateDelegate<ApplyPowerDelegate>());
         apply(this, target, amount, applier);
     }
+
+    internal void ApplyClonedPower(PowerModel prototype, Creature target, int amount, Creature? applier)
+    {
+        ApplyClonedPowerDelegate apply = ApplyClonedPowerDelegates.GetOrAdd(prototype.GetType(), static type =>
+            GenericApplyClonedPowerMethod.MakeGenericMethod(type).CreateDelegate<ApplyClonedPowerDelegate>());
+        apply(this, prototype, target, amount, applier);
+    }
+
+    private void ApplyClonedPowerCore<T>(PowerModel prototype, Creature target, int amount, Creature? applier)
+        where T : PowerModel
+        => ApplyWithBeforeApplied(target, amount, applier, null, prototype: (T)prototype);
 
     public void ApplyPowerSkippingNextDurationTick(
         Type powerType,
@@ -960,10 +977,10 @@ internal sealed partial class SimulatedCombatState
     public void ResetTenderCardsPlayed(Creature owner)
         => (_tenderCardsPlayed ??= [])[owner] = 0;
 
-    private T CreatePowerForApplication<T>(Creature owner, Creature? target, Creature? applier)
+    private T CreatePowerForApplication<T>(Creature owner, Creature? target, Creature? applier, T? prototype = null)
         where T : PowerModel
     {
-        T incoming = PredictionUtils.CloneModelForSimulation(CanonicalModels.Power<T>());
+        T incoming = PredictionUtils.CloneModelForSimulation(prototype ?? CanonicalModels.Power<T>());
         incoming._owner = owner;
         incoming._applier = applier;
         incoming._target = target;
@@ -1927,9 +1944,11 @@ internal sealed partial class SimulatedCombatState
             List<CardModel>? cardAttachedListenerOwners =
                 _modHookSubscribers.HasBaseLibCardModifiers
                     ? new(_registeredCombatCards.Count) : null;
-            for (int cardIndex = 0; cardIndex < _registeredCombatCards.Count; cardIndex++)
+            // Native card listeners follow Hand, Draw, Discard, Exhaust and Play pile order.
+            // Registration order identifies combat cards; moves change listener order.
+            for (int playerIndex = 0; playerIndex < players.Count; playerIndex++)
+            foreach (PredictedCard card in predictionState.GetPlayerCombatState(players[playerIndex]).AllCards)
             {
-                PredictedCard card = _registeredCombatCards[cardIndex];
                 if (card.Preview.HasBeenRemovedFromState)
                     continue;
                 CardModel preview = card.Preview;

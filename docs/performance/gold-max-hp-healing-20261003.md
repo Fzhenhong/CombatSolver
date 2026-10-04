@@ -34,7 +34,7 @@ DragonFruit 缺席或熔化只能证明这一机制贡献为 0，不能证明其
 
 三个请求均 Passed，覆盖完整状态/RNG、父分支/Fork 与 live 隔离；未知入口检查不执行回调。Linux 自有无头实例、IRONCLAD、初始 50/80、120 秒帽，均按清理开关删除。没有运行 Solve，因此不带增量搜索插桩。
 
-复跑用 `tools/run-unattended-test.sh --scenario-id <表中 scenario> --character-id IRONCLAD --initial-player-hp 50 --initial-player-max-hp 80 --timeout-seconds 120 --exit-on-complete --cleanup-instance-on-exit`，具体种子和请求见结构化证据指向的本地原始材料。Release 构建零警告/错误，13.46 秒。
+复跑用 `tools/testing/run-unattended-test.sh --scenario-id <表中 scenario> --character-id IRONCLAD --initial-player-hp 50 --initial-player-max-hp 80 --timeout-seconds 120 --exit-on-complete --cleanup-instance-on-exit`，具体种子和请求见结构化证据指向的本地原始材料。Release 构建零警告/错误，13.46 秒。
 
 开发中的夹具失败与修正独立保留：10 项基础金币差分已通过后，原生熔化要求蜡制；随后修正 canonical 测试模型构造；未知 override 被通用 registry 归为 Ignored 的实质缺口改为显式拒绝。旧 Failed 请求没有改写为 Passed，最终证据取自上述合并后版本。
 

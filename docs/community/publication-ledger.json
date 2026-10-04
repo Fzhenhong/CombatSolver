@@ -664,156 +664,6 @@
       ]
     },
     {
-      "batchId": "Q004",
-      "title": "[更优世界线 Q004] 5 个遭遇主题：机甲骑士、异蛙寄生虫、旧日雕像、盛碗虫群、多尼斯异鸟",
-      "kind": "optimization",
-      "themeIds": [
-        "O011",
-        "O012",
-        "O013",
-        "O014",
-        "O015"
-      ],
-      "claimUnit": "batch",
-      "themesPerBatch": 5,
-      "representativeCount": 5,
-      "versionScope": "0.47.x",
-      "verification": "static_only",
-      "archive": "Q004.zip",
-      "issueNumber": 184,
-      "issueUrl": "https://github.com/Torch1230/CombatSolver/issues/184",
-      "assetId": 605225097,
-      "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q004.zip",
-      "assetSizeBytes": 1667877,
-      "themes": [
-        {
-          "themeId": "O011",
-          "title": "机甲骑士战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:MECHA_KNIGHT_ELITE",
-          "representativeIds": [
-            "38eff40a9b3145c78a18846d4fdbe20e"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O012",
-          "title": "异蛙寄生虫战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:PHROG_PARASITE_ELITE",
-          "representativeIds": [
-            "4f4bbba076974da88eb308b5398e55b9"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O013",
-          "title": "旧日雕像战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:BYGONE_EFFIGY_ELITE",
-          "representativeIds": [
-            "c27f3e301dbd4a66a1a2a1a4bd2da885"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O014",
-          "title": "盛碗虫群战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:BOWLBUGS_NORMAL",
-          "representativeIds": [
-            "fdeff387600d43b6b9d402aa832aa330"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O015",
-          "title": "多尼斯异鸟战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:BYRDONIS_ELITE",
-          "representativeIds": [
-            "5a4088bbc2864a58af963fcfb9dc11a7"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        }
-      ]
-    },
-    {
-      "batchId": "Q005",
-      "title": "[更优世界线 Q005] 5 个遭遇主题：感染棱柱、灵魂异鱼、墨影幻灵、花园幽灵鳗、拳击构装体",
-      "kind": "optimization",
-      "themeIds": [
-        "O016",
-        "O017",
-        "O018",
-        "O019",
-        "O020"
-      ],
-      "claimUnit": "batch",
-      "themesPerBatch": 5,
-      "representativeCount": 5,
-      "versionScope": "0.47.x",
-      "verification": "static_only",
-      "archive": "Q005.zip",
-      "issueNumber": 185,
-      "issueUrl": "https://github.com/Torch1230/CombatSolver/issues/185",
-      "assetId": 605225174,
-      "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q005.zip",
-      "assetSizeBytes": 1474486,
-      "themes": [
-        {
-          "themeId": "O016",
-          "title": "感染棱柱战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:INFESTED_PRISMS_ELITE",
-          "representativeIds": [
-            "67ad4fc605164b66b93d8b77f13a222e"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O017",
-          "title": "灵魂异鱼战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:SOUL_FYSH_BOSS",
-          "representativeIds": [
-            "604d7330bac9443caa3d89fd5a06b42c"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O018",
-          "title": "墨影幻灵战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:VANTOM_BOSS",
-          "representativeIds": [
-            "a4201ea911ae41389ec8333f14081f76"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O019",
-          "title": "花园幽灵鳗战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:PHANTASMAL_GARDENERS_ELITE",
-          "representativeIds": [
-            "1e40d2a74f8c40b983370884dd0c4255"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        },
-        {
-          "themeId": "O020",
-          "title": "拳击构装体战斗的路线搜索质量",
-          "mechanismKey": "encounter-route-quality:PUNCH_OFF_EVENT_ENCOUNTER",
-          "representativeIds": [
-            "97495b8bffcf401bb7995f8034b4bc13"
-          ],
-          "evidenceLevel": "shared_mechanism",
-          "legacyTaskIds": []
-        }
-      ]
-    },
-    {
       "batchId": "Q006",
       "title": "[更优世界线 Q006] 5 个遭遇主题：地道虫、瀑布巨兽、蜂群术士、墨宝、Knight Gang",
       "kind": "optimization",
@@ -9096,6 +8946,168 @@
           "publicationSignature": "InvalidOperationException：回放时找不到手牌 ROCKET_PUNCH"
         }
       ]
+    },
+    {
+      "batchId": "Q004",
+      "title": "[更优世界线 Q004] 5 个遭遇主题：机甲骑士、异蛙寄生虫、旧日雕像、盛碗虫群、多尼斯异鸟",
+      "kind": "optimization",
+      "themeIds": [
+        "O011",
+        "O012",
+        "O013",
+        "O014",
+        "O015"
+      ],
+      "claimUnit": "batch",
+      "themesPerBatch": 5,
+      "representativeCount": 5,
+      "versionScope": "0.47.x",
+      "verification": "static_only",
+      "archive": "Q004.zip",
+      "issueNumber": 184,
+      "issueUrl": "https://github.com/Torch1230/CombatSolver/issues/184",
+      "assetId": 605225097,
+      "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q004.zip",
+      "assetSizeBytes": 1667877,
+      "themes": [
+        {
+          "themeId": "O011",
+          "title": "机甲骑士战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:MECHA_KNIGHT_ELITE",
+          "representativeIds": [
+            "38eff40a9b3145c78a18846d4fdbe20e"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O012",
+          "title": "异蛙寄生虫战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:PHROG_PARASITE_ELITE",
+          "representativeIds": [
+            "4f4bbba076974da88eb308b5398e55b9"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O013",
+          "title": "旧日雕像战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:BYGONE_EFFIGY_ELITE",
+          "representativeIds": [
+            "c27f3e301dbd4a66a1a2a1a4bd2da885"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O014",
+          "title": "盛碗虫群战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:BOWLBUGS_NORMAL",
+          "representativeIds": [
+            "fdeff387600d43b6b9d402aa832aa330"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O015",
+          "title": "多尼斯异鸟战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:BYRDONIS_ELITE",
+          "representativeIds": [
+            "5a4088bbc2864a58af963fcfb9dc11a7"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        }
+      ],
+      "status": "withdrawn",
+      "withdrawnAt": "2026-10-03T17:13:15.958761+00:00",
+      "withdrawalReason": "maintainer_withdrawal",
+      "issueState": "closed",
+      "issueStateReason": "not_planned",
+      "archiveAvailable": false
+    },
+    {
+      "batchId": "Q005",
+      "title": "[更优世界线 Q005] 5 个遭遇主题：感染棱柱、灵魂异鱼、墨影幻灵、花园幽灵鳗、拳击构装体",
+      "kind": "optimization",
+      "themeIds": [
+        "O016",
+        "O017",
+        "O018",
+        "O019",
+        "O020"
+      ],
+      "claimUnit": "batch",
+      "themesPerBatch": 5,
+      "representativeCount": 5,
+      "versionScope": "0.47.x",
+      "verification": "static_only",
+      "archive": "Q005.zip",
+      "issueNumber": 185,
+      "issueUrl": "https://github.com/Torch1230/CombatSolver/issues/185",
+      "assetId": 605225174,
+      "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q005.zip",
+      "assetSizeBytes": 1474486,
+      "themes": [
+        {
+          "themeId": "O016",
+          "title": "感染棱柱战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:INFESTED_PRISMS_ELITE",
+          "representativeIds": [
+            "67ad4fc605164b66b93d8b77f13a222e"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O017",
+          "title": "灵魂异鱼战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:SOUL_FYSH_BOSS",
+          "representativeIds": [
+            "604d7330bac9443caa3d89fd5a06b42c"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O018",
+          "title": "墨影幻灵战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:VANTOM_BOSS",
+          "representativeIds": [
+            "a4201ea911ae41389ec8333f14081f76"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O019",
+          "title": "花园幽灵鳗战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:PHANTASMAL_GARDENERS_ELITE",
+          "representativeIds": [
+            "1e40d2a74f8c40b983370884dd0c4255"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        },
+        {
+          "themeId": "O020",
+          "title": "拳击构装体战斗的路线搜索质量",
+          "mechanismKey": "encounter-route-quality:PUNCH_OFF_EVENT_ENCOUNTER",
+          "representativeIds": [
+            "97495b8bffcf401bb7995f8034b4bc13"
+          ],
+          "evidenceLevel": "shared_mechanism",
+          "legacyTaskIds": []
+        }
+      ],
+      "status": "withdrawn",
+      "withdrawnAt": "2026-10-03T17:13:15.958761+00:00",
+      "withdrawalReason": "maintainer_withdrawal",
+      "issueState": "closed",
+      "issueStateReason": "not_planned",
+      "archiveAvailable": false
     }
   ],
   "themesPerBatch": 5,
@@ -9218,9 +9230,9 @@
     "cosObjectsDeleted": 0
   },
   "latestPublicIndex": {
-    "assetId": 605230216,
+    "assetId": 608200786,
     "assetUrl": "https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/community-task-index.json",
-    "assetSizeBytes": 1725139,
+    "assetSizeBytes": 1730778,
     "cleanupCompleted": true
   },
   "latestLocalCleanup": {

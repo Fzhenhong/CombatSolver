@@ -369,15 +369,18 @@ internal static class CorePowerSupport
                 combat.Apply<VulnerablePower>(target, card.DynamicVars.Vulnerable.IntValue, owner);
                 break;
             case Thunderclap or HighFive:
-                ApplyAll<VulnerablePower>(combat, card, card.DynamicVars.Vulnerable.IntValue);
+                if (!ApplyAll<VulnerablePower>(simulator, combat, card, card.DynamicVars.Vulnerable.IntValue))
+                    return false;
                 break;
             case Shockwave:
-                ApplyAll<WeakPower>(combat, card, card.DynamicVars["Power"].IntValue);
-                ApplyAll<VulnerablePower>(combat, card, card.DynamicVars["Power"].IntValue);
+                if (!ApplyAll<WeakPower>(simulator, combat, card, card.DynamicVars["Power"].IntValue)
+                    || !ApplyAll<VulnerablePower>(simulator, combat, card, card.DynamicVars["Power"].IntValue))
+                    return false;
                 break;
             case MeteorShower:
-                ApplyAll<WeakPower>(combat, card, card.DynamicVars.Weak.IntValue);
-                ApplyAll<VulnerablePower>(combat, card, card.DynamicVars.Vulnerable.IntValue);
+                if (!ApplyAll<WeakPower>(simulator, combat, card, card.DynamicVars.Weak.IntValue)
+                    || !ApplyAll<VulnerablePower>(simulator, combat, card, card.DynamicVars.Vulnerable.IntValue))
+                    return false;
                 break;
             case PiercingWail:
                 foreach (Creature enemy in combat.HittableEnemies)
@@ -497,7 +500,6 @@ internal static class CorePowerSupport
             if (combat.GetAmount<RingingPower>(player) > 0)
                 combat.SetAmount<RingingPower>(player, 0);
             Tick<DoubleDamagePower>(combat, player);
-            PersistentPowerSupport.TriggerRitual(combat, player);
         }
         if (!EndTurnPowerSupport.TriggerRegular(
                 simulator,
@@ -551,7 +553,6 @@ internal static class CorePowerSupport
                     simulator.GainBlock(enemy, plating, ValueProp.Unpowered);
             }
             Tick<DoubleDamagePower>(combat, enemy);
-            PersistentPowerSupport.TriggerRitual(combat, enemy);
             if (simulator.HasPendingChoice)
                 return false;
         }
@@ -741,11 +742,17 @@ internal static class CorePowerSupport
         return Math.Max(0, (int)Math.Floor(damage));
     }
 
-    private static void ApplyAll<T>(SimulatedCombatState combat, CardModel card, int amount)
+    private static bool ApplyAll<T>(CombatPredictionSimulator simulator, SimulatedCombatState combat, CardModel card, int amount)
         where T : PowerModel
     {
         foreach (Creature enemy in combat.HittableEnemies)
+        {
             combat.Apply<T>(enemy, amount, card.Owner.Creature);
+            PowerLifecycleSupport.ResolvePowerAmountChanges(simulator, combat);
+            if (simulator.HasPendingChoice)
+                return false;
+        }
+        return true;
     }
 
     private static void Tick<T>(SimulatedCombatState combat, Creature creature) where T : PowerModel
