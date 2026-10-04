@@ -42,7 +42,7 @@ Power 的原版克隆会重置 `_internalData`。跨根保留的数据必须从�
 
 未登记的回合阶段、金币回调以及搜索支持表外的药水在拒绝执行时，同样按实际模型所属 Mod 分类。识别依据是失败入口的类型及游戏已加载程序集映射；已登记的处理器继续执行，不依据已安装 Mod 列表猜测失败来源。运行库的 `PlatformNotSupportedException` 记入实际失败类别，保留上传提示。
 
-规范 Power 的动态变量预热只访问原版来源。第三方 CanonicalVars 可以依赖附着后的 Owner；实际战斗实例仍在主线程物化，后台消费捕获值。规范实例和战斗实例的生命周期必须分别处理。
+规范 Power 的动态变量预热默认只访问原版来源。第三方 CanonicalVars 可以依赖附着后的 Owner；实际战斗实例仍在主线程物化，后台消费捕获值。规范实例和战斗实例的生命周期必须分别处理。第三方 Power 只要可能在搜索中第一次被施加，克隆规范实例时就会撞上后台禁止惰性创建显示变量的守卫；适配层确认其规范实例能在主线程物化后，用 `PowerDynamicVarWarmup.RegisterAdaptedCanonicalPower(Type)`（或泛型重载）登记，建根时随原版一起物化，失败照常抛出。
 
 第三方怪物当前没有完整 AI／行动登记合同，根捕获按 MonsterModel 的实际来源拒绝；修改原版 GenerateMoveStateMachine 的玩法补丁也需要对应合同。AttackIntent 必须提供可捕获的 DamageCalc；缺失时审计意图类型、构造器及原生意图计算补丁，不生成零伤害。确认来源时使用暂未适配提示，来源未知时保留明确的类型与行动诊断。BetterVanillaSTS2 的 TargetedStrengthPower 已由原包证明替换原版语义，属于已确认的玩法边界。
 

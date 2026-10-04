@@ -21,3 +21,10 @@
 在原版结算之后只派发第三方监听者，搜索回放与 `LiveEndTurnRiskEvaluator` 改走这两个入口。重写了却没登记的
 第三方类型按回合阶段表的口径停止搜索。监听者掩码用最后一位 `ExtraTurnCallbacks`，两个方法共用。
 没有第三方监听者时，判断与消耗的结果与此前逐位一致。
+
+### 第三方规范 Power 预热登记
+
+0.49.2 起规范 Power 预热只访问原版来源，第三方 Power 在搜索里第一次被施加时会撞上
+`PowerDynamicVarMaterializationGuardPatch`。`PowerDynamicVarWarmup.RegisterAdaptedCanonicalPower` 让适配层
+显式担保某个第三方 Power 的规范实例可以在主线程物化，建根时随原版一起物化，每局一次；物化失败照常抛出。
+默认范围不变，没有登记时行为与此前一致。
