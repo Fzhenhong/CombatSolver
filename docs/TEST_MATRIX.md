@@ -30,7 +30,11 @@ dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolv
 不入库的原包 ZIP 与本机 RitsuLib 路径，因此不写进下方矩阵启动器清单。2026-10-04 已串行首次执行
 （`-CleanupInstanceOnExit`，逐条完成再下一条）：O041、O042、O044 Passed，O045 Failed，结论与
 逐字段数值见 [Q010 复现记录](community/drafts/2026-10-04/Q010-claim-reproduction.md) 的
-「同根夹具首次执行结果」一节；`coverage/evidence/test-evidence.json` 已按实际状态登记。
+「同根夹具首次执行结果」一节；`coverage/evidence/test-evidence.json` 已按实际状态登记（三条 Passed、O045 Failed）。
+
+复跑必须声明内存档（`GC_SEARCH_ALLOCATION_LIMIT` 与 `GC_NO_GC_REGION_DECLINED percent_of_configured`）：
+同一夹具在窄档（弃区 24%）与宽档（44%）会给出不同终值，O045 实测窄档 1 战损 / 1 瓶、宽档 14 战损 / 0 瓶，
+O041/O042/O044 跨档不变。
 
 O042 的「被迫受击 = 1」分量没有协议断言字段（只有 `RESULT … unavoidable_hp_lost=` 诊断行，
 `src/Runtime/SolverDiagnostics.cs:209`），本次按 diagnostics 对账成立：同一次执行里
