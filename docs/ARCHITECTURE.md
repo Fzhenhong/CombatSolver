@@ -24,6 +24,8 @@
 
 政策由主线程从设置冻结到 `SearchPolicySnapshot`。后台通过请求参数、诊断 sink 与压力信号消费外部能力；算法不读取设置单例或操作 GC。Power 显示变量在主线程根捕获时物化；worker 只消费已物化值。克隆并发边界由 `BaseLibCloneConcurrencyPatch` 与原生克隆隔离规则维护。
 
+常规 GC 搜索的系统余量、分配限额和 Gen2 回收由 Runtime 作用域持有，Search 只在排空后的提交边界消费压力信号。常规检查点刷新请求限额；不可分割提交通过显式退出将分配交给 CLR，下一请求重新建立限额。Runtime 在限额和诊断成功后登记作用域，入口失败释放信号并传播原异常；退出时按作用域清理计数和信号。
+
 ## 3. Search
 
 | 入口 | 所有权 |
@@ -48,6 +50,10 @@
 
 `PowerCommitmentRetention` 按机制族、登记能力集合、药水数量与回合选择有界代表；能力激活顺序不重复占席，不同能力集合不因族相同而合并。Beam 只保护实际代表，其他能力节点不预占代表配额；替换保持容量和既有必保节点。完整状态键、转置支配及终局政策不消费这种启发式分组。显式路径观察只复制纯值承诺及独立字符串数组，不保留节点或模拟器。
 
+预览路线的采用回放持有请求级取消令牌，单轮搜索结束与用户取消请求分别判断。强制结束回合的卡牌动作只消费自身选择，后续回合选择由AdvanceRound持有。固定前缀在仍进行的稳定父状态继续，药水统一沿正式候选政策准入。
+
+`StrategicHpRecoveryBound` 在根快照中冻结回复环境资格，由 `.Remaining` 维护已审计来源闭包和分支剩余上界，未知来源保持无限上界。`.KnownSources` 单独提供当前原版已知来源策略，忽略尚未生成的随机药水回复；该策略资格不构成严格闭包证书。已有完整合规胜利可以沿既有 Retention 和组合成员入口提供界；主搜索之前的计划安排仍只对严格认证根开放，其余根保留原阶段顺序。
+
 ## 4. 模拟与 Prediction
 
 | 位置 | 职责 |
@@ -63,6 +69,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 未知 gameplay subscriber 显式拒绝；已支持来源在主线程捕获，并在分支中消费隔离状态。登记合同与封闭入口见 [第三方适配手册](third-party/README.md)。
 
+金币命令由 `GoldGainSupport` 串联标准镜像：修改使用跑局前缀和战斗监听表，获得后的回调使用原生 null-child 跑局作用域。`SimulatedCombatState.GoldHooks` 在主线程冻结活动成员与已克隆全局来源，Fork 只读共享；遗物、药水、金币和 HP 仍从所属分支读取。未知金币 override 显式拒绝。监听参与位图为三个金币方法共用一位，只形成保守成员超集，精确方法仍由 registry 区分；不溢出或复用其他 Hook 位。`CombatPredictionSimulator.GainMaxHp` 单独实现实际封顶增量与后续 Heal，Feed、FruitJuice 和 DragonFruit 共用这一权威入口。
+
 ## 5. UI
 
 `SolverOverlaySnapshot.Capture` 是结果到展示的唯一投影边界，可读取 `SolverResult` 与显示元数据。`SolverOverlay`、`SolverRouteRow`、`SolverActionPill` 只渲染只读 snapshot。
@@ -70,6 +78,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 路线身份、选择、目标与显示值由主线程投影；UI 不持有搜索分支或从 `ModelDb` 重新解释路线。设置输入由相应面板持有，Controller 负责政策冻结和续用失效。中英文本同时维护。
 
 ## 6. Testing
+
+源码按 [Testing 入口](../src/Testing/README.md) 收纳：Host 持有编排与协议，Support 持有共享差分辅助，Replay 持有恢复；Contracts 按 Combat/Search/Runtime/UI/ThirdParty 分组，Regressions 保存社区和报告回归。各目录沿用原程序集与 partial 类型。
 
 | 入口 | 所有权 |
 | --- | --- |
@@ -90,8 +100,14 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 能力路线组合的候选与名额选择仍归`CombatSearchCoordinator.PowerRoutes`：安全且有明显损血的无新增用药胜利可将一个已有变体名额用于自身首回合结束处续搜，动作来自当前搜索结果；既有调度器负责严格前缀回放与启发式基线重建，最终整场政策比较不变。
 
+旧批次的硬编码路径调查退出当前树，仍被原生回归、生成上下文与搜索合同调用的快照辅助保留在 Support。一次性验证代码由 .local/tool-tasks 持有并在任务结束清理，普通构建显式排除 .local 源码。
+
 ## 7. 工具与维护
 
-`tools/verify-refactor-boundaries.ps1` 和 `.sh` 维护同一职责边界。CoverageCatalog 从公开描述与结构化证据生成覆盖报告，报告的生成版本与测试来源分别说明。
+工具按 [职责目录](../tools/README.md) 管理。testing 持有无人实例与生产回归检查，replay 持有包恢复与会话，search/performance 持有离线指标与采样，inspection 持有目录和结构检查；build/release/community 分别维护构建、发布与社区流程。Windows MemoryCleaner 由 tools/runtime 提供，在线监控后台由独立私有仓库 combatsolver-presence-service 持有，本仓库仅维护模组端上报和提醒。
+
+tools/Directory.Build.props 统一工具项目的仓库根与构建产物路径，生成内容放在 .local/。`tools/inspection/verify-refactor-boundaries.ps1` 和 `.sh` 维护同一职责边界。CoverageCatalog 从公开描述与结构化证据生成覆盖报告，报告的生成版本与测试来源分别说明。
+
+[coverage](../coverage/README.md) 持有手工分类、证据、复用输入、固定语料和归档摘要。CoverageCatalog 读取 catalog/classifications.json 与 evidence/test-evidence.json，替换 catalog/generated 的现行快照；候选 fixture 写入 .local/coverage-fixtures。证据按完整仓库相对路径读取，缺失材料显式失败。脚本与完整运行产物分别属于 tools 和 .local。
 
 修改职责时在同一提交替换本文对应章节，并同步相关 skill 与结构门禁。开发进度写入当前开发记录，测试细节写入证据，历史报告冻结归档。
