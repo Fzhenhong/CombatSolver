@@ -149,6 +149,8 @@ L0：原生回复审计工具迁入tools/inspection后构建和真实DLL扫描�
 
 组件回复界及 Smart 原生合同通过，固定29根回归仍保留女王质量阻断；用户暂停丢路调查，未称全回归通过。完整实测、所有失败及未验证项见[组合上界](performance/component-healing-bound-20261003.md)、[原生组件审计](performance/native-healing-component-audit-20261003.md)和[组合研究](performance/heavy-scene-compositions-20261004.md)。合并前各合同、runId、平台清理与初筛范围完整保留于[固定提交的测试记录](https://github.com/ltlly/CombatSolver/blob/1bea4f8a/docs/TEST_MATRIX.md)。 同一记录补59张手牌阶段合同、Slither根认证、晚回合药水成本及未知消耗堆Feed的原生边界；组合性能仍有质量失败。
 
+回复证明扩展研究：有限再生旧门禁预期失败3f3afd5a…，候选2e84b06a…Passed（精确7／后续2次剪枝）；5bf5eec3…保留可回复分支及未知消耗堆Feed。沙漏10c7a7e1…Passed（六次出牌、三种敌人行动、九份完整状态、16 Fork、四堆未知拒绝）；PR215储君组合8faef194…成本与未知边界、0875367f…实际无药先导／账本／DOP2严格隔离Passed。普通完整请求初筛仍未达到性能或资源质量门槛，未作最终ABBA、固定回归或部署；失败夹具、构建、逐次结果及范围见[补充研究](performance/pr215-recovery-proof-research-20261005.md)。
+
 [全药水审计](performance/native-potion-recovery-certificates-20261004.md)记录64种有效原版药水的分类及58种有条件零回复准入；`14eef45cfeb04fc7bb137f9cec2a8c08` 最小原生合同Passed，全部64种实际用药及最终闭包未完成。[魂枢证据](performance/soul-nexus-0491-research-20261004.md)记录严格Continuation恢复、拟提交版本完整请求ABBA：上游311.39／315.50秒，候选96.02／96.66秒，中位数3.254倍，最差峰值降低50.75%，战损19→6、药水0→1、回合8→5，遗物计数目标满足数2→1；完整原生二进制仍未验证。四次搜索合同Passed，最后上游启动器退出1的身份确认异常及进程/实例清理单列。完整原生部署 `85a6c2eaf9ff495fafba556392362d86` Passed，第5回合63/70生命、StrengthPotion、非预期重算0。其他27个固定根同版本串行回归全部通过：完整根/预算/政策相等，24胜/原有3 NoWin保持，战损、保命、追回及同战损次级目标无退化，峰值最大+7.503%。女王两根按用户暂停要求排除，不能称原29根全量通过。
 
 魂枢机制新增合同：`373890e75fa0483db84b5ffd9a8121d0` Passed，实际用药、两回合完整状态、16 Fork/RNG/父分支/live隔离、禁药与额度仍保留已有再生、未知源拒绝、生成过滤及DOP2严格增量/完整重播。`b9a5e01156fb476d8dfcfb9ece2c0e6b` Passed，8遗物/68抽牌查询及冻结隔离，启动器退出1异常单列；查询不代替完整生命周期。拟提交版本 `965c558fc8d341a9afffb821c6d61468` Smart合同Passed，完整无药胜利、精确7次/后续2次剪枝及原政策门禁。
