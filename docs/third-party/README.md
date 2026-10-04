@@ -40,6 +40,12 @@ Power 的原版克隆会重置 `_internalData`。跨根保留的数据必须从�
 
 未登记的回合阶段、金币回调以及搜索支持表外的药水在拒绝执行时，同样按实际模型所属 Mod 分类。识别依据是失败入口的类型及游戏已加载程序集映射；已登记的处理器继续执行，不依据已安装 Mod 列表猜测失败来源。运行库的 `PlatformNotSupportedException` 记入实际失败类别，保留上传提示。
 
+规范 Power 的动态变量预热只访问原版来源。第三方 CanonicalVars 可以依赖附着后的 Owner；实际战斗实例仍在主线程物化，后台消费捕获值。规范实例和战斗实例的生命周期必须分别处理。
+
+第三方怪物当前没有完整 AI／行动登记合同，根捕获按 MonsterModel 的实际来源拒绝；修改原版 GenerateMoveStateMachine 的玩法补丁也需要对应合同。AttackIntent 必须提供可捕获的 DamageCalc；缺失时审计意图类型、构造器及原生意图计算补丁，不生成零伤害。确认来源时使用暂未适配提示，来源未知时保留明确的类型与行动诊断。BetterVanillaSTS2 的 TargetedStrengthPower 已由原包证明替换原版语义，属于已确认的玩法边界。
+
+原版卡牌异步 OnPlay 的 MoveNext 和 OnPlay 方法本体分别审计；现有 OnPlay 登记不覆盖 MoveNext 补丁。外部回调在已有 pending choice 时只能恢复同一选择；请求另一来源的选择会在写入前失败并保留原 pending。预见、伤害后抽牌和洗牌选择相互嵌套时，适配器必须停止当前派发并保存剩余程序阶段。基础卡牌／框架不能替代活动内容模型的来源。
+
 Power 来源也是语义的一部分：精确镜像可通过 `ICombatPredictionEffectSink.ApplyPowerFromSource` 显式提供 `CardModel? cardSource`，原版传 null 时必须保持 null，避免能力附带效果被误判成外层卡牌直接效果。普通 `ApplyPower` 仍沿用当前卡牌作用域；两者不能按调用栈有无卡牌随意替代。
 
 普通能力的 `Owner` 与可空 `Target` 不可混用：无显式目标的施加保持 Target=null，定向施加入口保留真实目标。临时力量族的回调使用经过修正的请求偏移，封顶后的净增量不能替代；其类型检查不扩大第三方能力支持面。内置 Weak/Vulnerable/Frail 的首 tick 标记进入精确状态比较，第三方持续能力仍须登记自己的状态与结算，不自动按这三个类型处理。

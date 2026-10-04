@@ -16,6 +16,111 @@ namespace CombatSolver;
 
 internal sealed partial class UnattendedTestRunner
 {
+    private static PowerModel? _ownerWarmupProbe;
+    private static int _ownerWarmupCalls;
+
+    private static bool OwnerBoundCanonicalVarsProbe(PowerModel __instance,
+        ref IEnumerable<MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar> __result)
+    {
+        if (!ReferenceEquals(__instance, _ownerWarmupProbe)) return true;
+        _ownerWarmupCalls++;
+        __result = [new MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar("OwnerHp", __instance.Owner.CurrentHp)];
+        return false;
+    }
+
+    private async Task AssertRootContentSourcesAsync(CombatState combat, Player player)
+    {
+        var previousMocks = AssemblyInfo.MockTypes;
+        string language = LocManager.Instance.Language;
+        AssemblyInfo.MockTypes = previousMocks == null ? [] : new(previousMocks);
+        Mod mod = new() { path = "test-content", manifest = new ModManifest
+            { id = "TestContentMod", name = "Content [Test]", affectsGameplay = true } };
+        try
+        {
+            AssertKnownGameplayModBoundary();
+            MonsterModel monster = combat.Enemies[0].Monster!;
+            AssemblyInfo.MockTypes[monster.GetType()] = (mod, false);
+            AssertBoundary(() => PredictionModPatchAudit.ValidateMonsterModels([monster]));
+            AssemblyInfo.MockTypes.Remove(monster.GetType());
+            var attack = new MegaCrit.Sts2.Core.MonsterMoves.Intents.SingleAttackIntent((Func<decimal>)null!);
+            AssemblyInfo.MockTypes[attack.GetType()] = (mod, false);
+            AssertBoundary(() => IntentForecaster.CaptureBaseDamage(attack, monster, "CHOMP_MOVE"));
+            AssemblyInfo.MockTypes.Remove(attack.GetType());
+            AssemblyInfo.MockTypes[typeof(ForeignCardPatch)] = (mod, false);
+            HarmonyLib.Harmony intentProbe = new("CombatSolver.Testing.IntentSource." + _request.RunId);
+            var constructor = HarmonyLib.AccessTools.Constructor(attack.GetType(), [typeof(int)]);
+            var generate = HarmonyLib.AccessTools.Method(monster.GetType(), "GenerateMoveStateMachine");
+            try
+            {
+                intentProbe.Patch(constructor, prefix: new HarmonyLib.HarmonyMethod(typeof(ForeignCardPatch), nameof(ForeignCardPatch.Prefix)));
+                AssertBoundary(() => IntentForecaster.CaptureBaseDamage(attack, monster, "CHOMP_MOVE"));
+                intentProbe.Patch(generate, prefix: new HarmonyLib.HarmonyMethod(typeof(ForeignCardPatch), nameof(ForeignCardPatch.Prefix)));
+                AssertBoundary(() => PredictionModPatchAudit.ValidateMonsterModels([monster]));
+            }
+            finally { intentProbe.UnpatchAll(intentProbe.Id); AssemblyInfo.MockTypes.Remove(typeof(ForeignCardPatch)); }
+            var simulator = CombatRootSnapshot.Capture(combat).ForkSimulator();
+            var shadow = (SimulatedCombatState)simulator.State.CombatState;
+            CardModel card = player.PlayerCombatState!.Hand.Cards.First();
+            AssemblyInfo.MockTypes[card.GetType()] = (mod, false);
+            shadow.SetPendingTurnStartChoice(new("STRATAGEM_POWER", PlanChoiceEffect.MoveToHand, MegaCrit.Sts2.Core.Entities.Cards.PileType.Draw, 1));
+            using (simulator.PushActionSource(card, PredictionActionKind.CardPlay))
+            {
+                if (!TurnStartChoiceSupport.ResolvePileDiscard(simulator, shadow, player, null,
+                        card.Id.Entry, MegaCrit.Sts2.Core.Entities.Cards.PileType.Draw, []))
+                    throw new InvalidOperationException("An empty choice operation must complete without replacing the pending choice.");
+                AssertBoundary(() => TurnStartChoiceSupport.ResolvePileDiscard(simulator, shadow, player, null,
+                    card.Id.Entry, MegaCrit.Sts2.Core.Entities.Cards.PileType.Draw,
+                    simulator.State.GetPlayerCombatState(player).DrawPile.Cards));
+            }
+            if (shadow.PendingTurnStartChoice?.SourceId != "STRATAGEM_POWER")
+                throw new InvalidOperationException("Callback overlap changed the pending choice.");
+            AssemblyInfo.MockTypes.Remove(card.GetType());
+
+            await InjectPowerAsync(combat, player, new() { PowerId = "STRENGTH_POWER", Target = "Player", Amount = 1 });
+            PowerModel canonical = ModelDb.Power<MegaCrit.Sts2.Core.Models.Powers.StrengthPower>();
+            PowerModel attached = player.Creature.GetPower<MegaCrit.Sts2.Core.Models.Powers.StrengthPower>()!;
+            var varsField = HarmonyLib.AccessTools.Field(typeof(PowerModel), "_dynamicVars");
+            object? canonicalVars = varsField.GetValue(canonical);
+            object? attachedVars = varsField.GetValue(attached);
+            var getter = HarmonyLib.AccessTools.PropertyGetter(typeof(PowerModel), "CanonicalVars");
+            HarmonyLib.Harmony probe = new("CombatSolver.Testing.OwnerWarmup." + _request.RunId);
+            probe.Patch(getter, prefix: new HarmonyLib.HarmonyMethod(typeof(UnattendedTestRunner), nameof(OwnerBoundCanonicalVarsProbe)));
+            AssemblyInfo.MockTypes[canonical.GetType()] = (mod, false);
+            try
+            {
+                varsField.SetValue(canonical, null);
+                _ownerWarmupProbe = canonical;
+                _ownerWarmupCalls = 0;
+                PowerDynamicVarWarmup.EnsureCanonicalMaterialized([canonical]);
+                if (_ownerWarmupCalls != 0) throw new InvalidOperationException("Owner-dependent canonical Power was materialized.");
+                varsField.SetValue(attached, null);
+                _ownerWarmupProbe = attached;
+                PowerDynamicVarWarmup.EnsureMaterialized(combat);
+                if (_ownerWarmupCalls != 1 || attached.DynamicVars["OwnerHp"].IntValue != player.Creature.CurrentHp)
+                    throw new InvalidOperationException("Attached owner-dependent Power was not materialized.");
+            }
+            finally
+            {
+                _ownerWarmupProbe = null;
+                probe.UnpatchAll(probe.Id);
+                varsField.SetValue(canonical, canonicalVars);
+                varsField.SetValue(attached, attachedVars);
+            }
+            _completedChecks.Add("RootContent:KnownMod:Monster:MissingAttackDamage:CallbackOverlap:OwnerBoundPower:Source:UploadClassification");
+        }
+        finally { AssemblyInfo.MockTypes = previousMocks; LocManager.Instance.SetLanguage(language); }
+
+        static void AssertBoundary(Action action)
+        {
+            try { action(); throw new InvalidOperationException("Content boundary was accepted."); }
+            catch (IncompatibleGameplayModException failure)
+            {
+                if (failure.ModId != "TestContentMod") throw new InvalidOperationException("Content source was lost.", failure);
+                AssertContentFailurePresentation(failure);
+            }
+        }
+    }
+
     private sealed class UnadaptedContentModel : AbstractModel
     {
         public override bool ShouldReceiveCombatHooks => false;
