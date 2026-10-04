@@ -41,9 +41,10 @@ O041/O042/O044 跨档不变。W2 修复（Smart 药水层不再被 strategic 净
 同政策同预算对照而非放大预算；首次执行四次的 launcher 墙钟 28.7–40.0 秒均远低于该上限，无一次接近超时。
 压到 120 秒会使包内软预算 300000ms 的 O042/O044 不再是同预算对照。
 
-O042 的「被迫受击 = 1」分量没有协议断言字段（只有 `RESULT … unavoidable_hp_lost=` 诊断行，
-`src/Runtime/SolverDiagnostics.cs:209`），本次按 diagnostics 对账成立：同一次执行里
-`unavoidable_hp_lost=1` 且 `sold_hp=4`，两者相加即断言的整场战损 5。
+O042 的「被迫受击 = 1」分量现为机器断言：夹具带 `expectedInitialUnavoidableHpLost=1`，值取自
+`RESULT … unavoidable_hp_lost=`（`src/Runtime/SolverDiagnostics.cs:209`）与新增的
+`UnattendedSolverMetrics.UnavoidableHpLost`；入口参数 `-ExpectedInitialUnavoidableHpLost`（ps1）/
+`--expected-initial-unavoidable-hp-lost`（sh）。修复前该分量只能按 diagnostics 对账（1 + sold 4 = 5）。
 
 复跑注意：带 `-CleanupInstanceOnExit` 时，`.local/headless-instances` 的实例目录偶尔删不掉
 （`game\data_sts2_windows_x86_64\0Harmony.dll` 句柄未释放），启动器因此返回退出码 1；这不改变

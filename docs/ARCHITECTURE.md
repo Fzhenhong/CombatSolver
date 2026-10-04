@@ -84,7 +84,7 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 | `ScenarioBuilder` | 建局与状态注入 |
 | `Executor` | 差分、搜索、部署执行及临时设置 |
 | `Assertions` | 执行前后断言 |
-| `Writer` | 结果协议和原子写入 |
+| `Writer` | 结果协议和原子写入；求解侧实测值（含 `UnavoidableHpLost`）在此进入 `UnattendedSolverMetrics`，两平台 launcher 的 `ExpectedInitial*` 参数只做透传，断言落在 Contracts |
 
 原生与模拟核对完整状态、顺序、引用、RNG 和续用合同。离线宿主只产搜索指标；headless 不证明真实可见布局或帧时间。入口见 [无人测试](HEADLESS_TESTING.md)、[离线宿主](OFFLINE_SEARCH_HARNESS.md)、[测试证据](TEST_MATRIX.md)。
 

@@ -1,4 +1,4 @@
-﻿#requires -Version 7.4
+#requires -Version 7.4
 
 param(
     [string]$ScenarioId = "SMOKE-001",
@@ -157,6 +157,7 @@ param(
     [int]$ExpectedInitialNodeLimitSnapshotsReleasedAtLeast = -1,
     [int]$ExpectedInitialChoiceBranchesEvaluatedAtLeast = -1,
     [int]$ExpectedInitialExecutableActionCountAtLeast = -1,
+    [int]$ExpectedInitialUnavoidableHpLost = -1,
     [int]$ExpectedInitialSoldHp = -1,
     [int]$ExpectedInitialSoldHpAtMost = -1,
     [int]$ExpectedInitialDeathSaveRelicHp = -1,
@@ -897,6 +898,7 @@ $request = [ordered]@{
     expectedInitialNodeLimitSnapshotsReleasedAtLeast = if ($ExpectedInitialNodeLimitSnapshotsReleasedAtLeast -ge 0) { $ExpectedInitialNodeLimitSnapshotsReleasedAtLeast } else { $null }
     expectedInitialChoiceBranchesEvaluatedAtLeast = if ($ExpectedInitialChoiceBranchesEvaluatedAtLeast -ge 0) { $ExpectedInitialChoiceBranchesEvaluatedAtLeast } else { $null }
     expectedInitialExecutableActionCountAtLeast = if ($ExpectedInitialExecutableActionCountAtLeast -ge 0) { $ExpectedInitialExecutableActionCountAtLeast } else { $null }
+    expectedInitialUnavoidableHpLost = if ($ExpectedInitialUnavoidableHpLost -ge 0) { $ExpectedInitialUnavoidableHpLost } else { $null }
     expectedInitialSoldHp = if ($ExpectedInitialSoldHp -ge 0) { $ExpectedInitialSoldHp } else { $null }
     expectedInitialSoldHpAtMost = if ($ExpectedInitialSoldHpAtMost -ge 0) { $ExpectedInitialSoldHpAtMost } else { $null }
     expectedInitialDeathSaveRelicHp = if ($ExpectedInitialDeathSaveRelicHp -ge 0) { $ExpectedInitialDeathSaveRelicHp } else { $null }

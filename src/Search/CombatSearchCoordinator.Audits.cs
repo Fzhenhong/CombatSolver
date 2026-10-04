@@ -98,7 +98,11 @@ internal static partial class CombatSearchCoordinator
         if (policy.IncludeTurnSetup)
             return primary;
         int maximumSmartPotionUses = policy.PotionPolicy == SolverPotionPolicy.Smart
-            ? MaximumSmartPotionUses(root, policy, potionFreeWon: true, primaryDeficit)
+            ? Math.Max(
+                MaximumSmartPotionUses(root, policy, potionFreeWon: true, primaryDeficit),
+                // 与梯度入口同一条理由：净差已扣掉与药水无关的既有治疗，用它否证整层药水搜索会让
+                // 「零药更好」反而关掉带药解的搜索面。必然受击才是门槛要比较的那一轴。
+                MaximumSmartPotionUses(root, policy, potionFreeWon: true, primary.UnavoidableHpLost))
             : Math.Max(1, primary.PotionCount);
         if (HasReachedProvablePrimaryQualityLowerBound(root, policy, primary)
             || policy.PotionPolicy == SolverPotionPolicy.RequireAtLeastOne
