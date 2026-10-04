@@ -14,4 +14,10 @@
 
 ## 下一版本（开发中）
 
-当前没有待发布的行为改动。
+### 第三方额外回合来源登记
+
+`ExtraTurnMirrors` 为 `ShouldTakeExtraTurn` / `AfterTakingExtraTurn` 开放第三方登记（泛型与按 `Type` 两种）。
+原版龙涎香、帕尔之眼的判断与消耗代码不动；`HookMirrors.ShouldTakeExtraTurn` / `AfterTakingExtraTurn`
+在原版结算之后只派发第三方监听者，搜索回放与 `LiveEndTurnRiskEvaluator` 改走这两个入口。重写了却没登记的
+第三方类型按回合阶段表的口径停止搜索。监听者掩码用最后一位 `ExtraTurnCallbacks`，两个方法共用。
+没有第三方监听者时，判断与消耗的结果与此前逐位一致。

@@ -197,6 +197,16 @@ StrategicEffectMirrors.Register<TYourPower>(requirements, evaluate, host);
 判据与泛型入口相同；`RegisterIgnored` 用于已复核的纯表现层覆写。
 完整签名、暂停和状态约束见[回合阶段镜像](turn-phase-mirrors.md)。
 
+`ExtraTurnMirrors.RegisterShouldTakeExtraTurn<TModel>(handler)` 与
+`RegisterAfterTakingExtraTurn<TModel>(handler)` 登记 `AbstractModel.ShouldTakeExtraTurn` /
+`AfterTakingExtraTurn`，接收者为 AbstractModel，上下文包含 `Player` 和分支 `Combat`。原版的龙涎香与
+帕尔之眼仍由 `SimulatedCombatState.ShouldTakeExtraPlayerTurn` / `ConsumeExtraTurnSources` 原样结算，
+这两张表只派发第三方监听者：判断时先问原版、再问第三方，任意一个返回 true 就给额外回合；用掉之后先结算
+原版、再按开头固定的成员通知第三方。搜索回放与实机回合末风险评估共用同一入口。
+登记时机和冻结门与上面三张表相同；重写了却没登记的第三方类型同样停止搜索，只做表现的重写登记一个
+返回 false / 什么都不做的处理即可。按 `Type` 的重载为 `RegisterShouldTakeExtraTurn(Type, handler)` /
+`RegisterAfterTakingExtraTurn(Type, handler)`。
+
 ### 2.11 已适配 OnPlay 补丁组合
 
 `AdaptedCardOnPlayMirrors.Register<TCard>` 登记精确目标、完整补丁组合与唯一完整预测实现。
@@ -348,7 +358,7 @@ StrategicEffectMirrors.Register<TYourPower>(requirements, evaluate, host);
 | `RitsuEmptyCapabilityFastPathPatches` | 模拟隔离域的空 capability 集可直接保留原卡牌标签序列；不枚举/复制标签，不缓存分支值。非空贡献者与精确类型默认来源继续框架入口；晚注册刷新来源代次，已物化的空集合仍按框架语义处理。live 不旁路，无新增登记入口 | 精确框架适配 |
 | `DynamicVarCloneMetadataPatches` | 模拟克隆只优化已核对为空默认值的 BaseLib 提示/升级字段与 Ritsu 提示工厂；非空值照常复制，live 调用保持原框架行为。其他附加字段继续原有克隆逻辑，不属于此优化入口 | 精确框架适配 |
 | `CorePowerSupport.TriggerPlayerRegularSideTurnEndEffects`、`FlushPlayerHandAtTurnEnd`、BeforeHandDraw、AfterSideTurnStart | 常规回合末及这些抽牌/阵营时点仍无通用登记；注能核心的首回合产球由 `TriggerRelicsAfterSideTurnStart` 显式结算，准备选牌根可能早于产球，不能认为所有开局效果已在根内。其闪电伤害加成仍走只读 `ModifyOrbValue`，只读数值支持不代表产球生命周期已适配。BeforeSideTurnStart、AfterPlayerTurnStart（Early/普通/Late）及 AfterSideTurnEndLate 已开放，见 §2.10，不能互相替代 | 部分开放 |
-| `SimulatedCombatState.TryPrepareExtraPlayerTurn` / `TryPrepareLiveExtraPlayerTurn` / `ConsumeExtraTurnSources` | 额外回合的来源硬编码，只认龙涎香和帕尔之眼 | 待做 |
+| `SimulatedCombatState.ShouldTakeExtraPlayerTurn` / `ConsumeExtraTurnSources` | 原版额外回合来源（龙涎香、帕尔之眼）仍按类型写死；第三方来源经 `HookMirrors.ShouldTakeExtraTurn` / `AfterTakingExtraTurn` 派发，见 §2.10 | 第三方已有入口 |
 | `CombatPredictionSimulator.OnPlayWrapper` | 出牌后补抽没有挂载点 | 待做 |
 | `CardChoiceSupport.RemovalPriority` 的排序口径 | 移除类选择按**单卡**估值排，不看牌库其余部分；弃牌那一侧已经是「源牌堆平均值减本牌估值」的相对口径，消耗与转变没有。表现为求解器不会为了压出无限而主动烧牌。起手牌那一层已由 §2.7 打开，相对口径这一层仍然封闭 | 待做 |
 | `ContinuationStamp.AppendCard` 的 `private=` 段与 `CombatBeamSolver.CaptureCardStateFingerprintForTesting` 的 `switch (preview)` | **卡牌**的隐藏字段按原版类型写死（利爪、基因算法、巨锤、狂暴、镰刀、疯狂科学），第三方卡牌的私有计数进不了指纹。Power 那一侧已有 `PowerHiddenStateMirrors`，见 §2.6 | 待做 |
