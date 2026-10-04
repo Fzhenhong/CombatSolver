@@ -732,6 +732,7 @@ internal static partial class CombatSearchCoordinator
             List<PlanAction[]> posteriorPrefixes = prefixes.DistinctBy(PowerPrefixKey).Take(prefixLimit).ToList();
             PlanAction[]? continuationSlot = posteriorPrefixes.LastOrDefault();
             Dictionary<string, PlanAction[]> openingFrontiers = [];
+            bool selectedBoundaryRefined = false;
             bool TryOpeningFrontier(PlanAction[] slot, out PlanAction[] frontier)
             {
                 frontier = slot;
@@ -760,6 +761,29 @@ internal static partial class CombatSearchCoordinator
                 }
                 PlanAction[] prefix = posteriorPrefixes[prefixIndex];
                 bool continueOpeningFrontier = TryOpeningFrontier(prefix, out PlanAction[] continuationPrefix);
+                bool continueSelectedBoundary = false;
+                if (!continueOpeningFrontier && !selectedBoundaryRefined
+                    && prefix.Length > 1 && primary.OnlyDeathRoutesFound
+                    && IsCompleteVictory(selected) && !selected.Snapshot.HasRisk
+                    && selected.ProjectedBattleHpLost > 0 && selected.ExplicitPotionCount <= 2)
+                {
+                    int completedTurns = selected.HpLostByTurn
+                        .Where(outcome => outcome.Value > 0 && outcome.Key > root.StartTurnNumber)
+                        .OrderByDescending(outcome => outcome.Key)
+                        .Select(outcome => outcome.Key - root.StartTurnNumber).FirstOrDefault();
+                    PlanAction[] boundary = selected.BestNode.Actions
+                        .TakeWhile(action => action.Turn < root.StartTurnNumber + completedTurns).ToArray();
+                    if (completedTurns > 0 && boundary.LastOrDefault()?.Kind == PlanActionKind.EndTurn
+                        && boundary.Last().Turn == root.StartTurnNumber + completedTurns - 1
+                        && boundary.Any(action => action.Kind == PlanActionKind.PlayCard
+                            && PowerCardValuationModels.Registry.ContainsCardId(action.CardId)))
+                    {
+                        continuationPrefix = boundary;
+                        // Spend one existing cold member at the last observed HP-loss boundary.
+                        selectedBoundaryRefined = true;
+                        continueSelectedBoundary = true;
+                    }
+                }
                 string prefixText = string.Join('+', continuationPrefix.Select(action =>
                     action.Kind == PlanActionKind.UsePotion
                         ? $"POTION:{action.PotionId}@{action.PotionSlot}" +
@@ -781,18 +805,27 @@ internal static partial class CombatSearchCoordinator
                 routeProfile = posteriorWindow.Limit(routeProfile,
                     routeProfile.MaxExpandedNodes, routeProfile.SoftTimeBudgetMilliseconds,
                     reserveMilliseconds: 0);
-                if (continueOpeningFrontier) routeProfile = routeProfile with { BaseScoreOnly = false };
+                if (continueOpeningFrontier || continueSelectedBoundary)
+                    routeProfile = routeProfile with { BaseScoreOnly = false };
+                if (continueSelectedBoundary)
+                {
+                    int remainingSlots = posteriorPrefixes.Count - prefixIndex;
+                    routeProfile = posteriorWindow.Limit(routeProfile,
+                        Math.Max(1, (int)(posteriorWindow.RemainingNodes / (remainingSlots + 1))),
+                        Math.Max(1, posteriorWindow.RemainingMilliseconds / (remainingSlots + 1)),
+                        reserveMilliseconds: 0);
+                }
                 PlanAction[]? openingPreviewActions = null;
                 SolverResult? candidate = continuationScheduler.DispatchOptional(
                     new ContinuationSearchRequest(context,
                         ContinuationPurpose.SmartOpeningPotionPosterior,
                         continuationPrefix, routeProfile, SolverPotionPolicy.RequireAtLeastOne,
-                        continueOpeningFrontier || prefix[0].PotionId == "BLOCK_POTION"
+                        continueOpeningFrontier || continueSelectedBoundary || prefix[0].PotionId == "BLOCK_POTION"
                             ? Math.Min(2, MaximumSmartPotionUses(root, policy,
                                 potionFreeWon: false, potionFreeHpDeficit: 0))
                             : 1, null)
                     {
-                        ResetFixedPrefixSchedulingBaseline = continueOpeningFrontier,
+                        ResetFixedPrefixSchedulingBaseline = continueOpeningFrontier || continueSelectedBoundary,
                         ProgressCallbackOverride = progress =>
                         {
                             if (prefix.Length == 1 && progress.CurrentTurnPreview is { } preview)
