@@ -86,8 +86,6 @@ O004补搜隔离使用 `Q002-O004-OPENING-POTION-POSTERIOR` / `Q002-O004-OPENING
 
 `Q002-O004-TURN-BOUNDARY-MEMBER`固定保存路线的完整首回合，以相同30秒/60,000节点/Beam90、最多2瓶和普通排序续搜，沿既有开关重建进展基线。`Q002-O004-POSTERIOR-FRONTIER`保留原两步前缀，只复制进度回调中的去重首回合候选（上限64，明确输出是否达到上限），不采集后续预览状态。`Q002-O004-FRONTIER-CONTINUATION`先运行上述成员，再用其最后首回合候选作第二个相同预算的续搜成员；保存profile和完整动作，候选截断/不存在/未结束回合时明确失败。两个成员不是一个30秒总预算，不作正常性能样本。三模式仅核对原生4事件后的T1 setup、冻结根及预测前缀；未对原生T2或整场执行作结论，均在搜索后核对实机与冻结开局不变。
 
-包协议与顺序文件：`dotnet run --project tools/CheckpointTool/CheckpointTool.csproj -c Release -- self-test`。边界门禁使用 `verify-refactor-boundaries.ps1` / `.sh`。
-
 包协议与顺序文件：`dotnet run --project tools/replay/CheckpointTool/CheckpointTool.csproj -c Release -- self-test`。边界门禁使用 `verify-refactor-boundaries.ps1` / `.sh`。
 
 可见采集测量：`run-visible-steam-benchmark.ps1 -LoggingFixture -TimeoutSeconds 120 -EvidenceDirectory <目录>`，Linux 为 `--logging-fixture --timeout-seconds 120 --evidence-directory <目录>`。该短原生战斗另存 ZIP，索引提供采集累计/最大时间和积压，session.json 提供材料大小。headless 只用于导入和吞吐测量。具体证据及未覆盖场景见 TEST_MATRIX.md。

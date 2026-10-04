@@ -254,6 +254,7 @@ internal static partial class CombatSearchCoordinator
         SolverResult selected = baseline;
         FrontierContinuationScheduler continuationScheduler = new(context);
         int memberIndex = 0;
+        bool boundaryContinuationStarted = false;
         foreach (PlanAction[] prefix in prefixes)
         {
             bool upgradedPower = powerUpgradePrefixes.Contains(PowerPrefixKey(prefix));
@@ -283,12 +284,18 @@ internal static partial class CombatSearchCoordinator
 
                 PlanAction[] continuationPrefix = prefix;
                 bool continueSelectedTurn = false;
-                if (!upgradedPower && configuredVariant.BaseScoreOnly
-                    && memberIndex == variants.Length - 1
+                bool deferredPowerMember = variants.Length == 4 && memberIndex == 1
+                    && configuredVariant.BeamWidth > profile.BeamWidth;
+                bool boundaryBandMember = variants.Length == 4 && memberIndex == 2
+                    && configuredVariant.SecondRankBand && boundaryContinuationStarted;
+                if (!upgradedPower
+                    && (configuredVariant.BaseScoreOnly && memberIndex == variants.Length - 1
+                        || deferredPowerMember || boundaryBandMember)
                     && IsCompleteVictory(selected) && !selected.Snapshot.HasRisk
                     && selected.ExplicitPotionCount == 0
                     && !policy.PotionStrategy.HasForcedDirectives
-                    && selected.ProjectedBattleHpLost >= SolverWeights.PotionMinimumHpSaved)
+                    && (selected.ProjectedBattleHpLost >= SolverWeights.PotionMinimumHpSaved
+                        || boundaryContinuationStarted))
                 {
                     PlanAction[] opening = selected.BestNode.Actions
                         .TakeWhile(action => action.Turn == root.StartTurnNumber).ToArray();
@@ -299,7 +306,19 @@ internal static partial class CombatSearchCoordinator
                         // Reuse this existing member's allowance for the selected turn boundary.
                         // The scheduler resets heuristic history while replaying exact combat state.
                         continuationPrefix = opening;
+                        if (deferredPowerMember)
+                        {
+                            PlanAction? nextTurnPower = prefixBuilder.BuildPowerActionsAfterPrefix(opening)
+                                .Where(action => PowerCardValuationModels.Registry.ContainsCardId(action.CardId!))
+                                .OrderByDescending(action => PowerCardValuationModels.Registry
+                                    .TryGetCommitmentDescriptor(action.CardId!, out PowerCommitmentDescriptor descriptor)
+                                        ? descriptor.Priority : 0)
+                                .FirstOrDefault();
+                            if (nextTurnPower != null)
+                                continuationPrefix = [.. opening, nextTurnPower];
+                        }
                         continueSelectedTurn = true;
+                        boundaryContinuationStarted = true;
                     }
                 }
                 SolverSearchProfile routeProfile = profile with
