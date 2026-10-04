@@ -9055,5 +9055,500 @@
       "scope": "streaming diagnostics only to resolve actual activation/hit/eviction counts; elapsed not acceptance"
     },
     "decision": "Do not promote or deploy;23sec screen not2x. Cache active but2.25% of all transitions hit in separate diagnostic,6.68% eligible attempts;4096 templates repeatedly evicted. No isolated attribution of allocator/key/lock/retention cost from one screen."
+  },
+  "roundDonationMemoIsolatedContract": {
+    "baseCommit": "c7467a0a",
+    "runtimeTemplate": "transition-donation-src",
+    "purpose": "end-turn-only released-state memo with first-entry retention and bounded key text",
+    "sourceHashes": {
+      "src/Search/SearchTransitionDonationMemo.cs": "7dccbff94df37a4142fcbae20627e124d32e6b88edf5e3b633e586ee9bb02c3d",
+      "src/Testing/UnattendedTestRunner.RoundDonationMemo.cs": "0492332d9f62d500a150d73da9044852566e96d7c741020abc7131faa7ac4de9",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "67ed987eaca6969cc0e67806390a087ab7f7039287bc82896e6e4fc3a5c22f53",
+      "src/Testing/UnattendedTestRunner.TransitionDonationMemo.cs": "02cc77e84a38bb330d1cce088764d00f424efc934f85f81ad5bafdc7fcc14141"
+    },
+    "status": "rejected-single-screen-not-twofold",
+    "runtimePromoted": false,
+    "deployed": false,
+    "parameters": {
+      "maximumEntries": 4096,
+      "maximumPaths": 65536,
+      "maximumHistory": 64,
+      "maximumActionCharacters": 4096,
+      "maximumKeyCharacters": 8388608,
+      "retainFirst": true,
+      "endTurnOnly": true
+    },
+    "unverified": [
+      "all permitted-source key closure",
+      "template byte bound",
+      "final interleaved acceptance",
+      "fixed full regression",
+      "native frozen target whole-battle deployment"
+    ],
+    "build": {
+      "seconds": 27.88,
+      "warnings": 0,
+      "errors": 0
+    },
+    "dllSha256": "ff6c8f447234d026e19aed1870556c82ecdfe192df2470d9b65f19e51ea690a5",
+    "nativeConfiguration": "SILENT/NIBBITS_WEAK/999hp/ROUND_DONATION_MEMO_20261004;two EndTurns/native Mayhem first;34hits/16lanes;strict full replay;2slot first-retention;120sec cap;no performance",
+    "nativeContract": {
+      "runId": "a44b0ff7cc3f438490b0cd3f3e7d6262",
+      "status": "Passed",
+      "elapsedMilliseconds": 33557.0322,
+      "mainAssemblyHash": "FF6C8F447234D026E19AED1870556C82ECDFE192DF2470D9B65F19E51EA690A5",
+      "completedChecks": [
+        "RoundDonationMemo:TwoStrictRoundMisses:34ActualCacheHits:FullHistorySnapshotState:16ParallelOwnedForksWithIndependentHpMutation:ParentLiveRngIsolated:TwoEarlyEntriesRetained:CapacitySkip:NonEndTurnRejected:RootSetupPolicyCancellationAndDisposeIsolation",
+        "RoundDonationMemo:TwoNativeFullRoundStates:MayhemAutomaticPlayDrawShuffleEnemyMovesRng:StrictReplayStillEnabled:NoCoordinatorBudgetOrPerformanceMeasurement",
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=43:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "TransitionDonationMemo:ActualCoordinatorStrictDop16:cacheHits=1079:CompleteWinnerNoAdditionalLossOrPotion:ActualPlanPowerMembers:LiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=3:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/round-donation-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "scope": "two native EndTurns with Mayhem automatic play/draw/shuffle/enemy state;34actual cachehits/16parallel altered forks;2retained slots/capacity skip/non-EndTurn gate;actual strictDOP16 Coordinator1079hits/3plan8power transfers/43prunes;2native potions;limited root"
+    },
+    "performanceScreen": {
+      "resultPath": ".local/general-healing-audit/round-donation-silent-screen/harness-result.json",
+      "wallSeconds": 22.8863101,
+      "peakProcessWorkingSetBytes": 19301638144,
+      "totalAllocatedBytes": 21633900744,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQuality": true,
+      "work": {
+        "TotalExpanded": 102259,
+        "TotalTransitions": 574344
+      },
+      "originalSpeedup": 1.6223768548867123,
+      "peakRatioOriginal": 0.7829376815157939,
+      "peakRatioResearchBaseline": 1.7302292621313595,
+      "scope": "one uninstrumented whole request,not final interleaved acceptance"
+    },
+    "cacheDiagnostic": {
+      "resultPath": ".local/general-healing-audit/round-donation-silent-diagnostic/harness-result.json",
+      "stats": {
+        "attempts": 7323,
+        "hits": 1264,
+        "donations": 3226,
+        "evictions": 0,
+        "rejected": 0,
+        "retained": 3226,
+        "paths": 8143,
+        "capacitySkips": 0,
+        "keyCharacters": 5465315
+      },
+      "fractionAttemptsHit": 0.1726068551140243,
+      "fractionTotalTransitionsHit": 0.002200771662975499,
+      "wallSeconds": 22.3503266,
+      "sameRootBudgetQuality": true,
+      "sameWork": true,
+      "scope": "stream diagnostics only;notperformance"
+    },
+    "decision": "Do not promote or deploy;first-retention capacity never filled in diagnostic, so no causal blame to eviction for this scope. EndTurn capture/checkpoint exclusion leaves narrow eligible path; source/caller semantics audit required before expansion."
+  },
+  "stableRoundCaptureMemoIsolatedContract": {
+    "baseCommit": "c7467a0a",
+    "runtimeTemplate": "round-donation-src",
+    "purpose": "reuse stable ordinary initial EndTurn results while a probe capture is requested;actual suspended checkpoints remain original;freeze prefix index at first-entry capacity",
+    "status": "rejected-single-screen-not-twofold",
+    "runtimePromoted": false,
+    "deployed": false,
+    "callerAudit": {
+      "files": [
+        "src/Search/CombatBeamSolver.EndTurnChoiceReplay.cs",
+        "src/Search/CombatBeamSolver.RoundTransition.cs",
+        "src/Search/CombatBeamSolver.Expansion.Replay.cs"
+      ],
+      "finding": "pending layer alone consumes/observes/takes capture;stable None result yields no layer;hint mutation happens only on observed pending;physical prefix captures can be omitted when stable cached result reused",
+      "scope": "source inspection,not full permitted-callback key closure",
+      "missForkChange": "Ordinary gated seed prepared inside transition guard only on actual cache miss;checkpoint-specific seeds stay on original path;physical fork counters continue reflecting actual work;node/transition budget unchanged."
+    },
+    "parameters": {
+      "maximumEntries": 4096,
+      "maximumPaths": 65536,
+      "maximumHistory": 64,
+      "maximumKeyCharacters": 8388608,
+      "maximumActionCharacters": 4096,
+      "retention": "first entries;freeze new prefix intern at capacity"
+    },
+    "unverified": [
+      "all permitted-source key closure",
+      "template byte retention",
+      "full request2x and memory/fixedregression"
+    ],
+    "buildHistory": [
+      {
+        "seconds": 21.63,
+        "warnings": 0,
+        "errors": 0,
+        "nativeExecuted": false,
+        "reason": "source review found ordinary parent fork still prepared before cache read; defer it to actual miss before native qualification"
+      }
+    ],
+    "sourceHashes": {
+      "src/Search/SearchTransitionDonationMemo.cs": "7e5d443bfc6e98345e808670be35f8841c1fdf020d70a4af40a03dc0733d6705",
+      "src/Search/CombatBeamSolver.Expansion.Replay.cs": "fab96ffb8e1ddfb7e46c6b1bfedff11e937ea7269994c63aacb18355988b98bd",
+      "src/Search/CombatBeamSolver.EndTurnChoiceReplay.cs": "c1e909d3191ce82884cd2651e21468cc44ee26c8fcb5f6d15adeb92e7cc2edd8",
+      "src/Search/CombatBeamSolver.RoundTransition.cs": "0ef80d811a1ff4e0bda1ac8e8d744680cfa5457d61c590c44461301343243e38",
+      "src/Search/CombatBeamSolver.TransitionCaptureContract.cs": "8264da34fa72e448f30de07471fd4a05c28f530cdedb827972d7b73b0b1a5cbb",
+      "src/Testing/UnattendedTestRunner.RoundDonationMemo.cs": "136b54d6344b032d404d4671edcbcfdf69d6ee23f8002a78b9e916475a92eb10",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "914a04dabcab860def3cbd82f123a250baeb27e3a9995cfc2a27a3bd13ab0d60"
+    },
+    "dllSha256": "89120730e9d672587cdbf94b901ffe11c15077d6bf8ca67a468f7c7450bcdf10",
+    "build": {
+      "revision": "v2",
+      "warnings": 0,
+      "errors": 0,
+      "seconds": 14.17
+    },
+    "nativeContract": {
+      "runId": "e11c31daf629480ba8f489b674107cfe",
+      "status": "Passed",
+      "elapsedMilliseconds": 33117.5703,
+      "mainAssemblyHash": "89120730E9D672587CDBF94B901FFE11C15077D6BF8CA67A468F7C7450BCDF10",
+      "completedChecks": [
+        "RoundCaptureDonationMemo:TwoStrictRoundMisses:34ActualCacheHits:FullHistorySnapshotState:16ParallelOwnedForksWithIndependentHpMutation:ParentLiveRngIsolated:TwoEarlyEntriesRetained:CapacitySkip:NonEndTurnRejected:RootSetupPolicyCancellationAndDisposeIsolation",
+        "RoundCaptureDonationMemo:TwoNativeFullRoundStates:MayhemAutomaticPlayDrawShuffleEnemyMovesRng:StrictReplayStillEnabled:NoCoordinatorBudgetOrPerformanceMeasurement",
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=40:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "TransitionDonationMemo:ActualCoordinatorStrictDop16:cacheHits=1132:CompleteWinnerNoAdditionalLossOrPotion:ActualPlanPowerMembers:LiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=3:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/round-capture-donation-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "scope": "learned capture forced on stable Mayhem EndTurns;34directhits/16ownedparallelforks/captureignoredonlyforstableNone;2complete native EndTurns;strictDOP16 actualCoordinator1132hits/3plan8power40prunes;2native potions;limited root"
+    },
+    "performanceScreen": {
+      "resultPath": ".local/general-healing-audit/round-capture-donation-silent-screen/harness-result.json",
+      "wallSeconds": 21.6202314,
+      "peakProcessWorkingSetBytes": 17181171712,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQuality": true,
+      "work": {
+        "TotalExpanded": 102259,
+        "TotalTransitions": 574344
+      },
+      "originalSpeedup": 1.7173830896185505,
+      "peakRatioOriginal": 0.696924615701573,
+      "scope": "one uninstrumented whole request,not final interleaved acceptance"
+    },
+    "cacheDiagnostic": {
+      "resultPath": ".local/general-healing-audit/round-capture-donation-silent-diagnostic/harness-result.json",
+      "stats": {
+        "attempts": 39395,
+        "hits": 6176,
+        "donations": 4096,
+        "evictions": 0,
+        "rejected": 18939,
+        "retained": 4096,
+        "paths": 9514,
+        "capacitySkips": 1264,
+        "keyCharacters": 7586680
+      },
+      "fractionAttemptsHit": 0.15677116385328088,
+      "fractionTotalTransitionsHit": 0.010753137492513198,
+      "wallSeconds": 20.6072617,
+      "sameRootBudgetQuality": true,
+      "sameWork": true,
+      "scope": "stream diagnostics only;notperformance"
+    },
+    "decision": "not promoted/deployed;21.62sec original1.717x;stable initial-capture reuse/source-deferred parentfork correct in limitednativecontract,not sufficientperformance;next long-history scope requires additional native evidence"
+  },
+  "longHistoryRoundMemoIsolatedContract": {
+    "baseCommit": "c7467a0a",
+    "runtimeTemplate": "round-capture-donation-src",
+    "purpose": "long-history end-turn cached replay;256event cap with early-entry/text bounds unchanged",
+    "status": "rejected-single-screen-not-twofold",
+    "runtimePromoted": false,
+    "deployed": false,
+    "parameters": {
+      "maximumEntries": 4096,
+      "maximumHistory": 256,
+      "maximumKeyCharacters": 8388608,
+      "endTurnOnly": true,
+      "retainFirst": true,
+      "freezePrefixAtCapacity": true
+    },
+    "nativeContractScope": "five actual full native EndTurns/Mayhem/long history>64;85hits/16ownedforks/five early slots;explicit smallCoordinator;no performance",
+    "unverified": [
+      "all permitted-source key closure",
+      "template byte-bound",
+      "full request2x and memory/fixed regression"
+    ],
+    "sourceHashes": {
+      "src/Search/SearchTransitionDonationMemo.cs": "82e31aeea02fb8c4a04357e0971874d9eef0d144e280f983949022e43b6c3ca0",
+      "src/Testing/UnattendedTestRunner.RoundDonationMemo.cs": "a929966f232302e36e7c8016a2bf8b7cb4618239fae74cb26980250852fa8bc1",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "4c6ba63bf60397e3e21b4227d5af5e832a3620f165fb50d668b275adc20e592f",
+      "src/Search/CombatBeamSolver.Expansion.Replay.cs": "fab96ffb8e1ddfb7e46c6b1bfedff11e937ea7269994c63aacb18355988b98bd"
+    },
+    "dllSha256": "a4b81358015faf033151edcb8715c3f82bca700bc663e2c828ec46ca31c76654",
+    "nativeContractHistory": [
+      {
+        "runId": "6a5f5e9870e54d85877b40822bb340bf",
+        "status": "Failed",
+        "elapsedMilliseconds": 27418.6925,
+        "mainAssemblyHash": "BDD191E5E339475CC60534A4CA6AB561437E8954EA7D5FEF67ADEC8CE3FE8728",
+        "completedChecks": [],
+        "error": "System.InvalidOperationException: Fixture did not cover long history: 64\n   at CombatSolver.UnattendedTestRunner.AssertRoundDonationMemoAsync(CombatState live, Player player)\n   at CombatSolver.UnattendedTestRunner.Executor.ExecuteAsync(ScenarioContext scenario)\n   at CombatSolver.UnattendedTestRunner.RunAsync()",
+        "resultPath": ".local/general-healing-audit/round-history-donation-native/result.json",
+        "launcherExitCode": 1,
+        "instanceCleanup": "launcher removed owned instance",
+        "reason": "fixture four EndTurns reached exactly64 events, not >64;long-history claim correctly rejected before performance"
+      }
+    ],
+    "buildHistory": [
+      {
+        "seconds": 22.52,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "build": {
+      "revision": "v2",
+      "seconds": 14.03,
+      "warnings": 0,
+      "errors": 0
+    },
+    "nativeContract": {
+      "runId": "f55af80fdb6649aeaaf36eb799728f5b",
+      "status": "Passed",
+      "elapsedMilliseconds": 35313.8858,
+      "mainAssemblyHash": "A4B81358015FAF033151EDCB8715C3F82BCA700BC663E2C828EC46CA31C76654",
+      "completedChecks": [
+        "RoundHistoryDonationMemo:ActualHistoryBeyondOld64Limit:maxHistory=83",
+        "RoundHistoryDonationMemo:FiveStrictRoundMisses:85ActualCacheHits:FullHistorySnapshotState:16ParallelOwnedForksWithIndependentHpMutation:ParentLiveRngIsolated:FiveEarlyEntriesRetained:CapacitySkip:NonEndTurnRejected:RootSetupPolicyCancellationAndDisposeIsolation",
+        "RoundHistoryDonationMemo:FiveNativeFullRoundStates:MayhemAutomaticPlayDrawShuffleEnemyMovesRng:StrictReplayStillEnabled:NoCoordinatorBudgetOrPerformanceMeasurement",
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=43:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "TransitionDonationMemo:ActualCoordinatorStrictDop16:cacheHits=1204:CompleteWinnerNoAdditionalLossOrPotion:ActualPlanPowerMembers:LiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=6:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/round-history-donation-native-v2/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "scope": "five actual EndTurns/native Mayhem and enemy/RNG/history state;maxHistory83;85hits/16mutableownedforks;5retainedslots;actualStrictDOP16Coordinator1204hits/3plan8power43prunes;2nativepotions;limitedroot"
+    },
+    "performanceScreen": {
+      "resultPath": ".local/general-healing-audit/round-history-donation-silent-screen/harness-result.json",
+      "wallSeconds": 21.0923857,
+      "peakProcessWorkingSetBytes": 11268837376,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQuality": true,
+      "work": {
+        "TotalExpanded": 102259,
+        "TotalTransitions": 574344
+      },
+      "originalSpeedup": 1.7603613137038356,
+      "peakRatioOriginal": 0.45710096431823166,
+      "scope": "one uninstrumented whole request,notfinalinterleavedacceptance"
+    },
+    "cacheDiagnostic": {
+      "resultPath": ".local/general-healing-audit/round-history-donation-cost-diagnostic/harness-result.json",
+      "stats": {
+        "attempts": 121393,
+        "hits": 337,
+        "donations": 4096,
+        "evictions": 0,
+        "rejected": 114897,
+        "retained": 4096,
+        "paths": 4185,
+        "capacitySkips": 2043,
+        "keyCharacters": 3113319
+      },
+      "fractionAttemptsHit": 0.0027761073538012902,
+      "fractionTotalTransitionsHit": 0.0005867563690053348,
+      "wallSeconds": 22.9898432,
+      "sameRootBudgetQuality": true,
+      "sameWork": true,
+      "scope": "timing/stream diagnostics only,notperformance"
+    },
+    "costDiagnostic": {
+      "purpose": "diagnostic memo-key/fork/attach/donation per-call elapsed intervals",
+      "sourceHashes": {
+        "Program.cs": "e8c0c775842612b3e343c785522c69c1104ffca3cfd6a8d066ba4706253c5f6e",
+        "TransitionMemoCostProbe.cs": "eff1e6046ffb6ebd76f993c958bfe5f84cfa6b889eeb75e0ec5207ca180991f5"
+      },
+      "runtimeChanged": false,
+      "performanceAcceptance": false,
+      "status": "diagnostic-cost-observations-complete",
+      "scope": "sum method elapsed incl waits,scheduling/parallel overlap;not CPU or whole request overhead;raw per-call timing not retained",
+      "build": {
+        "seconds": 16.74,
+        "warnings": 0,
+        "errors": 0
+      },
+      "hostDllSha256": "80395dd3801b4f8eda70459858cd58282758fd70a3fbc1e2333e42791a871795",
+      "runtimeDllSha256": "a4b81358015faf033151edcb8715c3f82bca700bc663e2c828ec46ca31c76654",
+      "resultPath": ".local/general-healing-audit/round-history-donation-cost-diagnostic/harness-result.json",
+      "timings": {
+        "observationOnly": true,
+        "stopwatchFrequency": 1000000000,
+        "entries": [
+          {
+            "name": "BuildKey",
+            "calls": 510688,
+            "elapsedMillisecondsTotal": 2245.584204
+          },
+          {
+            "name": "TryFork",
+            "calls": 6496,
+            "elapsedMillisecondsTotal": 256.43266
+          },
+          {
+            "name": "Attach",
+            "calls": 6496,
+            "elapsedMillisecondsTotal": 14.746579
+          },
+          {
+            "name": "Donate",
+            "calls": 6476,
+            "elapsedMillisecondsTotal": 36.049181
+          }
+        ],
+        "scope": "Per-call elapsed intervals, including lock wait and scheduling;DOP intervals overlap. Not CPU time or whole-request overhead. Instrumentation is not performance acceptance."
+      },
+      "request": {
+        "wallSeconds": 22.9898432,
+        "work": {
+          "TotalExpanded": 102259,
+          "TotalTransitions": 574344
+        },
+        "sameFrozenRoot": true,
+        "sameConfiguredBudget": true,
+        "sameQuality": true,
+        "scope": "diagnostic only,not performance acceptance"
+      }
+    },
+    "decision": "Not promoted or deployed: 21.0924s, original speedup 1.760x. Separate diagnostic recorded 114897 aggregate rejections and only337hits; individual rejection reasons were not counted. First4096 retention/prefix freeze and larger history eligibility are an investigation lead, not an isolated causal proof. BuildKey sum2.25s includes lock waits/scheduling/parallel overlap and is not whole-request overhead. Do not increase entries without byte/memory proof.",
+    "sourceReview": {
+      "fixedPrefixSchedulingReset": {
+        "file": "src/Search/CombatBeamSolver.Phases.cs",
+        "method": "ApplyFixedPrefixActions",
+        "finding": "Reset changes CombatProgress/Cycle and mutation/power lineage, retains node Action, Parent and ActionCount. SearchNode.MaterializeActions follows the full parent chain. Suspected omission of executed fixed prefix by this reset is not supported by actual source.",
+        "scope": "source inspection only; no new runtime or performance run"
+      },
+      "releaseDonationOwnership": {
+        "files": [
+          "src/Search/CombatPlan.cs",
+          "src/Search/SearchTransitionDonationMemo.cs"
+        ],
+        "finding": "ReleaseSimulator clears snapshot reference before callback and Attach records turn/shuffle/deaths from snapshot; caller-level proof that retained simulator is never advanced after Attach and before Release remains pending. Test deliberately clears callback before independent HP mutation. No production mismatch demonstrated."
+      },
+      "identityClosure": "Exact action JSON equality supplements the state fingerprint; complete deterministic closure over every permitted source remains unverified. Root healing certificate alone does not certify cache identity."
+    }
+  },
+  "transitionMemoCostIsolatedDiagnostic": {
+    "purpose": "diagnostic memo-key/fork/attach/donation per-call elapsed intervals",
+    "sourceHashes": {
+      "Program.cs": "e8c0c775842612b3e343c785522c69c1104ffca3cfd6a8d066ba4706253c5f6e",
+      "TransitionMemoCostProbe.cs": "eff1e6046ffb6ebd76f993c958bfe5f84cfa6b889eeb75e0ec5207ca180991f5"
+    },
+    "runtimeChanged": false,
+    "performanceAcceptance": false,
+    "status": "diagnostic-cost-observations-complete",
+    "scope": "sum method elapsed incl waits,scheduling/parallel overlap;not CPU or whole request overhead;raw per-call timing not retained",
+    "build": {
+      "seconds": 16.74,
+      "warnings": 0,
+      "errors": 0
+    },
+    "hostDllSha256": "80395dd3801b4f8eda70459858cd58282758fd70a3fbc1e2333e42791a871795",
+    "runtimeDllSha256": "a4b81358015faf033151edcb8715c3f82bca700bc663e2c828ec46ca31c76654",
+    "resultPath": ".local/general-healing-audit/round-history-donation-cost-diagnostic/harness-result.json",
+    "timings": {
+      "observationOnly": true,
+      "stopwatchFrequency": 1000000000,
+      "entries": [
+        {
+          "name": "BuildKey",
+          "calls": 510688,
+          "elapsedMillisecondsTotal": 2245.584204
+        },
+        {
+          "name": "TryFork",
+          "calls": 6496,
+          "elapsedMillisecondsTotal": 256.43266
+        },
+        {
+          "name": "Attach",
+          "calls": 6496,
+          "elapsedMillisecondsTotal": 14.746579
+        },
+        {
+          "name": "Donate",
+          "calls": 6476,
+          "elapsedMillisecondsTotal": 36.049181
+        }
+      ],
+      "scope": "Per-call elapsed intervals, including lock wait and scheduling;DOP intervals overlap. Not CPU time or whole-request overhead. Instrumentation is not performance acceptance."
+    },
+    "request": {
+      "wallSeconds": 22.9898432,
+      "work": {
+        "TotalExpanded": 102259,
+        "TotalTransitions": 574344
+      },
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQuality": true,
+      "scope": "diagnostic only,not performance acceptance"
+    }
   }
 }

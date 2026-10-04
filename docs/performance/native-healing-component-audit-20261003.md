@@ -142,3 +142,12 @@ TheInsatiable的初始行动明确给玩家生成六张FranticEscape，三张进
 独立请求缓存采用稳定快照释放后的所有权移交，锁内Fork，不直接共享可变模板。`TRANSITION-DONATION-MEMO` / `08730d3bad504b0f8083496fc4a5986e`、DLL`8191ade5…`、27.37秒Passed：51个真实命中、16路独立HP修改、完整history/快照/状态、FIFO、不同根/setup/政策、取消及Dispose/晚到移交；三个原生状态相等。增加Coordinator后的DLL`ee447e01…`，run`5285e6187c8948cbba341dbfc6bb6ad7`、31.44秒Passed，显式Beam24/1200/10000毫秒、Coordinator20000毫秒宽12/8、DOP16严格增量，记录1899真实hit、计划/能力传递3/8、32次剪枝、同战损完整无药胜利及两药水顺序/完整原生状态/父/live/RNG。原生阶段取消20秒、共享搜索取消30秒、启动器120秒，实例均删除。构建/准备失败及来源哈希单独保留，不复跑输入未变的成功合同。
 
 缓存根/动作前缀/政策键、移交和有界数量只属研究证明；回复组件证书本身不能证明所有未来机制的转移同余。全部允许来源的确定性闭包、实际对象图字节上界仍未完成。无插桩整请求22.99秒仅原始1.615倍、Win40/0瓶/4回合；另单独流式诊断12921命中/193555次尝试、大量FIFO淘汰，不作验收时间。未纳入生产或部署，未新增回复机制认证。详细输入、三份原生结果和性能/内存限制见配套JSON及[性能记录](component-healing-bound-20261003.md)。
+
+
+## EndTurn 初始 capture 与长历史复用的有限合同（2026-10-04）
+
+复用前述原生DLL版本及猎手来源证明，不改变生产组件准入或7/29覆盖。三版隔离合同 DLL/run 分别 `ff6c8f44…`/`a44b0ff7cc3f438490b0cd3f3e7d6262`、`89120730…`/`e11c31daf629480ba8f489b674107cfe`、`a4b81358…`/`f55af80fdb6649aeaaf36eb799728f5b`，33.56/33.12/35.31秒Passed。前两版各34个直接命中/两项完整原生EndTurn，末版85个命中/五项完整原生EndTurn、history83条；覆盖Mayhem自动牌/抽牌洗牌/敌方/RNG、完整history与快照、16路独立改血Fork/父live模板、容量/根setup政策取消Dispose。实际严格DOP16 Coordinator分别1079/1132/1204命中、3/8计划/能力传递及43/40/43次生命剪枝，完整胜利和两项原生药水状态不变。
+
+初始EndTurn capture扩大仅限稳定None且实际消费者无选择层；挂起checkpoint/capture续接仍原路。普通Fork延迟到miss，严格完整回放仍执行。最初长历史夹具四回合仅64条，`6a5f5e9870e54d85877b40822bb340bf`在覆盖断言Failed，未算通过；第五回合83条通过，实例全部删除、120秒帽。各源码/build/hash/失败和小预算见配套JSON新增三项合同。
+
+完整冻结请求三版22.89/21.62/21.09秒、原始仅1.622/1.717/1.760倍，均未纳入生产。独立诊断最后337hit/114897聚合拒绝，非认证覆盖；构键累计elapsed约2.25秒含锁等待及并行重叠，不代表完整请求开销。固定前缀reset经源码核对保留完整动作父链；全允许来源键闭包、移交前所有调用者不推进状态及模板字节界仍未完成，没有以回复证书代替缓存确定性证明。具体结果及未验证项见[性能报告](component-healing-bound-20261003.md)与配套JSON的`roundDonationMemoIsolatedContract`、`stableRoundCaptureMemoIsolatedContract`、`longHistoryRoundMemoIsolatedContract`、`transitionMemoCostIsolatedDiagnostic`。
