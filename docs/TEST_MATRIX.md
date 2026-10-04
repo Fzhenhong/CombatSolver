@@ -34,7 +34,7 @@ dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolv
 
 复跑必须声明内存档（`GC_SEARCH_ALLOCATION_LIMIT` 与 `GC_NO_GC_REGION_DECLINED percent_of_configured`）：
 同一夹具在窄档（弃区 24%）与宽档（44%）会给出不同终值，O045 实测窄档 1 战损 / 1 瓶、宽档 14 战损 / 0 瓶，
-O041/O042/O044 跨档不变。
+O041/O042/O044 跨档不变。W2 修复（Smart 药水层不再被 strategic 净差整层否证）后四条复跑均 Passed，score 与修复前逐位相同（O045 由 Failed 转 Passed，runId 095e69ee275b4acca62f35e9e735c869）；修复后的宽档实测尚未取得，宽窄档一致仍需在 GC_SEARCH_ALLOCATION_LIMIT ≥ 2.2GB 的机器复跑确认。
 
 四份夹具的 `timeoutSeconds=300` 高于 AGENTS.md 第 8 节的 120 秒默认口径：该值跟随各包内录制的
 `softTimeBudgetMilliseconds`（五包分别 120000/300000/180000/300000/180000ms，最长 300000ms），属

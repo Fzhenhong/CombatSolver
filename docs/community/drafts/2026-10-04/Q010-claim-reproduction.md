@@ -103,7 +103,7 @@ O044 实测 projHP=5、0 瓶、endTurn=6、`unavoidable_hp_lost=5`、`score=1000
 3. 战损 14 的 strategic 净差为 8，低于门槛 `firstPaidPotionHpRequired=9`（本轮 `potion_reward=Unknown/-/credit=0`，无替代治疗抵免）→ `MaximumSmartPotionUses`（`src/Search/CombatSearchCoordinator.cs:1009-1052`）返回 0 → Smart 梯度在 `src/Search/CombatSearchCoordinator.Audits.cs:859-865` 以 `stop=no_potion_acceptable maximum=0` 直接返回，**整层药水搜索被跳过** → 终值停在零药 14。
 4. 认领者侧零药只有 20，门槛通过，梯度 layer=1 搜出 1 瓶省血 19、整场战损 1 的路线并选中。
 
-即同一输入、同一政策、同一预算下，更宽的内存覆盖反而产出更差结果（14 vs 1）。缺口出在「零药更优 → 判定药水不可能划算 → 不搜药水层」这一步：门槛只看 strategic 净差，被更好的零药结果压低后就否证了整层，而该层里存在终值更优的路线。这是判据口径问题，不属于「源码相对包内路线退化」；按 AGENTS.md 第 1 节本批不改这段判据（影响所有 Smart 政策场景，需独立的「同根质量无退化 + 耗时无明显增加」哨兵），与门限口径一起交维护者定口径。
+即同一输入、同一政策、同一预算下，更宽的内存覆盖反而产出更差结果（14 vs 1）。缺口出在「零药更优 → 判定药水不可能划算 → 不搜药水层」这一步：门槛只看 strategic 净差，被更好的零药结果压低后就否证了整层，而该层里存在终值更优的路线。这是判据口径问题，不属于「源码相对包内路线退化」；按 AGENTS.md 第 1 节本批不改这段判据（影响所有 Smart 政策场景，需独立的「同根质量无退化 + 耗时无明显增加」哨兵），与门限口径一起交维护者定口径。**该缺口已于同日按 W2 修复**（本文件末尾「W2 修复与复跑结果」一节）：修复后本夹具转 Passed。
 
 ### O042 顺带闭合两项
 
@@ -129,12 +129,27 @@ O041 与 O042 的共同线索是 beam 宽度组合的精炼成员几乎全部被
 2. 三处首跑 `process_crash` 的原因**不同**，不都是 MemoryCleaner：`Q010-O043-so` 与 `Q010-O044-so` 的 `launcher-error.log` 指向 `run-unattended-test.ps1:466`，即 launcher.lock 争用（同一 headless 实例被并发占用），与 MemoryCleaner 无关；只有 `Q010-O045-searchonly` 首跑是 `run-unattended-test.ps1:422` 硬校验 CombatSolver.dll / manifest / MemoryCleaner.exe 三件产物失败。该 exe 是 `net48` 项目，需 .NET Framework 4.8 引用程序集；本机无 VS / SDK / winget，改用 NuGet `Microsoft.NETFramework.ReferenceAssemblies.net48` 解出引用程序集安装后构建通过（0 警告 0 错误），未改动仓库任何文件。
 3. 工具链：游戏 v0.111.0、RitsuLib 程序集 0.6.2.0、.NET SDK 10.0.400，headless 全程无需打开游戏窗口。
 
+## W2 修复与复跑结果（2026-10-04，Refs #210）
+
+修复一处：`src/Search/CombatSearchCoordinator.Audits.cs` 梯度入口在 Smart 政策下另按必然受击轴（`SolverResult.UnavoidableHpLost`，口径 `src/Search/CombatBeamSolver.Phases.cs:541-545,833`）求一份 `MaximumSmartPotionUses` 配额并取两者最大值，另输出 `SMART_POTION_GRADIENT axis_widened` 诊断。净差恒 ≤ 必然受击 ⇒ 新上界 ≥ 旧上界 ⇒ 只会多搜；层内是否采纳仍由 `RouteQualityPolicy`/`IsBetterPotionPolicyResult` 裁决，beam/节点/时间/No-GC 预算与比较规则一律未动。完整调用链与新旧行为差异推导在 `.local/tool-tasks/q010/w2-fix-rationale.md`。
+
+四条同根夹具复跑（约定：`score` 取 `comparisonQuality.score`；「墙钟」取 `timings.json` 各阶段之和；`limit` 取 `GC_SEARCH_ALLOCATION_LIMIT`）：
+
+| 主题 | 修复前 runId / 判定 / score | 修复后 runId / 判定 / score | 修复后终值 | 墙钟 ms | 本轮 limit | axis_widened |
+| --- | --- | --- | --- | --- | --- | --- |
+| O041 | `e1ef0c5f…` Passed / 10001064970 | `4e7f8e7e284a447195163b3741dc3f02` Passed / 10001064970 | 17 / T6 / 1 瓶 saved 16 | 40901.3 | 1183750724 | 未触发 |
+| O042 | `430a16e9…` Passed / 10001354974 | `5743f2ccc3de429584df1d0e92a538fd` Passed / 10001354974 | 5 / T7 / 0 瓶、sold 4、unavoidable 1 | 34975.6 | 1189524716 | 未触发 |
+| O044 | `c1c11f6d…` Passed / 10001829972 | `f6633b40430b49bd9d0c3e159d4e23ab` Passed / 10001829972 | 5 / T6 / 0 瓶 | 32780.8 | 1276120984 | 未触发 |
+| O045 | `d67f8317…` **Failed** / 10001209968（projHP 14） | `095e69ee275b4acca62f35e9e735c869` **Passed** / 10001989977 | 1 / T5 / 1 瓶 saved 19 | 31295.2 | 1307413060 | hp_deficit=14 unavoidable=19 maximum 1→2 |
+
+四条 `score` 与修复前逐位相同，O045 的 `score` 现与认领者窄档产物 `4d21b9fe…` 逐位相同。O045 第 2 层被真实搜索（`saved=20 required=27 selected=False`）后仍选第 1 层，说明轴放宽只扩大搜索面、不改变采纳判定。O041/O042/O044 的 `axis_widened` 未触发，即修复前行为确为被包含的子集。构建 0 警告 0 错误；另有三次 O045 复跑（`57b3c995…`、`dfc63c07…`、`567b87d9…`）同样 Passed 且同样落窄档。
+
 ## 未验证项
 
-- 本批无生产代码改动，因此没有「修改前失败 / 修改后通过」同输入对照；质量无退化的直接证据是 `git diff` 在 `src` 与 `tools` 为空，加上 O044 同根同政策跨内存档重跑的终值、`score` 与路线全同。
-- 「未改目标哨兵」在本批没有对应物（没有任何搜索策略代码改动，`src`/`tools` 的 diff 为空就是该哨兵的定义性证据）。「严格关闭内存门限」的同根对照未单独构建，已由本轮天然 A/B 替代闭合（O042 `ran=3` vs `ran=2` 结果不变、O045 `ran=3` 使结果变差）。成对耗时只到 SearchOnly 搜索与 launcher 墙钟两个口径（见上表），未做同一进程内的严格交替计时。
-- O045 的宽档失败只在这台机器复现（分配墙约为认领者的 1.8 倍）。未在认领者那档余量下重跑以证明「余量窄即 Passed」——该侧证据来自认领者产物，非本轮执行。**结论：O045 的 1 在高余量机器上不可达；夹具保持锁 1、保持 Failed、不改断言。**
+- W1（门限成本侧与余量侧同起点、有界成员按实际节点配额外推）**未实现**：改动点 `src/Search/CombatSearchCoordinator.BeamPortfolio.cs:120,139-140,207-210` 与 `tools/testing/checks/BeamWidthPortfolioChecks/Program.cs:349-361` 不在实现任务的许可范围。W2 已实现（见末节），因此「本批无生产代码改动」这句只对 t1–t12 成立。
+- 「未改目标哨兵」只对 t1–t12 成立（那时无搜索策略改动，`src`/`tools` diff 为空即定义性证据）；W2 改了 Smart 药水层准入，因此该哨兵现在必须有对应物，目前只做到「四条同根夹具 `score` 与修复前逐位相同」这一层，尚缺同机交替计时与更多场景的不可退化对照。「严格关闭内存门限」的同根对照未单独构建，已由本轮天然 A/B 替代闭合（O042 `ran=3` vs `ran=2` 结果不变、O045 `ran=3` 使结果变差）。成对耗时只到 SearchOnly 搜索与 launcher 墙钟两个口径（见上表），未做同一进程内的严格交替计时。
+- O045 的宽档失败只在这台机器复现（分配墙约为认领者的 1.8 倍）。未在认领者那档余量下重跑以证明「余量窄即 Passed」——该侧证据来自认领者产物，非本轮执行。**W2 修复后的宽档实测仍未取得**：修复后四次 O045 全落窄档（`GC_SEARCH_ALLOCATION_LIMIT` 1.19–1.60GB、弃区 25–30%），而窄档在修复前本就返回 1，故「宽档不再退到 14」目前只有机制推导与 `axis_widened` 触发证据，缺一次 limit ≥ 2.2GB 的实测；修复前宽档退化为 14 是可复现事实（`d67f8317…`、复跑 `e3632e58…`）。夹具断言值全程未改。
 - 二进制等价已由 12 次运行的 `mainAssemblyHash` 对账确认（同一哈希 `7E306914E10A62FA…60A610`），不再是未验证项。
-- O042 的「被迫受击 = 1」已按 diagnostics 对账成立（1 + sold 4 = 5），但夹具断不到它，字段缺失登记为工作项 3。
+- O042 的「被迫受击 = 1」已按 diagnostics 对账成立（1 + sold 4 = 5），但夹具断不到它：`ExpectedInitialUnavoidableHpLost` 需同时改 `src/Testing/Contracts/Search/UnattendedTestRunner.SolverPolicy.cs`（断言体）与 `tools/testing/run-unattended-test.ps1`/`.sh`（CLI→JSON 键；`.sh` 连同族的 `expected_initial_sold_hp` 都缺），三者均不在实现任务许可范围，本轮未落地，工作项 3 仍开放。
 - 五个主题均未执行 `DeploySolver` 原生部署，未做成对耗时对照；PR 保持 Draft、等维护者对口径的答复，部署对照不属于本批收口条件。未运行可见 Steam 会话，无 FPS 与帧时间结论（headless 数据不替代可见性能口径）。
 - 定位报告 `.local/tool-tasks/q010/O041-analysis.md`、`O042-analysis.md` 与验收汇总 `.local/tool-tasks/q010/verification.md` 按仓库规则在任务结束后清理，结论已全部并入本文件与本 PR 正文；证据以登记的 runId 与 `coverage/evidence/test-evidence.json` 为准。

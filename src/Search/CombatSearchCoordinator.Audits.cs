@@ -856,6 +856,25 @@ internal static partial class CombatSearchCoordinator
             policy,
             potionFreeWon,
             potionFreeDeficit);
+        // 净差会把与药水无关的既有治疗一并扣掉，于是零药路线越优越容易否证整个药水层，
+        // 而门槛要比较的「还能省多少血」量在必然受击那一轴上。两条轴都取更宽的一份配额，
+        // 只放宽「跑不跑药水层」，不改动任何预算，也不改变结果之间的比较规则。
+        if (policy.PotionPolicy == SolverPotionPolicy.Smart)
+        {
+            int unavoidableCapacity = MaximumSmartPotionUses(
+                root,
+                policy,
+                potionFreeWon,
+                potionFree.UnavoidableHpLost);
+            if (unavoidableCapacity > maximumOptionalPotionUses)
+            {
+                policy.Diagnostics.Info(
+                    $"[CombatSolver/Test] SMART_POTION_GRADIENT axis_widened " +
+                    $"hp_deficit={potionFreeDeficit} unavoidable_hp_lost={potionFree.UnavoidableHpLost} " +
+                    $"maximum_from_deficit={maximumOptionalPotionUses} maximum_from_unavoidable={unavoidableCapacity}");
+                maximumOptionalPotionUses = unavoidableCapacity;
+            }
+        }
         if (maximumOptionalPotionUses == 0)
         {
             policy.Diagnostics.Info(

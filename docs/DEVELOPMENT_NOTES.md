@@ -10,4 +10,14 @@
 
 ## 下一版本（开发中）
 
-暂无新增行为变化。
+## 下一版本（开发中）
+
+### Smart 药水层的准入不再被 strategic 净差否证（Q010 / W2，Refs #210）
+
+`CombatSearchCoordinator.Audits.cs` 的梯度入口原先只用 `StrategicHpDeficit` 推 `MaximumSmartPotionUses`；净差为 0 时整层药水搜索直接跳过。净差在同一路线上还会扣掉与药水无关的既有治疗，因此恒 ≤ 必然受击（`SolverResult.UnavoidableHpLost`，口径 `src/Search/CombatBeamSolver.Phases.cs:541-545,833`），零药路线越好越容易把药水层否证。Smart 政策下改为同时按必然受击求一份配额并取两者最大值，并输出 `SMART_POTION_GRADIENT axis_widened` 诊断。
+
+- 只放宽「跑不跑药水层」的上界：beam / 节点 / 时间 / No-GC 预算一律不变，结果之间的比较规则（`RouteQualityPolicy`、`IsBetterPotionPolicyResult`）未改。净差 ≤ 必然受击 ⇒ 新上界 ≥ 旧上界 ⇒ 只会多搜，旧行为是被包含的子集；层内是否被采纳仍由原比较器裁决，因此最终结果按生产比较器不劣于修复前。非 Smart 政策与其他 `MaximumSmartPotionUses` 调用点语义不变。
+- 日志算例（同根、同政策、同预算；约定：`projected_battle_hp_lost` 为整场累计、`unavoidable_hp_lost` 为扣除卖血后的必然受击）：修复前宽档（`GC_SEARCH_ALLOCATION_LIMIT=2319212440`、No-GC 弃区 44%）零药最优由 20 改善到 14、strategic 净差 8 < 门槛 9（`src/Runtime/SolverWeights.cs:99` 默认值，`BLOOD_POTION` 不在 `src/Search/PotionValuationRegistry.cs:19-34`）→ `stop=no_potion_acceptable maximum=0` → 终值 14；同一路线那条 `RESULT` 行给 `unavoidable_hp_lost=13`，按必然受击轴第一瓶本可接受（13 ≥ 9）。窄档（1296864492、24%）净差 14 ≥ 9，修复前即得 1。
+- 修复后实测（本机四条同根夹具全部 Passed，`score` 与修复前逐位相同：O041 10001064970、O042 10001354974、O044 10001829972、O045 10001989977）：O045 出现 `axis_widened hp_deficit=14 unavoidable_hp_lost=19 maximum_from_deficit=1 maximum_from_unavoidable=2`，第 2 层被真实搜索（`saved=20 required=27 selected=False`）后仍选第 1 层，终值不变；O041/O042 的 `axis_widened` 未触发（配额未被净差否证），终值、卖血、省血、长期资源、成长奖励全部与修复前相同。
+- 未观测：修复后的宽档终值。本轮主机 NoGC 达成比例降到 25–30%（`limit` 1.19–1.60GB），修复后 4 次 O045 全落窄档，「宽档不再退到 14」目前是机制推导，需 `limit` ≥ 2.2GB 的机器复跑闭合。
+- 同批待决：W1（门限成本侧与余量侧同起点、有界成员按实际节点配额外推）未实现——改动点 `src/Search/CombatSearchCoordinator.BeamPortfolio.cs:120,139-140,207-210` 与 `tools/testing/checks/BeamWidthPortfolioChecks/Program.cs:349-361` 不在本任务许可范围。已知算术（约定：按宽度线性外推、`ceil(base×w×3/(baseW×2))`）：O042 有界成员 `index=5` 配额 `7026/8=878` 节点、实花 `allocated_delta=113047992` 字节，外推给 638031970 字节，比值 5.64；基线自报 1063386616 占墙 1283575704 的 82.9%。
