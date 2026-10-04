@@ -306,7 +306,7 @@ internal static partial class CombatSearchCoordinator
                         // Reuse this existing member's allowance for the selected turn boundary.
                         // The scheduler resets heuristic history while replaying exact combat state.
                         continuationPrefix = opening;
-                        if (deferredPowerMember)
+                        if (deferredPowerMember || perRouteMilliseconds < MinimumPowerRouteMilliseconds)
                         {
                             PlanAction? nextTurnPower = prefixBuilder.BuildPowerActionsAfterPrefix(opening)
                                 .Where(action => PowerCardValuationModels.Registry.ContainsCardId(action.CardId!))
