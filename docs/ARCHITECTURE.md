@@ -79,6 +79,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 源码按 [Testing 入口](../src/Testing/README.md) 收纳：Host 持有编排与协议，Support 持有共享差分辅助，Replay 持有恢复；Contracts 按 Combat/Search/Runtime/UI/ThirdParty 分组，Regressions 保存社区和报告回归。各目录沿用原程序集与 partial 类型。
 
+组件剩余回复上界和 Smart 用药资格合同位于 `Contracts/Search`；根状态与完整原生差分仍由既有 Support/Runtime 合同提供，不改变 partial 方法、请求路由或状态所有权。
+
 | 入口 | 所有权 |
 | --- | --- |
 | `UnattendedTestRunner` | 请求级编排与共享 fixture helper |

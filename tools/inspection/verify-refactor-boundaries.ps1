@@ -2246,6 +2246,7 @@ if ($nativeReplay.Contains('ApplyReplayStateAsync(')) {
     throw 'Native recorded replay must reconstruct state through native actions.'
 }
 $maintainedTestingRoot = Join-Path $repositoryRoot 'src/Testing'
+# Component healing and Smart eligibility contracts also belong in Contracts/Search.
 if (Get-ChildItem -LiteralPath $maintainedTestingRoot -File -Filter '*.cs') {
     throw 'Testing source belongs in its responsibility directory; keep the root for navigation.'
 }

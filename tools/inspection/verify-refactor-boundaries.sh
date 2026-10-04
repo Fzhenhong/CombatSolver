@@ -1737,6 +1737,7 @@ if rg -q -F '._vars' "$repository_root/src" --glob '!**/DynamicVarSetAccess.cs';
 fi
 
 maintained_testing_root="$repository_root/src/Testing"
+# Component healing and Smart eligibility contracts also belong in Contracts/Search.
 for file in "$maintained_testing_root"/*.cs; do
     if [[ -f "$file" ]]; then
         violations+=("Testing source belongs in its responsibility directory; keep the root for navigation.")

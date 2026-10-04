@@ -1,0 +1,460 @@
+{
+  "scene": "SOUL_NEXUS_ELITE",
+  "reportedModVersion": "0.49.1",
+  "sourceCommit": "337aa9d08530eac1f1e8c81d8418dd95194754ce",
+  "acceptance": {
+    "minimumSpeedup": 2,
+    "maximumPeakRssIncreasePercent": 10,
+    "hpLossMustNotIncrease": true
+  },
+  "restoreAttempts": [
+    {
+      "runId": "d8e2e21ffc614f2ba51ff15fa399f4a7",
+      "status": "Failed",
+      "stage": "native_replay_events",
+      "launcherExitCode": 1,
+      "instanceRemoved": true,
+      "difference": "only loadout_summon_powers=empty missing; all other recorded continuation fields at combat_start equal",
+      "nativeBinaryVerified": false,
+      "serializationModelIdHashDifferent": true,
+      "performanceNotRun": true
+    },
+    {
+      "runId": "84edc25350a34d258311c42a9c9beb11",
+      "status": "Passed",
+      "replayStatus": "restored_continuation",
+      "continuationVerified": true,
+      "readyCheckpointVerified": true,
+      "nativeStateVerified": false,
+      "nativeBinaryLimitation": "legacy_model_id_mapping_not_recorded with different local model ID encoding",
+      "launcherExitCode": 0,
+      "instanceRemoved": true,
+      "scope": "full recorded combat_start and ready-checkpoint continuation; native binary not verified"
+    }
+  ],
+  "gcConfigurationEvidence": {
+    "exportedSettingsEnabled": true,
+    "requestLogEnabled": false,
+    "exportedBudgetGigabytes": 12,
+    "actualStatePending": true
+  },
+  "additionalEnvironment": {
+    "source": ".local/headless-instances/soul-nexus-source0491",
+    "modInputs": {
+      "BaseLib": "Steam/steamapps/workshop/content/2868840/3737335127/BaseLib",
+      "Loadout": "Steam/steamapps/workshop/content/2868840/3756859747"
+    },
+    "reason": "Original continuation has inactive Loadout summon hook; existing installed modules, no recorded field removed",
+    "cleanupRequiredAtEnd": true
+  },
+  "failedPreparation": {
+    "reason": "existing empty BaseLib directory: copytree without dirs_exist_ok",
+    "incompleteSourceAttempt": "soul-nexus-0491-restore-loadout",
+    "qualifiedEvidence": false
+  },
+  "baselineTimeout": {
+    "reason": "120-second unattended launcher cap; no result produced",
+    "performanceAcceptance": false,
+    "partialRss": {
+      "launcherExitCode": 1,
+      "launcherWallSeconds": 134.79657239909284,
+      "gamePid": 3773285,
+      "sampleCount": 2568,
+      "sampleIntervalSeconds": 0.05,
+      "peakProcessWorkingSetBytes": 5771624448,
+      "sampledPeakRssBytes": 5771624448,
+      "kernelVmHwmBytes": 5771624448,
+      "includesNativeStartup": true,
+      "wholeCoordinatorSecondsMustComeFromSolverMetrics": true
+    },
+    "input": "original start checkpoint; existing installed BaseLib/Loadout; exact upstream runtime",
+    "doNotIncreaseSameFixtureTimeout": true
+  },
+  "longPerformanceAuthorization": {
+    "userInstruction": "允许这个场景及对照长测（推荐）",
+    "scope": "this uploaded scenario and serial controls only",
+    "searchBudgetMilliseconds": 300000,
+    "launcherCapSeconds": 900
+  },
+  "baseline": {
+    "runId": "1d9cc228cdf442cb991a0771a6b5744b",
+    "dllSha256": "4fa9c20baaf6ed63e0807283de1419b1d8673f5d54fd66ebc16841a2bb181abd",
+    "wholeCoordinatorSeconds": 312.2017325,
+    "peakProcessWorkingSetBytes": 8205131776,
+    "quality": {
+      "score": 10000789950.2,
+      "finalHp": 50,
+      "finalEnemyHp": 0,
+      "onlyDeathRoutes": false,
+      "projectedBattleHpLost": 19,
+      "potionCount": 0,
+      "combatEndedTurn": 8,
+      "potionUses": []
+    },
+    "maxDopActual": 16,
+    "noGcActual": false,
+    "noGcBudgetBytes": 12000000000,
+    "nodes": 51720,
+    "transitions": 888266,
+    "totalGcPauseMilliseconds": 268671.099,
+    "totalWorkerAllocatedBytes": 49413291080,
+    "boundary": "TimeLimit",
+    "launcherExitCode": 0,
+    "instanceRemoved": true,
+    "nativeBinaryUnverified": true,
+    "diagnosticInstrumentation": false
+  },
+  "rootDiagnostic": {
+    "runId": "3aec03fb0887430abf32cbd3ccaa9d24",
+    "status": "Passed",
+    "noSolve": true,
+    "componentRejected": "extension",
+    "originalStrictReason": "run_mod_subscriber",
+    "knownNativePolicy": true,
+    "strictHpRelicPolicy": true,
+    "originalStrictRemainingBound": 2147483647,
+    "runModSubscribers": 2,
+    "combatModSubscribers": 3,
+    "baseLibCardModifiers": false,
+    "captureLiveUnchanged": true,
+    "nativeBinaryUnverified": true
+  },
+  "rootDiagnosticV2": {
+    "runId": "dba68df8d4be4c228d533cc35a668176",
+    "status": "Passed",
+    "replayMode": "RestoreOnly",
+    "liveUnchanged": true,
+    "runSubscribers": [
+      {
+        "type": "Loadout.Services.Morphing.BottledMonsterMorphCombatSnapshotHook",
+        "module": "3f51fce1-7ec3-4116-b440-2c31eb754731"
+      },
+      {
+        "type": "Loadout.Services.PowerGiver.PowerGiverCombatStartHook",
+        "module": "3f51fce1-7ec3-4116-b440-2c31eb754731"
+      }
+    ],
+    "combatSubscribers": [
+      {
+        "type": "Loadout.Services.PowerGiver.PowerGiverSummonHook",
+        "module": "3f51fce1-7ec3-4116-b440-2c31eb754731"
+      },
+      {
+        "type": "Loadout.Services.TildeKey.LoadoutKillAllMonstersCombatHook",
+        "module": "3f51fce1-7ec3-4116-b440-2c31eb754731"
+      },
+      {
+        "type": "Loadout.Services.TildeKey.LoadoutEveryCardFreeCombatHook",
+        "module": "3f51fce1-7ec3-4116-b440-2c31eb754731"
+      }
+    ],
+    "knownSourceRemainingRecovery": 15,
+    "inactiveSummonPowers": true,
+    "everyCardFreePlayers": 0,
+    "maxHandSizes": [
+      10
+    ],
+    "strictRejection": "extension"
+  },
+  "allocationDiagnostic": {
+    "diagnosticOnly": true,
+    "traceEventsLost": 0,
+    "traceDurationMilliseconds": 90190.748085,
+    "confirmedSearchSamples": {
+      "sampleCount": 163726,
+      "estimatedBytes": 17694036816,
+      "samplesWithoutStack": 0,
+      "samplesWithUnresolvedOnlyStack": 0,
+      "samplesWithSomeUnresolvedFrames": 25,
+      "firstSampleMs": 24088.023262,
+      "lastSampleMs": 90190.748085
+    },
+    "allocationCallsiteEstimates": [
+      {
+        "callsite": "CombatSolver.Engine.Common.PredictionUtils.CloneModelForSimulation",
+        "estimatedBytes": 2434461464
+      },
+      {
+        "callsite": "CombatSolver.Engine.Common.MirroredHookListenerFilter.Filter",
+        "estimatedBytes": 1640424016
+      },
+      {
+        "callsite": "CombatSolver.SimulatedCombatState.GetBaseHookListeners",
+        "estimatedBytes": 1542093088
+      },
+      {
+        "callsite": "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork",
+        "estimatedBytes": 1160745064
+      },
+      {
+        "callsite": "CombatSolver.Engine.Common.SimCardPile.Fork",
+        "estimatedBytes": 797420816
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution",
+        "estimatedBytes": 453404528
+      },
+      {
+        "callsite": "CombatSolver.CombatBeamSolver.Snapshot",
+        "estimatedBytes": 331022944
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork",
+        "estimatedBytes": 296934832
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ForkManualCardChoice",
+        "estimatedBytes": 265512288
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork",
+        "estimatedBytes": 239609448
+      },
+      {
+        "callsite": "CombatSolver.CardChoiceSupport.Apply",
+        "estimatedBytes": 216612312
+      },
+      {
+        "callsite": "CombatSolver.SimulatedCombatState.ForkHistoryCourseCards",
+        "estimatedBytes": 207962520
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayTailExecution",
+        "estimatedBytes": 201361352
+      },
+      {
+        "callsite": "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.RankBest",
+        "estimatedBytes": 201320024
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AutoPlay",
+        "estimatedBytes": 182283784
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.CanPlay",
+        "estimatedBytes": 171525768
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.ForkManualCardChoice",
+        "estimatedBytes": 169501792
+      },
+      {
+        "callsite": "CombatSolver.Engine.Common.PredictedCard+PreviewStorage.RegisterIdentity",
+        "estimatedBytes": 150131576
+      },
+      {
+        "callsite": "CombatSolver.SimulatedCombatState.GetAmount",
+        "estimatedBytes": 142569408
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Draw",
+        "estimatedBytes": 135104488
+      },
+      {
+        "callsite": "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].EnsureWritable",
+        "estimatedBytes": 120308008
+      },
+      {
+        "callsite": "CombatSolver.CorePowerSupport.ApplyCardPowers",
+        "estimatedBytes": 115271032
+      },
+      {
+        "callsite": "CombatSolver.SimulatedCombatState+CapturedManualChoice.Fork",
+        "estimatedBytes": 112194536
+      },
+      {
+        "callsite": "CombatSolver.CombatBeamSolver.CommitExpansionBatch",
+        "estimatedBytes": 111306784
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper",
+        "estimatedBytes": 110270000
+      },
+      {
+        "callsite": "CombatSolver.CardChoiceSupport.Find",
+        "estimatedBytes": 106102096
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyHpLost",
+        "estimatedBytes": 103038336
+      },
+      {
+        "callsite": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ExecuteAttack",
+        "estimatedBytes": 102818432
+      },
+      {
+        "callsite": "CombatSolver.SimulatedCombatState.RemapCachedModels",
+        "estimatedBytes": 102587120
+      },
+      {
+        "callsite": "CombatSolver.Engine.Common.PredictionStateStore.Fork",
+        "estimatedBytes": 100894488
+      }
+    ],
+    "leafEstimates": [
+      {
+        "frame": "CombatSolver.Engine.Common.MirroredHookListenerFilter.Filter",
+        "estimatedBytes": 1640424016
+      },
+      {
+        "frame": "System.Collections.Generic.List`1[System.__Canon].set_Capacity",
+        "estimatedBytes": 1177717368
+      },
+      {
+        "frame": "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork",
+        "estimatedBytes": 855847448
+      },
+      {
+        "frame": "System.Object.MemberwiseClone",
+        "estimatedBytes": 827757000
+      },
+      {
+        "frame": "CombatSolver.Engine.Common.SimCardPile.Fork",
+        "estimatedBytes": 792094400
+      },
+      {
+        "frame": "CombatSolver.SimulatedCombatState.GetBaseHookListeners",
+        "estimatedBytes": 612279680
+      },
+      {
+        "frame": "System.Collections.Generic.Dictionary`2[System.__Canon,System.__Canon].Initialize",
+        "estimatedBytes": 503499008
+      },
+      {
+        "frame": "System.Linq.Enumerable.Select",
+        "estimatedBytes": 404214200
+      },
+      {
+        "frame": "System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32].Initialize",
+        "estimatedBytes": 375894584
+      },
+      {
+        "frame": "System.Collections.Generic.List`1[System.__Canon]..ctor",
+        "estimatedBytes": 369885544
+      },
+      {
+        "frame": "dynamicClass.MegaCrit.Sts2.Core.Models.PowerModel.get_InstanceType_Patch1",
+        "estimatedBytes": 340448232
+      },
+      {
+        "frame": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution",
+        "estimatedBytes": 293808232
+      },
+      {
+        "frame": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork",
+        "estimatedBytes": 287874728
+      },
+      {
+        "frame": "MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVarSet..ctor",
+        "estimatedBytes": 287339048
+      },
+      {
+        "frame": "CombatSolver.CombatBeamSolver.Snapshot",
+        "estimatedBytes": 279878448
+      },
+      {
+        "frame": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ForkManualCardChoice",
+        "estimatedBytes": 264979288
+      },
+      {
+        "frame": "MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVarSet.InitializeWithOwner",
+        "estimatedBytes": 229261224
+      },
+      {
+        "frame": "System.Collections.Generic.HashSet`1[MegaCrit.Sts2.Core.Entities.Cards.CardKeyword].AddIfNotPresent",
+        "estimatedBytes": 209347992
+      },
+      {
+        "frame": "System.Collections.Generic.Dictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.__Canon]..ctor",
+        "estimatedBytes": 177042024
+      },
+      {
+        "frame": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.ForkManualCardChoice",
+        "estimatedBytes": 154905784
+      },
+      {
+        "frame": "System.SZArrayHelper.GetEnumerator",
+        "estimatedBytes": 149917168
+      },
+      {
+        "frame": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork",
+        "estimatedBytes": 141139904
+      },
+      {
+        "frame": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayTailExecution",
+        "estimatedBytes": 136357936
+      },
+      {
+        "frame": "CombatSolver.CardChoiceSupport.Find",
+        "estimatedBytes": 103980160
+      },
+      {
+        "frame": "System.Runtime.CompilerServices.ConditionalWeakTable`2+Container[System.__Canon,System.__Canon].Resize",
+        "estimatedBytes": 103236624
+      },
+      {
+        "frame": "MegaCrit.Sts2.Core.Models.CardModel.DeepCloneFields",
+        "estimatedBytes": 102870400
+      },
+      {
+        "frame": "CombatSolver.SimulatedCombatState.RemapCachedModels",
+        "estimatedBytes": 99920432
+      },
+      {
+        "frame": "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile",
+        "estimatedBytes": 99101824
+      },
+      {
+        "frame": "Loadout.Keywords.LoadoutKeywordIndex.EnumerateEnabled",
+        "estimatedBytes": 98965992
+      },
+      {
+        "frame": "CombatSolver.SimulatedCombatState.BuildEffectiveHookListeners",
+        "estimatedBytes": 96740088
+      }
+    ],
+    "method": "Sum GCAllocationTick weights by first CombatSolver frame; sampling estimates, not exact per-object totals",
+    "acceptance": false
+  },
+  "allocationCandidate": {
+    "sourceBase": "v0.49.1 337aa9d0",
+    "changes": [
+      "Share immutable type/mask Entry metadata; retain exact ordered layout comparisons and branch-owned receiver snapshot",
+      "Pre-size card/orb listener list for small decks as well as large decks"
+    ],
+    "productionIntegrated": false,
+    "behaviorChangesIntended": false,
+    "validationPending": false,
+    "build": {
+      "seconds": 28.72,
+      "warnings": 0,
+      "errors": 0
+    },
+    "dllSha256": "66df8367bcd792cce0876cdf8409b723b4a5e5ea2a9d6f5489c333710c4849ac",
+    "nativeV1Failure": {
+      "runId": "2283f3757afc4676b9102fd732393e4d",
+      "status": "Failed",
+      "completedChecks": 0,
+      "reason": "Existing reflection oracle treats GoldCallbacks union as a native method name; native method family uses ModifyGoldGained/AfterModifyingGoldGained/AfterGoldGained",
+      "candidateNotQualified": true,
+      "cleanupComplete": true
+    },
+    "testOracleCorrection": "Check the union of all three native gold callback overrides; runtime dispatch unmodified by this correction",
+    "v1DllSha256": "b2323f77ad8957ac1a5423c7a5e54a7746c5c580fcb6605da89b49e0a497743b",
+    "buildV2": {
+      "seconds": 14.52,
+      "warnings": 0,
+      "errors": 0
+    },
+    "nativeV2": {
+      "runId": "f99dd720ef0b4b49831d75dcc41d071e",
+      "status": "Passed",
+      "completedChecks": [
+        "MirroredHookFilter:Methods=63:Models=1685:OrderDuplicatesExternalForkInvalidationPatchRefreshSharedLayoutsSegmentsNoAnchorEffectivePrefixReuse",
+        "NativeOutcome:combatEnded=True:turn=1:hp=80:maxHp=80"
+      ],
+      "cleanupComplete": true
+    },
+    "performanceAcceptancePending": true
+  }
+}
