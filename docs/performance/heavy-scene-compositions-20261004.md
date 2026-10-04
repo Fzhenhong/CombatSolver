@@ -76,3 +76,5 @@ v9正常请求19.9516851秒、10.942GB，相对原始1.861倍。用户明确接�
 首次修正合同`805b083ba9b14df89d0fb85f71a16436` Passed，扩展合同`0bfdd959a37f49cda8f24f3adcf1a39c` Passed：较便宜路线保留、同成本仍剪枝、缺失成本保留、完整无药胜利界仍剪枝，原生药水完整状态及隔离通过。20项primary-incumbent和143项early-turn-continuation检查通过；普通120秒上限、独立实例清理。构建13.75/13.95秒，均零警告错误。 [长期原生合同](https://github.com/ltlly/CombatSolver/commit/4ae593db)已归位到`Contracts/Search`，固定入口`POTION-COST-INCUMBENT`原生`8cdb3b3ff63540c3ae04b52760d33065` Passed，构建13.40秒零警告错误；PowerShell结构、工具、覆盖和文档检查通过。
 
 这是对待合入代码的独立正确性修正，当前主任务运行时仍为已验收的魂枢组合。修正未并入主任务分支、未部署；没有新完整请求加速或RSS结论。#215合入后再组合并运行最终质量/内存回归。接续方向是当前回合无合法动作时的必然战损证明及回复组件覆盖，不重复#215已经实现的机制。原始记录、源码补丁及最小fixture保存在`.local/tool-tasks/pr215-review/`；[结构化研究记录](heavy-scene-compositions-20261004.json)保留成功、失败及未验证项。
+
+必然战损研究继续审查同DLL的59张正面候选牌：全继承CardModel；完整非元数据虚方法盘点发现5个牌型/8个阶段回调，包含不能只按Before/After识别的Burn.OnTurnEndInHand。逐个阅读IAmInvincible、MakeItSo、SovereignBlade、ThrummingHatchet、Burn的实际方法及相关父类默认实现：自动格挡和手牌烧伤必须在敌人行动前的完整前缀结算，返手斧在下一玩家抽牌之前，MakeItSo只响应Skill。未新增手牌准入或改模拟语义；敌方、遗物/Power/附件的完整组合及新原生差分仍待闭合，不作为完整证明或性能收益。

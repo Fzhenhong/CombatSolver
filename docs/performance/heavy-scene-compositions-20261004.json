@@ -2567,5 +2567,239 @@
     "documentationGateCorrection": "initially exceeded TEST_MATRIX limit (204 lines); moved details to existing strategy evidence and kept matrix an index (200 existing lines). Final documentation gate passed.",
     "boundariesGate": "PowerShell Passed: search_files=249",
     "reusableContractCommit": "4ae593db"
+  },
+  "mandatoryRoundCardPhaseAudit": {
+    "schemaVersion": 1,
+    "scope": "complementary mandatory-round research: complete declared nonmetadata card callback inventory plus targeted bodies; not a full closure certificate",
+    "dllSha256Reused": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+    "mvidReused": "8a76776c-0ce1-4d4f-90bd-8cce653dad8e",
+    "inventory": "native-health-references-v5.json",
+    "positiveCards": [
+      "MegaCrit.Sts2.Core.Models.Cards.Abrasive",
+      "MegaCrit.Sts2.Core.Models.Cards.Accelerant",
+      "MegaCrit.Sts2.Core.Models.Cards.Adrenaline",
+      "MegaCrit.Sts2.Core.Models.Cards.AscendersBane",
+      "MegaCrit.Sts2.Core.Models.Cards.Backflip",
+      "MegaCrit.Sts2.Core.Models.Cards.Begone",
+      "MegaCrit.Sts2.Core.Models.Cards.BladeOfInk",
+      "MegaCrit.Sts2.Core.Models.Cards.Bloodletting",
+      "MegaCrit.Sts2.Core.Models.Cards.BubbleBubble",
+      "MegaCrit.Sts2.Core.Models.Cards.BulletTime",
+      "MegaCrit.Sts2.Core.Models.Cards.Burn",
+      "MegaCrit.Sts2.Core.Models.Cards.CalculatedGamble",
+      "MegaCrit.Sts2.Core.Models.Cards.CloakAndDagger",
+      "MegaCrit.Sts2.Core.Models.Cards.CrashLanding",
+      "MegaCrit.Sts2.Core.Models.Cards.DaggerThrow",
+      "MegaCrit.Sts2.Core.Models.Cards.Dazed",
+      "MegaCrit.Sts2.Core.Models.Cards.DeadlyPoison",
+      "MegaCrit.Sts2.Core.Models.Cards.Debris",
+      "MegaCrit.Sts2.Core.Models.Cards.DefendRegent",
+      "MegaCrit.Sts2.Core.Models.Cards.DefendSilent",
+      "MegaCrit.Sts2.Core.Models.Cards.Deflect",
+      "MegaCrit.Sts2.Core.Models.Cards.DodgeAndRoll",
+      "MegaCrit.Sts2.Core.Models.Cards.EscapePlan",
+      "MegaCrit.Sts2.Core.Models.Cards.Expertise",
+      "MegaCrit.Sts2.Core.Models.Cards.FallingStar",
+      "MegaCrit.Sts2.Core.Models.Cards.Footwork",
+      "MegaCrit.Sts2.Core.Models.Cards.Glow",
+      "MegaCrit.Sts2.Core.Models.Cards.Haze",
+      "MegaCrit.Sts2.Core.Models.Cards.Hegemony",
+      "MegaCrit.Sts2.Core.Models.Cards.IAmInvincible",
+      "MegaCrit.Sts2.Core.Models.Cards.MakeItSo",
+      "MegaCrit.Sts2.Core.Models.Cards.Malaise",
+      "MegaCrit.Sts2.Core.Models.Cards.Mayhem",
+      "MegaCrit.Sts2.Core.Models.Cards.MinionStrike",
+      "MegaCrit.Sts2.Core.Models.Cards.Mirage",
+      "MegaCrit.Sts2.Core.Models.Cards.Neutralize",
+      "MegaCrit.Sts2.Core.Models.Cards.NeutronAegis",
+      "MegaCrit.Sts2.Core.Models.Cards.Outbreak",
+      "MegaCrit.Sts2.Core.Models.Cards.PiercingWail",
+      "MegaCrit.Sts2.Core.Models.Cards.PreciseCut",
+      "MegaCrit.Sts2.Core.Models.Cards.Prepared",
+      "MegaCrit.Sts2.Core.Models.Cards.SerpentForm",
+      "MegaCrit.Sts2.Core.Models.Cards.SevenStars",
+      "MegaCrit.Sts2.Core.Models.Cards.Shiv",
+      "MegaCrit.Sts2.Core.Models.Cards.Snakebite",
+      "MegaCrit.Sts2.Core.Models.Cards.SolarStrike",
+      "MegaCrit.Sts2.Core.Models.Cards.SovereignBlade",
+      "MegaCrit.Sts2.Core.Models.Cards.Speedster",
+      "MegaCrit.Sts2.Core.Models.Cards.StrikeRegent",
+      "MegaCrit.Sts2.Core.Models.Cards.StrikeSilent",
+      "MegaCrit.Sts2.Core.Models.Cards.Suppress",
+      "MegaCrit.Sts2.Core.Models.Cards.Survivor",
+      "MegaCrit.Sts2.Core.Models.Cards.ThinkingAhead",
+      "MegaCrit.Sts2.Core.Models.Cards.ThrummingHatchet",
+      "MegaCrit.Sts2.Core.Models.Cards.ToolsOfTheTrade",
+      "MegaCrit.Sts2.Core.Models.Cards.UltimateDefend",
+      "MegaCrit.Sts2.Core.Models.Cards.Venerate",
+      "MegaCrit.Sts2.Core.Models.Cards.VoidForm",
+      "MegaCrit.Sts2.Core.Models.Cards.Wound"
+    ],
+    "positiveCardCount": 59,
+    "allDirectCardModelInheritance": true,
+    "functionalDeclaredMethods": [
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.Burn",
+        "method": "System.Threading.Tasks.Task MegaCrit.Sts2.Core.Models.Cards.Burn::OnTurnEndInHand(MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext)",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      },
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.IAmInvincible",
+        "method": "System.Threading.Tasks.Task MegaCrit.Sts2.Core.Models.Cards.IAmInvincible::AfterAutoPostPlayPhaseEntered(MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext,MegaCrit.Sts2.Core.Entities.Players.Player)",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      },
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.MakeItSo",
+        "method": "System.Threading.Tasks.Task MegaCrit.Sts2.Core.Models.Cards.MakeItSo::AfterCardPlayedLate(MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext,MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      },
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.SovereignBlade",
+        "method": "System.Void MegaCrit.Sts2.Core.Models.Cards.SovereignBlade::AfterCloned()",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      },
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.SovereignBlade",
+        "method": "System.Void MegaCrit.Sts2.Core.Models.Cards.SovereignBlade::AfterDowngraded()",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      },
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.SovereignBlade",
+        "method": "System.Void MegaCrit.Sts2.Core.Models.Cards.SovereignBlade::AfterTransformedFrom()",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      },
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.SovereignBlade",
+        "method": "System.Threading.Tasks.Task MegaCrit.Sts2.Core.Models.Cards.SovereignBlade::AfterCardChangedPiles(MegaCrit.Sts2.Core.Models.CardModel,MegaCrit.Sts2.Core.Entities.Cards.PileType,MegaCrit.Sts2.Core.Models.AbstractModel)",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      },
+      {
+        "owner": "MegaCrit.Sts2.Core.Models.Cards.ThrummingHatchet",
+        "method": "System.Threading.Tasks.Task MegaCrit.Sts2.Core.Models.Cards.ThrummingHatchet::BeforeHandDraw(MegaCrit.Sts2.Core.Entities.Players.Player,MegaCrit.Sts2.Core.GameActions.Multiplayer.PlayerChoiceContext,MegaCrit.Sts2.Core.Combat.ICombatState)",
+        "HasBody": true,
+        "IsAbstract": false,
+        "baseType": "MegaCrit.Sts2.Core.Models.CardModel"
+      }
+    ],
+    "functionalDeclaredMethodCount": 8,
+    "bodies": {
+      "IAmInvincible": {
+        "methods": [
+          "AfterAutoPostPlayPhaseEntered"
+        ],
+        "target": "player block",
+        "timing": "current-turn AutoPostPlay; before enemies; exact forced prefix must include",
+        "condition": "owned card is draw-pile top",
+        "mayhemInteraction": "applying MayhemPower does not change draw order; no immediate card-play hook",
+        "status": "body and base default reviewed; full runtime phase contract pending"
+      },
+      "MakeItSo": {
+        "methods": [
+          "AfterCardPlayedLate"
+        ],
+        "target": "own card moved to hand",
+        "timing": "after Skill card play",
+        "condition": "each third owned Skill, currently outside hand",
+        "mayhemInteraction": "Mayhem is Power; this callback is not enabled by its play",
+        "status": "body and base default reviewed"
+      },
+      "SovereignBlade": {
+        "methods": [
+          "AfterCloned",
+          "AfterDowngraded",
+          "AfterTransformedFrom",
+          "AfterCardChangedPiles"
+        ],
+        "target": "own card metadata and visuals",
+        "timing": "clone/downgrade/transform/own pile change",
+        "condition": "pile callback returns immediately unless card == this",
+        "mayhemInteraction": "Mayhem pile changes do not pass self-card condition; own clone resets forge flag; no defence created",
+        "status": "all four bodies and relevant parent methods reviewed; existing fork semantics unchanged"
+      },
+      "ThrummingHatchet": {
+        "methods": [
+          "BeforeHandDraw"
+        ],
+        "target": "own card moved to hand",
+        "timing": "next player start, after forced damage prefix",
+        "condition": "played last player turn and not already in hand",
+        "mayhemInteraction": "does not add pre-enemy defence; full next-player-start continuation remains necessary",
+        "status": "body and base default reviewed"
+      },
+      "Burn": {
+        "methods": [
+          "OnTurnEndInHand"
+        ],
+        "target": "player damage",
+        "timing": "current-turn hand end effect; before enemies",
+        "condition": "card is in hand",
+        "mayhemInteraction": "not an immediate reaction to Mayhem; exact prefix must include its self-damage",
+        "status": "body and production CardOnTurnEndInHandMirrors HandleDamage reviewed; type is not added to unplayable-hand certificate"
+      }
+    },
+    "sourceProvenanceReused": {
+      "nativePinReused": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+      "scope": "declared positive-card phase callback audit; bodies not yet reviewed",
+      "sources": [
+        {
+          "type": "MegaCrit.Sts2.Core.Models.Cards.IAmInvincible",
+          "path": ".local/general-healing-audit/forced-round-phase-card-sources/IAmInvincible.cs",
+          "sha256": "0075946e04467398bc0b95806d78100cd16d06748feaf0ded071fec7282c2397",
+          "exitCode": 0
+        },
+        {
+          "type": "MegaCrit.Sts2.Core.Models.Cards.MakeItSo",
+          "path": ".local/general-healing-audit/forced-round-phase-card-sources/MakeItSo.cs",
+          "sha256": "a442e00aca1b1cc7332931c4431679576dc0c85c78f91972fb64e334bedb142b",
+          "exitCode": 0
+        },
+        {
+          "type": "MegaCrit.Sts2.Core.Models.Cards.SovereignBlade",
+          "path": ".local/general-healing-audit/forced-round-phase-card-sources/SovereignBlade.cs",
+          "sha256": "0d9f3655a167714d28a84581ed3494e3148a280005b514cfbb8be082d3512226",
+          "exitCode": 0
+        },
+        {
+          "type": "MegaCrit.Sts2.Core.Models.Cards.ThrummingHatchet",
+          "path": ".local/general-healing-audit/forced-round-phase-card-sources/ThrummingHatchet.cs",
+          "sha256": "9d6590357270d647fb942bb076a796f57ea9154c15a7ebc227522e19eff517f8",
+          "exitCode": 0
+        },
+        {
+          "type": "MegaCrit.Sts2.Core.Models.Cards.Mayhem",
+          "path": ".local/general-healing-audit/forced-round-phase-card-sources/Mayhem.cs",
+          "sha256": "f4b7090c4cf66649841402b5c3c657fa01db1bc7f086595741cbe198a1da80c0",
+          "exitCode": 0
+        }
+      ]
+    },
+    "additionalSources": [
+      "../CombatSolver-regent-healing-bound-20261003/.local/c56/native-src/Burn.cs",
+      "readonly-clone-audit/CardModel.cs",
+      "readonly-clone-audit/AbstractModel.cs",
+      "src/Engine/InCombat/Mirrors/Cards/CardOnTurnEndInHandMirrors.cs"
+    ],
+    "fullCallbackClosureComplete": false,
+    "runtimeUnchanged": true,
+    "remaining": [
+      "native enemy hooks under playable Mayhem",
+      "relic/power/attachment complete call-chain and parent semantics",
+      "full phase coverage including card end effects and choices",
+      "new combination native contract and final performance/RSS regression"
+    ]
   }
 }
