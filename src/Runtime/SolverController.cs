@@ -1390,7 +1390,7 @@ internal static partial class SolverController
 
     private static string FormatIncompatibleModFailure(IncompatibleGameplayModException incompatible)
         => $"[color={SolverUiTokens.Palette.DangerHex}]" +
-           SolverText.Format($"检测到不兼容的第三方 Mod：{EscapeRichText(incompatible.PlayerFacingModName)}。建议卸载该 Mod 并重启游戏后再使用求解器。") + "[/color]";
+           SolverText.Format($"求解器暂未适配此内容性 Mod：{EscapeRichText(incompatible.PlayerFacingModName)}，无法求解。") + "[/color]";
 
     internal static string FormatSearchFailureForTesting(
         Exception exception,

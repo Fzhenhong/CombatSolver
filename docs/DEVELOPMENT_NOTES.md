@@ -8,6 +8,8 @@
 
 0.49.1 紧急修复定稿见 [历史卷 13](archive/development/volume-13.md)，玩家说明见 [0.49.1 更新日志](releases/0.49.1-RELEASE_NOTES.md)。
 
+0.49.2 内容性 Mod 提示定稿见 [历史卷 14](archive/development/volume-14.md)，玩家说明见 [0.49.2 更新日志](releases/0.49.2-RELEASE_NOTES.md)。
+
 ## 下一版本（开发中）
 
 暂无新增行为变化。

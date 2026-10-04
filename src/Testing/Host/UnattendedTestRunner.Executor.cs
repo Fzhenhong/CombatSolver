@@ -378,6 +378,12 @@ internal sealed partial class UnattendedTestRunner
                 runner.AssertThirdPartyCalculatedFailure(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "CONTENT-MOD-FAILURES")
+            {
+                runner.AssertThirdPartyCalculatedFailure(combatState, player);
+                runner.AssertContentModFailures(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "LAMP-INDIRECT-POISON")
             {
                 await runner.AssertLampIndirectPoisonAsync(combatState, player);
