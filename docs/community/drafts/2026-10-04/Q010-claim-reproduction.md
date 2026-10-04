@@ -168,11 +168,80 @@ index=4 跑了 382 节点后 `NodeLimitNotTerminal`、不参与比较）。本�
    `Microsoft.NETFramework.ReferenceAssemblies.net48` 解出引用程序集安装后构建通过
    （0 警告 0 错误），未改动仓库任何文件。
 
+## 五包改善值录制检查点与同根可比性
+
+本批五个主题的「改善值」并非都从 `combat_start` 起算。逐包读 `preflight.json` 的 `index.searchResults`
+（该表是原报告录制时的求解产物，含 `startTurnNumber`、`battleHpLostSoFar`、`projectedBattleHpLost`、
+`boundaryReason`），口径为 `projectedBattleHpLost = 起算前已损 + 后续预测`
+（`src/Search/CombatBeamSolver.Phases.cs:838`，`futureHpLost` 取自 `:541`）：
+
+| 主题 | 原值录制点 | 改善值录制点 | 起算回合 / 已损 | 同根可比 |
+| --- | --- | --- | --- | --- |
+| O041 | 17 @ `…:1` | 12 @ `…:4` | T3 / 已损 6 | **否**，中途残局 |
+| O042 | 5 @ `…:1` | 1 @ `…:5` | T3 / 已损 1 | **否**，中途残局（整场等价即 1，其「后续」为 0） |
+| O043 | 12 @ `…:7`、`…:9`（`boundary=NodeLimit`） | 8 @ `…:9`、`…:11` | T2 / 已损 0 | **否**，第一回合之后的状态 |
+| O044 | 8 @ `…:1` | 5 @ `…:3` | T2 / 已损 5 | **否**，中途残局 |
+| O045 | 13 @ `…:1` | 1 @ `…:3` | T1 / 已损 0 | **是**，同根可比 |
+
+五包的**原值**一律录于 `startTurnNumber=1`、`battleHpLostSoFar=0`，与本轮 `-CheckpointSelector start`
+同根，可直接对照；**改善值**只有 O045 同根。O041 与 O042 另有玩家偏离的直接证据：
+`report.manualProjectionComparison` 的 `stateDifference` 分别是 `field=hp expected={77} actual={61}`
+（O041：计划第一回合喝 `BLOOD_POTION` 到 77，实机只到 61）与 `field=hp expected={55} actual={56}`
+（O042：实机比计划多 1 点血）。也就是说，除 O045 外的四个「改善值」描述的是**已经打成那样的局面之后**
+还能省多少血，不是从开战起可达的更优世界线。
+
+据此本批的夹具目标调整为：
+
+- **A 类**：O044、O045 锁同根实测终值（5 与 1），只断言战损、结束回合、边界与用药数，
+  不断言路线同构（O045 实测第一回合第 4 张是 `BASH`，包内改善记录是 `STOKE`，卡集不同）。
+- **B 类**：O041、O042 改为**同根非退化**夹具——锁当前源码在同根上的实际产出
+  （O041 为 17 战损 / 1 瓶 / `boundary=None`；O042 为 5 战损 / 0 瓶 / `boundary=None` /
+  其中主动卖血 4），不断言 12 或 1。O041 的同根产出与包内 `…:1` 记录的原路线逐 token 相同，
+  O042 与包内 `…:1` 的 26 个动作多重集完全相同（仅三处相邻顺序差异），因此这两条夹具的含义是
+  「未复现退化」，不是「未达目标」。
+- **C 类**：O043 维持「时间预算耗尽导致未收敛」的边界记录，不设修复，也不设达标夹具。
+
+夹具输入为 `coverage/fixtures/regressions/community/q010-o04{1,2,4,5}-same-root-*.json`，
+复跑命令见 [测试矩阵](../../../TEST_MATRIX.md)。
+
+## 门限口径偏差：待维护者决策的工作项
+
+O041 与 O042 的共同线索是 beam 宽度组合的精炼成员几乎全部被内存门限拦下
+（O041 `members=5 ran=2 compared=1`，O042 `members=6 ran=2 compared=2`）。
+逐位复算后，`src/Search/BeamWidthPortfolioGate.cs:86-118` 的算术与它拿到的输入一致，
+**判定为环境保守而非逻辑过严**；但输入侧有两处口径问题值得维护者决定是否单独立项：
+
+1. **成本侧与余量侧用了不同起点的分配量。** 门控用基线成员**自己那一段**的分配增量外推每个成员
+   的成本（`src/Search/CombatSearchCoordinator.BeamPortfolio.cs:120,139-140`），
+   却拿 `SearchMemoryPressureSignal.RemainingBytes`（`src/Runtime/SearchMemoryPressureSignal.cs:113-117,157-177`，
+   **自区域配置时刻起**的累计分配）当余量。O042 基线自报 `allocated_delta=1063386616`，
+   是整面分配墙 1283575704 的 82.9%，而反推出的判拒时刻余量只有约 0.64–1.06 GB；
+   结果凡宽度 ≥ 基线宽度的成员必然被拒。O041 同构：60 宽成员外推成本 1229477958
+   为其墙 1241302252 的 99.05%，差 11824294 字节被拒。
+2. **有界精炼成员被显著高估。** `src/Search/BeamWidthPortfolio.cs:284-285` 把它的节点预算压到
+   `totalExpanded / 8`（O042 为 7026/8 = 878，与日志 `nodes=878` 一致），实际只分配 113047992 字节，
+   而门控按宽度线性外推给它的预算是 638031970 字节，高估约 56 倍。
+
+两者的直接环境诱因是 NoGC 区域被系统内存压力拒开：`GC_NO_GC_REGION_DECLINED
+percent_of_configured=24`，配置 16 GB 只能保留 3.95 GB，中途区域重建后墙降到 1.28 GB
+（`physical_load` 8.6→10.6 GB、`system_limit` 12.56 GB）。
+
+本轮**不改生产代码**，理由：AGENTS.md 第 1 节禁止用扩大 Beam、节点、时间或 No-GC 预算掩盖问题，
+而门限校准属口径改动，需要独立的「同根质量无退化 + 耗时无明显增加」哨兵；
+且 O042 的最终结果并不出自被拦的精炼成员，而出自不经该门限的 `DEFERRED_OPENING_POWER` 补查
+（`src/Search/CombatSearchCoordinator.cs:564-601`），放宽门限对本批两个主题的收益未经证实。
+
 ## 未验证项
 
-- 尚无任何代码改动，因此没有「修改前失败 / 修改后通过」对照。
-- O041 已定位到判据链与基准口径（见 `.local/tool-tasks/q010/O041-analysis.md`），本轮判定为
-  口径差异而非选择错误，未改码；O042 的根因与 `MemoryHeadroomInsufficient` 是否判定过严仍未确认。
+- 尚无任何生产代码改动，因此没有「修改前失败 / 修改后通过」对照。
+- 四个同根夹具（`Q010-O041/O042/O044/O045-SAME-ROOT-*`）本轮**只落输入、未执行**：
+  预期值取自认领者已完成的 `SearchOnly` 同根产物（`.local/checkpoint-batch/Q010-O04{1,2,4,5}-*`）。
+  首次执行的通过证据在整批验收那一步补记，结构化证据当前保持 `Pending`。
+- O042 的「被迫受击 = 1」分量**没有协议断言字段**（`UnavoidableHpLost` 只在
+  `RESULT … unavoidable_hp_lost=` 诊断行输出，`src/Runtime/SolverDiagnostics.cs:209`），
+  夹具只锁可断言的 `expectedInitialSoldHp=4`；该分量靠 diagnostics 对账，记为未验证。
+- O041 已定位到判据链与基准口径（见 `.local/tool-tasks/q010/O041-analysis.md`），判定为
+  口径差异而非选择错误，未改码；O042 见 `.local/tool-tasks/q010/O042-analysis.md`。
 - 五个主题均未执行 `DeploySolver` 原生部署，未做成对耗时对照。
 - 两个哨兵（相邻正确场景、未改目标）尚未选定与运行。
 - 未运行可见 Steam 会话，无 FPS 与帧时间结论。
