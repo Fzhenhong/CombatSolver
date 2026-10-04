@@ -300,14 +300,13 @@ internal sealed partial class CombatBeamSolver
     private List<SearchNode> ApplyPrimaryIncumbentBound(List<SearchNode> retained)
     {
         // Per-event growth can repeat; the HP-only floor is not a bound on this objective.
-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
-            || _theftPolicy == SolverTheftPolicy.PreserveResources)
+        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
             return retained;
 
         List<SearchNode> bounded = retained;
         int pruned = 0;
         int certifiedHealingBoundPruned = 0;
-        if (_primaryIncumbent is { } incumbent)
+        if (_theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent)
             bounded = ApplyPrimaryIncumbentBoundCore(
             retained,
             incumbent,
@@ -328,8 +327,12 @@ internal sealed partial class CombatBeamSolver
             int uses = ExplicitPotionUseCount(node);
             bool potionTierClosed = CanUseSharedPotionTier(uses, _maximumPotionUses,
                 _forceAllPotionsDisabled, _potionPolicy, _potionStrategy.HasForcedDirectives);
+            int lootBucket = node.Snapshot.OutstandingStolenResource;
+            if (_theftPolicy == SolverTheftPolicy.PreserveResources && node.Snapshot.HasSimulator)
+                lootBucket = ((SimulatedCombatState)((CombatPredictionSimulator)node.Snapshot.Simulator).State.CombatState)
+                    .MinimumOutstandingStolenResource((CombatPredictionSimulator)node.Snapshot.Simulator);
             bool prune = !node.IsTerminal && !node.Snapshot.HasRisk && potionTierClosed
-                && _primaryIncumbents.TryGet(node.Snapshot.OutstandingStolenResource, uses, out var shared)
+                && _primaryIncumbents.TryGet(lootBucket, uses, out var shared)
                 && ShouldPruneByPrimaryIncumbent(
                     StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
                         Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential)),
@@ -551,8 +554,7 @@ internal sealed partial class CombatBeamSolver
         IReadOnlyList<SearchNode> retained,
         int completedTurnLayers)
     {
-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
-            || _theftPolicy == SolverTheftPolicy.PreserveResources)
+        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
             return false;
         bool canEstablishPotionFreeIncumbent = _minimumPotionUses == 0
             && _potionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart;
@@ -570,6 +572,7 @@ internal sealed partial class CombatBeamSolver
             return false;
         }
 
+        bool bucketUpdated = false;
         PrimarySearchIncumbent? tightened = _primaryIncumbent;
         foreach (SearchNode node in retained)
         {
@@ -618,9 +621,11 @@ internal sealed partial class CombatBeamSolver
                 effectivePotionPolicy: _potionPolicy,
                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount))
             {
-                _primaryIncumbents.Tighten(node.Snapshot.OutstandingStolenResource,
+                bucketUpdated |= _primaryIncumbents.Tighten(node.Snapshot.OutstandingStolenResource,
                     explicitPotionUses, classIncumbent!.Value);
             }
+            if (_theftPolicy == SolverTheftPolicy.PreserveResources)
+                continue;
             TryTightenPrimarySearchIncumbent(
                 _potionFreePolicyBaseline,
                 _minimumPotionUses,
@@ -635,6 +640,15 @@ internal sealed partial class CombatBeamSolver
                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount);
         }
 
+        if (_theftPolicy == SolverTheftPolicy.PreserveResources)
+        {
+            if (bucketUpdated)
+            {
+                _run.PrimaryIncumbentUpdates++;
+                policy.Diagnostics.Info("[CombatSolver/Test] PRIMARY_INCUMBENT_UPDATE source=theft_bucket");
+            }
+            return bucketUpdated;
+        }
         if (Nullable.Equals(tightened, _primaryIncumbent))
             return false;
 

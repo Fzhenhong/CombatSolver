@@ -138,6 +138,10 @@ internal static class Program
             }
 
             reached = "M1";
+            if (generated?.Request.TheftPolicyForTest is { } theftPolicy)
+                SolverController.SetTheftPolicyForTesting(combat!, theftPolicy);
+            if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_THEFT_BUCKET_CHECKS") == "1")
+                PrimaryIncumbentChecks.RunTheft(combat!);
             DuplicateChoiceProbe.RunBuilders(combat!, options.OutputDirectory);
             SnapshotOpportunityProbe.RunShuffleWitness(combat!, options.OutputDirectory);
             if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_HISTORY_CHECKS") == "1")

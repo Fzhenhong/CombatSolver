@@ -1,0 +1,224 @@
+diff --git a/src/Search/CombatBeamSolver.Retention.cs b/src/Search/CombatBeamSolver.Retention.cs
+index 938fe9902..4c9db3fcf 100644
+--- a/src/Search/CombatBeamSolver.Retention.cs
++++ b/src/Search/CombatBeamSolver.Retention.cs
+@@ -300,14 +300,13 @@ internal sealed partial class CombatBeamSolver
+     private List<SearchNode> ApplyPrimaryIncumbentBound(List<SearchNode> retained)
+     {
+         // Per-event growth can repeat; the HP-only floor is not a bound on this objective.
+-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
+-            || _theftPolicy == SolverTheftPolicy.PreserveResources)
++        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
+             return retained;
+ 
+         List<SearchNode> bounded = retained;
+         int pruned = 0;
+         int certifiedHealingBoundPruned = 0;
+-        if (_primaryIncumbent is { } incumbent)
++        if (_theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent)
+             bounded = ApplyPrimaryIncumbentBoundCore(
+             retained,
+             incumbent,
+@@ -328,8 +327,12 @@ internal sealed partial class CombatBeamSolver
+             int uses = ExplicitPotionUseCount(node);
+             bool potionTierClosed = CanUseSharedPotionTier(uses, _maximumPotionUses,
+                 _forceAllPotionsDisabled, _potionPolicy, _potionStrategy.HasForcedDirectives);
++            int lootBucket = node.Snapshot.OutstandingStolenResource;
++            if (_theftPolicy == SolverTheftPolicy.PreserveResources && node.Snapshot.HasSimulator)
++                lootBucket = ((SimulatedCombatState)((CombatPredictionSimulator)node.Snapshot.Simulator).State.CombatState)
++                    .MinimumOutstandingStolenResource((CombatPredictionSimulator)node.Snapshot.Simulator);
+             bool prune = !node.IsTerminal && !node.Snapshot.HasRisk && potionTierClosed
+-                && _primaryIncumbents.TryGet(node.Snapshot.OutstandingStolenResource, uses, out var shared)
++                && _primaryIncumbents.TryGet(lootBucket, uses, out var shared)
+                 && ShouldPruneByPrimaryIncumbent(
+                     StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
+                         Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential)),
+@@ -551,8 +554,7 @@ internal sealed partial class CombatBeamSolver
+         IReadOnlyList<SearchNode> retained,
+         int completedTurnLayers)
+     {
+-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
+-            || _theftPolicy == SolverTheftPolicy.PreserveResources)
++        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
+             return false;
+         bool canEstablishPotionFreeIncumbent = _minimumPotionUses == 0
+             && _potionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart;
+@@ -570,6 +572,7 @@ internal sealed partial class CombatBeamSolver
+             return false;
+         }
+ 
++        bool bucketUpdated = false;
+         PrimarySearchIncumbent? tightened = _primaryIncumbent;
+         foreach (SearchNode node in retained)
+         {
+@@ -618,9 +621,11 @@ internal sealed partial class CombatBeamSolver
+                 effectivePotionPolicy: _potionPolicy,
+                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount))
+             {
+-                _primaryIncumbents.Tighten(node.Snapshot.OutstandingStolenResource,
++                bucketUpdated |= _primaryIncumbents.Tighten(node.Snapshot.OutstandingStolenResource,
+                     explicitPotionUses, classIncumbent!.Value);
+             }
++            if (_theftPolicy == SolverTheftPolicy.PreserveResources)
++                continue;
+             TryTightenPrimarySearchIncumbent(
+                 _potionFreePolicyBaseline,
+                 _minimumPotionUses,
+@@ -635,6 +640,15 @@ internal sealed partial class CombatBeamSolver
+                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount);
+         }
+ 
++        if (_theftPolicy == SolverTheftPolicy.PreserveResources)
++        {
++            if (bucketUpdated)
++            {
++                _run.PrimaryIncumbentUpdates++;
++                policy.Diagnostics.Info("[CombatSolver/Test] PRIMARY_INCUMBENT_UPDATE source=theft_bucket");
++            }
++            return bucketUpdated;
++        }
+         if (Nullable.Equals(tightened, _primaryIncumbent))
+             return false;
+ 
+diff --git a/src/Search/SimulatedCombatState.Theft.cs b/src/Search/SimulatedCombatState.Theft.cs
+index 895ddecb9..29d104d08 100644
+--- a/src/Search/SimulatedCombatState.Theft.cs
++++ b/src/Search/SimulatedCombatState.Theft.cs
+@@ -21,6 +21,28 @@ internal sealed partial class SimulatedCombatState
+         return (_outstandingStolenGold!.Value, _outstandingStolenCards!.Value);
+     }
+ 
++    // Current theft is not permanent: a living thief may still be killed.
++    // Reserve every resource held by a present living enemy as recoverable.
++    // Only already irrecoverable loot remains in the optimistic final bucket.
++    public int MinimumOutstandingStolenResource(CombatPredictionSimulator simulator)
++    {
++        int outstanding = OutstandingStolenResource(simulator);
++        long recoverable = 0;
++        foreach (var power in EffectivePowers())
++        {
++            if (!ContainsCreature(power.Owner) || !simulator.State.GetCreature(power.Owner).IsAlive)
++                continue;
++            recoverable += power switch
++            {
++                SwipePower { StolenCard: not null } => 1,
++                HeistPower heist => Math.Max(0, heist.Amount),
++                ThieveryPower thievery => Math.Max(0, thievery.DynamicVars.Gold.IntValue),
++                _ => 0,
++            };
++        }
++        return (int)Math.Max(0, outstanding - recoverable);
++    }
++
+     public void RecordStolenCard(CombatPredictionSimulator simulator)
+     {
+         EnsureOutstandingStolenResourcesInitialized(simulator);
+diff --git a/src/Search/StrategicHpRecoveryBound.KnownSources.cs b/src/Search/StrategicHpRecoveryBound.KnownSources.cs
+index 7744e3c8b..53cceb874 100644
+--- a/src/Search/StrategicHpRecoveryBound.KnownSources.cs
++++ b/src/Search/StrategicHpRecoveryBound.KnownSources.cs
+@@ -61,6 +61,8 @@ internal static partial class StrategicHpRecoveryBound
+         // callbacks must stay conservative until their complete source chains are closed.
+         if (state.AllCards.Any(card => card.Preview is NotYet or Feed)
+             || combat.PendingReturningCards.Any(card => card.Preview is NotYet or Feed)
++            || combat.EffectivePowers().OfType<SwipePower>()
++                .Any(power => power.StolenCard is NotYet or Feed)
+             || combat.RelicsOf(player).Any(relic => !relic.IsMelted
+                 && relic is DemonTongue or BookOfFiveRings or BookRepairKnife or LizardTail
+                     or DragonFruit or DarkstonePeriapt or ChosenCheese))
+diff --git a/tools/search/OfflineSearchHarness/ModRuntime.cs b/tools/search/OfflineSearchHarness/ModRuntime.cs
+index 3c47813ef..b0afff7ff 100644
+--- a/tools/search/OfflineSearchHarness/ModRuntime.cs
++++ b/tools/search/OfflineSearchHarness/ModRuntime.cs
+@@ -392,7 +392,7 @@ internal static class ModRuntime
+         BattleDamageSnapshot damage = BattleDamageTracker.Observe(state);
+         SolverSettingsSnapshot settings = SolverSettings.Capture();
+         SearchPolicySnapshot policy = SolverController.CaptureSearchPolicy(
+-            settings, state, includeTurnSetup: false, theftPolicy: null);
++            settings, state, includeTurnSetup: false, theftPolicy: SolverController.ResolveTheftPolicy(state));
+         policy = policy with { DisableSharedPrimaryIncumbentsForTesting = options.DisableSharedIncumbents,
+             Profile = policy.Profile with
+         {
+diff --git a/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs b/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs
+index d84738ad9..7438bc98f 100644
+--- a/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs
++++ b/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs
+@@ -1,9 +1,63 @@
+ using CombatSolver;
++using CombatSolver.Engine.InCombat.Simulation;
++using MegaCrit.Sts2.Core.Combat;
++using MegaCrit.Sts2.Core.Entities.Cards;
++using MegaCrit.Sts2.Core.Models.Cards;
++using MegaCrit.Sts2.Core.Models.Powers;
+ 
+ namespace OfflineSearchHarness;
+ 
+ internal static class PrimaryIncumbentChecks
+ {
++    internal static void RunTheft(CombatState combat)
++    {
++        int assertions = 0;
++        var root = CombatRootSnapshot.Capture(combat);
++        var thief = combat.Enemies.First();
++        var held = root.ForkSimulator();
++        var state = (SimulatedCombatState)held.State.CombatState;
++        state.RecordStolenCard(held);
++        state.Apply<SwipePower>(thief, 1, thief);
++        held.AddToCombat<StrikeIronclad>(root.PlayerIdentity.Creature, PileType.Discard, 1, creator: null);
++        state.GetMutablePower<SwipePower>(thief)!.StolenCard =
++            held.State.GetPlayerCombatState(root.PlayerIdentity).DiscardPile.Cards.Last().Preview;
++        PowerLifecycleSupport.ResolvePowerAmountChanges(held, state);
++        Check(state.OutstandingStolenResource(held) == 1, "held card counts as current theft");
++        Check(state.MinimumOutstandingStolenResource(held) == 0, "living thief can return the card");
++        var escaped = held.Fork();
++        var escapedState = (SimulatedCombatState)escaped.State.CombatState;
++        escapedState.CreatureEscaped(thief);
++        Check(escapedState.OutstandingStolenResource(escaped) == 1, "escaped card remains lost");
++        Check(escapedState.MinimumOutstandingStolenResource(escaped) == 1, "escape closes the loss floor");
++        Check(state.MinimumOutstandingStolenResource(held) == 0, "escaped sibling cannot change parent");
++        var recovered = held.Fork();
++        var recoveredState = (SimulatedCombatState)recovered.State.CombatState;
++        recoveredState.RecoverStolenResources(recovered, thief);
++        Check(recoveredState.OutstandingStolenResource(recovered) == 0, "recovery closes the zero-loss bucket");
++        Check(state.OutstandingStolenResource(held) == 1, "recovered sibling cannot change parent");
++        PrimaryIncumbentTable table = new();
++        table.Tighten(1, 0, new(0, 3));
++        Check(!table.TryGet(state.MinimumOutstandingStolenResource(held), 0, out _),
++            "lost-card witness cannot prune a potentially saved-card route");
++        Check(table.TryGet(escapedState.MinimumOutstandingStolenResource(escaped), 0, out _),
++            "lost-card witness can bound the escaped-card bucket");
++        var healing = held.Fork();
++        healing.AddToCombat<NotYet>(root.PlayerIdentity.Creature, PileType.Discard, 1, creator: null);
++        var healCard = healing.State.GetPlayerCombatState(root.PlayerIdentity).DiscardPile.Cards.Last();
++        healing.RemoveFromCombat(healCard);
++        var healingState = (SimulatedCombatState)healing.State.CombatState;
++        healingState.GetMutablePower<SwipePower>(thief)!.StolenCard = healCard.Preview;
++        Check(StrategicHpRecoveryBound.KnownNativeHealingPotential(healing, root.PlayerIdentity, 6)
++            == int.MaxValue, "stolen healing card reserves future healing after recovery");
++        Console.WriteLine($"THEFT_BUCKET_CHECKS status=Passed assertions={assertions}");
++
++        void Check(bool condition, string message)
++        {
++            if (!condition) throw new InvalidOperationException(message);
++            assertions++;
++        }
++    }
++
+     internal static int Run()
+     {
+         int assertions = 0;
+diff --git a/tools/search/OfflineSearchHarness/Program.cs b/tools/search/OfflineSearchHarness/Program.cs
+index 8a85888ee..45bd14eab 100644
+--- a/tools/search/OfflineSearchHarness/Program.cs
++++ b/tools/search/OfflineSearchHarness/Program.cs
+@@ -138,6 +138,10 @@ internal static class Program
+             }
+ 
+             reached = "M1";
++            if (generated?.Request.TheftPolicyForTest is { } theftPolicy)
++                SolverController.SetTheftPolicyForTesting(combat!, theftPolicy);
++            if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_THEFT_BUCKET_CHECKS") == "1")
++                PrimaryIncumbentChecks.RunTheft(combat!);
+             if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_PILE_ORDER_CHECKS") == "1")
+                 PileOrderChecks.Run(combat!, options.OutputDirectory);
+             DuplicateChoiceProbe.RunBuilders(combat!, options.OutputDirectory);

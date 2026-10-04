@@ -61,6 +61,8 @@ internal static partial class StrategicHpRecoveryBound
         // callbacks must stay conservative until their complete source chains are closed.
         if (state.AllCards.Any(card => card.Preview is NotYet or Feed)
             || combat.PendingReturningCards.Any(card => card.Preview is NotYet or Feed)
+            || combat.EffectivePowers().OfType<SwipePower>()
+                .Any(power => power.StolenCard is NotYet or Feed)
             || combat.RelicsOf(player).Any(relic => !relic.IsMelted
                 && relic is DemonTongue or BookOfFiveRings or BookRepairKnife or LizardTail
                     or DragonFruit or DarkstonePeriapt or ChosenCheese))

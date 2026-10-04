@@ -1,9 +1,63 @@
 using CombatSolver;
+using CombatSolver.Engine.InCombat.Simulation;
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace OfflineSearchHarness;
 
 internal static class PrimaryIncumbentChecks
 {
+    internal static void RunTheft(CombatState combat)
+    {
+        int assertions = 0;
+        var root = CombatRootSnapshot.Capture(combat);
+        var thief = combat.Enemies.First();
+        var held = root.ForkSimulator();
+        var state = (SimulatedCombatState)held.State.CombatState;
+        state.RecordStolenCard(held);
+        state.Apply<SwipePower>(thief, 1, thief);
+        held.AddToCombat<StrikeIronclad>(root.PlayerIdentity.Creature, PileType.Discard, 1, creator: null);
+        state.GetMutablePower<SwipePower>(thief)!.StolenCard =
+            held.State.GetPlayerCombatState(root.PlayerIdentity).DiscardPile.Cards.Last().Preview;
+        PowerLifecycleSupport.ResolvePowerAmountChanges(held, state);
+        Check(state.OutstandingStolenResource(held) == 1, "held card counts as current theft");
+        Check(state.MinimumOutstandingStolenResource(held) == 0, "living thief can return the card");
+        var escaped = held.Fork();
+        var escapedState = (SimulatedCombatState)escaped.State.CombatState;
+        escapedState.CreatureEscaped(thief);
+        Check(escapedState.OutstandingStolenResource(escaped) == 1, "escaped card remains lost");
+        Check(escapedState.MinimumOutstandingStolenResource(escaped) == 1, "escape closes the loss floor");
+        Check(state.MinimumOutstandingStolenResource(held) == 0, "escaped sibling cannot change parent");
+        var recovered = held.Fork();
+        var recoveredState = (SimulatedCombatState)recovered.State.CombatState;
+        recoveredState.RecoverStolenResources(recovered, thief);
+        Check(recoveredState.OutstandingStolenResource(recovered) == 0, "recovery closes the zero-loss bucket");
+        Check(state.OutstandingStolenResource(held) == 1, "recovered sibling cannot change parent");
+        PrimaryIncumbentTable table = new();
+        table.Tighten(1, 0, new(0, 3));
+        Check(!table.TryGet(state.MinimumOutstandingStolenResource(held), 0, out _),
+            "lost-card witness cannot prune a potentially saved-card route");
+        Check(table.TryGet(escapedState.MinimumOutstandingStolenResource(escaped), 0, out _),
+            "lost-card witness can bound the escaped-card bucket");
+        var healing = held.Fork();
+        healing.AddToCombat<NotYet>(root.PlayerIdentity.Creature, PileType.Discard, 1, creator: null);
+        var healCard = healing.State.GetPlayerCombatState(root.PlayerIdentity).DiscardPile.Cards.Last();
+        healing.RemoveFromCombat(healCard);
+        var healingState = (SimulatedCombatState)healing.State.CombatState;
+        healingState.GetMutablePower<SwipePower>(thief)!.StolenCard = healCard.Preview;
+        Check(StrategicHpRecoveryBound.KnownNativeHealingPotential(healing, root.PlayerIdentity, 6)
+            == int.MaxValue, "stolen healing card reserves future healing after recovery");
+        Console.WriteLine($"THEFT_BUCKET_CHECKS status=Passed assertions={assertions}");
+
+        void Check(bool condition, string message)
+        {
+            if (!condition) throw new InvalidOperationException(message);
+            assertions++;
+        }
+    }
+
     internal static int Run()
     {
         int assertions = 0;

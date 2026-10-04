@@ -392,7 +392,7 @@ internal static class ModRuntime
         BattleDamageSnapshot damage = BattleDamageTracker.Observe(state);
         SolverSettingsSnapshot settings = SolverSettings.Capture();
         SearchPolicySnapshot policy = SolverController.CaptureSearchPolicy(
-            settings, state, includeTurnSetup: false, theftPolicy: null);
+            settings, state, includeTurnSetup: false, theftPolicy: SolverController.ResolveTheftPolicy(state));
         policy = policy with { DisableSharedPrimaryIncumbentsForTesting = options.DisableSharedIncumbents,
             Profile = policy.Profile with
         {
