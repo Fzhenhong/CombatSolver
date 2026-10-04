@@ -729,11 +729,38 @@ internal static partial class CombatSearchCoordinator
             int prefixLimit = prefixes.Any(prefix => prefix[0].PotionId == "BLOCK_POTION"
                 || prefix[0].Choice?.Effect == PlanChoiceEffect.SetFreeThisCombat) ? 12 : 8;
             FrontierContinuationScheduler continuationScheduler = new(context);
-            foreach (PlanAction[] prefix in prefixes
-                         .DistinctBy(PowerPrefixKey)
-                         .Take(prefixLimit))
+            List<PlanAction[]> posteriorPrefixes = prefixes.DistinctBy(PowerPrefixKey).Take(prefixLimit).ToList();
+            PlanAction[]? continuationSlot = posteriorPrefixes.LastOrDefault();
+            Dictionary<string, PlanAction[]> openingFrontiers = [];
+            bool TryOpeningFrontier(PlanAction[] slot, out PlanAction[] frontier)
             {
-                string prefixText = string.Join('+', prefix.Select(action =>
+                frontier = slot;
+                if (!ReferenceEquals(slot, continuationSlot)
+                    || slot.Length != 2 || !primary.OnlyDeathRoutesFound
+                    || IsCompleteVictory(selected)
+                    || slot[1].Kind != PlanActionKind.PlayCard
+                    || !PowerCardValuationModels.Registry.ContainsCardId(slot[1].CardId)
+                    || !openingFrontiers.TryGetValue(PowerPrefixKey([slot[0]]), out PlanAction[]? cached)
+                    || !cached.Any(action => action.Kind == PlanActionKind.PlayCard
+                        && action.CardId == slot[1].CardId))
+                    return false;
+                frontier = cached;
+                return true;
+            }
+            for (int prefixIndex = 0; prefixIndex < posteriorPrefixes.Count; prefixIndex++)
+            {
+                SearchBudgetWindow posteriorWindow = context.Budget.RequestWindow(profile);
+                if (!posteriorWindow.CanStart(0)) break;
+                int continuationIndex = continuationSlot == null ? -1 : posteriorPrefixes.IndexOf(continuationSlot);
+                if (continuationIndex > prefixIndex && posteriorPrefixes[prefixIndex].Length > 1
+                    && TryOpeningFrontier(continuationSlot!, out _))
+                {
+                    posteriorPrefixes.RemoveAt(continuationIndex);
+                    posteriorPrefixes.Insert(prefixIndex, continuationSlot!);
+                }
+                PlanAction[] prefix = posteriorPrefixes[prefixIndex];
+                bool continueOpeningFrontier = TryOpeningFrontier(prefix, out PlanAction[] continuationPrefix);
+                string prefixText = string.Join('+', continuationPrefix.Select(action =>
                     action.Kind == PlanActionKind.UsePotion
                         ? $"POTION:{action.PotionId}@{action.PotionSlot}" +
                           (action.Choice?.Cards.FirstOrDefault() is { } chosen
@@ -751,20 +778,38 @@ internal static partial class CombatSearchCoordinator
                                 profile.BeamWidth, BeamWidthPortfolio.WideRefinementRatio),
                     }
                     : profile;
+                routeProfile = posteriorWindow.Limit(routeProfile,
+                    routeProfile.MaxExpandedNodes, routeProfile.SoftTimeBudgetMilliseconds,
+                    reserveMilliseconds: 0);
+                if (continueOpeningFrontier) routeProfile = routeProfile with { BaseScoreOnly = false };
+                PlanAction[]? openingPreviewActions = null;
                 SolverResult? candidate = continuationScheduler.DispatchOptional(
                     new ContinuationSearchRequest(context,
                         ContinuationPurpose.SmartOpeningPotionPosterior,
-                        prefix, routeProfile, SolverPotionPolicy.RequireAtLeastOne,
-                        prefix[0].PotionId == "BLOCK_POTION"
+                        continuationPrefix, routeProfile, SolverPotionPolicy.RequireAtLeastOne,
+                        continueOpeningFrontier || prefix[0].PotionId == "BLOCK_POTION"
                             ? Math.Min(2, MaximumSmartPotionUses(root, policy,
                                 potionFreeWon: false, potionFreeHpDeficit: 0))
                             : 1, null)
-                    { ResetFixedPrefixSchedulingBaseline = false },
+                    {
+                        ResetFixedPrefixSchedulingBaseline = continueOpeningFrontier,
+                        ProgressCallbackOverride = progress =>
+                        {
+                            if (prefix.Length == 1 && progress.CurrentTurnPreview is { } preview)
+                                openingPreviewActions = preview.Actions.ToArray();
+                            progressCallback?.Invoke(progress);
+                        },
+                    },
                     $"SMART_OPENING_POTION_POSTERIOR prefix={prefixText}");
                 if (candidate == null)
                     continue;
                 if (candidate.ResultScope != SolverResultScope.SearchCompletion)
                     return candidate;
+                if (prefix.Length == 1 && !candidate.Snapshot.HasRisk
+                    && openingPreviewActions is { } opening
+                    && opening.LastOrDefault()?.Kind == PlanActionKind.EndTurn
+                    && opening.Count(action => action.Kind == PlanActionKind.UsePotion) == 1)
+                    openingFrontiers[PowerPrefixKey(prefix)] = opening;
                 PopulateSingleSessionTotals(candidate);
                 bool won = IsCompleteVictory(candidate);
                 int saved = IsCompleteVictory(primary)
