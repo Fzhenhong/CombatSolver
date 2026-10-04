@@ -6,28 +6,22 @@
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
-## 0.49.3 框架与局外 Mod 兼容性（2026-10-04）
+## 0.49.4 上传引导（2026-10-05）
 
-托管 `AdaptedOnPlayChecks` 普通模式 41 项、`--empty` 5 项 Passed。覆盖 BetterVanillaSTS2、BaseLib、RitsuLib 加载身份、gameplay-neutral 框架准入、真实 Harmony 完整组合和未适配 gameplay OnPlay 拒绝。
+`CONTENT-MOD-FAILURES` 最小原生合同初轮 Passed，runId `c9d7eff6241f4d89bfbb8a544c483558`，26.066 秒。补齐部署开始、回合准备失配与实机风险复核时的内容观察后，最终行为源码 Passed，runId `73fa6ecba0ff47ee9adf777a84abd640`，25.508 秒。新增 `Contracts/Runtime/UnattendedTestRunner.UploadGuidance.cs`，从已有内容失败合同调用：
+
+- 搜索期间 player 输入触发手操标记；solver / system 输入及上一轮手操保持独立；录制明细不完整时仍识别输入。
+- 手操过期免上传，来源不明的过期保留上传，同场已有诊断问题不被后续手操过期清除。
+- 使用游戏 `AssemblyInfo.MockTypes` 对实际角色、牌、遗物与怪物逐项提供第三方来源，四类普通异常保留原错误及分类；反馈横幅、全自动战损暂停与实机复核提示均免上传。声明为非 gameplay 的实际内容同样适用。本场未出现的登记模型及怪物不影响原版引导，新战斗重新判断。
+- eng / zhs / zht 文案覆盖；既有八类 Hook、计算型变量、包装异常及原版/框架/运行库失败合同继续通过。
 
 ```powershell
-dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录>
-dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录> -- --empty
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId CONTENT-MOD-FAILURES -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit
 ```
 
-原生验证使用安装的 BaseLib 3.4.7 DLL/PCK/manifest 与 RitsuLib，进入同一私有游戏快照：
+本次使用 Debug 测试 DLL；保留用户未完成的 `ISSUE-212-RECORDED-BOUNDARY` 测试入口，通过临时 MSBuild 输入改用该文件的已提交版本。启动器临时副本改用已有进程路径查询，保留进程出生时间、租约和清理检查。启动器已报告删除整个私有实例。两份玩家包仅作静态取证，未复跑观者实际 Mod 栈，未验证可见 Steam 排版。
 
-| 场景 | runId | 秒 | 直接证据 |
-| --- | --- | --- | --- |
-| `ROOT-CONTENT-SOURCES` | `791612a7355141518541227c3216270b` | 25.556 | 真实商店删牌入口放行，怪物和意图来源拒绝，根与真实战斗状态保持 |
-| BaseLib 最小准入 + `PR18-FOREIGN-ONPLAY-BOUNDARY` | `2781b571a8a04df2841924fba091511e` | 23.821 | Passed；真实修饰器根、Owner、Fork 隔离、原有 OnPlay 门禁与一次原版求解部署 |
-| BaseLib 完整合同 + `PR18-FOREIGN-ONPLAY-BOUNDARY` | `646fb5504eb445efbaa14fe8068f84b0` | 23.892 | Passed；原生生成牌状态键、五种牌堆及离堆的监听生命周期，原有完整修饰器合同、OnPlay 边界和一次原版求解部署 |
-
-原生入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId <表内场景> -TimeoutSeconds 120 -CleanupInstanceOnExit`。ROOT 使用 `-EnemyCurrentHp 1000`；PR18 使用 `-EnemyCurrentHp 1 -VerifyBaseLibCardModifierBoundary`。早先的最小准入样本通过临时 fixture 限定根、Owner 与 Fork，输出独立的 `BaseLibRootAdmission` 标记；当前完整合同输出 `BaseLibCardModifierBoundary` 与 `BaseLibGeneratedClone:NativeState:Created:Hand:Draw:Discard:Exhaust:Play:Removed`。
-
-此前完整 BaseLib 修饰器合同 Failed，runId `71984ec7e337460da825c98566898474`，22.033 秒，原文保留在 [历史卷 17](archive/development/volume-17.md#验证与范围)。本轮拆分断言的失败基线 runId `ef33630d6b52447b9279fefce87117e2`，21.952 秒，定位为入堆前的 listener 预期；生成牌修饰器和重置字段通过。当前合同按真实 BaseLib 的牌堆生命周期对照，完整通过；根因和范围见 [历史卷 18](archive/development/volume-18.md#baselib-生成牌回归合同2026-10-04)。
-
-Bash 使用同名 scenario 和对应长参数。本轮使用已提交 Executor 的隔离构建；临时启动器将 BaseLib 原包加入私有快照，并使用现有映像查询入口。进程身份、租约与退出清理检查保持，各次实例已删除。验证来源与未验证项见 [开发历史卷 17](archive/development/volume-17.md#验证与范围)，源码 `6a073d9e` 的历史验证见 [历史卷 16](archive/development/volume-16.md#验证与范围)。
+0.49.3 的框架、局外 Mod 与 BaseLib 验证见 [历史卷 14](archive/testing/volume-14.md)。
 
 ## 移动运行库内存回收（2026-10-04）
 

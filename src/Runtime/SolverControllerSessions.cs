@@ -134,6 +134,7 @@ internal sealed class SolverCombatSession
     public bool ManualControlObserved { get; set; }
     public bool ShowcaseMode { get; set; }
     public CombatBugReportIssueLedger BugReportIssues { get; } = new();
+    public CombatBugReportUploadPolicy UploadPolicy { get; } = new();
 }
 
 internal sealed class SolverSearchSession(
@@ -160,6 +161,11 @@ internal sealed class SolverSearchSession(
     public int ReferenceReleaseState;
     public int CancellationDisposeState;
     public bool DeployWhenReady { get; set; } = deployWhenReady;
+    public bool PlayerInputObserved { get; private set; }
+    public void ObserveInput(string origin)
+    {
+        if (origin == "player") PlayerInputObserved = true;
+    }
     public int MaxDegreeOfParallelism { get; set; } = 1;
     public SearchMemoryPressureSignal? MemoryPressureSignal { get; set; }
     public SearchInteractionState Interaction { get; } = new();

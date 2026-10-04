@@ -194,11 +194,13 @@ internal static partial class SolverController
         => _combat.ReplanCounts.GetValueOrDefault(ReplanCause.ManualDivergence);
     internal static bool ManualRouteImprovementDetected
         => _combat.ManualRouteImprovementDetected;
+    internal static bool AllowsPlayerUploadGuidance
+        => _combat.UploadPolicy.AllowsPlayerUploadGuidance;
     internal static bool BugReportUploadRecommended
-        => UnexpectedReplanCount > 0
+        => AllowsPlayerUploadGuidance && (UnexpectedReplanCount > 0
            || _combat.ReplanCounts.GetValueOrDefault(ReplanCause.ContinuationMissing) > 0
            || _combat.ReplanCounts.GetValueOrDefault(ReplanCause.PlanExhausted) > 0
-           || _combat.BugReportIssues.RequiresPlayerUpload;
+           || _combat.BugReportIssues.RequiresPlayerUpload);
     internal static ManualProjectionComparison? LastManualProjectionComparisonForTesting
         => _combat.LastManualProjectionComparison;
     internal static int NoGcRegionRolloverCountForTesting
@@ -450,6 +452,7 @@ internal static partial class SolverController
                 $"current_epoch={Volatile.Read(ref _combatLifecycleGeneration)}");
             return false;
         }
+        _combat.UploadPolicy.Observe(combat);
         _combat.BugReportIssues.RecordFailure(
             CombatBugReportIssueKind.TurnSetupFailure,
             exception);
@@ -474,6 +477,7 @@ internal static partial class SolverController
                 $"current_epoch={Volatile.Read(ref _combatLifecycleGeneration)}");
             return false;
         }
+        _combat.UploadPolicy.Observe(combat);
         _combat.BugReportIssues.Record(
             CombatBugReportIssueKind.TurnSetupStateMismatch,
             difference);
@@ -584,6 +588,8 @@ internal static partial class SolverController
     {
         AssertMainThread();
         ResetCore("combat_starting");
+        if (state is CombatState contentState)
+            _combat.UploadPolicy.Observe(contentState);
         _combat.FullAutoEnabled = !_solverDisabled
             && state is CombatState { Players.Count: 1 }
             && SolverSettings.Current.AutoEnableFullAuto;
@@ -919,6 +925,7 @@ internal static partial class SolverController
     public static void RequestSearch(NGame host, CombatState state, SearchReason reason, bool deployWhenReady = false)
     {
         AssertMainThread();
+        _combat.UploadPolicy.Observe(state);
         if (reason == SearchReason.Manual)
             _combat.RouteFrozen = false;
         if (_combat.ShowcaseMode && reason != SearchReason.AutoTurnStart)
@@ -1382,7 +1389,7 @@ internal static partial class SolverController
         if (exception.GetBaseException() is not IncompatibleGameplayModException incompatible)
         {
             return $"{title}\n[color={SolverUiTokens.Palette.DangerHex}]{EscapeRichText(exception.Message)}[/color]" +
-                   $"\n{SolverUiTokens.BugReportUploadInstructionRichText}";
+                   (AllowsPlayerUploadGuidance ? $"\n{SolverUiTokens.BugReportUploadInstructionRichText}" : string.Empty);
         }
 
         return FormatIncompatibleModFailure(incompatible);
@@ -2444,6 +2451,26 @@ internal static partial class SolverController
         Entry.Logger.Info($"[CombatSolver/Test] CONTROL_MODE_CHANGED mode=manual_plus_solver reason={reason}");
     }
 
+    internal static void ObserveCombatInput(string origin)
+    {
+        _search?.ObserveInput(origin);
+        if (_search is { PlayerInputObserved: true })
+            MarkManualControlObserved("search_player_input");
+    }
+
+    internal static void RecordSearchResultStale(SolverSearchSession search)
+        => _combat.BugReportIssues.Record(
+            search.PlayerInputObserved
+                ? CombatBugReportIssueKind.ManualSearchResultStale
+                : CombatBugReportIssueKind.SearchResultStale,
+            $"第 {search.StartTurnNumber} 回合");
+
+    internal static string FormatSearchResultStale(bool playerInputObserved)
+        => $"[b]{SolverText.Get("战斗路线求解器")}[/b]\n" + (playerInputObserved
+            ? SolverText.Get("手动操作改变了战斗状态，已丢弃过期结果，请重新计算。")
+            : SolverText.Get("战斗状态在计算期间发生变化，已丢弃过期结果。") +
+              (AllowsPlayerUploadGuidance ? "\n" + SolverUiTokens.BugReportUploadInstructionRichText : string.Empty));
+
     private static string CauseToken(ReplanCause cause)
         => cause switch
         {
@@ -2481,6 +2508,7 @@ internal static partial class SolverController
         AssertMainThread();
         if (!ReferenceEquals(_search, search))
             return;
+        _combat.UploadPolicy.Observe(search.State);
         _search = null;
         Volatile.Write(ref search.Interaction.Progress, null);
         int generation = search.Generation;
@@ -2526,19 +2554,16 @@ internal static partial class SolverController
             || !CanSolve(searchedState, out _)
             || LiveCombatStamp.Capture(searchedState) != searchedStamp)
         {
-            _combat.BugReportIssues.Record(
-                CombatBugReportIssueKind.SearchResultStale,
-                $"第 {LocalContext.GetMe(searchedState)?.PlayerCombatState?.TurnNumber ?? 0} 回合");
+            RecordSearchResultStale(search);
             _combat.PendingCompleteProjectionBaseline = null;
             _combat.PendingManualProjectionBaseline = null;
             _combat.LatestResult = null;
             _combat.LatestStamp = null;
             SolverOverlay.Show(
                 host,
-                "[b]战斗路线求解器[/b]\n战斗状态在计算期间发生变化，已丢弃过期结果。\n" +
-                SolverUiTokens.BugReportUploadInstructionRichText);
+                FormatSearchResultStale(search.PlayerInputObserved));
             SearchCompletionNotifier.Notify(SearchCompletionNotificationKind.Stale);
-            Entry.Logger.Info($"[CombatSolver/Test] SEARCH_STALE generation={generation}");
+            Entry.Logger.Info($"[CombatSolver/Test] SEARCH_STALE generation={generation} player_input={search.PlayerInputObserved}");
             return;
         }
 
@@ -2764,6 +2789,7 @@ internal static partial class SolverController
 
     private static void StartDeployment(NGame host, CombatState state, SolverResult result)
     {
+        _combat.UploadPolicy.Observe(state);
         bool hasCurrentTurnPlan = result.BestNode.Actions.Any(action =>
             action.Turn == result.StartTurnNumber
             && (action.IsExecutable || action.Kind == PlanActionKind.EndTurn));
@@ -3059,6 +3085,7 @@ internal static partial class SolverController
                     if ((_stopFullAutoOnDeathTurn && liveRisk.PlayerDead)
                         || (_stopFullAutoOnWorseRecalculation && worsened))
                     {
+                        _combat.UploadPolicy.Observe(state);
                         _combat.BugReportIssues.Record(
                             liveRisk.PlayerDead
                                 ? CombatBugReportIssueKind.FullAutoStoppedAtLiveRiskDeath
@@ -3187,6 +3214,7 @@ internal static partial class SolverController
         }
         catch (Exception ex)
         {
+            _combat.UploadPolicy.Observe(state);
             _combat.BugReportIssues.RecordFailure(CombatBugReportIssueKind.DeploymentFailure, ex);
             SolverOverlay.Show(host, FormatDeploymentFailure(ex));
             Entry.Logger.Error($"[CombatSolver/Test] DEPLOY_FAILURE turn={turn} exception={ex}");
@@ -3219,6 +3247,7 @@ internal static partial class SolverController
 
     private static void PauseAfterNativeChoiceFailure(NGame host, SolverDeploymentSession deployment, int turn, Exception failure)
     {
+        _combat.UploadPolicy.Observe(deployment.State!);
         _combat.ContinuationSource = null;
         _combat.FullAutoEnabled = false;
         _combat.AutomaticSearchPaused = true;
@@ -3538,24 +3567,24 @@ internal static partial class SolverController
         => exception.GetBaseException() is IncompatibleGameplayModException incompatible
            ? FormatIncompatibleModFailure(incompatible)
            : $"[color={SolverUiTokens.Palette.DangerHex}][b]{SolverText.Get("计算失败")}[/b]\n" +
-           $"{EscapeRichText(exception.Message)}[/color]\n" +
-           SolverUiTokens.SearchFailureInstructionRichText(parallelSearchWasEnabled);
+           $"{EscapeRichText(exception.Message)}[/color]" +
+           (AllowsPlayerUploadGuidance ? "\n" + SolverUiTokens.SearchFailureInstructionRichText(parallelSearchWasEnabled) : string.Empty);
 
-    private static string FormatDeploymentFailure(Exception exception)
+    internal static string FormatDeploymentFailure(Exception exception)
         => exception.GetBaseException() is IncompatibleGameplayModException incompatible
            ? FormatIncompatibleModFailure(incompatible)
            : $"[color={SolverUiTokens.Palette.DangerHex}][b]{SolverText.Get("自动执行中止")}[/b]\n" +
-           $"{EscapeRichText(exception.Message)}[/color]\n" +
-           SolverUiTokens.BugReportUploadInstructionRichText;
+           $"{EscapeRichText(exception.Message)}[/color]" +
+           (AllowsPlayerUploadGuidance ? "\n" + SolverUiTokens.BugReportUploadInstructionRichText : string.Empty);
 
-    private static string FormatTurnSetupFailure(
+    internal static string FormatTurnSetupFailure(
         Exception exception,
         bool parallelSearchWasEnabled)
         => exception.GetBaseException() is IncompatibleGameplayModException incompatible
            ? FormatIncompatibleModFailure(incompatible)
            : $"[color={SolverUiTokens.Palette.DangerHex}][b]{SolverText.Get("回合准备选牌失败")}[/b]\n" +
-           $"{EscapeRichText(exception.GetBaseException().Message)}[/color]\n" +
-           SolverUiTokens.SearchFailureInstructionRichText(parallelSearchWasEnabled);
+           $"{EscapeRichText(exception.GetBaseException().Message)}[/color]" +
+           (AllowsPlayerUploadGuidance ? "\n" + SolverUiTokens.SearchFailureInstructionRichText(parallelSearchWasEnabled) : string.Empty);
 
     private static void CancelDeployment()
     {

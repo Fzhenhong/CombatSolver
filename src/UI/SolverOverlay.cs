@@ -1387,7 +1387,7 @@ internal static class SolverOverlay
             _summaryText.Text =
                 SolverText.Format($"[color={SolverUiTokens.Palette.DangerHex}]完整路线原预计 {previousProjectedBattleHpLost} HP，") +
                 SolverText.Format($"重算后为 {projectedBattleHpLost} HP；全自动已暂停。[/color]\n") +
-                SolverUiTokens.BugReportUploadInstructionRichText;
+                (SolverController.AllowsPlayerUploadGuidance ? SolverUiTokens.BugReportUploadInstructionRichText : string.Empty);
         }
     }
 
@@ -1409,7 +1409,7 @@ internal static class SolverOverlay
             _summaryText.Text =
                 SolverText.Format($"[color={SolverUiTokens.Palette.DangerHex}]路线预计掉血 {plannedHpLoss} HP，") +
                 SolverText.Format($"结束回合前实机复核为 {liveHpLoss} HP；全自动未提交结束回合。[/color]\n") +
-                SolverUiTokens.BugReportUploadInstructionRichText;
+                (SolverController.AllowsPlayerUploadGuidance ? SolverUiTokens.BugReportUploadInstructionRichText : string.Empty);
         }
     }
 
@@ -2472,14 +2472,14 @@ internal static class SolverOverlay
 
         string? text;
         Color tone;
-        if (SolverController.ManualRouteImprovementDetected)
+        if (SolverController.AllowsPlayerUploadGuidance && SolverController.ManualRouteImprovementDetected)
         {
             text = SolverText.Get("你打出了比求解器更好的世界线。") +
                    SolverUiTokens.BugReportUploadInstruction +
                    SolverText.Get("这可以更好地推动算法进步！");
             tone = Success;
         }
-        else if (SolverController.UnexpectedReplanCount > 0)
+        else if (SolverController.AllowsPlayerUploadGuidance && SolverController.UnexpectedReplanCount > 0)
         {
             text = SolverText.Get("出现计划外重算，可能是模拟或算法问题。") +
                    SolverUiTokens.BugReportUploadInstruction;

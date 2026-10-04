@@ -234,6 +234,7 @@ internal sealed partial class UnattendedTestRunner
             LocManager.Instance.SetLanguage(previousLanguage);
             AssemblyInfo.MockTypes = previousMocks;
         }
+        AssertUploadGuidance(combat, player);
     }
 
     private static void AssertContentFailurePresentation(IncompatibleGameplayModException failure)
