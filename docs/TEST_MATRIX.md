@@ -34,7 +34,19 @@ dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolv
 
 复跑必须声明内存档（`GC_SEARCH_ALLOCATION_LIMIT` 与 `GC_NO_GC_REGION_DECLINED percent_of_configured`）：
 同一夹具在窄档（弃区 24%）与宽档（44%）会给出不同终值，O045 实测窄档 1 战损 / 1 瓶、宽档 14 战损 / 0 瓶，
-O041/O042/O044 跨档不变。W2 修复（Smart 药水层不再被 strategic 净差整层否证）后四条复跑均 Passed，score 与修复前逐位相同（O045 由 Failed 转 Passed，runId 095e69ee275b4acca62f35e9e735c869）；修复后的宽档实测尚未取得，宽窄档一致仍需在 GC_SEARCH_ALLOCATION_LIMIT ≥ 2.2GB 的机器复跑确认。
+O041/O042/O044 跨档不变。W2 修复（Smart 药水层不再被 strategic 净差整层否证）后四条复跑均 Passed，score 与修复前逐位相同（O045 由 Failed 转 Passed，runId 095e69ee275b4acca62f35e9e735c869）。
+
+夹具锁定质量界（本批新增口径，captain 对 t14 的裁决①）：A 类同根夹具的断言只锁质量界——战损轴用
+`expectedInitialProjectedBattleHpLostAtMost`（上界）、用药轴用 `expectedInitialPotionCount`（等值，比下限更严）、
+胜负轴用 `expectedInitialFinalEnemyHpAtMost=0` + `expectedInitialOnlyDeathRoutesFound=false`；单机快照值
+（`combatEndedTurn`、`potionHpSavedAtLeast`、`boundaryReason`、`score`）只作观测记录写进 description 与证据文件，
+不入断言。理由是录制三元组是录制机内存档形态的函数：同机同根下无修复二进制与修复后二进制给出同一偏移量
+（O044 两侧各两次都稳定 proj=3、endTurn=7、score=10001949972，而录制值是 proj=5、endTurn=6），把快照值当等值断言
+就会把环境差异误报成退化。误用警示：`expectedInitialHpLostAtMost` 断的是 `HpLostByTurn[startedTurn]`（首回合掉血），
+**不是**整场战损，proj 轴一律用 `ExpectedInitialProjectedBattleHpLostAtMost`（断言体
+`src/Testing/Contracts/Search/UnattendedTestRunner.SolverPolicy.cs:417-422`）。按此口径，O044/O045 落盘后各重跑一次
+均 Passed：`4e17b33a1367462c906cca1a83fc4aae`（limit=1232616004 字节 = 1176 MiB，proj=3 ≤ 5）、
+`7d8a2799942d459390c12a1b87142a3d`（limit=1235238808 字节 = 1178 MiB，proj=1 ≤ 1、1 瓶）。
 
 四份夹具的 `timeoutSeconds=300` 高于 AGENTS.md 第 8 节的 120 秒默认口径：该值跟随各包内录制的
 `softTimeBudgetMilliseconds`（五包分别 120000/300000/180000/300000/180000ms，最长 300000ms），属
