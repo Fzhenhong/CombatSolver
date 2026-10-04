@@ -57,6 +57,9 @@ internal sealed class CombatRootSnapshot
     public string? HealingBoundCertificationSourceId { get; }
     public bool CanCertifyRemainingHealing { get; }
     public bool UsesKnownNativeHealingPolicy { get; }
+    internal GrowthValues InitialGrowthRewards
+        => ((SimulatedCombatState)_rootSimulator.State.CombatState).GrowthRewards;
+    internal GrowthValues? ExhaustingGrowthUpperBound { get; }
     /// <summary>Root card/power/potion healing bound, excluding fixed post-combat healing.</summary>
     public int InitialRemainingHealingUpperBound { get; }
     public CombatHistoryDependencies HistoryDependencies { get; }
@@ -143,6 +146,8 @@ internal sealed class CombatRootSnapshot
         CanCertifyRemainingHealing = StrategicHpRecoveryBound.CanCertifyRemainingHealingEnvironment(
             rootSimulator, playerIdentity);
         UsesKnownNativeHealingPolicy = StrategicHpRecoveryBound.CanUseKnownNativeHealingPolicy(
+            rootSimulator, playerIdentity);
+        ExhaustingGrowthUpperBound = ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(
             rootSimulator, playerIdentity);
         InitialRemainingHealingUpperBound = CanCertifyRemainingHealing
             ? StrategicHpRecoveryBound.RemainingHealingUpperBound(rootSimulator, playerIdentity, postCombatHeal: 0)

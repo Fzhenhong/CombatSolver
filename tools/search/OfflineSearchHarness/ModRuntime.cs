@@ -112,6 +112,13 @@ internal static class ModRuntime
     private static void ApplyFixedBudgetSettings(HarnessOptions options)
     {
         SolverSearchProfile profile = ResolveProfile(options);
+        SolverSettingsData? resourceSettings = Environment.GetEnvironmentVariable("OFFLINE_HARNESS_RESOURCE_SETTINGS")
+            is { Length: > 0 } resourcePath
+                ? System.Text.Json.JsonSerializer.Deserialize<SolverSettingsData>(File.ReadAllText(resourcePath),
+                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true,
+                        Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() } })
+                    ?? throw new InvalidDataException("Empty resource policy settings.")
+                : null;
         SolverSettings.ApplyForTesting(new SolverSettingsData
         {
             PerformanceMigrationVersion = SolverSettings.CurrentPerformanceMigrationVersion,
@@ -131,6 +138,9 @@ internal static class ModRuntime
             OnlineStatisticsEnabled = false,
             SearchCompletionNotificationsEnabled = false,
             PotionPolicy = Enum.Parse<SolverPotionPolicy>(options.PotionPolicy, ignoreCase: true),
+            GrowthBudgets = resourceSettings?.GrowthBudgets ?? default,
+            RelicStrategyEnabled = resourceSettings?.RelicStrategyEnabled ?? true,
+            RelicCounterRules = resourceSettings?.RelicCounterRules ?? [],
         });
     }
 
@@ -522,7 +532,11 @@ internal static class ModRuntime
                 policy with { PrimaryIncumbents = reused }, CancellationToken.None, null);
             if (next.OnlyDeathRoutesFound || !next.Snapshot.AllEnemiesDead
                 || next.ProjectedBattleHpLost > result.ProjectedBattleHpLost
-                || next.ExplicitPotionCount != result.ExplicitPotionCount)
+                || next.ExplicitPotionCount != result.ExplicitPotionCount
+                || RouteQualityPolicy.Compare(
+                    RouteQuality.FromInterim(CombatSearchCoordinator.CapturePortfolioQuality(root, policy, next)),
+                    RouteQuality.FromInterim(CombatSearchCoordinator.CapturePortfolioQuality(root, policy, result)),
+                    RouteQualityProjection.PotionPolicy, policy.TheftPolicy) > 0)
                 throw new InvalidOperationException("Reused request lost victory quality.");
             var changed = incumbentSession.AcquirePrimaryIncumbents(root,
                 policy with { PotionPolicy = SolverPotionPolicy.RequireAtLeastOne }, damage);

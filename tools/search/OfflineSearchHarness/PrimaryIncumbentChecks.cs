@@ -9,6 +9,86 @@ namespace OfflineSearchHarness;
 
 internal static class PrimaryIncumbentChecks
 {
+    internal static void RunResources(CombatState combat)
+    {
+        int assertions = 0;
+        void Check(bool condition, string message)
+        {
+            if (!condition) throw new InvalidOperationException(message);
+            assertions++;
+        }
+        var root = CombatRootSnapshot.Capture(combat);
+        var policy = SolverController.CaptureSearchPolicy(SolverSettings.Capture(), combat, false, null);
+        var initial = root.ForkSimulator();
+        var initialCombat = (SimulatedCombatState)initial.State.CombatState;
+        Check(root.ExhaustingGrowthUpperBound is { Royalties: 1 },
+            "plain exhausting royalty has a finite cap; native=" + root.UsesKnownNativeHealingPolicy
+            + "; subscribers=" + root.CapturedRunModSubscriberCount + "/" + root.CapturedCombatModSubscriberCount
+            + "; powers=" + string.Join(",", initialCombat.EffectivePowers().Select(p => p.Id.Entry))
+            + "; cards=" + string.Join(",", initial.State.GetPlayerCombatState(root.PlayerIdentity).AllCards
+                .Select(c => c.Preview.Id.Entry + ":" + string.Join("/", c.Preview.Keywords))));
+        var copied = root.ForkSimulator();
+        copied.AddToCombat<DualWield>(root.PlayerIdentity.Creature, PileType.Hand, 1, creator: null);
+        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(copied, root.PlayerIdentity) == null,
+            "copy cards invalidate the growth cap");
+        var returned = root.ForkSimulator();
+        returned.AddToCombat<Eidolon>(root.PlayerIdentity.Creature, PileType.Hand, 1, creator: null);
+        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(returned, root.PlayerIdentity) == null,
+            "exhaust replay invalidates the growth cap");
+        Check(root.ExhaustingGrowthUpperBound is { Royalties: 1 }, "siblings leave the frozen root unchanged");
+        PrimaryIncumbentTable table = new();
+        PrimaryIncumbentBucket feed = new(0, 0, new(Feed: 1));
+        PrimaryIncumbentBucket royalty = new(0, 0, new(Royalties: 1));
+        Check(ResourceIncumbentPolicy.IsPlainBucket(new(0, 0)), "plain witness may use the scalar compatibility path");
+        Check(!ResourceIncumbentPolicy.IsPlainBucket(royalty), "generated growth cannot leak into scalar witnesses");
+        Check(table.Tighten(feed, new(-5, 3)), "feed witness stored");
+        Check(!table.TryGet(royalty, out _), "equal total counts with different sources stay separate");
+        Check(table.Tighten(royalty, new(0, 4)), "royalty witness stored independently");
+        Check(!table.TryGet(0, 0, out _), "reward witnesses do not enter the plain bucket");
+        ulong flower = 1UL << (int)RelicCounterId.HappyFlower;
+        ulong nib = 1UL << (int)RelicCounterId.PenNib;
+        Check(table.Tighten(new(0, 0, default, flower), new(-3, 4)), "flower witness stored");
+        Check(!table.TryGet(new(0, 0, default, nib), out _), "equal satisfied counts do not merge relic masks");
+        Check(!table.TryGet(new(0, 1, default, flower), out _), "potion tier remains isolated");
+        var goals = policy with
+        {
+            GrowthOpportunityTargets = new(new(Royalties: 1), []),
+            GrowthBudgets = new(Royalties: 5),
+            RelicTargets = [new(RelicCounterId.HappyFlower, 2, 2, 3, 3)],
+        };
+        Check(ResourceIncumbentPolicy.TryOptimisticBucket(goals, new(Royalties: 1), default(GrowthValues),
+            0, 0, out var optimistic, out int credit) && optimistic.Growth.Royalties == 1
+            && optimistic.RelicMask == flower && credit == 8,
+            "unfinished route reserves every future growth and relic reward");
+        Check(!table.TryGet(optimistic, out _), "partial witnesses cannot bound the optimistic goal bucket");
+        table.Tighten(optimistic, new(-8, 5));
+        Check(table.TryGet(optimistic, out _), "matching full-goal witness supplies its bound");
+        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals, null, default(GrowthValues),
+            0, 0, out _, out _), "unknown growth cap never means zero future reward");
+        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals, new(Royalties: 1), new GrowthValues(Royalties: 2),
+            0, 0, out _, out _), "observed reward beyond cap refuses pruning");
+        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals with
+            { GrowthOpportunityTargets = GrowthOpportunityTargets.UnboundedForTesting("repeatable") },
+            new(Royalties: 1), default(GrowthValues), 0, 0, out _, out _),
+            "unbounded goals refuse pruning even with a nominal cap");
+        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals with
+            { GrowthOpportunityTargets = new(new GrowthValues { ThirdParty = new() { ["external"] = 1 } }, []) },
+            new(Royalties: 1), default(GrowthValues), 0, 0, out _, out _),
+            "native cap cannot certify a third-party growth target");
+        Check(ResourceIncumbentPolicy.TryOptimisticBucket(goals with { IgnoreLongTermRewards = true },
+            null, default(GrowthValues), 0, 0, out var ignored, out int ignoredCredit)
+            && ignored.Growth == default && ignoredCredit == 3, "ignore growth retains relic policy");
+        var spentFeed = root.ForkSimulator();
+        spentFeed.AddToCombat<Feed>(root.PlayerIdentity.Creature, PileType.Exhaust, 1, creator: null);
+        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(spentFeed, root.PlayerIdentity)
+            is { Feed: 0 }, "unrecoverable exhausted feed has no future activation");
+        Check(StrategicHpRecoveryBound.KnownNativeHealingPotential(spentFeed, root.PlayerIdentity, 6)
+            == int.MaxValue, "uncertified exhausted feed keeps the original healing reserve");
+        Check(StrategicHpRecoveryBound.KnownNativeHealingPotential(spentFeed, root.PlayerIdentity, 6,
+            ignoreExhaustedFeed: true) == 6, "closed exhausting loadout can release the spent feed reserve");
+        Console.WriteLine($"RESOURCE_BUCKET_CHECKS status=Passed assertions={assertions}");
+    }
+
     internal static void RunTheft(CombatState combat)
     {
         int assertions = 0;

@@ -125,10 +125,10 @@ internal sealed class SolverCombatSession
         _primaryIncumbents = new();
         if (string.Equals(_primaryIncumbentScope, scope, StringComparison.Ordinal)
             && previous.PotionFreeWitness is { } witness
-            && previous.TryGet(witness.OutstandingStolenResource, 0, out var bound))
+            && previous.TryGet(ResourceIncumbentPolicy.CompletedBucket(witness.Snapshot, 0), out var bound))
         {
             _primaryIncumbents.PotionFreeWitness = witness;
-            _primaryIncumbents.Tighten(witness.OutstandingStolenResource, 0, bound);
+            _primaryIncumbents.Tighten(ResourceIncumbentPolicy.CompletedBucket(witness.Snapshot, 0), bound);
         }
         _primaryIncumbentScope = scope;
         return _primaryIncumbents;

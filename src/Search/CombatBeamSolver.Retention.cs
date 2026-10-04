@@ -299,14 +299,13 @@ internal sealed partial class CombatBeamSolver
 
     private List<SearchNode> ApplyPrimaryIncumbentBound(List<SearchNode> retained)
     {
-        // Per-event growth can repeat; the HP-only floor is not a bound on this objective.
-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
-            return retained;
-
         List<SearchNode> bounded = retained;
         int pruned = 0;
         int certifiedHealingBoundPruned = 0;
-        if (_theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent)
+        if (!_hasGrowthTargets && root.InitialGrowthRewards.Total == 0
+            && _theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent
+            && retained.All(node => ResourceIncumbentPolicy.IsPlainBucket(
+                ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, 0))))
             bounded = ApplyPrimaryIncumbentBoundCore(
             retained,
             incumbent,
@@ -332,12 +331,15 @@ internal sealed partial class CombatBeamSolver
                 lootBucket = ((SimulatedCombatState)((CombatPredictionSimulator)node.Snapshot.Simulator).State.CombatState)
                     .MinimumOutstandingStolenResource((CombatPredictionSimulator)node.Snapshot.Simulator);
             bool prune = !node.IsTerminal && !node.Snapshot.HasRisk && potionTierClosed
-                && _primaryIncumbents.TryGet(lootBucket, uses, out var shared)
+                && ResourceIncumbentPolicy.TryOptimisticBucket(policy, root.ExhaustingGrowthUpperBound,
+                    node.Snapshot, lootBucket, uses, out var resourceBucket, out int rewardCredit)
+                && _primaryIncumbents.TryGet(resourceBucket, out var shared)
                 && ShouldPruneByPrimaryIncumbent(
                     StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
-                        Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential)),
+                        Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential))
+                        - rewardCredit,
                     node.Turn, shared, allowTurnTieBound: !_strictHpBoundWithRelicTargets,
-                    pruneEqualHp: policy.RelicTargets.Count == 0);
+                    pruneEqualHp: true);
             if (prune)
             {
                 if (sharedBounded == null)
@@ -457,7 +459,9 @@ internal sealed partial class CombatBeamSolver
                 (CombatPredictionSimulator)snapshot.Simulator, _player,
                 root.PostCombatRelicHeal.UnconditionalHeal + root.PostCombatRelicHeal.WoundedHeal,
                 includePotionHealing: !_forceAllPotionsDisabled,
-                maximumExplicitPotionUses: _maximumPotionUses));
+                maximumExplicitPotionUses: _maximumPotionUses,
+                ignoreExhaustedFeed: root.ExhaustingGrowthUpperBound is { } upper
+                    && snapshot.GrowthRewards.Feed >= upper.Feed));
         return certifiedPotential;
     }
 
@@ -554,8 +558,6 @@ internal sealed partial class CombatBeamSolver
         IReadOnlyList<SearchNode> retained,
         int completedTurnLayers)
     {
-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
-            return false;
         bool canEstablishPotionFreeIncumbent = _minimumPotionUses == 0
             && _potionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart;
         // The strict-primary escape in FinalPlanOrdering is guaranteed to make an
@@ -604,9 +606,10 @@ internal sealed partial class CombatBeamSolver
                     + ActEndingBossPolicy.RankedPostCombatRelicHeal(
                         root.PostCombatRelicHeal, true, node.Snapshot.PlayerHp, node.Snapshot.PlayerMaxHp),
                 _strategicBossHpRelief,
-                node.Snapshot.DeathSaveHpRestored);
+                node.Snapshot.DeathSaveHpRestored) - node.Snapshot.StrategicHpCredit;
+            var resourceBucket = ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, explicitPotionUses);
             PrimarySearchIncumbent? classIncumbent = _primaryIncumbents.TryGet(
-                node.Snapshot.OutstandingStolenResource, explicitPotionUses, out var witnessed)
+                resourceBucket, out var witnessed)
                     ? witnessed : null;
             if (TryTightenPrimarySearchIncumbent(
                 _potionFreePolicyBaseline,
@@ -621,10 +624,11 @@ internal sealed partial class CombatBeamSolver
                 effectivePotionPolicy: _potionPolicy,
                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount))
             {
-                bucketUpdated |= _primaryIncumbents.Tighten(node.Snapshot.OutstandingStolenResource,
-                    explicitPotionUses, classIncumbent!.Value);
+                bucketUpdated |= _primaryIncumbents.Tighten(resourceBucket, classIncumbent!.Value);
             }
-            if (_theftPolicy == SolverTheftPolicy.PreserveResources)
+            if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
+                || !ResourceIncumbentPolicy.IsPlainBucket(resourceBucket)
+                || _theftPolicy == SolverTheftPolicy.PreserveResources)
                 continue;
             TryTightenPrimarySearchIncumbent(
                 _potionFreePolicyBaseline,
@@ -640,18 +644,17 @@ internal sealed partial class CombatBeamSolver
                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount);
         }
 
-        if (_theftPolicy == SolverTheftPolicy.PreserveResources)
+        if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
+            || _theftPolicy == SolverTheftPolicy.PreserveResources
+            || Nullable.Equals(tightened, _primaryIncumbent))
         {
             if (bucketUpdated)
             {
                 _run.PrimaryIncumbentUpdates++;
-                policy.Diagnostics.Info("[CombatSolver/Test] PRIMARY_INCUMBENT_UPDATE source=theft_bucket");
+                policy.Diagnostics.Info("[CombatSolver/Test] PRIMARY_INCUMBENT_UPDATE source=resource_bucket");
             }
             return bucketUpdated;
         }
-        if (Nullable.Equals(tightened, _primaryIncumbent))
-            return false;
-
         PrimarySearchIncumbent? previous = _primaryIncumbent;
         _primaryIncumbent = tightened;
         _run.PrimaryIncumbentUpdates++;

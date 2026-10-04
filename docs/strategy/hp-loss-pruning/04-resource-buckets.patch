@@ -1,0 +1,515 @@
+diff --git a/src/Runtime/CombatRootSnapshot.cs b/src/Runtime/CombatRootSnapshot.cs
+index 0db6e5bc6..5eecaca02 100644
+--- a/src/Runtime/CombatRootSnapshot.cs
++++ b/src/Runtime/CombatRootSnapshot.cs
+@@ -58,6 +58,9 @@ internal sealed class CombatRootSnapshot
+     public string? HealingBoundCertificationSourceId { get; }
+     public bool CanCertifyRemainingHealing { get; }
+     public bool UsesKnownNativeHealingPolicy { get; }
++    internal GrowthValues InitialGrowthRewards
++        => ((SimulatedCombatState)_rootSimulator.State.CombatState).GrowthRewards;
++    internal GrowthValues? ExhaustingGrowthUpperBound { get; }
+     /// <summary>Root card/power/potion healing bound, excluding fixed post-combat healing.</summary>
+     public int InitialRemainingHealingUpperBound { get; }
+     public CombatHistoryDependencies HistoryDependencies { get; }
+@@ -146,6 +149,8 @@ internal sealed class CombatRootSnapshot
+             rootSimulator, playerIdentity);
+         UsesKnownNativeHealingPolicy = StrategicHpRecoveryBound.CanUseKnownNativeHealingPolicy(
+             rootSimulator, playerIdentity);
++        ExhaustingGrowthUpperBound = ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(
++            rootSimulator, playerIdentity);
+         InitialRemainingHealingUpperBound = CanCertifyRemainingHealing
+             ? StrategicHpRecoveryBound.RemainingHealingUpperBound(rootSimulator, playerIdentity, postCombatHeal: 0)
+             : int.MaxValue;
+diff --git a/src/Runtime/SolverControllerSessions.cs b/src/Runtime/SolverControllerSessions.cs
+index 0fa8ec41b..dfaedeffa 100644
+--- a/src/Runtime/SolverControllerSessions.cs
++++ b/src/Runtime/SolverControllerSessions.cs
+@@ -125,10 +125,10 @@ internal sealed class SolverCombatSession
+         _primaryIncumbents = new();
+         if (string.Equals(_primaryIncumbentScope, scope, StringComparison.Ordinal)
+             && previous.PotionFreeWitness is { } witness
+-            && previous.TryGet(witness.OutstandingStolenResource, 0, out var bound))
++            && previous.TryGet(ResourceIncumbentPolicy.CompletedBucket(witness.Snapshot, 0), out var bound))
+         {
+             _primaryIncumbents.PotionFreeWitness = witness;
+-            _primaryIncumbents.Tighten(witness.OutstandingStolenResource, 0, bound);
++            _primaryIncumbents.Tighten(ResourceIncumbentPolicy.CompletedBucket(witness.Snapshot, 0), bound);
+         }
+         _primaryIncumbentScope = scope;
+         return _primaryIncumbents;
+diff --git a/src/Search/CombatBeamSolver.Retention.cs b/src/Search/CombatBeamSolver.Retention.cs
+index 4c9db3fcf..c55273505 100644
+--- a/src/Search/CombatBeamSolver.Retention.cs
++++ b/src/Search/CombatBeamSolver.Retention.cs
+@@ -299,14 +299,13 @@ internal sealed partial class CombatBeamSolver
+ 
+     private List<SearchNode> ApplyPrimaryIncumbentBound(List<SearchNode> retained)
+     {
+-        // Per-event growth can repeat; the HP-only floor is not a bound on this objective.
+-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
+-            return retained;
+-
+         List<SearchNode> bounded = retained;
+         int pruned = 0;
+         int certifiedHealingBoundPruned = 0;
+-        if (_theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent)
++        if (!_hasGrowthTargets && root.InitialGrowthRewards.Total == 0
++            && _theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent
++            && retained.All(node => ResourceIncumbentPolicy.IsPlainBucket(
++                ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, 0))))
+             bounded = ApplyPrimaryIncumbentBoundCore(
+             retained,
+             incumbent,
+@@ -332,12 +331,15 @@ internal sealed partial class CombatBeamSolver
+                 lootBucket = ((SimulatedCombatState)((CombatPredictionSimulator)node.Snapshot.Simulator).State.CombatState)
+                     .MinimumOutstandingStolenResource((CombatPredictionSimulator)node.Snapshot.Simulator);
+             bool prune = !node.IsTerminal && !node.Snapshot.HasRisk && potionTierClosed
+-                && _primaryIncumbents.TryGet(lootBucket, uses, out var shared)
++                && ResourceIncumbentPolicy.TryOptimisticBucket(policy, root.ExhaustingGrowthUpperBound,
++                    node.Snapshot, lootBucket, uses, out var resourceBucket, out int rewardCredit)
++                && _primaryIncumbents.TryGet(resourceBucket, out var shared)
+                 && ShouldPruneByPrimaryIncumbent(
+                     StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
+-                        Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential)),
++                        Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential))
++                        - rewardCredit,
+                     node.Turn, shared, allowTurnTieBound: !_strictHpBoundWithRelicTargets,
+-                    pruneEqualHp: policy.RelicTargets.Count == 0);
++                    pruneEqualHp: true);
+             if (prune)
+             {
+                 if (sharedBounded == null)
+@@ -457,7 +459,9 @@ internal sealed partial class CombatBeamSolver
+                 (CombatPredictionSimulator)snapshot.Simulator, _player,
+                 root.PostCombatRelicHeal.UnconditionalHeal + root.PostCombatRelicHeal.WoundedHeal,
+                 includePotionHealing: !_forceAllPotionsDisabled,
+-                maximumExplicitPotionUses: _maximumPotionUses));
++                maximumExplicitPotionUses: _maximumPotionUses,
++                ignoreExhaustedFeed: root.ExhaustingGrowthUpperBound is { } upper
++                    && snapshot.GrowthRewards.Feed >= upper.Feed));
+         return certifiedPotential;
+     }
+ 
+@@ -554,8 +558,6 @@ internal sealed partial class CombatBeamSolver
+         IReadOnlyList<SearchNode> retained,
+         int completedTurnLayers)
+     {
+-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets)
+-            return false;
+         bool canEstablishPotionFreeIncumbent = _minimumPotionUses == 0
+             && _potionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart;
+         // The strict-primary escape in FinalPlanOrdering is guaranteed to make an
+@@ -604,9 +606,10 @@ internal sealed partial class CombatBeamSolver
+                     + ActEndingBossPolicy.RankedPostCombatRelicHeal(
+                         root.PostCombatRelicHeal, true, node.Snapshot.PlayerHp, node.Snapshot.PlayerMaxHp),
+                 _strategicBossHpRelief,
+-                node.Snapshot.DeathSaveHpRestored);
++                node.Snapshot.DeathSaveHpRestored) - node.Snapshot.StrategicHpCredit;
++            var resourceBucket = ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, explicitPotionUses);
+             PrimarySearchIncumbent? classIncumbent = _primaryIncumbents.TryGet(
+-                node.Snapshot.OutstandingStolenResource, explicitPotionUses, out var witnessed)
++                resourceBucket, out var witnessed)
+                     ? witnessed : null;
+             if (TryTightenPrimarySearchIncumbent(
+                 _potionFreePolicyBaseline,
+@@ -621,10 +624,11 @@ internal sealed partial class CombatBeamSolver
+                 effectivePotionPolicy: _potionPolicy,
+                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount))
+             {
+-                bucketUpdated |= _primaryIncumbents.Tighten(node.Snapshot.OutstandingStolenResource,
+-                    explicitPotionUses, classIncumbent!.Value);
++                bucketUpdated |= _primaryIncumbents.Tighten(resourceBucket, classIncumbent!.Value);
+             }
+-            if (_theftPolicy == SolverTheftPolicy.PreserveResources)
++            if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
++                || !ResourceIncumbentPolicy.IsPlainBucket(resourceBucket)
++                || _theftPolicy == SolverTheftPolicy.PreserveResources)
+                 continue;
+             TryTightenPrimarySearchIncumbent(
+                 _potionFreePolicyBaseline,
+@@ -640,18 +644,17 @@ internal sealed partial class CombatBeamSolver
+                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount);
+         }
+ 
+-        if (_theftPolicy == SolverTheftPolicy.PreserveResources)
++        if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
++            || _theftPolicy == SolverTheftPolicy.PreserveResources
++            || Nullable.Equals(tightened, _primaryIncumbent))
+         {
+             if (bucketUpdated)
+             {
+                 _run.PrimaryIncumbentUpdates++;
+-                policy.Diagnostics.Info("[CombatSolver/Test] PRIMARY_INCUMBENT_UPDATE source=theft_bucket");
++                policy.Diagnostics.Info("[CombatSolver/Test] PRIMARY_INCUMBENT_UPDATE source=resource_bucket");
+             }
+             return bucketUpdated;
+         }
+-        if (Nullable.Equals(tightened, _primaryIncumbent))
+-            return false;
+-
+         PrimarySearchIncumbent? previous = _primaryIncumbent;
+         _primaryIncumbent = tightened;
+         _run.PrimaryIncumbentUpdates++;
+diff --git a/src/Search/CombatSearchCoordinator.cs b/src/Search/CombatSearchCoordinator.cs
+index 24c5f09db..73b8645b2 100644
+--- a/src/Search/CombatSearchCoordinator.cs
++++ b/src/Search/CombatSearchCoordinator.cs
+@@ -184,9 +184,14 @@ internal static partial class CombatSearchCoordinator
+             if (!policy.DisableRefinementIncumbentForTesting && !policy.DisableSharedPrimaryIncumbentsForTesting
+                 && selected.ExplicitPotionCount == 0 && !selected.Snapshot.HasRisk
+                 && selected.BoundaryReason == SearchBoundaryReason.None
+-                && BuildRefinementPrimarySearchIncumbent(root, policy, null, selected) is { } shared)
++                && !policy.PotionStrategy.HasForcedDirectives && IsCompleteVictory(selected)
++                && selected.CombatEndedTurn is { } endedTurn
++                && selected.Snapshot.ProjectedDeathSaveUseCount == 0
++                && policy.PotionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart)
+             {
+-                policy.PrimaryIncumbents!.Tighten(selected.OutstandingStolenResource, 0, shared);
++                policy.PrimaryIncumbents!.Tighten(
++                    ResourceIncumbentPolicy.CompletedBucket(selected.Snapshot, 0),
++                    new(StrategicHpDeficit(root, policy, selected), endedTurn));
+                 policy.PrimaryIncumbents.PotionFreeWitness = selected;
+             }
+             return selected;
+@@ -928,6 +933,8 @@ internal static partial class CombatSearchCoordinator
+         SolverResult result)
+     {
+         if (policy.EffectiveHasGrowthTargets
++            || !ResourceIncumbentPolicy.IsPlainBucket(
++                ResourceIncumbentPolicy.CompletedBucket(result.Snapshot, result.ExplicitPotionCount))
+             || policy.RelicTargets.Count > 0 && !CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)
+             || result.Snapshot.ProjectedDeathSaveUseCount > 0
+             || !IsCompleteVictory(result)
+diff --git a/src/Search/PrimaryIncumbentTable.cs b/src/Search/PrimaryIncumbentTable.cs
+index 02c9c1773..ccdeae062 100644
+--- a/src/Search/PrimaryIncumbentTable.cs
++++ b/src/Search/PrimaryIncumbentTable.cs
+@@ -1,27 +1,36 @@
+ namespace CombatSolver;
+ 
++internal readonly record struct PrimaryIncumbentBucket(
++    int Stolen, int Potions, GrowthValues Growth = default, ulong RelicMask = 0);
++
+ /// <summary>Witnessed victories shared only by searches with the same frozen root and policy.</summary>
+ internal sealed class PrimaryIncumbentTable
+ {
+-    private readonly Dictionary<(int Stolen, int Potions), PrimarySearchIncumbent> _bounds = [];
++    private readonly Dictionary<PrimaryIncumbentBucket, PrimarySearchIncumbent> _bounds = [];
+     internal SolverResult? PotionFreeWitness { get; set; }
+ 
+     internal bool TryGet(int stolen, int potions, out PrimarySearchIncumbent incumbent)
++        => TryGet(new(stolen, potions), out incumbent);
++
++    internal bool TryGet(PrimaryIncumbentBucket bucket, out PrimarySearchIncumbent incumbent)
+     {
+         lock (_bounds)
+-            return _bounds.TryGetValue((stolen, potions), out incumbent);
++            return _bounds.TryGetValue(bucket, out incumbent);
+     }
+ 
+     internal bool Tighten(int stolen, int potions, PrimarySearchIncumbent candidate)
++        => Tighten(new(stolen, potions), candidate);
++
++    internal bool Tighten(PrimaryIncumbentBucket bucket, PrimarySearchIncumbent candidate)
+     {
+         lock (_bounds)
+         {
+-            if (_bounds.TryGetValue((stolen, potions), out var current)
++            if (_bounds.TryGetValue(bucket, out var current)
+                 && (candidate.StrategicHpDeficit > current.StrategicHpDeficit
+                     || candidate.StrategicHpDeficit == current.StrategicHpDeficit
+                         && candidate.CombatEndedTurn >= current.CombatEndedTurn))
+                 return false;
+-            _bounds[(stolen, potions)] = candidate;
++            _bounds[bucket] = candidate;
+             return true;
+         }
+     }
+diff --git a/src/Search/ResourceIncumbentPolicy.cs b/src/Search/ResourceIncumbentPolicy.cs
+new file mode 100644
+index 000000000..2d5bb2535
+--- /dev/null
++++ b/src/Search/ResourceIncumbentPolicy.cs
+@@ -0,0 +1,112 @@
++using CombatSolver.Engine.InCombat.Simulation;
++using CombatSolver.Engine.Common;
++using MegaCrit.Sts2.Core.Entities.Cards;
++using MegaCrit.Sts2.Core.Entities.Players;
++using MegaCrit.Sts2.Core.Models;
++using MegaCrit.Sts2.Core.Models.Cards;
++using MegaCrit.Sts2.Core.Models.Powers;
++using MegaCrit.Sts2.Core.Models.Relics;
++
++namespace CombatSolver;
++
++internal static class ResourceIncumbentPolicy
++{
++    internal static bool IsPlainBucket(PrimaryIncumbentBucket bucket)
++        => bucket.Growth.Total == 0 && bucket.RelicMask == 0;
++
++    internal static PrimaryIncumbentBucket CompletedBucket(SimulationSnapshot snapshot, int potions)
++        => new(snapshot.OutstandingStolenResource, potions, snapshot.GrowthRewards,
++            snapshot.RelicCounters.SatisfiedMask);
++
++    internal static PrimaryIncumbentBucket CompletedBucket(SolverSnapshot snapshot, int potions)
++        => new(snapshot.OutstandingStolenResource, potions, snapshot.GrowthRewards,
++            snapshot.RelicCounters.SatisfiedMask);
++
++    // A frozen opportunity target is not by itself a proof of a global reward cap.
++    // Certify a small closed loadout: no generation, exhaust recovery, copying,
++    // replay powers/relics, third-party callbacks, or reward-granting potions.
++    internal static GrowthValues? CaptureExhaustingGrowthUpperBound(
++        CombatPredictionSimulator simulator, Player player)
++    {
++        var combat = (SimulatedCombatState)simulator.State.CombatState;
++        if (!StrategicHpRecoveryBound.CanUseKnownNativeHealingPolicy(simulator, player)
++            || GrowthSourceMirrors.All.Count != 0
++            || combat.RootRunModSubscriberCount != 0 || combat.RootCombatModSubscriberCount != 0
++            || combat.HasPendingReturningCards
++            || combat.PotionUses.Count != 0
++            || Enumerable.Range(0, ((ICombatPredictionPlayerLimits)combat).GetPotionSlotCount(player))
++                .Any(slot => combat.GetPotionAtSlot(player, slot) != null)
++            || combat.RelicsOf(player).Any(relic => !relic.IsMelted && relic is not
++                (BurningBlood or BlackBlood or RingOfTheSnake or BoundPhylactery
++                or DivineRight or HappyFlower or PenNib or Nunchaku))
++            || combat.EffectivePowers().Any(power => ReferenceEquals(power.Owner, player.Creature)
++                && power is not (StrengthPower or DexterityPower or WeakPower or VulnerablePower
++                    or FrailPower or ThornsPower or RoyaltiesPower))
++            || combat.EffectivePowers().OfType<SwipePower>().Any(power => power.StolenCard != null))
++            return null;
++
++        GrowthValues upper = combat.GrowthRewards;
++        if (!upper.Extras.IsEmpty) return null;
++        foreach (var card in simulator.State.GetPlayerCombatState(player).AllCards)
++        {
++            CardModel model = card.Preview;
++            if (model.Enchantment != null || model.Affliction != null) return null;
++            GrowthSource? source = model switch
++            {
++                Feed => GrowthSource.Feed,
++                TheHunt => GrowthSource.TheHunt,
++                Royalties => GrowthSource.Royalties,
++                GeneticAlgorithm when model.DeckVersion != null => GrowthSource.GeneticAlgorithm,
++                TheScythe when model.DeckVersion != null => GrowthSource.TheScythe,
++                _ => null,
++            };
++            if (source is { } growth)
++            {
++                if (!card.HasKeyword(simulator.State, CardKeyword.Exhaust)
++                    && !(model is Royalties && model.Type == CardType.Power)) return null;
++                if (!simulator.State.GetPlayerCombatState(player).ExhaustPile.Cards.Contains(card))
++                    upper = upper.With(growth, checked(upper.Get(growth) + 1));
++            }
++            else if (model is not (StrikeIronclad or DefendIronclad or Bash
++                or StrikeSilent or DefendSilent or Neutralize or Survivor
++                or StrikeNecrobinder or DefendNecrobinder or Bodyguard or Unleash
++                or StrikeRegent or DefendRegent)
++                && model.Type is not (CardType.Status or CardType.Curse))
++                return null;
++        }
++        return upper;
++    }
++
++    internal static bool TryOptimisticBucket(SearchPolicySnapshot policy, GrowthValues? growthUpper,
++        SimulationSnapshot snapshot, int stolen, int potions,
++        out PrimaryIncumbentBucket bucket, out int rewardCredit)
++        => TryOptimisticBucket(policy, growthUpper, snapshot.GrowthRewards, stolen, potions,
++            out bucket, out rewardCredit);
++
++    internal static bool TryOptimisticBucket(SearchPolicySnapshot policy, GrowthValues? growthUpper,
++        GrowthValues realized, int stolen, int potions,
++        out PrimaryIncumbentBucket bucket, out int rewardCredit)
++    {
++        bucket = default;
++        rewardCredit = 0;
++        GrowthValues optimistic = default;
++        if (!policy.IgnoreLongTermRewards && (policy.EffectiveHasGrowthTargets || realized.Total != 0))
++        {
++            if (!policy.GrowthOpportunityTargets.IsBounded
++                || !policy.GrowthOpportunityTargets.RequiredRewards.Extras.IsEmpty
++                || growthUpper is not { } upper
++                || !upper.Satisfies(realized)) return false;
++            optimistic = upper;
++        }
++        ulong relicMask = 0;
++        foreach (var target in policy.RelicTargets)
++        {
++            relicMask |= 1UL << (int)target.Id;
++            if (target.Id != RelicCounterId.MeatOnTheBone)
++                rewardCredit = checked(rewardCredit + target.HpAllowance);
++        }
++        rewardCredit = checked(rewardCredit + policy.EffectiveGrowthBudgets.Credit(optimistic));
++        bucket = new(stolen, potions, optimistic, relicMask);
++        return true;
++    }
++}
+diff --git a/src/Search/StrategicHpRecoveryBound.KnownSources.cs b/src/Search/StrategicHpRecoveryBound.KnownSources.cs
+index 53cceb874..261dc615b 100644
+--- a/src/Search/StrategicHpRecoveryBound.KnownSources.cs
++++ b/src/Search/StrategicHpRecoveryBound.KnownSources.cs
+@@ -49,7 +49,8 @@ internal static partial class StrategicHpRecoveryBound
+ 
+     internal static int KnownNativeHealingPotential(
+         CombatPredictionSimulator simulator, Player player, int postCombatHeal,
+-        bool includePotionHealing = true, int? maximumExplicitPotionUses = null)
++        bool includePotionHealing = true, int? maximumExplicitPotionUses = null,
++        bool ignoreExhaustedFeed = false)
+     {
+         if (simulator.HasPendingChoice || !CanUseKnownNativeHealingPolicy(simulator, player))
+             return int.MaxValue;
+@@ -59,7 +60,8 @@ internal static partial class StrategicHpRecoveryBound
+         // Recurring relic heals and death saves retain the complete HP allowance.
+         // Max-HP gains also heal: permanent-deck curse additions and combat-end
+         // callbacks must stay conservative until their complete source chains are closed.
+-        if (state.AllCards.Any(card => card.Preview is NotYet or Feed)
++        if (state.AllCards.Any(card => card.Preview is NotYet
++                || card.Preview is Feed && (!ignoreExhaustedFeed || !state.ExhaustPile.Cards.Contains(card)))
+             || combat.PendingReturningCards.Any(card => card.Preview is NotYet or Feed)
+             || combat.EffectivePowers().OfType<SwipePower>()
+                 .Any(power => power.StolenCard is NotYet or Feed)
+diff --git a/tools/search/OfflineSearchHarness/ModRuntime.cs b/tools/search/OfflineSearchHarness/ModRuntime.cs
+index b0afff7ff..e000486ea 100644
+--- a/tools/search/OfflineSearchHarness/ModRuntime.cs
++++ b/tools/search/OfflineSearchHarness/ModRuntime.cs
+@@ -112,6 +112,13 @@ internal static class ModRuntime
+     private static void ApplyFixedBudgetSettings(HarnessOptions options)
+     {
+         SolverSearchProfile profile = ResolveProfile(options);
++        SolverSettingsData? resourceSettings = Environment.GetEnvironmentVariable("OFFLINE_HARNESS_RESOURCE_SETTINGS")
++            is { Length: > 0 } resourcePath
++                ? System.Text.Json.JsonSerializer.Deserialize<SolverSettingsData>(File.ReadAllText(resourcePath),
++                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true,
++                        Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() } })
++                    ?? throw new InvalidDataException("Empty resource policy settings.")
++                : null;
+         SolverSettings.ApplyForTesting(new SolverSettingsData
+         {
+             PerformanceMigrationVersion = SolverSettings.CurrentPerformanceMigrationVersion,
+@@ -131,6 +138,9 @@ internal static class ModRuntime
+             OnlineStatisticsEnabled = false,
+             SearchCompletionNotificationsEnabled = false,
+             PotionPolicy = Enum.Parse<SolverPotionPolicy>(options.PotionPolicy, ignoreCase: true),
++            GrowthBudgets = resourceSettings?.GrowthBudgets ?? default,
++            RelicStrategyEnabled = resourceSettings?.RelicStrategyEnabled ?? true,
++            RelicCounterRules = resourceSettings?.RelicCounterRules ?? [],
+         });
+     }
+ 
+@@ -522,7 +532,11 @@ internal static class ModRuntime
+                 policy with { PrimaryIncumbents = reused }, CancellationToken.None, null);
+             if (next.OnlyDeathRoutesFound || !next.Snapshot.AllEnemiesDead
+                 || next.ProjectedBattleHpLost > result.ProjectedBattleHpLost
+-                || next.ExplicitPotionCount != result.ExplicitPotionCount)
++                || next.ExplicitPotionCount != result.ExplicitPotionCount
++                || RouteQualityPolicy.Compare(
++                    RouteQuality.FromInterim(CombatSearchCoordinator.CapturePortfolioQuality(root, policy, next)),
++                    RouteQuality.FromInterim(CombatSearchCoordinator.CapturePortfolioQuality(root, policy, result)),
++                    RouteQualityProjection.PotionPolicy, policy.TheftPolicy) > 0)
+                 throw new InvalidOperationException("Reused request lost victory quality.");
+             var changed = incumbentSession.AcquirePrimaryIncumbents(root,
+                 policy with { PotionPolicy = SolverPotionPolicy.RequireAtLeastOne }, damage);
+diff --git a/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs b/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs
+index 7438bc98f..c8f52d4f5 100644
+--- a/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs
++++ b/tools/search/OfflineSearchHarness/PrimaryIncumbentChecks.cs
+@@ -9,6 +9,86 @@ namespace OfflineSearchHarness;
+ 
+ internal static class PrimaryIncumbentChecks
+ {
++    internal static void RunResources(CombatState combat)
++    {
++        int assertions = 0;
++        void Check(bool condition, string message)
++        {
++            if (!condition) throw new InvalidOperationException(message);
++            assertions++;
++        }
++        var root = CombatRootSnapshot.Capture(combat);
++        var policy = SolverController.CaptureSearchPolicy(SolverSettings.Capture(), combat, false, null);
++        var initial = root.ForkSimulator();
++        var initialCombat = (SimulatedCombatState)initial.State.CombatState;
++        Check(root.ExhaustingGrowthUpperBound is { Royalties: 1 },
++            "plain exhausting royalty has a finite cap; native=" + root.UsesKnownNativeHealingPolicy
++            + "; subscribers=" + root.CapturedRunModSubscriberCount + "/" + root.CapturedCombatModSubscriberCount
++            + "; powers=" + string.Join(",", initialCombat.EffectivePowers().Select(p => p.Id.Entry))
++            + "; cards=" + string.Join(",", initial.State.GetPlayerCombatState(root.PlayerIdentity).AllCards
++                .Select(c => c.Preview.Id.Entry + ":" + string.Join("/", c.Preview.Keywords))));
++        var copied = root.ForkSimulator();
++        copied.AddToCombat<DualWield>(root.PlayerIdentity.Creature, PileType.Hand, 1, creator: null);
++        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(copied, root.PlayerIdentity) == null,
++            "copy cards invalidate the growth cap");
++        var returned = root.ForkSimulator();
++        returned.AddToCombat<Eidolon>(root.PlayerIdentity.Creature, PileType.Hand, 1, creator: null);
++        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(returned, root.PlayerIdentity) == null,
++            "exhaust replay invalidates the growth cap");
++        Check(root.ExhaustingGrowthUpperBound is { Royalties: 1 }, "siblings leave the frozen root unchanged");
++        PrimaryIncumbentTable table = new();
++        PrimaryIncumbentBucket feed = new(0, 0, new(Feed: 1));
++        PrimaryIncumbentBucket royalty = new(0, 0, new(Royalties: 1));
++        Check(ResourceIncumbentPolicy.IsPlainBucket(new(0, 0)), "plain witness may use the scalar compatibility path");
++        Check(!ResourceIncumbentPolicy.IsPlainBucket(royalty), "generated growth cannot leak into scalar witnesses");
++        Check(table.Tighten(feed, new(-5, 3)), "feed witness stored");
++        Check(!table.TryGet(royalty, out _), "equal total counts with different sources stay separate");
++        Check(table.Tighten(royalty, new(0, 4)), "royalty witness stored independently");
++        Check(!table.TryGet(0, 0, out _), "reward witnesses do not enter the plain bucket");
++        ulong flower = 1UL << (int)RelicCounterId.HappyFlower;
++        ulong nib = 1UL << (int)RelicCounterId.PenNib;
++        Check(table.Tighten(new(0, 0, default, flower), new(-3, 4)), "flower witness stored");
++        Check(!table.TryGet(new(0, 0, default, nib), out _), "equal satisfied counts do not merge relic masks");
++        Check(!table.TryGet(new(0, 1, default, flower), out _), "potion tier remains isolated");
++        var goals = policy with
++        {
++            GrowthOpportunityTargets = new(new(Royalties: 1), []),
++            GrowthBudgets = new(Royalties: 5),
++            RelicTargets = [new(RelicCounterId.HappyFlower, 2, 2, 3, 3)],
++        };
++        Check(ResourceIncumbentPolicy.TryOptimisticBucket(goals, new(Royalties: 1), default(GrowthValues),
++            0, 0, out var optimistic, out int credit) && optimistic.Growth.Royalties == 1
++            && optimistic.RelicMask == flower && credit == 8,
++            "unfinished route reserves every future growth and relic reward");
++        Check(!table.TryGet(optimistic, out _), "partial witnesses cannot bound the optimistic goal bucket");
++        table.Tighten(optimistic, new(-8, 5));
++        Check(table.TryGet(optimistic, out _), "matching full-goal witness supplies its bound");
++        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals, null, default(GrowthValues),
++            0, 0, out _, out _), "unknown growth cap never means zero future reward");
++        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals, new(Royalties: 1), new GrowthValues(Royalties: 2),
++            0, 0, out _, out _), "observed reward beyond cap refuses pruning");
++        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals with
++            { GrowthOpportunityTargets = GrowthOpportunityTargets.UnboundedForTesting("repeatable") },
++            new(Royalties: 1), default(GrowthValues), 0, 0, out _, out _),
++            "unbounded goals refuse pruning even with a nominal cap");
++        Check(!ResourceIncumbentPolicy.TryOptimisticBucket(goals with
++            { GrowthOpportunityTargets = new(new GrowthValues { ThirdParty = new() { ["external"] = 1 } }, []) },
++            new(Royalties: 1), default(GrowthValues), 0, 0, out _, out _),
++            "native cap cannot certify a third-party growth target");
++        Check(ResourceIncumbentPolicy.TryOptimisticBucket(goals with { IgnoreLongTermRewards = true },
++            null, default(GrowthValues), 0, 0, out var ignored, out int ignoredCredit)
++            && ignored.Growth == default && ignoredCredit == 3, "ignore growth retains relic policy");
++        var spentFeed = root.ForkSimulator();
++        spentFeed.AddToCombat<Feed>(root.PlayerIdentity.Creature, PileType.Exhaust, 1, creator: null);
++        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(spentFeed, root.PlayerIdentity)
++            is { Feed: 0 }, "unrecoverable exhausted feed has no future activation");
++        Check(StrategicHpRecoveryBound.KnownNativeHealingPotential(spentFeed, root.PlayerIdentity, 6)
++            == int.MaxValue, "uncertified exhausted feed keeps the original healing reserve");
++        Check(StrategicHpRecoveryBound.KnownNativeHealingPotential(spentFeed, root.PlayerIdentity, 6,
++            ignoreExhaustedFeed: true) == 6, "closed exhausting loadout can release the spent feed reserve");
++        Console.WriteLine($"RESOURCE_BUCKET_CHECKS status=Passed assertions={assertions}");
++    }
++
+     internal static void RunTheft(CombatState combat)
+     {
+         int assertions = 0;
+diff --git a/tools/search/OfflineSearchHarness/Program.cs b/tools/search/OfflineSearchHarness/Program.cs
+index 45bd14eab..7a53729e5 100644
+--- a/tools/search/OfflineSearchHarness/Program.cs
++++ b/tools/search/OfflineSearchHarness/Program.cs
+@@ -142,6 +142,8 @@ internal static class Program
+                 SolverController.SetTheftPolicyForTesting(combat!, theftPolicy);
+             if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_THEFT_BUCKET_CHECKS") == "1")
+                 PrimaryIncumbentChecks.RunTheft(combat!);
++            if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_RESOURCE_BUCKET_CHECKS") == "1")
++                PrimaryIncumbentChecks.RunResources(combat!);
+             if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_PILE_ORDER_CHECKS") == "1")
+                 PileOrderChecks.Run(combat!, options.OutputDirectory);
+             DuplicateChoiceProbe.RunBuilders(combat!, options.OutputDirectory);

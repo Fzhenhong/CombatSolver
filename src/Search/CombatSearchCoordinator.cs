@@ -184,9 +184,14 @@ internal static partial class CombatSearchCoordinator
             if (!policy.DisableRefinementIncumbentForTesting && !policy.DisableSharedPrimaryIncumbentsForTesting
                 && selected.ExplicitPotionCount == 0 && !selected.Snapshot.HasRisk
                 && selected.BoundaryReason == SearchBoundaryReason.None
-                && BuildRefinementPrimarySearchIncumbent(root, policy, null, selected) is { } shared)
+                && !policy.PotionStrategy.HasForcedDirectives && IsCompleteVictory(selected)
+                && selected.CombatEndedTurn is { } endedTurn
+                && selected.Snapshot.ProjectedDeathSaveUseCount == 0
+                && policy.PotionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart)
             {
-                policy.PrimaryIncumbents!.Tighten(selected.OutstandingStolenResource, 0, shared);
+                policy.PrimaryIncumbents!.Tighten(
+                    ResourceIncumbentPolicy.CompletedBucket(selected.Snapshot, 0),
+                    new(StrategicHpDeficit(root, policy, selected), endedTurn));
                 policy.PrimaryIncumbents.PotionFreeWitness = selected;
             }
             return selected;
@@ -928,6 +933,8 @@ internal static partial class CombatSearchCoordinator
         SolverResult result)
     {
         if (policy.EffectiveHasGrowthTargets
+            || !ResourceIncumbentPolicy.IsPlainBucket(
+                ResourceIncumbentPolicy.CompletedBucket(result.Snapshot, result.ExplicitPotionCount))
             || policy.RelicTargets.Count > 0 && !CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)
             || result.Snapshot.ProjectedDeathSaveUseCount > 0
             || !IsCompleteVictory(result)

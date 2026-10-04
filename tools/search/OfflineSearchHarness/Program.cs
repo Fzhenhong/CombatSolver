@@ -142,6 +142,8 @@ internal static class Program
                 SolverController.SetTheftPolicyForTesting(combat!, theftPolicy);
             if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_THEFT_BUCKET_CHECKS") == "1")
                 PrimaryIncumbentChecks.RunTheft(combat!);
+            if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_RESOURCE_BUCKET_CHECKS") == "1")
+                PrimaryIncumbentChecks.RunResources(combat!);
             DuplicateChoiceProbe.RunBuilders(combat!, options.OutputDirectory);
             SnapshotOpportunityProbe.RunShuffleWitness(combat!, options.OutputDirectory);
             if (Environment.GetEnvironmentVariable("OFFLINE_HARNESS_HISTORY_CHECKS") == "1")
