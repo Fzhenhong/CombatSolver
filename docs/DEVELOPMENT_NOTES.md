@@ -78,3 +78,9 @@ CoverageCatalog 使用当前 RitsuLib 分拆引用，先初始化 ModelDb，再�
 
 
 EndTurn释放态复用新增有限保留、稳定初始capture及长history三个隔离合同：两回合34直接hit到五回合85hit/真实history83，Mayhem/敌方/RNG/完整快照/16路改血Fork及实际严格Coordinator1079/1132/1204hit通过。四回合恰好64条的覆盖失败完整保留，第五回合才证明新增范围。无插桩整请求22.89/21.62/21.09秒，仅原始1.622/1.717/1.760倍，战损/药水/回合/工作数一致，均未纳入PR运行时或部署。独立诊断扩大历史后的命中很少，构键elapsed约2.25秒含锁等待/并行重叠，不计速度验收；固定前缀reset未丢动作链，但完整确定性闭包、释放前调用者状态不推进、对象图字节界仍未完成。认证覆盖7/29与女王质量阻断不变，见[报告](performance/component-healing-bound-20261003.md)。
+
+
+本轮补齐当前原生45个AfterCombatEnd正文，36模型和11依赖新增提取、9正文复用；逐来源对象/时点/条件/次数/来源/哈希保存。战后复活→结束回调→Power清除→条件胜利回复及非空UI/ExecutionFinished/Upgraded通知链已定位，ChosenCheese上限变化和永久牌组返还不能遗漏；CombatStateChanged等后续派发尚未闭合，不新增生产证书。另FIFO EndTurn最小合同通过85直接hit/五项原生完整状态/history81/淘汰后精确miss，实际严格Coordinator777hit；完整无插桩21.15秒仅原始1.756倍，继续隔离。诊断耗尽8Mi字符界，命中率不作为验收，见[报告](performance/component-healing-bound-20261003.md)和[审计](performance/native-healing-component-audit-20261003.md)。
+
+
+女王回归新增原因边界：复用原始A1完整85项结构化路线，仅从同根回放，不运行Solve；原基线与f266均获胜67战损/0瓶、最终continuation与公开快照属性一致、父/live隔离，正常搜索遗漏不能被该结果掩盖。原档回合12/直接回放13差异及首宿主setter不兼容失败保留。下一步排查正常候选保留/计划/预算，禁止把已知路线注入性能请求，见[报告](performance/component-healing-bound-20261003.md)。

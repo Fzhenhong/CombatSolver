@@ -9057,5 +9057,226 @@
       "sameQuality": true,
       "scope": "diagnostic only,not performance acceptance"
     }
+  },
+  "researchRoundFifoDonationMemo": {
+    "baseCommit": "ed59abef",
+    "runtimeTemplate": "round-history-donation-src v2",
+    "purpose": "single retention policy experiment: end-turn-only stable initial capture, history256, FIFO instead of retaining first4096; no budgets/scoring/policy changes",
+    "parameters": {
+      "maximumEntries": 4096,
+      "maximumPaths": 65536,
+      "maximumHistory": 256,
+      "maximumActionCharacters": 4096,
+      "maximumKeyCharacters": 8388608,
+      "retainFirst": false
+    },
+    "status": "rejected-single-screen-not-twofold",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "complete permitted-source deterministic key closure",
+      "Attach-to-Release callers do not advance template",
+      "template graph byte bound",
+      "final interleaved 2x and memory acceptance",
+      "fixed full regression",
+      "native frozen target complete deployment"
+    ],
+    "sourceHashes": {
+      "src/Search/SearchTransitionDonationMemo.cs": "f02bdedb231c657c1eb0f1c2b75cebe757f0b4efef36466c6158af563152e0bc",
+      "src/Testing/UnattendedTestRunner.RoundDonationMemo.cs": "0950558421906f79bf4c2d844bebfea4c45aaede38a3c0cb00d92872bb8b0e28",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "55d454d077e7044414a7cb19075463a034cf44d84e169ac7dea0076f021b1097"
+    },
+    "build": {
+      "seconds": 27.93,
+      "warnings": 0,
+      "errors": 0
+    },
+    "dllSha256": "acd543c1e7543cc202a3ebf2bc75fbd84ce3fbc743e6f7535b8d478439acf8f4",
+    "nativeContract": {
+      "runId": "cf35dfddee9d4a7d82cb7d657895b3c4",
+      "scenarioId": "ROUND-FIFO-DONATION-MEMO",
+      "status": "Passed",
+      "elapsedMilliseconds": 34596.4475,
+      "mainAssemblyHash": "ACD543C1E7543CC202A3EBF2BC75FBD84CE3FBC743E6F7535B8D478439ACF8F4",
+      "completedChecks": [
+        "RoundFifoDonationMemo:ActualHistoryBeyondOld64Limit:maxHistory=81",
+        "RoundFifoDonationMemo:FiveStrictRoundMisses:85ActualCacheHits:FullHistorySnapshotState:16ParallelOwnedForksWithIndependentHpMutation:ParentLiveRngIsolated:FiveTemplates:FifoEviction:EvictedRoundExactMiss:NonEndTurnRejected:RootSetupPolicyCancellationAndDisposeIsolation",
+        "RoundFifoDonationMemo:FiveNativeFullRoundStates:MayhemAutomaticPlayDrawShuffleEnemyMovesRng:StrictReplayStillEnabled:NoCoordinatorBudgetOrPerformanceMeasurement",
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1vs16:ExplicitProfile:updates=0:pruned=35:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "TransitionDonationMemo:ActualCoordinatorStrictDop16:cacheHits=777:CompleteWinnerNoAdditionalLossOrPotion:ActualPlanPowerMembers:LiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=6:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/round-fifo-donation-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "scope": "five native Mayhem EndTurns/full state and history81;85actualhits/16ownedmutatedForks;five-slotFIFO evicts oldest and exact replay miss returns originalstate;strictDOP16Coordinator777hits/3plan8power35prunes;native two potion states;limited root"
+    },
+    "performanceScreen": {
+      "resultPath": ".local/general-healing-audit/round-fifo-donation-silent-screen/harness-result.json",
+      "wallSeconds": 21.146646,
+      "peakProcessWorkingSetBytes": 11346432000,
+      "totalAllocatedBytes": 21567704704,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQualityAsPriorPrototype": true,
+      "work": {
+        "TotalExpanded": 102259,
+        "TotalTransitions": 574344
+      },
+      "originalSpeedup": 1.755844392533927,
+      "peakRatioOriginal": 0.4602484564926995,
+      "scope": "single uninstrumented whole request,not final interleaved acceptance"
+    },
+    "cacheDiagnostic": {
+      "resultPath": ".local/general-healing-audit/round-fifo-donation-silent-diagnostic/harness-result.json",
+      "wallSeconds": 21.3085992,
+      "stats": {
+        "attempts": 121332,
+        "hits": 4823,
+        "donations": 13435,
+        "evictions": 9339,
+        "rejected": 102871,
+        "retained": 4096,
+        "paths": 11248,
+        "capacity_skips": 0,
+        "key_characters": 8388590
+      },
+      "fractionAttemptsHit": 0.03975043681798701,
+      "fractionTotalTransitionsHit": 0.008397406432381987,
+      "sameRootBudgetQuality": true,
+      "sameWork": true,
+      "scope": "stream diagnostics only,not performance acceptance"
+    },
+    "decision": "No promotion/deployment: whole screen21.1466s/1.756x not2x. FIFO native eviction/miss scope passed but broad key/ownership/byte-bound obligations remain. Inspect diagnostic finite prefix/key saturation rather than blindly increasing entries."
+  },
+  "afterCombatEndAuditProgress": {
+    "nativeOverridesReviewed": 45,
+    "newBodyExtractions": 36,
+    "newDependencyExtractions": 11,
+    "reusedBodies": 9,
+    "source": "docs/performance/native-healing-component-audit-20261003.json:afterCombatEndBodyReview",
+    "runtimeCertificateAdded": false,
+    "scope": "all45 installed-native AfterCombatEnd override bodies plus explicitly reviewed helpers; no all-model certificate or native differential implied",
+    "limitations": [
+      "This45 set does not include BeforeCombatStart/AfterCombatVictoryEarly/AfterCombatVictory or every health callback",
+      "Arbitrary notifications, extension/Harmony changes, CardModel.OnUpgrade, enchantment/dynamic updates and CombatStateChanged subscribers require independent closure",
+      "Permanent deck return/removal/upgrade and subsequent source acquisition cannot be omitted",
+      "Normal end dispatch is guarded by IsInProgress; arbitrary direct invocation/reentry is not certified",
+      "Dead-player Heal1 is a native post-combat boundary and must not become a winning in-combat resurrection",
+      "No new native/simulation differential, certificate coverage, pruning count or performance gain is claimed from body reading"
+    ]
+  },
+  "queenRecordedRouteSemanticDiagnostic": {
+    "baseCommit": "ed59abef",
+    "purpose": "replay existing structured Queen A1 complete route under original and current runtime without repeating full searches; diagnose semantic validity versus search failure",
+    "runtimeChanged": false,
+    "performanceAcceptance": false,
+    "status": "original-and-f266-recorded-route-replay-complete",
+    "sourceHashes": {
+      "RootHealingSourceProbe.cs": "0bda5838e657cffe4eb5b66aa5f56615c1c888ba90648422b7e9f8bd8a828d79",
+      "Program.cs": "1b5425b75167ee9032076a9a8de090b0c2c5d8d53f82c497890b0adf1e5315b4",
+      "ModRuntime.cs": "6446d4d26c9f8a6ea3cdfb12d14e8a9dc89b4df1354e7cbcb3aed1bd6a50e42e"
+    },
+    "build": {
+      "revision": "v2",
+      "seconds": 2.58,
+      "warnings": 0,
+      "errors": 0
+    },
+    "hostDllSha256": "5b58065250d54b79475636cc0f91fd9ba2de2190b2a86a8a995e4656fb5d989f",
+    "requestPath": "/home/ltlly/Code/nmslmod/CombatSolver-perf-20261001/.local/veryhigh-dop16/frozen-corpus/requests/screen-queen.json",
+    "routeSource": "/home/ltlly/Code/nmslmod/CombatSolver-perf-stage1-20261002/.local/stage1/regression/runs/screen-queen-A1/route.json",
+    "routeSha256": "83d7af23d2adc7f5abec0f70885755ad3aa15e3be5bc7f5c170a44aa3a1dd711",
+    "evidenceSource": "/home/ltlly/Code/nmslmod/CombatSolver-perf-stage1-20261002/.local/stage1/regression/runs/screen-queen-A1/evidence/search-result.json",
+    "evidenceSha256": "9ce3375dbbb779bf53908192b77b2449991437e24ae11bda7f9cfd3435129291",
+    "preparationHistory": [
+      {
+        "build": {
+          "seconds": 16.4,
+          "warnings": 0,
+          "errors": 0
+        },
+        "hostDllSha256": "ff43d56607bab7b53dd1fcbfffce63fa93b4bf5174615e9b5bce0e777e1f896c",
+        "run": "recorded-route-queen-original",
+        "exitCode": 1,
+        "reached": "none",
+        "error": {
+          "type": "System.MissingMethodException",
+          "message": "Method not found: 'Void OfflineSessionOptions.set_EarlyTurnExplorationDepth(Int32)'.",
+          "stack": "   at OfflineSearchHarness.ModRuntime.ApplyUnattendedOverrides(HarnessOptions options)\n   at OfflineSearchHarness.ModRuntime.Initialize(HarnessOptions options) in /home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/recorded-route-probe-host/ModRuntime.cs:line 55\n   at OfflineSearchHarness.Program.<>c__DisplayClass1_0.<Main>b__1() in /home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/recorded-route-probe-host/Program.cs:line 71\n   at OfflineSearchHarness.Program.Step(List`1 steps, String name, Func`1 body) in /home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/recorded-route-probe-host/Program.cs:line 337\n   at OfflineSearchHarness.Program.Main(String[] rawArgs) in /home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/general-healing-audit/recorded-route-probe-host/Program.cs:line 71"
+        },
+        "scope": "host newer OfflineSessionOptions setter missing in original runtime, before root/replay; not evidence of route invalidity"
+      }
+    ],
+    "compatibilityFix": "Reuse previously compatible stage1 entire host source; insert dedicated no-Solve recorded-route branch. Reflection constructor/replay argument mapping remains unchanged.",
+    "replays": [
+      {
+        "label": "recorded-route-queen-original-v2",
+        "resultPath": ".local/general-healing-audit/recorded-route-queen-original-v2/recorded-route-replay.json",
+        "exitCode": 0,
+        "rootMatches": true,
+        "liveUnchanged": true,
+        "parentUnchanged": true,
+        "actionCount": 85,
+        "replayCompleted": true,
+        "allEnemiesDead": true,
+        "playerDead": false,
+        "boundaryReason": "None",
+        "cumulativeHpLost": 67,
+        "battleHpLostBeforeRequest": 0,
+        "playerHp": 13,
+        "playerMaxHp": 80,
+        "potionUseCount": 0,
+        "combatEndedTurn": 13
+      },
+      {
+        "label": "recorded-route-queen-f266",
+        "resultPath": ".local/general-healing-audit/recorded-route-queen-f266/recorded-route-replay.json",
+        "exitCode": 0,
+        "rootMatches": true,
+        "liveUnchanged": true,
+        "parentUnchanged": true,
+        "actionCount": 85,
+        "replayCompleted": true,
+        "allEnemiesDead": true,
+        "playerDead": false,
+        "boundaryReason": "None",
+        "cumulativeHpLost": 67,
+        "battleHpLostBeforeRequest": 0,
+        "playerHp": 13,
+        "playerMaxHp": 80,
+        "potionUseCount": 0,
+        "combatEndedTurn": 13
+      }
+    ],
+    "comparison": {
+      "sameCapturedRoot": true,
+      "sameFinalContinuationState": true,
+      "snapshotPublicPropertyDifferences": {},
+      "completeWinningReplayBoth": true,
+      "originalArchivedCombatEndedTurn": 13,
+      "replayedCombatEndedTurn": 13,
+      "scope": "two simulation full-root replay diagnostics; no native gameplay execution; final continuation stamp/public properties do not certify every hidden source or callback",
+      "turnReportingNote": "Archived comparisonQuality reports turn12, both direct full-root replays report turn13; unexplained source/result reporting distinction is retained, no change to scoring or policy."
+    },
+    "decision": "Archived complete route remains a67HP/0potion win under both runtime replays with exactroot and parent/live isolation. Investigate normal search retention/plan/budget execution, rather than treating original route as semantically invalid. Queen normal request regression remains blocked; no route injected into solver or performance run, no new speed acceptance."
   }
 }

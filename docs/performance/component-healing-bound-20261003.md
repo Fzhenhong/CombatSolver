@@ -265,3 +265,23 @@ Smart 仍使用原 `SmartRequiredHpSaved`、药水价值、替换奖励抵扣与
 为判断构键开销，独立宿主给同一长历史 DLL 的 BuildKey/TryFork/Attach/Donate 加入 Stopwatch 时间戳，原研究运行时未改；宿主构建16.74秒零警告/错误。22.9898秒诊断请求保持根/预算/质量/工作数一致，但**不作为速度验收**。BuildKey 510688次、累计2245.584毫秒；TryFork6496次/256.433毫秒；Attach6496次/14.747毫秒；Donate6476次/36.049毫秒。逐调用 elapsed 包括锁等待和调度，并行区间重叠，不能当CPU时间或直接从整请求减去的开销；原始逐调用时间未保留，汇总与宿主来源哈希保留。
 
 额外源码核对纠正一个待查疑点：固定前缀 scheduling reset 只改变进展/Cycle/保路谱系，保留 Action、Parent、ActionCount，`SearchNode.MaterializeActions` 沿完整父链，因此没有证据表明该 reset 丢失了实际执行前缀。完整允许来源的确定性键闭包仍未完成；释放时清空所有者引用不替代 Attach 后到 Release 前的所有调用者不推进模拟器的证明，最小测试改血前显式清除移交回调，尚未发现生产反例。回复证书本身不证明转移缓存安全。三版均**未推广、未部署**，不继续失败版最终交错/固定全回归/目标整场；合格前版部署与女王质量阻断不变。逐次来源、失败、诊断及未验证项见配套JSON `researchRoundDonationMemo`、`researchStableRoundCaptureMemo`、`researchLongHistoryRoundMemo`、`researchTransitionMemoCost`。
+
+
+## FIFO EndTurn 复用初筛与战后正文审查（2026-10-04）
+
+沿用上节长history/稳定初始capture/miss才Fork的原型，仅把首批4096保留改为FIFO，原数量和8Mi字符界均不变。DLL`acd543c1e7543cc202a3ebf2bc75fbd84ce3fbc743e6f7535b8d478439acf8f4`构建27.93秒零警告/错误；`ROUND-FIFO-DONATION-MEMO`/`cf35dfddee9d4a7d82cb7d657895b3c4`在34.60秒Passed，五回合实际history81、85直接hit、16路独立改血Fork/完整状态、FIFO最老淘汰后重新miss仍完整相等，实际严格DOP16 Coordinator777hit/3计划8能力传递/35次生命剪枝、完整无药胜利及两原生药水状态保持。实例删除/退出码0；最小预算、通知隔离和原严格根回放没有改变。合同限这个输入，不补齐完整确定性/所有权或字节界。
+
+同一冻结猎手精英根、VeryHigh/DOP16/Smart、完整Coordinator/Portfolio、300000毫秒配置、生产预算及16GB No-GC，无诊断单次完整请求**21.1466秒**，原始37.1302秒仅**1.756倍**，仍未达两倍；峰值11,346,432,000字节、对原始下降53.98%。完整根/预算/质量与前原型相等，Win40战损/0瓶/T4、102259节点/574344转移。没有做失败版最终交错/固定全回归/目标整场，不纳入PR运行时或部署。
+
+另一次只打开流式诊断，21.3086秒不计性能验收：121332次资格内尝试、4823hit、13435移交、9339淘汰、102871聚合内部拒绝、4096模板/11248前缀/8,388,590字符、无容量跳过；hit占全部转移0.840%。完整根/预算/质量/工作数相等。相比首批保留命中增加，但已耗尽8Mi前缀字符界；聚合拒绝未分原因，不能宣称全部都是此原因或以命中率取得性能结论。后续不盲目扩大模板数量；完整允许来源键闭包、Attach到Release前状态不推进及对象图字节界继续保留。逐次结果见配套JSON `researchRoundFifoDonationMemo`。
+
+本轮还按实际DLL补齐45个AfterCombatEnd覆盖的**正文审查**：新增36个模型/11个依赖提取、复用9份正文，逐来源目标/条件/次数/重复性/来源/哈希保存在[组件审计](native-healing-component-audit-20261003.md)及其JSON。实际战后复活、结束回调、Power清除、条件胜利回复的顺序，以及Status/Display/ExecutionFinished/Upgraded的非空委托一起核对；`ChosenCheese`上限增量先于MeatOnTheBone门槛，返还永久牌组和随机遗物奖励不能被无直接Heal调用掩盖。CombatStateChanged等后续派发仍未知，没有新增运行时证书或扩大7/29覆盖。审查覆盖不是性能或原生差分结论；女王质量阻断与前合格版本部署保持。
+
+
+## 女王历史完整路线的独立回放诊断（2026-10-04）
+
+从原始`screen-queen-A1`现存`route.json`及`evidence/search-result.json`读取85个完整结构化动作，包含主/嵌套/回合选择、牌状态和实例序号；没有从展示字符串猜测路线，也没有向正常搜索注入路线或incumbent。单独宿主只捕获同一冻结根，按实际运行时构造函数/Replay参数反射映射，从根完整回放，不调用Solve，不减少验收预算或改评分。用途是核对历史胜利是否仍在当前模拟语义下可行，时间不计性能。
+
+首次宿主构建16.40秒零错误，但对原始DLL在根之前因新OfflineSessionOptions.EarlyTurnExplorationDepth setter缺失退出1，未运行回放，不能据此认定路线失效。换用已经兼容的stage1宿主源码，加专用只回放分支，构建2.58秒零警告/错误；反射构造和回放代码不变。`recorded-route-queen-original-v2`及`recorded-route-queen-f266`两个独立进程均退出0，根分别与历史原根完全匹配，85动作完整执行，Win67累计战损/0瓶、13/80生命、BoundaryNone，父/live不变。两次最终continuation完整文本相等，Simulator之外全部公开快照属性没有差异。
+
+原档comparisonQuality的回合为12，两次直接回放为13，保留这个尚未解释的结果报告差异；不把回放同战损称为正常搜索质量通过。此处是**两个模拟器完整根回放诊断**，没有原生游戏实际执行，也没有单凭continuation/公开属性证明全部隐藏回调状态。它说明历史路线在原基线与当前f266中均能完整回放为胜利，后续应检查正常搜索候选保留、计划分配和预算执行。女王正常请求的NoWin质量阻断仍在，禁止以固定路线取得速度或解除回归。宿主来源、初始化失败、结构化输入哈希、完整结果/差异与范围见配套JSON `queenRecordedRouteSemanticDiagnostic`。

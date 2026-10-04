@@ -151,3 +151,33 @@ TheInsatiable的初始行动明确给玩家生成六张FranticEscape，三张进
 初始EndTurn capture扩大仅限稳定None且实际消费者无选择层；挂起checkpoint/capture续接仍原路。普通Fork延迟到miss，严格完整回放仍执行。最初长历史夹具四回合仅64条，`6a5f5e9870e54d85877b40822bb340bf`在覆盖断言Failed，未算通过；第五回合83条通过，实例全部删除、120秒帽。各源码/build/hash/失败和小预算见配套JSON新增三项合同。
 
 完整冻结请求三版22.89/21.62/21.09秒、原始仅1.622/1.717/1.760倍，均未纳入生产。独立诊断最后337hit/114897聚合拒绝，非认证覆盖；构键累计elapsed约2.25秒含锁等待及并行重叠，不代表完整请求开销。固定前缀reset经源码核对保留完整动作父链；全允许来源键闭包、移交前所有调用者不推进状态及模板字节界仍未完成，没有以回复证书代替缓存确定性证明。具体结果及未验证项见[性能报告](component-healing-bound-20261003.md)与配套JSON的`roundDonationMemoIsolatedContract`、`stableRoundCaptureMemoIsolatedContract`、`longHistoryRoundMemoIsolatedContract`、`transitionMemoCostIsolatedDiagnostic`。
+
+
+## 全部原版 AfterCombatEnd 正文与通知边界（2026-10-04）
+
+按当前安装DLL的45个实际覆盖补齐正文审查，新增36个模型、11个命令/状态/通知依赖的成功提取，复用9份既有正文。重新读取的原生DLL仍为SHA-256 `2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f`、MVID `8a76776c-0ce1-4d4f-90bd-8cce653dad8e`；36份正文提取23.64秒、0失败。逐项记录对象、时点、条件、次数、重复性、可达来源、实际源码/正文哈希和方法行号，保存在配套JSON `afterCombatEndBodyReview`。这补齐了45项**正文审查**，没有新增运行时证书，也不代表全部回复来源审计完成。
+
+| 当前原生正文分组 | 数量 | 直接行为与仍需组合的来源 |
+|---|---:|---|
+| 自身状态/计数/引用及UI复位 | 35 | 固定正文及已读原生通知处理本身无玩家生命写入；其他模型方法、任意订阅者、Harmony及完整根仍须分别认证 |
+| `WongosMysteryTicket` | 1 | 推进CombatsFinished/RemainingCombats；另一个奖励回调在同玩家/战斗房间/未用尽且>=5场时添加Repeat（默认3）份随机遗物奖励。领取可获得加生命遗物，在当前战斗动作搜索之外，不能称为永不产生回复来源 |
+| `ChosenCheese` | 1 | 结束回调GainMaxHp（默认1）并回复实际上限增量；先于条件胜利回复，可能改变MeatOnTheBone门槛，保持未知组合的保守处理 |
+| `FishingRod` / `ImprovementPower` / `PaelsTooth` | 3 | 永久牌组升级；后者还反序列化并返还保存牌、加入Deck。分别保持Niche/CombatCardSelection/Rewards RNG。OnUpgrade、附着、动态变量、Upgraded及Deck添加回调不能略过 |
+| `ToyBox` | 1 | 每个符合计数的结束事件至多熔化一件蜡遗物；原生Melt通向AfterRemoved（已有原版无覆盖/基类空方法证据）。完整模型的取得奖励及扩展仍另审 |
+| `ForbiddenGrimoirePower` / `RoyaltiesPower` | 2 | 只向房间列表增加移除牌/金币奖励，不立刻移除或调用GainGold；后续领取与原有成长/资源目标另审 |
+| `Guilty` / `IllusionPower` | 2 | 前者只在永久Deck计数并移除自己，临时战斗副本不进入分支；后者仅对已死拥有者播放动画，本方法不执行复活或Heal。完整来源和其他回调继续保守 |
+
+原生命令链实际顺序为：`EndCombatInternal`设置IsInProgress=false、清额外回合及阶段；逐玩家`ReviveBeforeCombatEnd`对已死者调用Heal(Creature,1)；`Hook.AfterCombatEnd`逐监听者等待并调用`InvokeExecutionFinished`；清历史/房间收尾/玩家Power清除；`AfterCombatVictoryEarly`全部监听者，再`AfterCombatVictory`；之后房间/存档与奖励领取。正常胜利检查用IsInProgress防止再次结束，任意直接调用/重入不在本证明中。战后Heal(1)不能把当前死亡搜索分支重新认作完整胜利，尤其多人边界要单独审查。
+
+`CardCmd.Upgrade`虽有IsEnding门，但此时IsInProgress已false，`IsCombatEnding`返回false，因此不能利用该门把战后升级误认为不可达。`UpgradeInternal`实际调用虚方法OnUpgrade、DynamicVars.RecalculateForUpgradeOrEnchant、Upgraded。CardPileCmd.Add至永久Deck还经过ShouldAddToDeck、ModifyCardBeingAddedToDeck及AfterCardChangedPiles；MeatOnTheBone等回调不是唯一需考虑的生命路径。
+
+没有把字段赋值当作无回调：RelicModel.Status调用StatusChanged，显示/Flash各自调用委托。实际IL中的四条原生订阅位于Player.AddRelicInternal和NRelicInventoryHolder.OnModelChanged；已读处理器改音效/视觉、颜色/着色器、计数文本及粒子，相关属性和UpdateDisplay正文一起核对。Hook结束后的ExecutionFinished原生订阅恢复手牌选牌UI；Upgraded另被CombatStateTracker和手牌UI订阅。前者延迟执行RecalculateCardValues并派发CombatStateChanged，这个后续派发边界仍未闭合；原生订阅清单不能排除任意委托、反射、外部Mod或补丁。
+
+本轮仅记录实际正文和明确命令/通知链，不新增默认安全名单或生产覆盖。全部45项分别保留“正文已审/完整组件尚未新认证”的状态；其他战斗开始/胜利/受伤/死亡/生成回调、永久牌组与获得来源、有限重复界、扩展和新原生差分仍待完成。生产严格覆盖仍7/29，性能收益没有从静态阅读中推导。
+
+## FIFO 回合尾复用的隔离合同（2026-10-04）
+
+仅把上一长历史缓存的首批保留改为FIFO，4096模板、65536前缀、256条history及8Mi字符界不变。DLL`acd543c1…`构建27.93秒零警告/错误；`ROUND-FIFO-DONATION-MEMO`/`cf35dfddee9d4a7d82cb7d657895b3c4`在34.60秒Passed：五项原生Mayhem EndTurn/完整history81、85直接命中/16路独立改血Fork、五槽FIFO最老模板淘汰及重放miss状态一致、根/setup/政策/取消/Dispose/父/live/RNG。实际严格DOP16 Coordinator777命中、3/8计划/能力见证传递、35次生命剪枝、完整无药胜利和原生两瓶药水保持。小预算/取消/120秒帽沿用，私有实例删除、启动器退出0。完整冻结请求21.1466秒、仅原始1.756倍，未纳入生产；单独诊断耗尽前缀键上限，不能以命中增加替代完整速度验收，详见[性能记录](component-healing-bound-20261003.md)。
+
+
+女王历史路线另作两个模拟器版本的只回放诊断，复用85项结构化动作与同一冻结根；原基线与f266均Win67/0瓶、13/80生命，最终continuation文本/全部公开快照属性相同，父/live不变。没有原生游戏执行、没有向正常搜索注入路线或新增来源证书；原档回合12与两次直接回放13的报告差异保留。首宿主在根之前因旧DLL setter不兼容Failed，使用已兼容stage1宿主后两次成功；不能把初始化失败写成路线失败，也不能以回放成功解除正常NoWin阻断。具体范围见配套JSON `queenRecordedRouteReplayDiagnostic`与[性能记录](component-healing-bound-20261003.md)。

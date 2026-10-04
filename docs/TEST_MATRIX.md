@@ -94,3 +94,9 @@ Smart跨搜索见证研究：`SMART-OPENING-WITNESS` / `1336ac4aa23f4274be8a832d
 
 
 EndTurn复用三项最小合同：`ROUND-DONATION-MEMO`/`a44b0ff7cc3f438490b0cd3f3e7d6262`、`ROUND-CAPTURE-DONATION-MEMO`/`e11c31daf629480ba8f489b674107cfe`、`ROUND-HISTORY-DONATION-MEMO`/`f55af80fdb6649aeaaf36eb799728f5b`，33.56/33.12/35.31秒Passed，SILENT/NIBBITS_WEAK、敌血999、各固定种子；直接搜索Beam24/1200节点/10000毫秒、Coordinator20000毫秒/宽12和8、DOP16严格，搜索30秒/原生20秒取消、启动器120秒、私有实例全部删除。前两项34directhit/两项原生EndTurn，末项85hit/五项原生EndTurn/history83；Mayhem自动牌/洗牌/敌方/RNG、完整history及快照、16路独立改血Fork/父live、保留容量及政策边界，真实Coordinator1079/1132/1204hit和完整无药胜利/两原生药水通过。长历史首版`6a5f5e9870e54d85877b40822bb340bf`恰好64条、覆盖断言Failed且清理，未算新范围通过。三版无插桩完整请求22.89/21.62/21.09秒均未达两倍；独立诊断与构键计时不计性能，未知确定性/所有权/字节界和最终回归未验证，不纳入生产，见[报告](performance/component-healing-bound-20261003.md)。
+
+
+FIFO EndTurn：DLL`acd543c1…`、`ROUND-FIFO-DONATION-MEMO`/`cf35dfddee9d4a7d82cb7d657895b3c4`、34.60秒Passed，SILENT/NIBBITS_WEAK/敌血999/种子`ROUND_FIFO_DONATION_MEMO_20261004`；直接Beam24/1200节点/10000毫秒，Coordinator20000毫秒/宽12和8，严格DOP16，搜索30秒/原生20秒取消、启动器120秒/实例删除。五项真实EndTurn/history81、85hit/16改血Fork/父liveRNG、最老FIFO淘汰及重算miss完整状态、777实际Coordinator命中/3计划8能力见证/35剪枝、两原生药水保持；完整请求21.15秒未达2倍，诊断不计验收，未纳入生产。另45个AfterCombatEnd正文及11依赖仅静态来源/通知链阅读，不计为原生差分、组件认证或速度通过，见[报告](performance/component-healing-bound-20261003.md)。
+
+
+女王历史路线诊断：专用`recorded-route-probe-host` v2构建2.58秒0警告/错误；原始A1的85项结构化route/evidence从原DLL及f266完整根重放，两次进程退出0，root与历史匹配、Win67/0瓶/13回合、玩家13/80、父/live不变，最终continuation和公开快照属性无差异。原档比较回合12差异保留；首宿主在根前缺旧DLL setter退出1，不是路线失效。只调用Replay，不调用Solve、不注入正常incumbent；不是原生游戏差分或性能/质量回归验收，见[报告](performance/component-healing-bound-20261003.md)。
