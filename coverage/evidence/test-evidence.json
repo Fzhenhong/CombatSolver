@@ -2756,7 +2756,7 @@
     "procedure": "O041 猎人杀手 0.111.0 原包从 combat_start 同根 SearchOnly，Instant、300 秒上限和实例清理；Smart 政策与预算按包内录制政策恢复。",
     "expected": "当前源码在同根的实际产出不退化：预计整场战损 17、第 6 回合完胜、boundary=None、路线 1 瓶且该瓶省血 ≥16。审核稿改善值 12 录于中途检查点（第 3 回合、已损 6），不同根，不作断言。",
     "observed": "夹具已落地，本轮未执行，因此本条不作为通过证据。预期值取自认领者 2026-10-04 的 SearchOnly 同根产物 runId 64c2f0401542492ab2ae739ee0b0da5f（projected_battle_hp_lost=17、combat_ended_turn=6、boundary=None、potion_count=1、potion_hp_saved=16、unavoidable_hp_lost=17），其 30 个动作与原包 :1 记录路线逐 token 相同（仅两枚 ANGER 的 occurrence 互换）。首次执行结果待整批验收补记。",
-    "evidence": "coverage/fixtures/regressions/community/q010-o041-same-root-no-regression.json; docs/community/drafts/2026-10-04/Q010-claim-reproduction.md; docs/TEST_MATRIX.md; .local/tool-tasks/q010/O041-analysis.md"
+    "evidence": "coverage/fixtures/regressions/community/q010-o041-same-root-no-regression.json; docs/community/drafts/2026-10-04/Q010-claim-reproduction.md; docs/TEST_MATRIX.md"
   },
   "Q010-O042-SAME-ROOT-NO-REGRESSION": {
     "status": "Pending",
@@ -2764,7 +2764,7 @@
     "procedure": "O042 偷窃草蜢 0.111.0 原包从 combat_start 同根 SearchOnly，Instant、300 秒上限和实例清理；PreserveResources 偷窃政策按包内录制政策恢复。",
     "expected": "同根实际产出不退化：预计整场战损 5、第 7 回合完胜、boundary=None、0 瓶，其中主动卖血 4、未追回资源 0、长期资源 ≥20、成长奖励 1。审核稿改善值 1 录于中途检查点（第 3 回合、已损 1），不同根，不作断言。",
     "observed": "夹具已落地，本轮未执行，因此本条不作为通过证据。预期值取自 runId 0202e4fdcb1349a0b870a33fca69a983（projected_battle_hp_lost=5、combat_ended_turn=7、boundary=None、potion_count=0、sold_hp=4、outstanding_stolen_resource=0、long_term_resource=20、growth_reward_count=1），其 26 个动作与原包 :1 记录路线多重集完全相同（仅三处相邻顺序差异）。「被迫受击 = 1」分量无协议断言字段，只有 RESULT 诊断行（src/Runtime/SolverDiagnostics.cs:209），需在验收时按 diagnostics 对账。",
-    "evidence": "coverage/fixtures/regressions/community/q010-o042-same-root-no-regression.json; src/Runtime/SolverDiagnostics.cs; docs/community/drafts/2026-10-04/Q010-claim-reproduction.md; docs/TEST_MATRIX.md; .local/tool-tasks/q010/O042-analysis.md"
+    "evidence": "coverage/fixtures/regressions/community/q010-o042-same-root-no-regression.json; src/Runtime/SolverDiagnostics.cs; docs/community/drafts/2026-10-04/Q010-claim-reproduction.md; docs/TEST_MATRIX.md"
   },
   "Q010-O044-SAME-ROOT-TARGET": {
     "status": "Pending",
