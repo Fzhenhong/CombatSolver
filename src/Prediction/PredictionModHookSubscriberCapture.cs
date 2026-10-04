@@ -232,7 +232,8 @@ internal sealed class PredictionModHookSubscriberCapture
                 scope);
         }
         if (PredictionModModelSupport.IsBaseLibCardModifier(subscriber)
-            || KnownPreRootSubscriberTypeNames.Contains(type.FullName ?? string.Empty))
+            || KnownPreRootSubscriberTypeNames.Contains(type.FullName ?? string.Empty)
+            || (!isBaseGame && mod?.manifest?.affectsGameplay is false))
         {
             return;
         }

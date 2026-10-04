@@ -21,18 +21,14 @@ HeavenlyDrill 的 OnPlay 使用精确镜像，先解析分支 X 值及修正，�
 
 | 你的 Mod | 要做什么 |
 |---|---|
-| 只改美术、UI、音效等表现内容 | **什么都不用做**；覆写战斗回调的表现效果需明确登记为 `Ignored` |
+| 清单里 `affects_gameplay: false`（纯美术、UI、音效） | **什么都不用做**，自动放行 |
 | 只改地图、进幕、事件、休息处、商店这类战斗外内容，包括商店删牌价格 | **什么都不用做**，求解器会判定它对战斗惰性 |
 | 加了牌、Power、遗物、药水、敌人，或改了战斗数值 | 往下读 |
 
-门禁按当前战斗的实际模型、订阅器和补丁目标判断。第三条出现未适配的战斗效果时，求解器会停在
+前两条是自动的。第三条涉及的未适配战斗内容被实际使用时，求解器会停在
 「求解器暂未适配此内容性 Mod：名称，无法求解。」
 
-Mod ID、程序集名和 `affects_gameplay` 声明只提供来源信息。BetterVanillaSTS2 只修改商店删牌价格时按战斗外内容放行；启用改变战斗效果的配置时按具体效果判断。根捕获检查可达模型的原版数值、费用、升级、Power 生命周期、药水、球、怪物行动和战斗 Hook 补丁；卡牌 OnPlay 继续使用完整补丁组合适配合同。声明 `affects_gameplay: false` 的未适配战斗覆写仍须提供镜像，纯表现覆写使用显式 `RegisterIgnored`。搜索、部署和回合准备捕获已确认的第三方不兼容时均使用专用提示，报告账本只记录 `IncompatibleGameplayMod`，显示为“内容性 Mod 暂未适配”，不引导玩家上传日志。包内仅出现其他 Mod 的名字或恢复环境不匹配，均不足以认定该 Mod 是某个偏差的原因。
-
-框架桥接按精确方法检查：根牌的 Ritsu capability 集为空时放行目标、星能、可打性和升级的既有桥接；BaseLib 升级桥接要求实际附着修饰器为空，变量升级桥接还逐项核对自定义升级额度为空。修改原版伤害、费用或升级数值的贡献继续形成战斗边界。只参与战斗外 Hook 的遗物及 Modifier，其商店等元数据按战斗外内容处理。
-
-这是一组明确的战斗入口审计。尚未进入根的生成模型、任意动态 detour、初始化后直接改写字段，以及其他未列出的全局方法补丁仍需各自的语义合同；通过入口审计只证明已检查的边界。
+Mod ID 和程序集名用于标明来源。BetterVanillaSTS2 仅修改商店删牌价格时，按战斗外内容放行。BaseLib、RitsuLib 与声明为非 gameplay 的扩展沿既有框架、订阅器及镜像合同处理；原版模型的已捕获数值继续由镜像消费。实际参与战斗的未适配模型、gameplay subscriber、OnPlay 替换和怪物 AI 使用各自的语义门禁。搜索、部署和回合准备捕获已确认的第三方不兼容时均使用专用提示，报告账本只记录 `IncompatibleGameplayMod`，显示为“内容性 Mod 暂未适配”，不引导玩家上传日志。包内仅出现其他 Mod 的名字或恢复环境不匹配，均不足以认定该 Mod 是某个偏差的原因。
 
 Power 的原版克隆会重置 `_internalData`。跨根保留的数据必须从原生来源捕获：例如本批苍蓝星球的已触发标记，以及 DarkEmbrace 的虚无消耗延迟计数。DarkEmbrace 后续按实际事件累计并在回合末清零，不能用结束回合前的牌数代替此状态。
 
@@ -64,16 +60,16 @@ CrabRagePower 的同伴死亡结算由 `AfterDeathMirrors` 独占：力量、格
 
 求解器扫描所有 ModHelper 战斗 hook 订阅者。放行条件包括：
 
-1. `PredictionModHookSubscriberInertness.IsCombatInert` 判定为战斗惰性——只重写了战斗外的
+1. 清单 `affects_gameplay: false`；
+2. `PredictionModHookSubscriberInertness.IsCombatInert` 判定为战斗惰性——只重写了战斗外的
    hook，或者只重写了战斗开始 / 战斗结束 hook（前者的效果已经落在被捕获的根状态里，后者在
    胜负判定之后才分发，求解器搜到战斗结束就停）；
-2. 在 `PredictionModHookSubscriberCapture.KnownPreRootSubscriberTypeNames` 白名单里。
-3. 已捕获所有权的 BaseLib CardModifier，继续逐效果使用对应镜像和状态合同。
+3. 在 `PredictionModHookSubscriberCapture.KnownPreRootSubscriberTypeNames` 白名单里。
 4. Loadout 的 `PowerGiverSummonHook`：主线程检查实际加载的公开计数快照接口及怪物能力配置，把空配置写入续用状态戳。版本号变化不会阻止搜索；接口变化或配置非空时明确失败。这不放行 Loadout 的其他战斗效果。
 
 条件都不满足就抛 `IncompatibleGameplayModException`，整个求解器停摆。
 
-> **当前限制。** 第 2 条那份白名单是私有静态集合，没有公开登记入口。目前只能靠 publicizer
+> **当前限制。** 第 3 条那份白名单是私有静态集合，没有公开登记入口。目前只能靠 publicizer
 > 写进去。这是明确要补的扩展点之一，见第 6 节。
 
 ### 1.2 镜像：进来之后每个类型的五种下场
@@ -345,7 +341,6 @@ StrategicEffectMirrors.Register<TYourPower>(requirements, evaluate, host);
 | `SearchPolicySnapshot.IsAct3BossEncounter` / `CombatBeamSolver.CaptureAct3BossInteractionPotential` | 首领范围只含第三幕实验体、永世沙漏、女王；联动上下文只适配原版 Pagestorm、DanseMacabre、Demesne；StrategicEffectModel 对 PrepTimePower 按未来攻击与回合视野估计重复精力收益。这些不是通用第三方触发次数分析。第三方 Power 仍使用 §2.2 登记 | 原版特化；第三方估值已有入口 |
 | `GoldGainedMirrors` / `GoldGainSupport` | 三个标准 descriptor 描述金币 Modify、AfterModify、AfterGain；当前只有原版 BowlerHat、Ectoplasm、DragonFruit 的精确登记，registry 未开放外部注册。仅明确审计的展示通知可 Ignored；未知 override 即使非 gameplay manifest 也拒绝。修改用 combat child，获得后使用根冻结的 null-child 跑局序列；金币/遗物/药水/HP 属当前分支。 | 原版封闭派发 |
 | `PredictionModHookSubscriberCapture.KnownPreRootSubscriberTypeNames` | 私有静态白名单，没有公开登记入口 | 待做 |
-| `PredictionModPatchAudit.ValidateCombatModelPatches` | 根内模型的数值、费用、升级、Power、药水、球、怪物行动及战斗 Hook Harmony 补丁须具备对应语义合同；OnPlay 的完整组合使用既有登记入口。来源按实际补丁类型识别 | 战斗入口审计 |
 | `NativeModelCloneConcurrency` | 预测克隆只放行已核对原版阶段、原版变量及 BaseLib/Ritsu 稀疏元数据复制补丁组合的普通原版卡牌；附魔/灾厄、第三方模型/变量和未知补丁保留原锁。Power 只放行已物化原版变量、继承默认克隆及 InitInternalData 的原版类型，同时核对基阶段与变量 getter 补丁；自定义初始化保持原锁。每个线程最外层模拟隔离域重新核对，不支持求解中安装补丁；原版 MutableClone 保护不变。没有新增外部注册入口 | 精确框架适配 |
 | `RitsuEmptyCapabilityFastPathPatches` | 模拟隔离域的空 capability 集可直接保留原卡牌标签序列；不枚举/复制标签，不缓存分支值。非空贡献者与精确类型默认来源继续框架入口；晚注册刷新来源代次，已物化的空集合仍按框架语义处理。live 不旁路，无新增登记入口 | 精确框架适配 |
 | `DynamicVarCloneMetadataPatches` | 模拟克隆只优化已核对为空默认值的 BaseLib 提示/升级字段与 Ritsu 提示工厂；非空值照常复制，live 调用保持原框架行为。其他附加字段继续原有克隆逻辑，不属于此优化入口 | 精确框架适配 |

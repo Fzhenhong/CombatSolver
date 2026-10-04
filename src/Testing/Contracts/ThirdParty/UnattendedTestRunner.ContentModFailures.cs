@@ -106,7 +106,7 @@ internal sealed partial class UnattendedTestRunner
                 varsField.SetValue(canonical, canonicalVars);
                 varsField.SetValue(attached, attachedVars);
             }
-            _completedChecks.Add("RootContent:CombatModBoundary:Monster:MissingAttackDamage:CallbackOverlap:OwnerBoundPower:Source:UploadClassification");
+            _completedChecks.Add("RootContent:ShopMod:Monster:MissingAttackDamage:CallbackOverlap:OwnerBoundPower:Source:UploadClassification");
         }
         finally { AssemblyInfo.MockTypes = previousMocks; LocManager.Instance.SetLanguage(language); }
 
@@ -171,7 +171,6 @@ internal sealed partial class UnattendedTestRunner
                 () => GoldGainedMirrors.AfterGain(model, gold),
             })
             {
-                mod.manifest!.affectsGameplay = false;
                 try
                 {
                     action();

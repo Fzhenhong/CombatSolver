@@ -10,7 +10,7 @@
 
 0.49.2 全平台发布定稿见 [历史卷 15](archive/development/volume-15.md)，内容性 Mod 提示初始记录见 [历史卷 14](archive/development/volume-14.md)，玩家说明见 [0.49.2 更新日志](releases/0.49.2-RELEASE_NOTES.md)。
 
-0.49.3 战斗兼容性边界定稿见 [历史卷 16](archive/development/volume-16.md)，玩家说明见 [0.49.3 更新日志](releases/0.49.3-RELEASE_NOTES.md)。
+0.49.3 框架与局外 Mod 兼容性定稿见 [历史卷 17](archive/development/volume-17.md)，玩家说明见 [0.49.3 更新日志](releases/0.49.3-RELEASE_NOTES.md)。
 
 ## 下一版本（开发中）
 

@@ -168,14 +168,6 @@ internal sealed class CombatRootSnapshot
         Engine.InCombat.Mirrors.Hooks.TurnStart.AfterPlayerTurnStartMirrors.Seal();
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        PredictionModPatchAudit.ValidateCombatModelPatches(
-            state.IterateHookListeners()
-                .Concat(state.Creatures.SelectMany(creature => creature.Powers))
-                .Concat(state.Enemies.Select(enemy => enemy.Monster).OfType<MonsterModel>())
-                .Concat(state.Players.SelectMany(player => player.PlayerCombatState!.AllCards))
-                .Concat(state.Players.SelectMany(player => player.Deck.Cards))
-                .Concat(state.Players.SelectMany(player => player.Relics))
-                .Concat(state.Players.SelectMany(player => player.PotionSlots).OfType<PotionModel>()));
         PredictionModPatchAudit.ValidateMonsterModels(state.Enemies.Select(enemy => enemy.Monster).OfType<MonsterModel>());
 
         PowerDynamicVarWarmup.EnsureMaterialized(state);

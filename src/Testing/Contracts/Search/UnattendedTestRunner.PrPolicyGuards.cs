@@ -14,57 +14,29 @@ namespace CombatSolver;
 
 internal sealed partial class UnattendedTestRunner
 {
-    private sealed class MerchantOnlySubscriber : AbstractModel
-    {
-        public override bool ShouldReceiveCombatHooks => false;
-        public override decimal ModifyMerchantPrice(Player player,
-            MegaCrit.Sts2.Core.Entities.Merchant.MerchantEntry entry, decimal cost) => 0m;
-    }
-
     private static void AssertCombatModBoundary(CombatState combat)
     {
         var previousMocks = AssemblyInfo.MockTypes;
         AssemblyInfo.MockTypes = previousMocks == null ? [] : new(previousMocks);
-        var validateSubscriber = AccessTools.Method(typeof(PredictionModHookSubscriberCapture), "ValidateSubscriber")
-            .CreateDelegate<Action<AbstractModel, string>>();
-        Harmony harmony = new("CombatSolver.Testing.CombatModBoundary");
+        Harmony harmony = new("CombatSolver.Testing.ShopModBoundary");
         var prefix = AccessTools.Method(typeof(ForeignCardPatch), nameof(ForeignCardPatch.Prefix));
         var price = AccessTools.Method(typeof(MegaCrit.Sts2.Core.Entities.Merchant.MerchantCardRemovalEntry), "CalcCost");
-        CardModel card = combat.Players[0].PlayerCombatState!.AllCards.First();
-        var numeric = AccessTools.PropertyGetter(card.GetType(), "CanonicalVars");
         ContinuationStamp before = ContinuationStamp.CaptureLive(combat);
         try
         {
             foreach (string modId in new[] { "BetterVanillaSTS2", "WheelchairSpire", "PengoTarot", "BetterCharacterRelics" })
             foreach (bool affectsGameplay in new[] { true, false })
             {
-                Mod mod = new() { path = "test-combat-boundary", manifest = new ModManifest
+                Mod mod = new() { path = "test-shop-mod", manifest = new ModManifest
                     { id = modId, name = modId, affectsGameplay = affectsGameplay } };
                 AssemblyInfo.MockTypes[typeof(ForeignCardPatch)] = (mod, false);
-                AssemblyInfo.MockTypes[typeof(MerchantOnlySubscriber)] = (mod, false);
-                AssemblyInfo.MockTypes[typeof(MapOnlyOverCombatBaseSubscriber)] = (mod, false);
-                validateSubscriber(ModelDb.All.OfType<MerchantOnlySubscriber>().Single(), "run");
-                AssertRejected(() => validateSubscriber(ModelDb.All.OfType<MapOnlyOverCombatBaseSubscriber>().Single(), "run"));
                 harmony.Patch(price, prefix: new HarmonyMethod(prefix));
                 _ = CombatRootSnapshot.Capture(combat);
-                harmony.Patch(numeric, prefix: new HarmonyMethod(prefix));
-                AssertRejected(() => CombatRootSnapshot.Capture(combat));
-                harmony.Unpatch(numeric, prefix);
                 harmony.Unpatch(price, prefix);
                 _ = CombatRootSnapshot.Capture(combat);
-
-                void AssertRejected(Action action)
-                {
-                    try { action(); throw new InvalidOperationException("Combat content was accepted."); }
-                    catch (IncompatibleGameplayModException failure)
-                    {
-                        if (failure.ModId != modId)
-                            throw new InvalidOperationException("Combat content lost its mod source.", failure);
-                    }
-                }
             }
             if (ContinuationStamp.CaptureLive(combat) != before)
-                throw new InvalidOperationException("Compatibility audit changed live combat state.");
+                throw new InvalidOperationException("Shop compatibility audit changed live combat state.");
         }
         finally { harmony.UnpatchAll(harmony.Id); AssemblyInfo.MockTypes = previousMocks; }
     }
@@ -104,7 +76,7 @@ internal sealed partial class UnattendedTestRunner
                     throw new InvalidOperationException("补丁失败缺少 Mod 和方法上下文。", ex);
             }
             manifest.affectsGameplay = false;
-            AssertRejectedNeutralPatch();
+            _ = CombatRootSnapshot.Capture(combat);
             AssemblyInfo.MockTypes[typeof(ForeignCardPatch)] = (null, false);
             try
             {
@@ -137,21 +109,12 @@ internal sealed partial class UnattendedTestRunner
                         throw new InvalidOperationException("异步补丁失败缺少来源上下文。", ex);
                 }
                 manifest.affectsGameplay = false;
-                AssertRejectedNeutralPatch();
+                _ = CombatRootSnapshot.Capture(combat);
             }
             finally { harmony.Unpatch(moveNext, prefix); manifest.affectsGameplay = true; }
             if (ContinuationStamp.CaptureLive(combat) != before)
                 throw new InvalidOperationException("补丁审计修改了真实战斗状态。");
-            _completedChecks.Add("ForeignOnPlay:LatePatch:AsyncMoveNext:DeclaredNeutral:Unknown:Unpatch:RootUnchanged");
-
-            void AssertRejectedNeutralPatch()
-            {
-                try { _ = CombatRootSnapshot.Capture(combat); throw new InvalidOperationException("Declared-neutral combat patch was accepted."); }
-                catch (IncompatibleGameplayModException failure)
-                {
-                    if (failure.ModId != manifest.id) throw new InvalidOperationException("Combat patch lost its mod source.", failure);
-                }
-            }
+            _completedChecks.Add("ForeignOnPlay:LatePatch:AsyncMoveNext:Neutral:Unknown:Unpatch:RootUnchanged");
         }
         finally
         {

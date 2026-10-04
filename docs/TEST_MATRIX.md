@@ -6,26 +6,27 @@
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
-## 0.49.3 战斗兼容性边界（2026-10-04）
+## 0.49.3 框架与局外 Mod 兼容性（2026-10-04）
 
-托管 `AdaptedOnPlayChecks` 普通模式最终 49 项、`--empty` 2 项 Passed。覆盖加载身份、真实 Harmony 组合、原版数值拒绝、商店 Hook 和遗物数值放行、非 gameplay 声明，以及 BaseLib 空升级桥接和实际贡献边界。
+托管 `AdaptedOnPlayChecks` 普通模式 41 项、`--empty` 5 项 Passed。覆盖 BetterVanillaSTS2、BaseLib、RitsuLib 加载身份、gameplay-neutral 框架准入、真实 Harmony 完整组合和未适配 gameplay OnPlay 拒绝。
 
 ```powershell
 dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录>
 dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayChecks.csproj -c Release -p:Sts2DataDir=<游戏数据目录> -- --empty
 ```
 
-原生三项 Passed：
+原生验证使用安装的 BaseLib 3.4.7 DLL/PCK/manifest 与 RitsuLib，进入同一私有游戏快照：
 
 | 场景 | runId | 秒 | 直接证据 |
 | --- | --- | --- | --- |
-| `ROOT-CONTENT-SOURCES` | `3cd7ec96ae094e63b66cfe68dc1c55b8` | 24.913 | 商店删牌入口放行，原版数值、继承 Hook、怪物和意图来源拒绝，战斗状态保持 |
-| `CONTENT-MOD-FAILURES` | `20e28be96c83465789cc9266fd5b5c42` | 24.396 | 八个声明为非 gameplay 的战斗回调拒绝，计算变量、eng/zhs/zht 和上传分类 |
-| `PR18-FOREIGN-ONPLAY-BOUNDARY` | `453fc5c44e2b4a5483c553ab543557e6` | 23.548 | 后装 OnPlay、async MoveNext、未知来源、卸载、状态保持与一次原版部署 |
+| `ROOT-CONTENT-SOURCES` | `791612a7355141518541227c3216270b` | 25.556 | 真实商店删牌入口放行，怪物和意图来源拒绝，根与真实战斗状态保持 |
+| BaseLib 最小准入 + `PR18-FOREIGN-ONPLAY-BOUNDARY` | `2781b571a8a04df2841924fba091511e` | 23.821 | Passed；真实修饰器根、Owner、Fork 隔离、原有 OnPlay 门禁与一次原版求解部署 |
 
-原生入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId <表内场景> -TimeoutSeconds 120 -CleanupInstanceOnExit`。ROOT、CONTENT 使用 `-EnemyCurrentHp 1000`，CONTENT 另加 `-VerifyPredictionFailureBoundaries`；PR18 使用 `-EnemyCurrentHp 1`。
+原生入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId <表内场景> -TimeoutSeconds 120 -CleanupInstanceOnExit`。ROOT 使用 `-EnemyCurrentHp 1000`；PR18 使用 `-EnemyCurrentHp 1 -VerifyBaseLibCardModifierBoundary`，本轮临时 fixture 将 BaseLib 检查限定为根、Owner 与 Fork，输出独立的 `BaseLibRootAdmission` 标记。
 
-Bash 使用同名 scenario 和对应长参数。本轮采用已提交 Executor 的隔离构建；临时启动器使用现有映像查询入口，保留进程身份与租约检查。各次实例已删除，环境阻塞、临时辅助及未验证项见 [开发历史卷 16](archive/development/volume-16.md#验证与范围)。原生证据采用 RitsuLib；后续 BaseLib 空桥接扩展由托管合同覆盖，原始第三方完整栈未运行。
+完整 BaseLib 修饰器合同 Failed，runId `71984ec7e337460da825c98566898474`，22.033 秒，失败位于生成牌克隆字段／修饰器核对。最小准入通过不代表该完整合同通过；失败原文与范围保留在 [历史卷 17](archive/development/volume-17.md#验证与范围)。
+
+Bash 使用同名 scenario 和对应长参数。本轮使用已提交 Executor 的隔离构建；临时启动器将 BaseLib 原包加入私有快照，并使用现有映像查询入口。进程身份、租约与退出清理检查保持，各次实例已删除。验证来源与未验证项见 [开发历史卷 17](archive/development/volume-17.md#验证与范围)，源码 `6a073d9e` 的历史验证见 [历史卷 16](archive/development/volume-16.md#验证与范围)。
 
 ## 移动运行库内存回收（2026-10-04）
 

@@ -168,7 +168,7 @@ internal sealed partial class UnattendedTestRunner
             {
                 runner.SetStage("combat_mod_boundary");
                 AssertCombatModBoundary(scenario.CombatState);
-                runner._completedChecks.Add("CombatModBoundary:Merchant:InheritedCombatHooks:NumericPatch:DeclaredNeutral:RootUnchanged");
+                runner._completedChecks.Add("CombatModBoundary:Merchant:GameplayDeclaration:RootUnchanged");
             }
             if (request.ScenarioId == "CYCLE-EXIT-REVOKED-PARENT")
             {

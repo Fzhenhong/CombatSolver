@@ -2,6 +2,8 @@
 
 [返回归档索引](README.md)
 
+本卷记录源码 `6a073d9e` 的历史验证。当前 0.49.3 的实现与验证见 [历史卷 17](volume-17.md)。
+
 ## 0.49.3 战斗兼容性边界（2026-10-04）
 
 兼容性按本场战斗的可达模型、订阅器和补丁目标判断。商店删牌价格、地图、事件、休息处等战斗外修改放行；实际参与战斗的未适配模型、效果、怪物、意图、回调与原版数值修改保留明确边界。Mod ID、程序集名和玩法声明用于报告来源。
@@ -19,7 +21,7 @@ Ritsu 目标、星能、可打性和升级桥接只在根牌的 capability 集�
 - `CONTENT-MOD-FAILURES` 加 `VerifyPredictionFailureBoundaries` Passed：runId `20e28be96c83465789cc9266fd5b5c42`，24.396 秒。声明为非 gameplay 的八个未适配回调仍拒绝；计算变量、包装异常、eng/zhs/zht 名称与上传分类通过。
 - `PR18-FOREIGN-ONPLAY-BOUNDARY` Passed：runId `453fc5c44e2b4a5483c553ab543557e6`，23.548 秒。包含后装补丁、async MoveNext、玩法声明、未知 owner、卸载与根状态保持；一张原版打击完成真实部署，玩家 HP=80，敌人 HP=0。
 
-原生合同均使用 `-TimeoutSeconds 120 -CleanupInstanceOnExit`，启动器确认删除各次实例。入口与命令见 [测试矩阵](../../TEST_MATRIX.md#0493-战斗兼容性边界2026-10-04)。
+原生合同均使用 `-TimeoutSeconds 120 -CleanupInstanceOnExit`，启动器确认删除各次实例。历史入口与命令见 [该源码的测试矩阵](https://github.com/Torch1230/CombatSolver/blob/6a073d9e/docs/TEST_MATRIX.md#0493-战斗兼容性边界2026-10-04)。
 
 本轮工作区已有 Executor 调查接线指向缺失的 `ProbeIssue212RecordedBoundaryAsync`。测试与定版构建通过忽略目录中的临时 MSBuild target 选择该文件的已提交版本，保留原有工作区改动。原生启动器的 MainModule 映像路径检查拒绝了启动进程；临时启动器改用现有 `Get-ProcessExecutablePath` 的映像查询入口，保留精确进程路径、出生时间、租约及退出清理检查。临时构建和启动辅助在交付后删除，主项目启动工具未修改。
 
