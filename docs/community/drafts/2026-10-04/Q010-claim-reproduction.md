@@ -230,8 +230,11 @@ O044 同时是一次跨环境对照：本轮分配墙 2325295000（认领者 128
 失败信息「首轮路线使用药水 0 瓶，预期为 1 瓶」。两侧输入与政策可证完全相同：`rootContinuationStamp`
 长 3776 字符、SHA256 均为 `F95E3DA5A9F50626FE74A5FF1302BB12B97690FD4924BBD3E31722E9252AD006`；
 `policy.json` 的 `executedPolicy` 逐字段无差异；`request.json` 的 seed/ascension/encounter/act/
-`enemyCurrentHp`/`checkpointSelector`/`replayMode`/`headlessFastModeForTest`/`stopFlag` 全同；`src` 与
-`tools` 相对认领者运行时零改动。同参数复跑结果一致（同 `score`、同终值）。
+`enemyCurrentHp`/`checkpointSelector`/`replayMode`/`headlessFastModeForTest`/`stopFlag` 全同。生产侧
+`git diff 4533f6bb..HEAD -- src tools` 为空，即与复现记录声明的分支基点零改动；但认领者的四次运行时刻
+（00:56–01:05）早于该基点提交（01:34），两侧证据都不记录所加载 `CombatSolver.dll` 的哈希，所以二进制
+等价属于推断（由同基点与三条主题终值/`score`/路线逐位相同支撑），不是哈希对账。下面这条因果链完全
+取自本轮自己的日志，不依赖该推断成立。同参数复跑结果一致（同 `score`、同终值）。
 
 差异只在内存余量，并沿这条链改变结果：
 
