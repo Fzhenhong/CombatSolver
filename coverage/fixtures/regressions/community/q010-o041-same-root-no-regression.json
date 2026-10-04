@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scenarioId": "Q010-O041-SAME-ROOT-NO-REGRESSION",
-  "description": "O041 猎人杀手：从 combat_start 同根复跑，锁当前源码的实测产出（原始战损 17、Smart 选 1 瓶）。审核稿改善值 12 录于中途检查点（:4，第 3 回合、已损 6），不同根，故不断言。",
+  "description": "O041 猎人杀手：从 combat_start 同根复跑，锁当前源码的实测产出（原始战损 17、Smart 选 1 瓶）。审核稿改善值 12 录于中途检查点（:4，第 3 回合、已损 6），不同根，故不断言。W2 修复后复跑 Passed：runId 4e7f8e7e284a447195163b3741dc3f02，score 10001064970 与修复前逐位相同、未触发 axis_widened（本包配额未被净差否证），即该夹具结果不由 W2 路径决定。",
   "characterId": "IRONCLAD",
   "encounterId": "HUNTER_KILLER_NORMAL",
   "seed": "8X5MFZSQ4J3L",
