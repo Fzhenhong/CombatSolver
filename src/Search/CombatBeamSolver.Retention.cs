@@ -330,16 +330,28 @@ internal sealed partial class CombatBeamSolver
             if (_theftPolicy == SolverTheftPolicy.PreserveResources && node.Snapshot.HasSimulator)
                 lootBucket = ((SimulatedCombatState)((CombatPredictionSimulator)node.Snapshot.Simulator).State.CombatState)
                     .MinimumOutstandingStolenResource((CombatPredictionSimulator)node.Snapshot.Simulator);
-            bool prune = !node.IsTerminal && !node.Snapshot.HasRisk && potionTierClosed
+            bool eligible = !node.IsTerminal && !node.Snapshot.HasRisk && potionTierClosed;
+            int hpLowerBound = eligible ? StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
+                Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential)) : 0;
+            bool prune = eligible
                 && ResourceIncumbentPolicy.TryOptimisticBucket(policy, root.ExhaustingGrowthUpperBound,
                     node.Snapshot, lootBucket, uses, out var resourceBucket, out int rewardCredit)
                 && _primaryIncumbents.TryGet(resourceBucket, out var shared)
                 && ShouldPruneByPrimaryIncumbent(
-                    StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
-                        Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential))
-                        - rewardCredit,
+                    hpLowerBound - rewardCredit,
                     node.Turn, shared, allowTurnTieBound: !_strictHpBoundWithRelicTargets,
                     pruneEqualHp: true);
+            if (!prune && eligible && !policy.IgnoreLongTermRewards && policy.RelicTargets.Count == 0
+                && (_hasGrowthTargets || node.Snapshot.GrowthRewards.Total != 0)
+                && node.Snapshot.HasSimulator)
+            {
+                var simulator = (CombatPredictionSimulator)node.Snapshot.Simulator;
+                var remainingUpper = ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(
+                    simulator, root.PlayerIdentity);
+                prune = ResourceIncumbentPolicy.PruneGrowthTargets(policy, remainingUpper,
+                    node.Snapshot.GrowthRewards, lootBucket, uses, hpLowerBound,
+                    _primaryIncumbents, out _, out _);
+            }
             if (prune)
             {
                 if (sharedBounded == null)

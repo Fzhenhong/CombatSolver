@@ -31,6 +31,14 @@ internal static class PrimaryIncumbentChecks
         copied.AddToCombat<DualWield>(root.PlayerIdentity.Creature, PileType.Hand, 1, creator: null);
         Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(copied, root.PlayerIdentity) == null,
             "copy cards invalidate the growth cap");
+        var closedCopy = copied.Fork();
+        var royalties = closedCopy.State.GetPlayerCombatState(root.PlayerIdentity).AllCards
+            .Where(card => card.Preview is Royalties).ToArray();
+        foreach (var card in royalties) closedCopy.RemoveFromCombat(card);
+        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(closedCopy, root.PlayerIdentity)
+            is { Royalties: 0 }, "copying ordinary cards cannot reopen a closed growth source");
+        Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(copied, root.PlayerIdentity) == null,
+            "closing a copied sibling does not close its parent");
         var returned = root.ForkSimulator();
         returned.AddToCombat<Eidolon>(root.PlayerIdentity.Creature, PileType.Hand, 1, creator: null);
         Check(ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(returned, root.PlayerIdentity) == null,
@@ -86,6 +94,34 @@ internal static class PrimaryIncumbentChecks
             == int.MaxValue, "uncertified exhausted feed keeps the original healing reserve");
         Check(StrategicHpRecoveryBound.KnownNativeHealingPotential(spentFeed, root.PlayerIdentity, 6,
             ignoreExhaustedFeed: true) == 6, "closed exhausting loadout can release the spent feed reserve");
+        var growthOnly = goals with { RelicTargets = [] };
+        PrimaryIncumbentTable targets = new();
+        targets.Tighten(new(0, 0, new(Royalties: 1)), new(10, 3)); // 15 HP - 5 credit
+        targets.Tighten(new(0, 0, new(Royalties: 2)), new(10, 3)); // 20 HP - 10 credit
+        Check(ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 2),
+            new(Royalties: 1), 0, 0, 30, targets, out int examined, out int excluded)
+            && examined == 2 && excluded == 2, "each final target consumes its own positive HP bound");
+        Check(!ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 2),
+            new(Royalties: 1), 0, 0, 18, targets, out examined, out excluded)
+            && examined == 2 && excluded == 1, "one excluded target leaves the other target searchable");
+        Check(ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 1),
+            new(Royalties: 1), 0, 0, 18, targets, out examined, out excluded)
+            && examined == 1 && excluded == 1, "spent opportunities close the lower-growth bucket");
+        Check(!ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 3),
+            new(Royalties: 1), 0, 0, 40, targets, out examined, out excluded)
+            && examined == 3 && excluded == 2, "an unseen higher target preserves shared expansion");
+        Check(!ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, null,
+            new(Royalties: 1), 0, 0, 40, targets, out _, out _), "unknown opportunity range never closes targets");
+        Check(!ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 2),
+            new(Royalties: 1), 0, 1, 40, targets, out _, out _), "target bounds do not cross potion tiers");
+        Check(!ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 2),
+            new(Royalties: 1), 1, 0, 40, targets, out _, out _), "target bounds do not cross theft buckets");
+        Check(!ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 300),
+            default, 0, 0, 40, targets, out examined, out excluded) && examined == 0,
+            "large target domains fall back without truncating reachable targets");
+        Check(!ResourceIncumbentPolicy.PruneGrowthTargets(growthOnly, new(Royalties: 2),
+            new(Royalties: 1), 0, 0, 14, targets, out examined, out excluded) && excluded == 0,
+            "future healing reducing the physical lower bound keeps improving routes");
         Console.WriteLine($"RESOURCE_BUCKET_CHECKS status=Passed assertions={assertions}");
     }
 

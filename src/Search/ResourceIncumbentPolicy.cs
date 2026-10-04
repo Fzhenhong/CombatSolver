@@ -11,6 +11,7 @@ namespace CombatSolver;
 
 internal static class ResourceIncumbentPolicy
 {
+    private static readonly GrowthSource[] Sources = Enum.GetValues<GrowthSource>();
     internal static bool IsPlainBucket(PrimaryIncumbentBucket bucket)
         => bucket.Growth.Total == 0 && bucket.RelicMask == 0;
 
@@ -23,8 +24,8 @@ internal static class ResourceIncumbentPolicy
             snapshot.RelicCounters.SatisfiedMask);
 
     // A frozen opportunity target is not by itself a proof of a global reward cap.
-    // Certify a small closed loadout: no generation, exhaust recovery, copying,
-    // replay powers/relics, third-party callbacks, or reward-granting potions.
+    // Certify a small closed loadout: no generation, exhaust recovery, live
+    // growth copying, replay powers/relics, callbacks, or reward-granting potions.
     internal static GrowthValues? CaptureExhaustingGrowthUpperBound(
         CombatPredictionSimulator simulator, Player player)
     {
@@ -47,10 +48,18 @@ internal static class ResourceIncumbentPolicy
 
         GrowthValues upper = combat.GrowthRewards;
         if (!upper.Extras.IsEmpty) return null;
+        bool hasCopyCard = false;
         foreach (var card in simulator.State.GetPlayerCombatState(player).AllCards)
         {
             CardModel model = card.Preview;
             if (model.Enchantment != null || model.Affliction != null) return null;
+            // Once no growth card remains available, copying ordinary attacks
+            // cannot reopen growth. Before that point DualWield remains unknown.
+            if (model is DualWield)
+            {
+                hasCopyCard = true;
+                continue;
+            }
             GrowthSource? source = model switch
             {
                 Feed => GrowthSource.Feed,
@@ -74,7 +83,54 @@ internal static class ResourceIncumbentPolicy
                 && model.Type is not (CardType.Status or CardType.Curse))
                 return null;
         }
-        return upper;
+        return hasCopyCard && upper != combat.GrowthRewards ? null : upper;
+    }
+
+    // Each final growth vector has its own HP threshold. Shared expansion stops
+    // only when every conservatively reachable target is bounded by a witness.
+    // Missing witnesses and excessively large domains always preserve the node.
+    internal static bool PruneGrowthTargets(SearchPolicySnapshot policy, GrowthValues? upperBound,
+        GrowthValues realized, int stolen, int potions, int physicalHpLowerBound,
+        PrimaryIncumbentTable table, out int examined, out int excluded)
+    {
+        examined = excluded = 0;
+        if (policy.IgnoreLongTermRewards || policy.RelicTargets.Count != 0
+            || !realized.Extras.IsEmpty || !policy.GrowthOpportunityTargets.RequiredRewards.Extras.IsEmpty
+            || upperBound is not { } upper || !upper.Extras.IsEmpty || !upper.Satisfies(realized))
+            return false;
+        int size = 1;
+        foreach (GrowthSource source in Sources)
+        {
+            long width = (long)upper.Get(source) - realized.Get(source) + 1;
+            if (realized.Get(source) < 0 || width > 256 / size) return false;
+            size *= (int)width;
+        }
+        int visited = 0, bounded = 0;
+        Visit(0, realized);
+        examined = visited;
+        excluded = bounded;
+        return visited != 0 && visited == bounded;
+
+        void Visit(int index, GrowthValues target)
+        {
+            if (index == Sources.Length)
+            {
+                visited++;
+                if (table.TryGet(new(stolen, potions, target), out var witness)
+                    && physicalHpLowerBound - policy.EffectiveGrowthBudgets.Credit(target)
+                        >= witness.StrategicHpDeficit)
+                    bounded++;
+                return;
+            }
+            GrowthSource source = Sources[index];
+            int count = realized.Get(source);
+            while (true)
+            {
+                Visit(index + 1, target.With(source, count));
+                if (count == upper.Get(source)) break;
+                count++;
+            }
+        }
     }
 
     internal static bool TryOptimisticBucket(SearchPolicySnapshot policy, GrowthValues? growthUpper,
