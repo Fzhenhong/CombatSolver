@@ -7307,5 +7307,916 @@
       "sameWorkAsPriorPlanSeed": true,
       "scope": "single complete uninstrumented screen, no new workload reduction from additional member handoff; not final acceptance"
     }
+  },
+  "researchSnapshotBulk": {
+    "baseCommit": "0eb1c382",
+    "priorPrototype": "silent-member-hp-provenance.json",
+    "priorDllSha256": "fe20001ea0d27ec942fd1236494f4b8bca25a2ac86280e76db51e4f652b981e6",
+    "mechanism": "one destination count update and three synchronous span copies in original discard/draw/hand order; same lane-owned temporary list, no escaping source spans, no score/search/budget changes; existing strict healing/seed mechanisms retained in isolation.",
+    "sourceHashes": {
+      "src/Search/StrategicHpRecoveryBound.Components.cs": "9c8782588ae28486ca45f74252ea9f682f053c48163a1f099d5285693e06b069",
+      "src/Search/CombatBeamSolver.Retention.cs": "aca35fc10b211774490806d988d5d729b8c7be3e7ef440a95b0f5d9fda600d3d",
+      "src/Search/CombatBeamSolver.Phases.cs": "e07e1c4ee44157d4d6636a95fa7727a65294b5c72fb99e824f78269fd2ed3121",
+      "src/Search/CombatBeamSolver.EarlyHpBound.cs": "fb7eb67d2752fb64a40c4365bea5977642d564da58d78ccc009238984e2aad71",
+      "src/Testing/UnattendedTestRunner.SilentEarlyHp.cs": "d21705b1a275c6dc55b5c44acb67c9a39a5aec5f6abda01fb2acb9ff40c531e8",
+      "src/Testing/UnattendedTestRunner.Executor.cs": "1c4d99098d953cc7e5db1e11b2f620a3c17008738c32e6027d235fe4f4760e3b",
+      "src/Search/CombatBeamSolver.cs": "474252a9d3e6e51d992aff8e482e46e10f6f4f6166f499c408948cd37b00db8a",
+      "src/Search/FrontierContinuationScheduler.cs": "29199233b9f64aa7aa8038c41f62a29a6ca76abcddab11d4b8ae9246b2966bb4",
+      "src/Search/CombatSearchCoordinator.PlanSearch.cs": "63e91b8069e80b3df12d1544df3f1e24043d7b5dfdd0f67efb842e9445b39507",
+      "src/Search/CombatSearchCoordinator.cs": "b44ba7132690ba29a8ce70c18b59961da4bb2e01fa5e335f0c7cc6bf18cd73f8",
+      "src/Search/CombatSearchCoordinator.PowerRoutes.cs": "32dc795c8e4c96b21ae48a091b4956bc5a4ce60e29ca56d00390367a94aa9c02",
+      "src/Engine/Common/SimCardPile.cs": "1f3319624a9c3785f66ed335e1e45d2b1dc9d2325f53b1055cde7c602cea275d",
+      "src/Search/CombatBeamSolver.StateEvaluation.cs": "0b70ad35ab76aad2c0ef217da218d7552b83700776cf188dabb4342a85d44327"
+    },
+    "status": "native-passed-whole-request-speed-rejected",
+    "runtimePromoted": false,
+    "deployed": false,
+    "unverified": [
+      "final interleaved acceptance",
+      "fixed full regression",
+      "frozen native full target deployment",
+      "request exclusive snapshot overhead"
+    ],
+    "build": {
+      "seconds": 20.93,
+      "warnings": 0,
+      "errors": 0
+    },
+    "dllSha256": "72376d6657c412c6e268fbd12287a1b7acde81f38ceb0aba4f3f8b670d97ff2b",
+    "nativeContract": {
+      "runId": "78168715494e435fa9e3cd13c0908902",
+      "status": "Passed",
+      "elapsedMilliseconds": 30094.0041,
+      "mainAssemblyHash": "72376D6657C412C6E268FBD12287A1B7ACDE81F38CEB0ABA4F3F8B670D97FF2B",
+      "completedChecks": [
+        "SilentEarlyHp:StableForgeComponent:ActualCompleteVictoryRetained:CrossSolverSeed:StrictDop1LegacySnapshotVs16Bulk:NonEmptyDrawDiscardExhaust:ExplicitProfile:updates=0:pruned=35:NoAdditionalLossOrPotion:ParentLiveRngIsolation",
+        "SilentEarlyHp:ActualCoordinatorMultiPlanAndPowerSeedHandoff:transfers=3:powerTransfers=8:RetainedCompleteWinner:ExplicitSharedBudget:Dop16Strict:QualityLiveParentRng",
+        "ComponentSilentPotions:StableSerumRetainHand:ForgeHandUpgrade:TwoLegalOrders:TwoFullNativeStates:ZeroRecovery:Fork:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=60:maxHp=70"
+      ],
+      "error": null,
+      "resultPath": ".local/general-healing-audit/snapshot-bulk-native/result.json",
+      "launcherExitCode": 0,
+      "instanceCleanup": "launcher removed owned instance",
+      "profile": "explicit Beam24/1200/10000ms DOP1 legacy snapshot and bound disabled vs DOP16 bulk snapshot/actual complete seed; strict incremental; Coordinator20000ms widths12/8; 30sec shared cancellation/120sec launcher",
+      "scope": "nonempty hand/draw/discard/exhaust, strict result and replay comparison, actual plan/power handoff, two full native potion states, both legal orders and fork/parent/live/RNG"
+    },
+    "performanceScreen": {
+      "configuration": "VeryHigh/DOP16/Smart/Coordinator/Portfolio/300000ms/production budget/NoGC16GiB",
+      "resultPath": ".local/general-healing-audit/snapshot-bulk-screen/harness-result.json",
+      "wallSeconds": 22.4777046,
+      "peakProcessWorkingSetBytes": 20446609408,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "speedupVsOriginal": 1.6518688389560916,
+      "sameOriginalRoot": true,
+      "sameOriginalBudget": true,
+      "sameOriginalQuality": true,
+      "samePriorWork": true,
+      "totalExpanded": 102259,
+      "totalTransitions": 574344,
+      "workAttributions": [
+        {
+          "Mechanism": "OpeningPowerRouteMember",
+          "ExpandedNodes": 61106,
+          "Transitions": 339735,
+          "ChoiceBranches": 132878,
+          "ElapsedMilliseconds": 9058.862700000001,
+          "WorkerAllocatedBytes": 12347633768,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 16
+        },
+        {
+          "Mechanism": "PlanCommitment",
+          "ExpandedNodes": 9769,
+          "Transitions": 50309,
+          "ChoiceBranches": 16180,
+          "ElapsedMilliseconds": 4072.8174,
+          "WorkerAllocatedBytes": 2097899736,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 3
+        },
+        {
+          "Mechanism": "PrimaryBeam",
+          "ExpandedNodes": 4358,
+          "Transitions": 24431,
+          "ChoiceBranches": 9334,
+          "ElapsedMilliseconds": 1721.6725,
+          "WorkerAllocatedBytes": 940264488,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 1
+        },
+        {
+          "Mechanism": "RefinementBeam",
+          "ExpandedNodes": 19403,
+          "Transitions": 108041,
+          "ChoiceBranches": 40730,
+          "ElapsedMilliseconds": 3733.4225999999994,
+          "WorkerAllocatedBytes": 3818441336,
+          "Gen0Collections": 0,
+          "Gen1Collections": 0,
+          "Gen2Collections": 0,
+          "GcPauseMilliseconds": 0,
+          "MaxObservedGcPauseMilliseconds": 0,
+          "RecordedSolverCount": 5
+        },
+        {
+          "Mechanism": "SmartPotionGradient",
+          "ExpandedNodes": 7623,
+          "Transitions": 51828,
+          "ChoiceBranches": 18898,
+          "ElapsedMilliseconds": 2326.3115,
+          "WorkerAllocatedBytes": 1944246144,
+          "Gen0Collections": 2,
+          "Gen1Collections": 2,
+          "Gen2Collections": 2,
+          "GcPauseMilliseconds": 5.272,
+          "MaxObservedGcPauseMilliseconds": 4.069,
+          "RecordedSolverCount": 2
+        }
+      ],
+      "passesSpeed": false,
+      "passesQuality": true,
+      "scope": "single uninstrumented whole coordinator request; no gain, not final acceptance"
+    }
+  },
+  "researchSilentCpuDiagnostics": {
+    "dllSha256": "fe20001ea0d27ec942fd1236494f4b8bca25a2ac86280e76db51e4f652b981e6",
+    "threadDiagnostic": {
+      "purpose": "sampled search thread diagnostic only; not CPU or performance acceptance",
+      "profile": "dotnet-sampled-thread-time",
+      "sameFrozenRoot": true,
+      "sameBudget": true,
+      "sameWork": true,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "diagnosticWallSeconds": 21.9385637
+    },
+    "threadAnalysis": {
+      "scope": "Managed sampled search thread intervals; excludes synthetic timing frames, blocked leaves, JIT-hook stacks and stacks outside beam/simulator. Not CPU time or performance acceptance.",
+      "activeSampledThreadMilliseconds": 171537.74166197295,
+      "excludedMilliseconds": {
+        "outsideSearch": 3412.336681453604,
+        "jit": 38189.95810754257,
+        "wait": 299839.5515312904
+      },
+      "exclusive": [
+        [
+          "?!?",
+          19863.94735996239
+        ],
+        [
+          "System.Private.CoreLib!System.Object.MemberwiseClone()",
+          19216.748434798526
+        ],
+        [
+          "System.Private.CoreLib!System.Collections.Generic.List`1[System.__Canon].AddRange(class System.Collections.Generic.IEnumerable`1<!0>)",
+          14175.309936733272
+        ],
+        [
+          "System.Private.CoreLib!System.Collections.Generic.Dictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.__Canon].GetEnumerator()",
+          10595.524236168325
+        ],
+        [
+          "CombatSolver!CombatSolver.CombatBeamSolver.PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,class System.Object)",
+          9778.315161513998
+        ],
+        [
+          "System.Private.CoreLib!System.Collections.Generic.List`1[System.__Canon]..ctor(class System.Collections.Generic.IEnumerable`1<!0>)",
+          9206.266947513359
+        ],
+        [
+          "System.Private.CoreLib!System.Diagnostics.Stopwatch.GetTimestamp()",
+          7728.131802095879
+        ],
+        [
+          "System.Private.CoreLib!System.Collections.Generic.List`1[System.__Canon].set_Capacity(int32)",
+          7132.285462872594
+        ],
+        [
+          "CombatSolver!CombatSolver.CombatBeamSolver+AdmittedJobWave.WaitForNextOutcome()",
+          6178.5430881852335
+        ],
+        [
+          "CombatSolver!CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class CombatSolver.Engine.Common.PredictedCard,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+          5776.550610407856
+        ],
+        [
+          "System.Linq!System.Linq.Enumerable.<ToArray>g__EnumerableToArray|314_0(class System.Collections.Generic.IEnumerable`1<!!0>)",
+          3550.9318359670224
+        ],
+        [
+          "System.Private.CoreLib!System.Collections.Generic.List`1[System.__Canon].RemoveAt(int32)",
+          3163.9021872872163
+        ],
+        [
+          "CombatSolver!CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.FlattenAttackResults(class MegaCrit.Sts2.Core.Commands.Builders.AttackCommand)",
+          2833.9893217358567
+        ],
+        [
+          "CombatSolver!CombatSolver.SimulatedCombatState.RemapCachedPowers(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.PowerModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          2190.7890711743003
+        ],
+        [
+          "System.Private.CoreLib!Interop+Kernel32.SetEvent(class Microsoft.Win32.SafeHandles.SafeWaitHandle)",
+          2134.578615143429
+        ],
+        [
+          "CombatSolver!CombatSolver.Engine.Common.PredictionForkContext.Dispose()",
+          2123.642560842358
+        ],
+        [
+          "CombatSolver!CombatSolver.CombatBeamSolver+AdmittedJobWave.Publish(class AdmittedJobOutcome)",
+          1834.6407920110055
+        ],
+        [
+          "System.Linq!System.Linq.Enumerable+ArrayWhereIterator`1[System.__Canon].ToArray(value class System.ReadOnlySpan`1<!0>,class System.Func`2<!0,bool>)",
+          1629.0909225760297
+        ],
+        [
+          "System.Linq!System.Linq.Enumerable.ICollectionToArray(class System.Collections.Generic.ICollection`1<!!0>)",
+          1556.4235931448547
+        ],
+        [
+          "System.Linq!System.Linq.Enumerable+IEnumerableWhereIterator`1[System.__Canon].ToList()",
+          1540.1906253103516
+        ],
+        [
+          "System.Linq!System.Linq.Enumerable+ConcatNIterator`1[System.__Canon].PreallocatingToArray()",
+          1501.3747150807067
+        ],
+        [
+          "CombatSolver!CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+          1371.3568312637854
+        ],
+        [
+          "System.Private.CoreLib!System.Buffers.SharedArrayPool`1[System.__Canon].Return(!0[],bool)",
+          1281.7840543431244
+        ],
+        [
+          "CombatSolver!CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane.Dispatch(class IExpansionLaneWorkItem)",
+          1204.6668751894063
+        ],
+        [
+          "System.Linq!System.Linq.Enumerable+IEnumerableWhereIterator`1[System.__Canon].ToArray()",
+          1189.1341535548977
+        ],
+        [
+          "System.Linq!System.Linq.Enumerable.ToArray(class System.Collections.Generic.IEnumerable`1<!!0>)",
+          1122.0625768256314
+        ],
+        [
+          "CombatSolver!CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          994.2512543940525
+        ],
+        [
+          "System.Private.CoreLib!System.Span`1[System.__Canon].CopyTo(value class System.Span`1<!0>)",
+          960.9315231884284
+        ],
+        [
+          "System.Private.CoreLib!System.Collections.Generic.List`1[CombatSolver.SimulatedPowerAmountChange].ToArray()",
+          925.0502380836579
+        ],
+        [
+          "System.Private.CoreLib!System.Collections.Generic.List`1[System.__Canon].Insert(int32,!0)",
+          891.6892033837562
+        ]
+      ]
+    },
+    "cpuDiagnostic": {
+      "purpose": "hardware CPU diagnostic only; no performance acceptance",
+      "event": "cycles:u",
+      "frequencyHz": 199,
+      "samples": 25466,
+      "lostSamples": 0,
+      "mapSha256": "5576c8c11aa36025b50a0f745542ff2fe69b66d4b6a57051ca63ee41b4273a04",
+      "sameFrozenRoot": true,
+      "sameBudget": true,
+      "sameWork": true,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "diagnosticWallSeconds": 20.8539324,
+      "cpuAnalysis": {
+        "scope": "Hardware cycles:u at199Hz, leaf IP manually resolved with owned managed perf-map; samples after first search plan log by wall/monotonic-raw offset. Overall search including runtime/JIT/GC; native leaves aggregated by DSO, not symbols. Not performance acceptance.",
+        "includedSamples": 24892,
+        "estimatedCycles": 423346870964,
+        "searchStartMonotonic": 1101776.8352861404,
+        "clockOffsetMethod": "current CLOCK_REALTIME-CLOCK_MONOTONIC_RAW; approximate search window, not phase attribution",
+        "unresolvedManagedSamples": 870,
+        "dsoCycles": {
+          "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/libcoreclr.so": 104705255844,
+          "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/libclrjit.so": 21850495835,
+          "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/System.Private.CoreLib.dll": 2733476318,
+          "/usr/lib/libc.so.6": 8126069408,
+          "[unknown]": 585107603,
+          "/tmp/perf-3522164.map": 115558261,
+          "/memfd:doublemapper (deleted)": 276179614444,
+          "/tmp/mm-exhelper.so.M6ccOJ": 29538679,
+          "/usr/lib/ld-linux-x86-64.so.2": 8229978757,
+          "/usr/lib/libstdc++.so.6.0.36": 97110149,
+          "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/System.Collections.Concurrent.dll": 17623689,
+          "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/System.Linq.dll": 233029686,
+          "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/libSystem.Native.so": 83379483,
+          "[vdso]": 319261089,
+          "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/System.Collections.Immutable.dll": 41371719
+        },
+        "topLeafSymbols": [
+          {
+            "symbol": "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/libcoreclr.so:unresolved-native-leaf",
+            "estimatedCycles": 104705255844,
+            "percent": 24.73273408294632,
+            "samples": 5861
+          },
+          {
+            "symbol": "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/libclrjit.so:unresolved-native-leaf",
+            "estimatedCycles": 21850495835,
+            "percent": 5.161369395560761,
+            "samples": 1105
+          },
+          {
+            "symbol": "/memfd:doublemapper (deleted):unresolved-managed-leaf",
+            "estimatedCycles": 14425525202,
+            "percent": 3.4074954113046223,
+            "samples": 870
+          },
+          {
+            "symbol": "/usr/lib/ld-linux-x86-64.so.2:unresolved-native-leaf",
+            "estimatedCycles": 8229978757,
+            "percent": 1.9440273027788246,
+            "samples": 459
+          },
+          {
+            "symbol": "/usr/lib/libc.so.6:unresolved-native-leaf",
+            "estimatedCycles": 8126069408,
+            "percent": 1.9194825721744886,
+            "samples": 1044
+          },
+          {
+            "symbol": "instance !1& [System.Private.CoreLib] System.Collections.Generic.Dictionary`2[System.__Canon,System.__Canon]::FindValue(!0)",
+            "estimatedCycles": 7461930106,
+            "percent": 1.7626042892459544,
+            "samples": 435
+          },
+          {
+            "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfInterface(void*,object)",
+            "estimatedCycles": 4609117042,
+            "percent": 1.08873298898008,
+            "samples": 266
+          },
+          {
+            "symbol": "class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::RemapCachedModels(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+            "estimatedCycles": 4008091481,
+            "percent": 0.9467629870213059,
+            "samples": 251
+          },
+          {
+            "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfClass(void*,object)",
+            "estimatedCycles": 3731634532,
+            "percent": 0.8814602842115551,
+            "samples": 226
+          },
+          {
+            "symbol": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,valuetype CombatSolver.SearchBoundaryReason,class [System.Runtime]System.Collections.Generic.IReadOnlySet`1<uint32>)",
+            "estimatedCycles": 3263912508,
+            "percent": 0.7709782997965166,
+            "samples": 188
+          },
+          {
+            "symbol": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::IsCombatEnding()",
+            "estimatedCycles": 3249147717,
+            "percent": 0.7674906654208616,
+            "samples": 185
+          },
+          {
+            "symbol": "instance bool [CombatSolver] CombatSolver.SimulatedCombatState+ConcatenatedListenerView+<GetEnumerator>d__13::MoveNext()",
+            "estimatedCycles": 2978699385,
+            "percent": 0.7036072755698479,
+            "samples": 174
+          },
+          {
+            "symbol": "instance int32 [System.Private.CoreLib] System.Collections.Generic.ObjectEqualityComparer`1[System.__Canon]::IndexOf(!0[],!0,int32,int32)",
+            "estimatedCycles": 2917652143,
+            "percent": 0.6891871283603056,
+            "samples": 166
+          },
+          {
+            "symbol": "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)",
+            "estimatedCycles": 2844125131,
+            "percent": 0.6718190982547394,
+            "samples": 147
+          },
+          {
+            "symbol": "instance int32 [CombatSolver] CombatSolver.SimulatedCombatState::GetAmount(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+            "estimatedCycles": 2791025303,
+            "percent": 0.6592762329020118,
+            "samples": 169
+          },
+          {
+            "symbol": "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/System.Private.CoreLib.dll:unresolved-native-leaf",
+            "estimatedCycles": 2733476318,
+            "percent": 0.6456824191886954,
+            "samples": 157
+          },
+          {
+            "symbol": "instance class [sts2]MegaCrit.Sts2.Core.Models.CardModel [CombatSolver] CombatSolver.Engine.Common.PredictedCard::get_Preview()",
+            "estimatedCycles": 2692877505,
+            "percent": 0.6360924550754489,
+            "samples": 155
+          },
+          {
+            "symbol": "instance int32 [System.Private.CoreLib] System.Collections.Generic.ObjectEqualityComparer`1[System.__Canon]::GetHashCode(!0)",
+            "estimatedCycles": 2602455089,
+            "percent": 0.6147335122789426,
+            "samples": 156
+          },
+          {
+            "symbol": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Mirrors.HookMirrors+HookListenerEnumerable+Enumerator::MoveNext()",
+            "estimatedCycles": 2467573160,
+            "percent": 0.5828726581540824,
+            "samples": 147
+          },
+          {
+            "symbol": "instance valuetype [System.Runtime]System.ValueTuple`2<valuetype CombatSolver.StateFingerprint,int32> [CombatSolver] CombatSolver.CombatBeamSolver::BuildProjectedShuffleOrder(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.Engine.Common.PredictedCard>)",
+            "estimatedCycles": 2364360716,
+            "percent": 0.5584925455138317,
+            "samples": 139
+          },
+          {
+            "symbol": "instance void [CombatSolver] CombatSolver.SimulatedCombatState::NormalizeCardAfflictions(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+            "estimatedCycles": 2342972854,
+            "percent": 0.5534404562067116,
+            "samples": 142
+          },
+          {
+            "symbol": "instance class CombatSolver.Engine.Common.SimCardPile [CombatSolver] CombatSolver.Engine.Common.SimCardPile::Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+            "estimatedCycles": 2047398960,
+            "percent": 0.48362208402246676,
+            "samples": 120
+          },
+          {
+            "symbol": "void [CombatSolver] CombatSolver.SimulatedCombatState::AddCreatureIntMap(valuetype CombatSolver.StateFingerprintBuilder&,char,class CombatSolver.ForkableDictionary`2<class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,int32>)",
+            "estimatedCycles": 2003458243,
+            "percent": 0.4732427190114669,
+            "samples": 117
+          },
+          {
+            "symbol": "void [CombatSolver] CombatSolver.CombatBeamSolver::AppendCyclePileShape(valuetype CombatSolver.StateFingerprintBuilder&,class CombatSolver.Engine.Common.SimCardPile,char)",
+            "estimatedCycles": 1944779058,
+            "percent": 0.4593819374574703,
+            "samples": 120
+          },
+          {
+            "symbol": "instance int32 [System.Private.CoreLib] System.Collections.Generic.HashSet`1[System.__Canon]::FindItemIndex(!0)",
+            "estimatedCycles": 1928212599,
+            "percent": 0.455468725825062,
+            "samples": 115
+          },
+          {
+            "symbol": "instance !1& [System.Private.CoreLib] System.Collections.Generic.Dictionary`2[System.__Canon,System.Int32]::FindValue(!0)",
+            "estimatedCycles": 1926422017,
+            "percent": 0.4550457672247249,
+            "samples": 114
+          },
+          {
+            "symbol": "class MegaCrit.Sts2.Core.Entities.Creatures.Creature [sts2] MegaCrit.Sts2.Core.Hooks.Hook::ModifyUnblockedDamageTarget(class MegaCrit.Sts2.Core.Combat.ICombatState,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,valuetype [System.Runtime]System.Decimal,valuetype MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+            "estimatedCycles": 1875988107,
+            "percent": 0.44313262614371085,
+            "samples": 118
+          },
+          {
+            "symbol": "void [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::StelemRef_Helper(object&,void*,object)",
+            "estimatedCycles": 1770440676,
+            "percent": 0.4182009594091348,
+            "samples": 107
+          },
+          {
+            "symbol": "instance void [CombatSolver] CombatSolver.StateFingerprintBuilder::Add(uint64)",
+            "estimatedCycles": 1747962031,
+            "percent": 0.4128912130659496,
+            "samples": 93
+          },
+          {
+            "symbol": "instance class [sts2]MegaCrit.Sts2.Core.Combat.ICombatState [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+            "estimatedCycles": 1703647605,
+            "percent": 0.4024235731613267,
+            "samples": 99
+          },
+          {
+            "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfClass(void*,object)[InstrumentedTierOptimized]",
+            "estimatedCycles": 1579597807,
+            "percent": 0.37312140831538676,
+            "samples": 97
+          },
+          {
+            "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfAny(void*,object)",
+            "estimatedCycles": 1484288419,
+            "percent": 0.35060809959930445,
+            "samples": 85
+          },
+          {
+            "symbol": "bool [System.Linq] System.Linq.Enumerable::Any(class [System.Runtime]System.Collections.Generic.IEnumerable`1<!!0>,class [System.Runtime]System.Func`2<!!0,bool>)",
+            "estimatedCycles": 1482127551,
+            "percent": 0.35009767466216496,
+            "samples": 91
+          },
+          {
+            "symbol": "void [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::StelemRef(object[],native int,object)",
+            "estimatedCycles": 1456283193,
+            "percent": 0.34399290342784594,
+            "samples": 86
+          },
+          {
+            "symbol": "stub<1550> GenerateDispatchStub<GenerateDispatchStub>",
+            "estimatedCycles": 1434580829,
+            "percent": 0.33886652468537837,
+            "samples": 82
+          },
+          {
+            "symbol": "instance int32 [sts2] MegaCrit.Sts2.Core.Models.CardModel::CompareTo(class MegaCrit.Sts2.Core.Models.AbstractModel)",
+            "estimatedCycles": 1387036682,
+            "percent": 0.32763598295685736,
+            "samples": 82
+          },
+          {
+            "symbol": "instance bool [System.Private.CoreLib] System.Object::Equals(object)",
+            "estimatedCycles": 1314886749,
+            "percent": 0.3105932367011196,
+            "samples": 80
+          },
+          {
+            "symbol": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)",
+            "estimatedCycles": 1248184659,
+            "percent": 0.294837341340865,
+            "samples": 76
+          },
+          {
+            "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstance_Helper(void*,object)",
+            "estimatedCycles": 1228210044,
+            "percent": 0.29011907923241576,
+            "samples": 75
+          },
+          {
+            "symbol": "instance class CombatSolver.Engine.InCombat.Simulation.CombatPredictionCardGenerationOptionsEntry [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory::FindLatestCardGenerationOptions(class CombatSolver.Engine.Common.PredictedCard)",
+            "estimatedCycles": 1182101517,
+            "percent": 0.27922764949419504,
+            "samples": 67
+          },
+          {
+            "symbol": "valuetype CombatSolver.StrategicEffectContext [CombatSolver] CombatSolver.StrategicEffectContext::Build(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,int32,int32,int32,valuetype CombatSolver.StrategicEffectRequirements,bool)",
+            "estimatedCycles": 1162173871,
+            "percent": 0.27452048207032276,
+            "samples": 72
+          },
+          {
+            "symbol": "instance bool [System.Private.CoreLib] System.Collections.Generic.List`1+Enumerator[System.__Canon]::MoveNext()",
+            "estimatedCycles": 1158054677,
+            "percent": 0.2735474752330169,
+            "samples": 63
+          },
+          {
+            "symbol": "valuetype [System.Runtime]System.Decimal [sts2] MegaCrit.Sts2.Core.Hooks.Hook::ModifyHandDraw(class MegaCrit.Sts2.Core.Combat.ICombatState,class MegaCrit.Sts2.Core.Entities.Players.Player,valuetype [System.Runtime]System.Decimal,class [System.Runtime]System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Models.AbstractModel>&)",
+            "estimatedCycles": 1139845779,
+            "percent": 0.269246298290682,
+            "samples": 72
+          },
+          {
+            "symbol": "instance void [CombatSolver] CombatSolver.SimulatedCombatState::NormalizePowerAfflictions(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+            "estimatedCycles": 1132145041,
+            "percent": 0.267427284491793,
+            "samples": 60
+          },
+          {
+            "symbol": "instance !!0 [System.Private.CoreLib] System.SZArrayHelper::get_Item(int32)",
+            "estimatedCycles": 1053013952,
+            "percent": 0.24873549900160824,
+            "samples": 63
+          },
+          {
+            "symbol": "valuetype CombatSolver.StateFingerprint [CombatSolver] CombatSolver.SimulatedCombatState::GetPowerFingerprint(class [sts2]MegaCrit.Sts2.Core.Models.PowerModel,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+            "estimatedCycles": 1037597699,
+            "percent": 0.24509398088553105,
+            "samples": 60
+          },
+          {
+            "symbol": "stub<1854> GenerateDispatchStub<GenerateDispatchStub>",
+            "estimatedCycles": 1026934160,
+            "percent": 0.2425751152149952,
+            "samples": 65
+          },
+          {
+            "symbol": "stub<2037> GenerateDispatchStub<GenerateDispatchStub>",
+            "estimatedCycles": 1025115068,
+            "percent": 0.24214542218434687,
+            "samples": 58
+          },
+          {
+            "symbol": "instance class CombatSolver.CombatBeamSolver/AdmittedExpansionJob [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedJobScheduler::NextJob(int32,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.CombatBeamSolver/SerialJobPhase>)",
+            "estimatedCycles": 978902287,
+            "percent": 0.2312293663045032,
+            "samples": 49
+          },
+          {
+            "symbol": "instance void [CombatSolver] CombatSolver.CombatBeamSolver::AppendPile(valuetype CombatSolver.StateFingerprintBuilder&,class CombatSolver.Engine.Common.SimCardPile,char)",
+            "estimatedCycles": 967921700,
+            "percent": 0.228635609800529,
+            "samples": 52
+          }
+        ]
+      },
+      "nativeCallers": {
+        "scope": "CPU cycles leaf in coreclr grouped by nearest resolved non-stub managed caller from frame-pointer chains; uncovered native frames retained. Not inclusive CPU distribution of all search or performance acceptance.",
+        "coveredCycles": 99091290969,
+        "uncoveredCycles": 5613964875,
+        "nearestManagedCallers": [
+          [
+            "System.RuntimeMethodInfoStub /* MT: 0x7fdd9cbd1538 */ [0Harmony] dynamicClass::new RuntimeMethodInfoStub(native int,object)[Optimized]",
+            5086861853
+          ],
+          [
+            "valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Interop.CoreCLR+V60::InvokeCompileMethod(native int,native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)[OptimizedTier1]",
+            3785608900
+          ],
+          [
+            "instance bool [System.Private.CoreLib] System.Threading.WaitHandle::WaitOneNoCheck(int32,bool,object,valuetype System.Diagnostics.Tracing.NativeRuntimeEventSource/WaitHandleWaitSourceMap)[OptimizedTier1]",
+            2991275685
+          ],
+          [
+            "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)[QuickJitted]",
+            2348377551
+          ],
+          [
+            "instance object [System.Private.CoreLib] System.Object::MemberwiseClone()[OptimizedTier1]",
+            2235270297
+          ],
+          [
+            "instance class CombatSolver.CombatBeamSolver/ReplayForkSeed [CombatSolver] CombatSolver.CombatBeamSolver::PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,object)[OptimizedTier1]",
+            2229089527
+          ],
+          [
+            "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)[OptimizedTier1]",
+            2219898760
+          ],
+          [
+            "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfClass(void*,object)[InstrumentedTierOptimized]",
+            2045219218
+          ],
+          [
+            "instance void [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedJobWave::Publish(class CombatSolver.CombatBeamSolver/AdmittedJobOutcome)[OptimizedTier1]",
+            1839767637
+          ],
+          [
+            "instance int32 [System.Private.CoreLib] System.Collections.Generic.ObjectEqualityComparer`1[System.__Canon]::IndexOf(!0[],!0,int32,int32)[InstrumentedTierOptimized]",
+            1535725650
+          ],
+          [
+            "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)[InstrumentedTier]",
+            1434273781
+          ],
+          [
+            "valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Interop.CoreCLR+V60::InvokeCompileMethod(native int,native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)[InstrumentedTier]",
+            1220389368
+          ],
+          [
+            "instance bool [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerLayout::Matches(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>)[QuickJitted]",
+            956333659
+          ],
+          [
+            "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfInterface(void*,object)[InstrumentedTierOptimized]",
+            808385463
+          ],
+          [
+            "int64 [System.Private.CoreLib] System.GC::GetTotalMemory(bool)[OptimizedTier1]",
+            773641589
+          ],
+          [
+            "instance bool [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionCreatureSemantics.IsPrimaryEnemy(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature)[QuickJitted]",
+            765707506
+          ],
+          [
+            "bool [System.Private.CoreLib] Interop+Kernel32::SetEvent(class Microsoft.Win32.SafeHandles.SafeWaitHandle)[OptimizedTier1]",
+            752093952
+          ],
+          [
+            "instance bool [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerLayout::Matches(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>)[InstrumentedTier]",
+            670668331
+          ],
+          [
+            "System.Type /* MT: 0x7fdd9a8582d8 */ [0Harmony] dynamicClass::GetDeclaringTypeOfMethodHandle(native int)[Optimized]",
+            664663538
+          ],
+          [
+            "class MegaCrit.Sts2.Core.Entities.Creatures.Creature [sts2] MegaCrit.Sts2.Core.Hooks.Hook::ModifyUnblockedDamageTarget(class MegaCrit.Sts2.Core.Combat.ICombatState,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,valuetype [System.Runtime]System.Decimal,valuetype MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature)[QuickJitted]",
+            661134479
+          ],
+          [
+            "instance class CombatSolver.CombatBeamSolver/AdmittedJobOutcome [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedJobWave::WaitForNextOutcome()[OptimizedTier1]",
+            626446098
+          ],
+          [
+            "valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Interop.CoreCLR+V60::InvokeCompileMethod(native int,native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)[QuickJitted]",
+            624465704
+          ],
+          [
+            "instance bool [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionCreatureSemantics.IsPrimaryEnemy(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature)[InstrumentedTier]",
+            588530919
+          ],
+          [
+            "!0 [CombatSolver] CombatSolver.Engine.Common.CanonicalModels+PowerCache`1[System.__Canon]::get_Value()[OptimizedTier1]",
+            566181958
+          ],
+          [
+            "instance int32 [System.Private.CoreLib] System.Collections.Generic.ObjectEqualityComparer`1[System.__Canon]::GetHashCode(!0)[InstrumentedTierOptimized]",
+            541857009
+          ],
+          [
+            "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::get_HasPendingChoice()[InstrumentedTier]",
+            513324937
+          ],
+          [
+            "instance class [sts2]MegaCrit.Sts2.Core.Combat.ICombatState [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)[OptimizedTier1]",
+            509271687
+          ],
+          [
+            "class System.Collections.Generic.EqualityComparer`1<!0> [System.Private.CoreLib] System.Collections.Generic.EqualityComparer`1[System.__Canon]::get_Default()[OptimizedTier1]",
+            505207122
+          ],
+          [
+            "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane::Run()[QuickJitted]",
+            471085768
+          ],
+          [
+            "instance bool [System.Private.CoreLib] System.Collections.Generic.List`1+Enumerator[System.__Canon]::MoveNext()[InstrumentedTierOptimized]",
+            451623847
+          ]
+        ]
+      },
+      "failedAnalysis": [
+        "perf inject --jit rejected missing perf record -k1; retained original samples and resolved managed leaf addresses from owned perf-map instead",
+        "perf script --no-callchain unavailable; used local supported -G",
+        "initial CLOCK_MONOTONIC search-window conversion yielded zero samples; actual default clock MONOTONIC_RAW differed49sec; corrected without rerunning search"
+      ],
+      "limits": [
+        "no exclusive phase attribution",
+        "native leaves aggregate DSO plus managed caller, not native symbol",
+        "870 managed leaf samples unresolved",
+        "search window uses current realtime/raw offset; approximate",
+        "no cache congruence proof"
+      ]
+    },
+    "evidenceDirectories": [
+      ".local/general-healing-audit/silent-member-diagnostic",
+      ".local/general-healing-audit/silent-cpu-diagnostic"
+    ],
+    "interpretation": "thread-time AddRange hotspot did not predict whole-request speed; CPU leaves distributed, with unresolved native and managed samples explicitly retained; no acceptance evidence from either diagnostic"
+  },
+  "researchTransitionStateObservations": {
+    "purpose": "diagnostic only, no cache or game-source changes",
+    "dllSha256": "fe20001ea0d27ec942fd1236494f4b8bca25a2ac86280e76db51e4f652b981e6",
+    "hostSourceSha256": "09ca0f2a076d54c69168d0133440ebe6767040f26bcbc19399580d94c7ec124a",
+    "scope": "sampled stable-boundary same exact serialized action/state key/path hash/history length repeated transitions; compare continuation/RNG/native hidden-state mirrors, fingerprint, complete normalized prediction history and all snapshot properties excluding simulator; limited existing stamp coverage, not universal congruence proof",
+    "status": "sampled-state-observations-complete-not-a-cache-proof",
+    "build": {
+      "seconds": 18.27,
+      "warnings": 0,
+      "errors": 0
+    },
+    "hostDllSha256": "1f0fbf9a8821a5a37a2803176366a903e29baeda6bdf2b2f81a0e7e717951a76",
+    "resultPath": ".local/general-healing-audit/transition-state-silent-diagnostic/transition-repeat-probe.json",
+    "observations": {
+      "Total": 543022,
+      "StrictRepeated": 123931,
+      "StrictCrossMember": 116926,
+      "StrictDifferentOutputs": 0,
+      "FullObserved": 8284,
+      "FullRepeated": 2136,
+      "FullCrossMember": 2011,
+      "FullDifferentInputs": 0,
+      "FullDifferentStates": 0,
+      "FullDifferentMetadata": 0,
+      "FullBoundarySkips": 535,
+      "FullCaptureFailures": 0,
+      "fullKeys": 6148,
+      "fullSampleRule": "path.First low6bits zero; stable boundaries only; complete continuation/fingerprint/history text + all snapshot properties except simulator"
+    },
+    "captureFailures": [],
+    "differenceExamples": [],
+    "diagnosticRequest": {
+      "wallSeconds": 36.2520648,
+      "totalExpanded": 96350,
+      "totalTransitions": 542980,
+      "sameFrozenRoot": true,
+      "sameConfiguredBudget": true,
+      "sameQuality": true,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999619974,
+        "CombatEndedTurn": 4,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "timeBoundaryObserved": false,
+      "scope": "instrumented diagnostic changes portfolio/member work despite same configured root/budget and selected quality; not performance acceptance. Aggregate timeBoundaryObserved=false, all16 power members ended None; do not attribute all work differences to time limits.",
+      "phaseWork": [
+        {
+          "Mechanism": "OpeningPowerRouteMember",
+          "ExpandedNodes": 61187,
+          "Transitions": 340109,
+          "ElapsedMilliseconds": 20026.0798
+        },
+        {
+          "Mechanism": "PlanCommitment",
+          "ExpandedNodes": 9769,
+          "Transitions": 50309,
+          "ElapsedMilliseconds": 7475.214599999999
+        },
+        {
+          "Mechanism": "PrimaryBeam",
+          "ExpandedNodes": 4358,
+          "Transitions": 24431,
+          "ElapsedMilliseconds": 1553.9396
+        },
+        {
+          "Mechanism": "RefinementBeam",
+          "ExpandedNodes": 13413,
+          "Transitions": 76303,
+          "ElapsedMilliseconds": 4425.3714
+        },
+        {
+          "Mechanism": "SmartPotionGradient",
+          "ExpandedNodes": 7623,
+          "Transitions": 51828,
+          "ElapsedMilliseconds": 2160.0302
+        }
+      ]
+    },
+    "cacheImplemented": false,
+    "unverified": [
+      "probe purity: observation changes power/refinement work; causes not fully isolated",
+      "semantic completeness of stamp/history and snapshot-property inventory for every permitted source",
+      "exact action/policy/root identity key and hash-collision fallback",
+      "retained template fork/RNG/history/parent/live isolation",
+      "bounded memory and eviction/concurrency ownership",
+      "native strict full-state cache-vs-original differential",
+      "complete request performance and final interleaved/full regression"
+    ]
   }
 }
