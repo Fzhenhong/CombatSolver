@@ -30,6 +30,8 @@ HeavenlyDrill 的 OnPlay 使用精确镜像，先解析分支 X 值及修正，�
 
 Mod ID 和程序集名用于标明来源。BetterVanillaSTS2 仅修改商店删牌价格时，按战斗外内容放行。BaseLib、RitsuLib 与声明为非 gameplay 的扩展沿既有框架、订阅器及镜像合同处理；原版模型的已捕获数值继续由镜像消费。实际参与战斗的未适配模型、gameplay subscriber、OnPlay 替换和怪物 AI 使用各自的语义门禁。搜索、部署和回合准备捕获已确认的第三方不兼容时均使用专用提示，报告账本只记录 `IncompatibleGameplayMod`，显示为“内容性 Mod 暂未适配”，不引导玩家上传日志。包内仅出现其他 Mod 的名字或恢复环境不匹配，均不足以认定该 Mod 是某个偏差的原因。
 
+怪物门禁检查当前敌方模型及其行动状态机补丁；仅新增怪物且本场战斗没有该怪物的 Mod，按当前战斗继续求解。卡牌出牌补丁审计使用根可达卡牌，包括战斗牌堆和玩家牌组。玩法订阅器与 Harmony 补丁按当前挂载的入口检查；配置关闭后若仍保留未知战斗入口，需要对应的配置状态合同才能证明它处于空配置。当前门禁并不通用推断任意 Mod 的功能开关。
+
 Power 的原版克隆会重置 `_internalData`。跨根保留的数据必须从原生来源捕获：例如本批苍蓝星球的已触发标记，以及 DarkEmbrace 的虚无消耗延迟计数。DarkEmbrace 后续按实际事件累计并在回合末清零，不能用结束回合前的牌数代替此状态。
 
 ## 1. 求解器默认怎么对待未知内容
@@ -66,6 +68,7 @@ CrabRagePower 的同伴死亡结算由 `AfterDeathMirrors` 独占：力量、格
    胜负判定之后才分发，求解器搜到战斗结束就停）；
 3. 在 `PredictionModHookSubscriberCapture.KnownPreRootSubscriberTypeNames` 白名单里。
 4. Loadout 的 `PowerGiverSummonHook`：主线程检查实际加载的公开计数快照接口及怪物能力配置，把空配置写入续用状态戳。版本号变化不会阻止搜索；接口变化或配置非空时明确失败。这不放行 Loadout 的其他战斗效果。
+5. BaseLib `CardModifier`：侧表状态随预测卡牌独立复制并重绑 Owner，Hook 仍由对应镜像处理。修饰器的战斗监听成员与原生 BaseLib 一致，按玩家五种战斗牌堆枚举；生成牌完成战斗域登记后，在入堆时参与监听，离开所有牌堆后退出监听。复跑使用 `-VerifyBaseLibCardModifierBoundary`，合同直接对照原生生成牌及各牌堆的生命周期。
 
 条件都不满足就抛 `IncompatibleGameplayModException`，整个求解器停摆。
 

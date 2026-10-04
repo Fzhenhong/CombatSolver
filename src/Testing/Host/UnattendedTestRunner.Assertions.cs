@@ -348,6 +348,7 @@ internal sealed partial class UnattendedTestRunner
                 runner.SetStage("base_lib_card_modifier_boundary");
                 await AssertBaseLibCardModifierBoundaryAsync(scenario.CombatState, scenario.Player);
                 runner._completedChecks.Add("BaseLibCardModifierBoundary");
+                runner._completedChecks.Add("BaseLibGeneratedClone:NativeState:Created:Hand:Draw:Discard:Exhaust:Play:Removed");
             }
 
             if (request.ExportBugReportAfterSetup)
