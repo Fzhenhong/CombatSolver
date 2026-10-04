@@ -11,6 +11,7 @@ internal enum DirectSearchPurpose
     EarlyTurnScout,
     NoveltyExploration,
     AdaptiveNoveltyRefinement,
+    NarrowOpeningIncumbent,
 }
 
 internal readonly record struct SearchRequestWorkSnapshot(

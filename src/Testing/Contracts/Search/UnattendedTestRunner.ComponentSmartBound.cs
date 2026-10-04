@@ -95,13 +95,16 @@ internal sealed partial class UnattendedTestRunner
             policy,
             smart with { PotionPolicy = SolverPotionPolicy.RequireAtLeastOne },
             smart with { TheftPolicy = SolverTheftPolicy.PreserveResources },
-            smart with { RelicTargets = [new(RelicCounterId.PenNib, 2, 2, 0, 10)] },
+            smart with { RelicTargets = [new(RelicCounterId.PenNib, 2, 2, 1, 10)] },
             smart with { GrowthOpportunityTargets = GrowthOpportunityTargets.UnboundedForTesting("component_guard") },
             smart with { PotionStrategy = new(SolverPotionPolicy.Smart,
                 [new(0, "COLORLESS_POTION", SolverPotionDirective.Force)]) },
         })
             if (Solver(guarded).ComponentSmartBoundEnabledForTesting)
                 throw new InvalidOperationException("Growth/relic/theft/forced/potion-policy guard ignored.");
+        if (!Solver(smart with { RelicTargets = [new(RelicCounterId.PenNib, 2, 2, 0, 10)] })
+                .ComponentSmartBoundEnabledForTesting)
+            throw new InvalidOperationException("Zero HP allowance relic goal lost its strict Smart certificate.");
         if (Solver(smart, DirectSearchPurpose.PrimaryBeam).ComponentSmartBoundEnabledForTesting)
             throw new InvalidOperationException("Bound enabled outside Smart counterfactual audit.");
         SolverResult candidate = await Task.Run(() => CombatSearchCoordinator.Solve(root, names, damage,

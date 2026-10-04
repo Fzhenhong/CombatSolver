@@ -312,7 +312,8 @@ internal static partial class CombatSearchCoordinator
             SolverResult SolveMember(SolverSearchProfile memberProfile, bool refinement,
                 PrimarySearchIncumbent? primaryIncumbent)
             {
-                if (initialPlanIncumbent != null && !refinement)
+                if ((initialPlanIncumbent != null || passContext.PlanDiscovery.NarrowOpeningIncumbentAttempted)
+                    && !refinement)
                     memberProfile = memberProfile with
                     {
                         SoftTimeBudgetMilliseconds = (int)Math.Clamp(passContext.RemainingMilliseconds,

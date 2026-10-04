@@ -42,36 +42,37 @@ internal static class PersistentPowerSupport
         Player player,
         int baseDraw)
     {
-        decimal result = Hook.ModifyHandDraw(combat, player, baseDraw, out _);
-        result = AdjustTurnBasedRelicHandDraw(combat, player, result);
+        // Preserve the native normal/late listener passes. Audited turn/counter
+        // relics read the branch directly, never Owner.PlayerCombatState in live.
+        decimal result = baseDraw;
+        int simulatedTurn = combat.GetPlayerTurnNumber(player);
+        foreach (AbstractModel listener in combat.IterateHookListeners())
+        {
+            if (listener is RelicModel relic && IsBranchOwnedHandDrawRelic(relic))
+            {
+                if (ReferenceEquals(relic.Owner, player) && !relic.IsMelted)
+                    result += GetTurnBasedHandDrawContribution(relic, combat, simulatedTurn)
+                        + combat.GetStatefulRelicHandDrawContribution(relic, player, simulatedTurn);
+            }
+            else
+                result = listener.ModifyHandDraw(player, result);
+        }
+        foreach (AbstractModel listener in combat.IterateHookListeners())
+            result = listener.ModifyHandDrawLate(player, result);
         return Math.Max(0, (int)result);
     }
+
+    private static bool IsBranchOwnedHandDrawRelic(RelicModel relic)
+        => relic.GetType() == typeof(BagOfPreparation) || relic.GetType() == typeof(BigMushroom)
+            || relic.GetType() == typeof(BoomingConch) || relic.GetType() == typeof(RingOfTheDrake)
+            || relic.GetType() == typeof(RingOfTheSnake) || relic.GetType() == typeof(Pendulum)
+            || relic.GetType() == typeof(Pocketwatch) || relic.GetType() == typeof(PollinousCore);
 
     public static int GetModifiedMaxEnergy(SimulatedCombatState combat, Player player)
     {
         decimal result = Hook.ModifyMaxEnergy(combat, player, player.MaxEnergy);
         result = AdjustTurnBasedRelicMaxEnergy(combat, player, result);
         return Math.Max(0, (int)result);
-    }
-
-    private static decimal AdjustTurnBasedRelicHandDraw(
-        SimulatedCombatState combat,
-        Player player,
-        decimal result)
-    {
-        int rootTurn = combat.GetRootPlayerTurnNumber(player);
-        int simulatedTurn = combat.GetPlayerTurnNumber(player);
-        foreach (RelicModel relic in combat.RelicsOf(player).Where(static relic => !relic.IsMelted))
-        {
-            result -= GetTurnBasedHandDrawContribution(relic, combat, rootTurn);
-            result -= SimulatedCombatState.GetLiveStatefulRelicHandDrawContribution(
-                relic,
-                player,
-                rootTurn);
-            result += GetTurnBasedHandDrawContribution(relic, combat, simulatedTurn);
-            result += combat.GetStatefulRelicHandDrawContribution(relic, player, simulatedTurn);
-        }
-        return result;
     }
 
     private static decimal GetTurnBasedHandDrawContribution(

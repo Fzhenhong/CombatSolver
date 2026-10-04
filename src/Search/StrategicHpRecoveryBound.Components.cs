@@ -26,6 +26,11 @@ internal static partial class StrategicHpRecoveryBound
         typeof(Aggression), typeof(Hemokinesis), typeof(TearAsunder), typeof(Rupture),
         typeof(Fisticuffs), typeof(TheGambit), typeof(DarkEmbrace), typeof(Stoke),
         typeof(InfernalBlade), typeof(JackOfAllTrades), typeof(Jackpot),
+        typeof(Acrobatics), typeof(CorrosiveWave), typeof(FlickFlack),
+        typeof(GrandFinale), typeof(Production), typeof(Ricochet),
+        // Reuse the successful native eight-card mechanism contract on this DLL.
+        typeof(Backstab), typeof(FanOfKnives), typeof(Flechettes), typeof(MasterPlanner),
+        typeof(NoxiousFumes), typeof(Prowess), typeof(Reflex), typeof(RollingBoulder),
     }.ToFrozenSet();
 
     private static readonly FrozenSet<Type> ComponentEnemies = new Type[]
@@ -41,6 +46,10 @@ internal static partial class StrategicHpRecoveryBound
         typeof(IceCream), typeof(TungstenRod), typeof(Kunai),
         typeof(DivineRight), typeof(Girya), typeof(OldCoin), typeof(VitruvianMinion),
         typeof(RingOfTheSnake), typeof(PotionBelt), typeof(Shovel),
+        typeof(Kaleidoscope), typeof(GhostSeed), typeof(Vajra), typeof(RippleBasin),
+        typeof(Whetstone), typeof(VeryHotCocoa), typeof(TuningFork), typeof(FestivePopper),
+        typeof(StrikeDummy), typeof(FakeHappyFlower), typeof(SneckoSkull),
+        typeof(TriBoomerang), typeof(OrnamentalFan), typeof(Permafrost),
     }.ToFrozenSet();
 
     private static bool ComponentInitialCard(CardModel card)
@@ -57,14 +66,12 @@ internal static partial class StrategicHpRecoveryBound
             && HasCertifiedRemainingAttachments(card) && !GrowthValues.HasTarget(card);
 
     private static bool ComponentPotion(Type type)
-        => type == typeof(ColorlessPotion) || type == typeof(BottledPotential)
-            || type == typeof(RegenPotion) || type == typeof(HeartOfIron)
-            || type == typeof(BeetleJuice) || type == typeof(GamblersBrew);
+        => type == typeof(RegenPotion) || NativeZeroRecoveryPotions.Contains(type);
 
     private static bool ComponentPower(Type type)
         => type == typeof(RegenPower) || type == typeof(ReattachPower)
             || RemainingSafePowers.Contains(type) || NativeNonHealingGeneratedPowers.Contains(type)
-            || NativeLouseClosure.Powers.Contains(type);
+            || NativeLouseClosure.Powers.Contains(type) || NativePotionZeroRecoveryPowers.Contains(type);
 
     // Called only at the stable main-thread root. The permanent deck prefix must be
     // checked independently: an unknown source cannot disappear into Exhaust and
@@ -82,8 +89,8 @@ internal static partial class StrategicHpRecoveryBound
             && character != typeof(Regent) && character != typeof(Necrobinder)
             && character != typeof(MegaCrit.Sts2.Core.Models.Characters.Defect))
             return "character:" + character.Name;
-        if (combat.Modifiers.Count != 0 || combat.RootRunModSubscriberCount != 0
-            || combat.RootCombatModSubscriberCount != 0 || combat.RootHasBaseLibCardModifiers
+        if (combat.Modifiers.Count != 0 || !combat.RootHasCertifiedNonHealingSubscribers
+            || combat.RootHasBaseLibCardModifiers
             || combat.AdaptedOnPlay is not null)
             return "extension";
         var state = simulator.State.GetPlayerCombatState(player);
@@ -98,7 +105,9 @@ internal static partial class StrategicHpRecoveryBound
                 PowerModel power => ComponentPower(power.GetType()),
                 MonsterModel monster => ComponentEnemies.Contains(monster.GetType()),
                 PotionModel potion => ComponentPotion(potion.GetType()),
-                _ => source.GetType() == typeof(CccComboModel)
+                _ => combat.IsCertifiedNonHealingSubscriberSource(source)
+                    || source.GetType() == typeof(global::MegaCrit.Sts2.Core.Models.Enchantments.Instinct)
+                    || source.GetType() == typeof(CccComboModel)
                     || source.GetType() == typeof(DebufferModel)
                     || source.GetType() == typeof(MultiplayerScalingModel),
             };
@@ -120,7 +129,9 @@ internal static partial class StrategicHpRecoveryBound
 
     internal static int ComponentHealingUpperBound(
         CombatPredictionSimulator simulator, Player player, int postCombatHeal,
-        bool includePotionHealing = true, int? maximumExplicitPotionUses = null)
+        bool includePotionHealing = true, int? maximumExplicitPotionUses = null,
+        PotionStrategySnapshot? potionStrategy = null,
+        SolverPotionPolicy effectivePotionPolicy = SolverPotionPolicy.Smart)
     {
         if (simulator.HasPendingChoice)
             return int.MaxValue;
@@ -166,7 +177,9 @@ internal static partial class StrategicHpRecoveryBound
             // Existing Regen is retained even when manual potion use is forbidden.
             // Summing all legally available doses before the first tick overestimates
             // every staggered sequence, including a smaller remaining use allowance.
-            if (includePotionHealing && potion.GetType() == typeof(RegenPotion))
+            if (includePotionHealing && potion.GetType() == typeof(RegenPotion)
+                && (potionStrategy is null || potionStrategy.AllowsExplicitUse(
+                    slot, potion.Id.Entry, effectivePotionPolicy, forceAllDisabled: false)))
                 regen += Math.Max(0, potion.DynamicVars["RegenPower"].IntValue);
         }
         return RegenerationHealingUpperBound(regen, postCombatHeal);

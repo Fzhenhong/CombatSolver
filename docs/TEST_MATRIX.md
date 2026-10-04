@@ -149,6 +149,10 @@ L0：原生回复审计工具迁入tools/inspection后构建和真实DLL扫描�
 
 组件回复界及 Smart 原生合同通过，固定29根回归仍保留女王质量阻断；用户暂停丢路调查，未称全回归通过。完整实测、所有失败及未验证项见[组合上界](performance/component-healing-bound-20261003.md)、[原生组件审计](performance/native-healing-component-audit-20261003.md)和[组合研究](performance/heavy-scene-compositions-20261004.md)。合并前各合同、runId、平台清理与初筛范围完整保留于[固定提交的测试记录](https://github.com/ltlly/CombatSolver/blob/1bea4f8a/docs/TEST_MATRIX.md)。
 
-[全药水审计](performance/native-potion-recovery-certificates-20261004.md)记录64种有效原版药水的分类及58种有条件零回复准入；`14eef45cfeb04fc7bb137f9cec2a8c08` 最小原生合同Passed，全部64种实际用药及最终闭包未完成。[魂枢复现](performance/soul-nexus-0491-research-20261004.md)记录严格Continuation恢复、整请求312.20秒基线及独立分配诊断，完整原生二进制仍未验证。新增监听者分配原型的首次合同 `2283f3757afc4676b9102fd732393e4d` 因既有GoldCallbacks反射oracle错误失败；更正为三个原生金币回调的并集后，`f99dd720ef0b4b49831d75dcc41d071e` Passed，1685模型/63监听位/完整顺序/Fork/失效/补丁与共享布局合同通过。原型仍未完成整请求及最终回归。
+[全药水审计](performance/native-potion-recovery-certificates-20261004.md)记录64种有效原版药水的分类及58种有条件零回复准入；`14eef45cfeb04fc7bb137f9cec2a8c08` 最小原生合同Passed，全部64种实际用药及最终闭包未完成。[魂枢证据](performance/soul-nexus-0491-research-20261004.md)记录严格Continuation恢复、拟提交版本完整请求ABBA：上游311.39／315.50秒，候选96.02／96.66秒，中位数3.254倍，最差峰值降低50.75%，战损19→6、药水0→1、回合8→5，遗物计数目标满足数2→1；完整原生二进制仍未验证。四次搜索合同Passed，最后上游启动器退出1的身份确认异常及进程/实例清理单列。完整原生部署 `85a6c2eaf9ff495fafba556392362d86` Passed，第5回合63/70生命、StrengthPotion、非预期重算0。其他27个固定根同版本串行回归全部通过：完整根/预算/政策相等，24胜/原有3 NoWin保持，战损、保命、追回及同战损次级目标无退化，峰值最大+7.503%。女王两根按用户暂停要求排除，不能称原29根全量通过。
+
+魂枢机制新增合同：`373890e75fa0483db84b5ffd9a8121d0` Passed，实际用药、两回合完整状态、16 Fork/RNG/父分支/live隔离、禁药与额度仍保留已有再生、未知源拒绝、生成过滤及DOP2严格增量/完整重播。`b9a5e01156fb476d8dfcfb9ece2c0e6b` Passed，8遗物/68抽牌查询及冻结隔离，启动器退出1异常单列；查询不代替完整生命周期。拟提交版本 `965c558fc8d341a9afffb821c6d61468` Smart合同Passed，完整无药胜利、精确7次/后续2次剪枝及原政策门禁。
+
+新增监听者分配原型的首次合同 `2283f3757afc4676b9102fd732393e4d` 因既有GoldCallbacks反射oracle错误失败；更正后 `f99dd720ef0b4b49831d75dcc41d071e` Passed，1685模型/63监听位/完整顺序/Fork/失效/补丁合同通过。整请求317.18秒、0.984倍，未提速，未纳入拟提交版本。其余失败构建、内部短搜取消及未提速候选均在魂枢报告保留。
 
 上游合并后的合同原文归位：组件回复界和Smart资格移入 `Contracts/Search`；双平台门禁由两条根目录违规修正为Passed、search_files=248，Release构建0警告错误。原生 `01d1255ecab441e0825ac28d14135597` Passed：完整无药胜利见证，精确层7次/开局后续2次实际剪枝、药水/成长/遗物/追回门禁、DOP2严格增量及完整协调器/live隔离；实例清理。代表合同不代替合并后固定29根回归。

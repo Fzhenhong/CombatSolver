@@ -33,11 +33,16 @@ internal sealed partial class CombatBeamSolver
             : null;
 
     internal static bool CanUseComponentSmartPotionEligibility(CombatRootSnapshot root, SearchPolicySnapshot policy)
-        => root.UsesComponentHealingCertificate && root.InitialRemainingHealingUpperBound == 0
+        => root.UsesComponentHealingCertificate
             && root.SearchablePotions.Count > 0 && policy.PotionPolicy == SolverPotionPolicy.Smart
             && !policy.PotionStrategy.HasForcedDirectives
-            && !policy.EffectiveHasGrowthTargets && policy.RelicTargets.Count == 0
-            && policy.TheftPolicy != SolverTheftPolicy.PreserveResources;
+            && !policy.EffectiveHasGrowthTargets
+            && (policy.RelicTargets.Count == 0 || CanUseStrictHpRelicBound(root, policy))
+            && policy.TheftPolicy != SolverTheftPolicy.PreserveResources
+            && (root.InitialRemainingHealingUpperBound == 0
+                || StrategicHpRecoveryBound.ComponentHealingUpperBound(root.ForkSimulator(),
+                    root.PlayerIdentity, postCombatHeal: 0,
+                    potionStrategy: policy.PotionStrategy, effectivePotionPolicy: policy.PotionPolicy) == 0);
 
     private int _smartPotionEligibilityBranchesPruned;
     internal bool ComponentSmartBoundEnabledForTesting => _smartPotionEligibilityHpCeiling is not null;

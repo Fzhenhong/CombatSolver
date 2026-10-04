@@ -1398,7 +1398,7 @@ foreach ($healingBoundary in @(
     @('src/Search/CombatBeamSolver.Retention.cs', 'targets.All(target => target.HpAllowance == 0)'),
     @('src/Search/CombatBeamSolver.Retention.cs', 'allowTurnTieBound: !_strictHpBoundWithRelicTargets'),
     @('src/Search/CombatSearchCoordinator.cs', '!CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)'),
-    @('src/Search/CombatSearchCoordinator.PlanSearch.cs', 'if (!context.Root.CanCertifyRemainingHealing')
+    @('src/Search/CombatSearchCoordinator.PlanSearch.cs', 'if (!root.CanCertifyRemainingHealing')
 )) {
     if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot $healingBoundary[0]) -SimpleMatch $healingBoundary[1] -Quiet)) {
         $violations.Add("Missing common healing-bound policy: $($healingBoundary[0])")

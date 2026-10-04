@@ -71,6 +71,9 @@ internal sealed partial class SimulatedCombatState
     internal bool HasInactiveLoadoutSummonPowers => _modHookSubscribers.HasInactiveLoadoutSummonPowers;
     internal bool RootHasOnlyNonHealingLoadoutSubscribers
         => _modHookSubscribers.HasOnlyNonHealingLoadoutSubscribers;
+    internal bool RootHasCertifiedNonHealingSubscribers => _modHookSubscribers.HasCertifiedNonHealingSubscribers;
+    internal bool IsCertifiedNonHealingSubscriberSource(AbstractModel source)
+        => _modHookSubscribers.IsCertifiedNonHealingSubscriberSource(source);
     private readonly IReadOnlyDictionary<Player, int> _rootMaxHandSizes;
     private readonly RootCombatCardGenerationPoolSnapshot _rootCardGenerationPools;
     private readonly RootCombatTransformationPoolSnapshot _rootTransformationPools;
