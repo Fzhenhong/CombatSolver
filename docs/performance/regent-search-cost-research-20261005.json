@@ -1,0 +1,2594 @@
+{
+  "scope": "Research only; formal PR207 C422 runtime unchanged; pending PR215 shared table reused.",
+  "baseDllSha256": "0fa5b354cc0b82e8d63aa4b35bdf78f6469c1ef767f9a57cfe7743f6216aeaef",
+  "nativeDllSha256": "2b40d2df538db1ceb5fa48d958c80ab730ada1e07db88a870aff01a661768b9f",
+  "cpuDiagnostic": {
+    "purpose": "diagnostics only; not performance acceptance",
+    "sourceDll": "0fa5b354cc0b82e8d63aa4b35bdf78f6469c1ef767f9a57cfe7743f6216aeaef",
+    "managedTrace": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/profile-thread-time/trace.speedscope.json",
+    "managedTraceLimit": "sampled thread time includes waits; cannot identify CPU cost from inclusive wall time",
+    "cpuEvent": "cycles:u",
+    "frequencyHz": 199,
+    "clock": "CLOCK_MONOTONIC (perf -k1)",
+    "window": "approximate, after narrow-pilot completion minus450ms; derived from log realtime with current realtime/monotonic offset",
+    "includedSamples": 16505,
+    "unresolvedManagedSamples": 716,
+    "topCpuLeaves": [
+      {
+        "symbol": "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/libcoreclr.so:unresolved-native-leaf",
+        "estimatedCycles": 81869772603,
+        "percent": 27.225381967357727,
+        "samples": 4195
+      },
+      {
+        "symbol": "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/libclrjit.so:unresolved-native-leaf",
+        "estimatedCycles": 18783053979,
+        "percent": 6.246210326875083,
+        "samples": 910
+      },
+      {
+        "symbol": "/memfd:doublemapper (deleted):unresolved-managed-leaf",
+        "estimatedCycles": 12568742769,
+        "percent": 4.179672324177817,
+        "samples": 716
+      },
+      {
+        "symbol": "/usr/lib/ld-linux-x86-64.so.2:unresolved-native-leaf",
+        "estimatedCycles": 7582731990,
+        "percent": 2.5215994648589968,
+        "samples": 387
+      },
+      {
+        "symbol": "instance !1& [System.Private.CoreLib] System.Collections.Generic.Dictionary`2[System.__Canon,System.__Canon]::FindValue(!0)",
+        "estimatedCycles": 4552971931,
+        "percent": 1.5140679638774406,
+        "samples": 274
+      },
+      {
+        "symbol": "/usr/share/dotnet/shared/Microsoft.NETCore.App/9.0.19/System.Private.CoreLib.dll:unresolved-native-leaf",
+        "estimatedCycles": 4345543853,
+        "percent": 1.4450887976387654,
+        "samples": 228
+      },
+      {
+        "symbol": "/usr/lib/libc.so.6:unresolved-native-leaf",
+        "estimatedCycles": 3959009430,
+        "percent": 1.3165487153212336,
+        "samples": 694
+      },
+      {
+        "symbol": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)",
+        "estimatedCycles": 2898008141,
+        "percent": 0.9637180619254112,
+        "samples": 160
+      },
+      {
+        "symbol": "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)",
+        "estimatedCycles": 2527862051,
+        "percent": 0.8406278374925086,
+        "samples": 136
+      },
+      {
+        "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfClass(void*,object)",
+        "estimatedCycles": 2401076757,
+        "percent": 0.7984660243196299,
+        "samples": 115
+      },
+      {
+        "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfClass(void*,object)[InstrumentedTierOptimized]",
+        "estimatedCycles": 2192494396,
+        "percent": 0.7291030070627552,
+        "samples": 110
+      },
+      {
+        "symbol": "instance bool [CombatSolver] CombatSolver.SimulatedCombatState+ConcatenatedListenerView+<GetEnumerator>d__13::MoveNext()",
+        "estimatedCycles": 2101630006,
+        "percent": 0.6988865102248207,
+        "samples": 102
+      },
+      {
+        "symbol": "instance class [sts2]MegaCrit.Sts2.Core.Models.CardModel [CombatSolver] CombatSolver.Engine.Common.PredictedCard::get_Preview()",
+        "estimatedCycles": 2042504392,
+        "percent": 0.679224584045908,
+        "samples": 108
+      },
+      {
+        "symbol": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,valuetype CombatSolver.SearchBoundaryReason,class [System.Runtime]System.Collections.Generic.IReadOnlySet`1<uint32>)",
+        "estimatedCycles": 1887044149,
+        "percent": 0.6275270605052337,
+        "samples": 97
+      },
+      {
+        "symbol": "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfInterface(void*,object)",
+        "estimatedCycles": 1850649701,
+        "percent": 0.6154242694898495,
+        "samples": 111
+      },
+      {
+        "symbol": "valuetype CombatSolver.StrategicEffectContext [CombatSolver] CombatSolver.StrategicEffectContext::Build(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,int32,int32,int32,valuetype CombatSolver.StrategicEffectRequirements,bool)",
+        "estimatedCycles": 1679982904,
+        "percent": 0.5586698827395407,
+        "samples": 79
+      },
+      {
+        "symbol": "instance int32 [CombatSolver] CombatSolver.SimulatedCombatState::GetAmount(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+        "estimatedCycles": 1654813146,
+        "percent": 0.5502998060459253,
+        "samples": 103
+      },
+      {
+        "symbol": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::GetBaseHookListeners()",
+        "estimatedCycles": 1499695111,
+        "percent": 0.4987160820580781,
+        "samples": 84
+      },
+      {
+        "symbol": "instance void [CombatSolver] CombatSolver.StateFingerprintBuilder::Add(uint64)",
+        "estimatedCycles": 1447383082,
+        "percent": 0.48131997937291804,
+        "samples": 63
+      },
+      {
+        "symbol": "void [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::StelemRef_Helper(object&,void*,object)",
+        "estimatedCycles": 1431280798,
+        "percent": 0.4759652456475332,
+        "samples": 77
+      },
+      {
+        "symbol": "void [CombatSolver] CombatSolver.CombatBeamSolver::AppendCyclePileShape(valuetype CombatSolver.StateFingerprintBuilder&,class CombatSolver.Engine.Common.SimCardPile,char)",
+        "estimatedCycles": 1409739043,
+        "percent": 0.46880164314229367,
+        "samples": 77
+      },
+      {
+        "symbol": "instance int32 [System.Private.CoreLib] System.Collections.Generic.ObjectEqualityComparer`1[System.__Canon]::GetHashCode(!0)",
+        "estimatedCycles": 1297712457,
+        "percent": 0.4315477642395289,
+        "samples": 62
+      },
+      {
+        "symbol": "class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::RemapCachedModels(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "estimatedCycles": 1256902756,
+        "percent": 0.4179767029995476,
+        "samples": 76
+      },
+      {
+        "symbol": "instance valuetype [System.Runtime]System.ValueTuple`2<valuetype CombatSolver.StateFingerprint,int32> [CombatSolver] CombatSolver.CombatBeamSolver::BuildProjectedShuffleOrder(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.Engine.Common.PredictedCard>)",
+        "estimatedCycles": 1249089044,
+        "percent": 0.41537829229167256,
+        "samples": 74
+      },
+      {
+        "symbol": "instance bool [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerLayout::Matches(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>)",
+        "estimatedCycles": 1219576788,
+        "percent": 0.4055641396835462,
+        "samples": 70
+      }
+    ],
+    "nativeCallers": {
+      "scope": "CPU cycles leaf in coreclr grouped by nearest resolved non-stub managed caller from frame-pointer chains; uncovered native frames retained. Not inclusive CPU distribution of all search or performance acceptance.",
+      "coveredCycles": 80296246566,
+      "uncoveredCycles": 1573526037,
+      "nearestManagedCallers": [
+        [
+          "instance class System.Reflection.MethodBase [System.Private.CoreLib] System.RuntimeType+RuntimeTypeCache+MemberInfoCache`1[System.__Canon]::AddMethod(class System.RuntimeType,valuetype System.RuntimeMethodHandleInternal,valuetype System.RuntimeType/RuntimeTypeCache/CacheType)[OptimizedTier1]",
+          5361332205
+        ],
+        [
+          "valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Interop.CoreCLR+V60::InvokeCompileMethod(native int,native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)[OptimizedTier1]",
+          3280442796
+        ],
+        [
+          "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)[OptimizedTier1]",
+          2797543962
+        ],
+        [
+          "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfClass(void*,object)[InstrumentedTierOptimized]",
+          2374487921
+        ],
+        [
+          "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)[QuickJitted]",
+          1327812219
+        ],
+        [
+          "instance bool [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerLayout::Matches(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>)[QuickJitted]",
+          1258784979
+        ],
+        [
+          "instance bool [System.Private.CoreLib] System.Threading.WaitHandle::WaitOneNoCheck(int32,bool,object,valuetype System.Diagnostics.Tracing.NativeRuntimeEventSource/WaitHandleWaitSourceMap)[OptimizedTier1]",
+          1052059364
+        ],
+        [
+          "valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Interop.CoreCLR+V60::InvokeCompileMethod(native int,native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)[InstrumentedTier]",
+          1003284427
+        ],
+        [
+          "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)[QuickJitted]",
+          972901830
+        ],
+        [
+          "instance void [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedJobWave::Publish(class CombatSolver.CombatBeamSolver/AdmittedJobOutcome)[OptimizedTier1]",
+          965874616
+        ],
+        [
+          "instance int32 [System.Private.CoreLib] System.Collections.Generic.ObjectEqualityComparer`1[System.__Canon]::GetHashCode(!0)[InstrumentedTierOptimized]",
+          921330996
+        ],
+        [
+          "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)[InstrumentedTier]",
+          909640132
+        ],
+        [
+          "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfInterface(void*,object)[InstrumentedTierOptimized]",
+          902365531
+        ],
+        [
+          "instance object [System.Private.CoreLib] System.Object::MemberwiseClone()[OptimizedTier1]",
+          778271512
+        ],
+        [
+          "instance bool [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionCreatureSemantics.IsPrimaryEnemy(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature)[QuickJitted]",
+          647459207
+        ],
+        [
+          "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)[InstrumentedTier]",
+          635389926
+        ],
+        [
+          "instance int32 [System.Private.CoreLib] System.Runtime.CompilerServices.ConditionalWeakTable`2+Container[System.__Canon,System.__Canon]::FindEntry(!0,object&)[OptimizedTier1]",
+          626270466
+        ],
+        [
+          "instance bool [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerLayout::Matches(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>)[InstrumentedTier]",
+          619801392
+        ],
+        [
+          "instance !1& [System.Private.CoreLib] System.Collections.Generic.Dictionary`2[System.__Canon,System.__Canon]::FindValue(!0)[InstrumentedTierOptimized]",
+          606948055
+        ],
+        [
+          "instance class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel [CombatSolver] CombatSolver.SimulatedCombatState+ConcatenatedListenerView::get_Item(int32)[InstrumentedTier]",
+          592054058
+        ],
+        [
+          "instance class CombatSolver.CombatBeamSolver/ReplayForkSeed [CombatSolver] CombatSolver.CombatBeamSolver::PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,object)[OptimizedTier1]",
+          570925735
+        ],
+        [
+          "instance void [sts2] MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVarSet::.ctor(class [System.Runtime]System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar>)[OptimizedTier1]",
+          529030994
+        ],
+        [
+          "instance bool [System.Private.CoreLib] System.Collections.Generic.List`1+Enumerator[System.__Canon]::MoveNext()[InstrumentedTierOptimized]",
+          489487673
+        ],
+        [
+          "instance bool [CombatSolver] CombatSolver.SimulatedCombatState+ConcatenatedListenerView+<GetEnumerator>d__13::MoveNext()[QuickJitted]",
+          485889645
+        ],
+        [
+          "instance bool [sts2] MegaCrit.Sts2.Core.Hooks.Hook+<IterateCombatHookListeners>d__0::MoveNext()[QuickJitted]",
+          467592085
+        ],
+        [
+          "instance bool [System.Private.CoreLib] System.Collections.Generic.Dictionary`2[System.__Canon,System.__Canon]::TryGetValue(!0,!1&)[InstrumentedTierOptimized]",
+          466671371
+        ],
+        [
+          "instance int32 [System.Private.CoreLib] System.Collections.Generic.ObjectEqualityComparer`1[System.__Canon]::IndexOf(!0[],!0,int32,int32)[InstrumentedTierOptimized]",
+          450131043
+        ],
+        [
+          "valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Interop.CoreCLR+V60::InvokeCompileMethod(native int,native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)[QuickJitted]",
+          449165930
+        ],
+        [
+          "bool [System.Private.CoreLib] Interop+Kernel32::SetEvent(class Microsoft.Win32.SafeHandles.SafeWaitHandle)[OptimizedTier1]",
+          441830687
+        ],
+        [
+          "object [System.Private.CoreLib] System.Runtime.CompilerServices.CastHelpers::IsInstanceOfAny(void*,object)[InstrumentedTierOptimized]",
+          436054026
+        ]
+      ]
+    },
+    "analysisCorrections": [
+      "first native-caller analysis ran before perf script completed; zero-result replaced after conversion completion",
+      "first window used default MONOTONIC_RAW assumption despite explicit perf -k1; corrected to MONOTONIC without rerunning search"
+    ],
+    "artifactDirectory": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/profile-cpu"
+  },
+  "allocationDiagnostic": {
+    "diagnosticOnly": true,
+    "inputDllHash": "0fa5b354cc0b82e8d63aa4b35bdf78f6469c1ef767f9a57cfe7743f6216aeaef",
+    "command": {
+      "command": [
+        "/home/ltlly/.dotnet/tools/dotnet-trace",
+        "collect",
+        "--profile",
+        "gc-verbose",
+        "--format",
+        "NetTrace",
+        "--output",
+        "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/profile-allocation/allocation.nettrace",
+        "--show-child-io",
+        "--",
+        "dotnet",
+        "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll",
+        "--request",
+        "/home/ltlly/Code/nmslmod/CombatSolver-perf-20261001/.local/veryhigh-dop16/frozen-corpus/requests/dev-08-regent-boss.json",
+        "--label",
+        "regent-shared-proof-allocation-diagnostic",
+        "--out",
+        "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/profile-allocation/run",
+        "--dop",
+        "16",
+        "--budget-ms",
+        "300000",
+        "--potion-policy",
+        "Smart",
+        "--search-mode",
+        "Coordinator",
+        "--profile",
+        "VeryHigh",
+        "--use-portfolio",
+        "--production-budget",
+        "--enable-no-gc-region",
+        "--no-gc-region-budget-gigabytes",
+        "16"
+      ],
+      "dll": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/source/build/CombatSolver.dll",
+      "diagnosticOnly": true,
+      "outerTimeoutSeconds": 120
+    },
+    "completeness": {
+      "status": "StrictConversionSucceeded",
+      "allowIncomplete": false,
+      "conversionReportedTruncated": null
+    },
+    "traceEventsLost": 0,
+    "allIncludedSamples": {
+      "sampleCount": 125095,
+      "estimatedBytes": 13401153560,
+      "samplesWithoutStack": 0,
+      "samplesWithUnresolvedOnlyStack": 0,
+      "samplesWithSomeUnresolvedFrames": 232,
+      "firstSampleMs": 19.118104,
+      "lastSampleMs": 18272.925469
+    },
+    "confirmedSearch": {
+      "sampleCount": 118728,
+      "estimatedBytes": 12719783016,
+      "samplesWithoutStack": 0,
+      "samplesWithUnresolvedOnlyStack": 0,
+      "samplesWithSomeUnresolvedFrames": 28,
+      "firstSampleMs": 2317.25582,
+      "lastSampleMs": 18133.810434
+    },
+    "searchCategories": [
+      {
+        "key": "Other",
+        "totals": {
+          "sampleCount": 63467,
+          "estimatedBytes": 6818976592,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 25,
+          "firstSampleMs": 2317.25582,
+          "lastSampleMs": 18133.810434
+        }
+      },
+      {
+        "key": "Fork",
+        "totals": {
+          "sampleCount": 36953,
+          "estimatedBytes": 3939292408,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2580.580288,
+          "lastSampleMs": 18125.122453
+        }
+      },
+      {
+        "key": "SnapshotStateEvaluation",
+        "totals": {
+          "sampleCount": 16780,
+          "estimatedBytes": 1798624152,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 3,
+          "firstSampleMs": 2353.777662,
+          "lastSampleMs": 18125.206886
+        }
+      },
+      {
+        "key": "History",
+        "totals": {
+          "sampleCount": 1370,
+          "estimatedBytes": 146049248,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2678.651233,
+          "lastSampleMs": 18120.842957
+        }
+      },
+      {
+        "key": "ProjectedShuffle",
+        "totals": {
+          "sampleCount": 158,
+          "estimatedBytes": 16840616,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 3110.516799,
+          "lastSampleMs": 18116.649887
+        }
+      }
+    ],
+    "topSearchTypes": [
+      {
+        "key": "Entry[]",
+        "totals": {
+          "sampleCount": 6502,
+          "estimatedBytes": 693169368,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2679.366281,
+          "lastSampleMs": 18131.988524
+        }
+      },
+      {
+        "key": "CombatSolver.Engine.Common.PredictedCard",
+        "totals": {
+          "sampleCount": 4949,
+          "estimatedBytes": 527554816,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2744.555688,
+          "lastSampleMs": 18125.122453
+        }
+      },
+      {
+        "key": "CombatSolver.Engine.Common.PredictedCard[]",
+        "totals": {
+          "sampleCount": 4243,
+          "estimatedBytes": 452318168,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2711.008719,
+          "lastSampleMs": 18124.464756
+        }
+      },
+      {
+        "key": "MegaCrit.Sts2.Core.Models.AbstractModel[]",
+        "totals": {
+          "sampleCount": 4062,
+          "estimatedBytes": 432986920,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2551.693059,
+          "lastSampleMs": 18132.385929
+        }
+      },
+      {
+        "key": "System.Int32[]",
+        "totals": {
+          "sampleCount": 3938,
+          "estimatedBytes": 424200264,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2579.245426,
+          "lastSampleMs": 18126.034781
+        }
+      },
+      {
+        "key": "CombatSolver.SimulatedCombatState",
+        "totals": {
+          "sampleCount": 3153,
+          "estimatedBytes": 336115928,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2703.996035,
+          "lastSampleMs": 18124.479885
+        }
+      },
+      {
+        "key": "Entry[MegaCrit.Sts2.Core.Entities.Creatures.Creature,System.Int32][]",
+        "totals": {
+          "sampleCount": 2254,
+          "estimatedBytes": 240282832,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2688.937435,
+          "lastSampleMs": 18121.149728
+        }
+      },
+      {
+        "key": "Enumerator[MegaCrit.Sts2.Core.Entities.Creatures.Creature]",
+        "totals": {
+          "sampleCount": 1907,
+          "estimatedBytes": 203299904,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2691.552936,
+          "lastSampleMs": 18124.253889
+        }
+      },
+      {
+        "key": "System.Collections.Generic.Dictionary`2[MegaCrit.Sts2.Core.Entities.Creatures.Creature,System.Int32]",
+        "totals": {
+          "sampleCount": 1847,
+          "estimatedBytes": 196889600,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2679.991816,
+          "lastSampleMs": 18121.008306
+        }
+      },
+      {
+        "key": "CombatSolver.SimulationSnapshot",
+        "totals": {
+          "sampleCount": 1782,
+          "estimatedBytes": 189972192,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2634.439101,
+          "lastSampleMs": 18121.889413
+        }
+      },
+      {
+        "key": "ConcatenatedListenerView",
+        "totals": {
+          "sampleCount": 1595,
+          "estimatedBytes": 170021224,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2704.64212,
+          "lastSampleMs": 18117.104964
+        }
+      },
+      {
+        "key": "Entry[System.String,MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar][]",
+        "totals": {
+          "sampleCount": 1556,
+          "estimatedBytes": 165872936,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2704.86528,
+          "lastSampleMs": 18123.218003
+        }
+      },
+      {
+        "key": "Slot[]",
+        "totals": {
+          "sampleCount": 1546,
+          "estimatedBytes": 164814280,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2749.392249,
+          "lastSampleMs": 18122.280026
+        }
+      },
+      {
+        "key": "System.Collections.Generic.Dictionary`2[System.String,MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVar]",
+        "totals": {
+          "sampleCount": 1499,
+          "estimatedBytes": 159817040,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2705.429267,
+          "lastSampleMs": 18121.225594
+        }
+      },
+      {
+        "key": "CombatSolver.SearchNode[]",
+        "totals": {
+          "sampleCount": 1480,
+          "estimatedBytes": 158304656,
+          "samplesWithoutStack": 0,
+          "samplesWithUnresolvedOnlyStack": 0,
+          "samplesWithSomeUnresolvedFrames": 0,
+          "firstSampleMs": 2767.909364,
+          "lastSampleMs": 18128.01141
+        }
+      }
+    ],
+    "nearestOwnedCallerGroups": {
+      "scope": "selected top5000 stack groups, weighted allocation samples; nearest resolved owned caller only, not inclusive total CPU or retained bytes",
+      "estimatedBytesInGroups": 2767395472,
+      "callers": [
+        [
+          "CombatSolver.Engine.Common.PredictionUtils.CloneModelForSimulation(!!0)",
+          332541704
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          322993472
+        ],
+        [
+          "CombatSolver.Engine.Common.SimCardPile.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          283149680
+        ],
+        [
+          "CombatSolver.Engine.Common.MirroredHookListenerFilter.Filter(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)",
+          258542880
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.RankBest(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>,int32,bool,bool,bool,class System.Action`1<value class GlobalRetentionDecision>)",
+          154951456
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Fork()",
+          122832544
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.GetBaseHookListeners()",
+          107143560
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,value class CombatSolver.SearchBoundaryReason,class System.Collections.Generic.IReadOnlySet`1<unsigned int32>)",
+          106936888
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.SelectActionCandidates(class CombatSolver.SearchNode,class System.Collections.Generic.List`1<value class ActionCandidate>)",
+          78866472
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.CommitExpansionBatch(class CombatSolver.SearchNode,class ExpansionBatch,class System.Action`1<class CombatSolver.SearchNode>)",
+          77811496
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.BuildCandidate(class CombatSolver.SimulationSnapshot,class CombatSolver.SimulationSnapshot,class CombatSolver.SearchNode,value class MegaCrit.Sts2.Core.Entities.Cards.CardType,value class System.Nullable`1<unsigned int32>)",
+          67364496
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.CaptureEnergyRefundWindow(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,value class CombatSolver.StrategicEffectContext,bool)",
+          57792248
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.TryAcceptTransposition(class CombatSolver.SearchNode)",
+          47222448
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+AdmittedJobScheduler.NextJob(int32,value class System.Nullable`1<value class SerialJobPhase>)",
+          46993272
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.FindBestLane(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,value class CombatSolver.SearchRouteTraits)",
+          41103224
+        ],
+        [
+          "CombatSolver.Engine.Common.PredictedCard.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          40930480
+        ],
+        [
+          "CombatSolver.OwnedExpansionBatch`3+Storage[System.__Canon,CombatSolver.CombatBeamSolver+RawCardCandidate,System.__Canon]..ctor()",
+          40893888
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AdmitCycleProbeCandidate(class System.Collections.Generic.IReadOnlyList`1<value class ActionCandidate>,class System.Collections.Generic.List`1<value class ActionCandidate>)",
+          35704728
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.SolveCore()",
+          34529440
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AdmitExistingCycleProbeLease(class System.Collections.Generic.IReadOnlyList`1<value class ActionCandidate>,class System.Collections.Generic.List`1<value class ActionCandidate>,int32)",
+          34425120
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AnnotateTurnOutcomes(class System.Collections.Generic.List`1<class CombatSolver.SearchNode>)",
+          33840640
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass225_0.<AdmitCycleProbeCandidate>b__2(value class ActionCandidate)",
+          28876176
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.CreatePlannedCardChild(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot)",
+          25480536
+        ],
+        [
+          "CombatSolver.SearchNode.<Clone>$()",
+          21954648
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class CombatSolver.Engine.Common.PredictedCard,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+          20679632
+        ],
+        [
+          "CombatSolver.Engine.Common.PredictedCard+PreviewStorage.RegisterIdentity(class MegaCrit.Sts2.Core.Models.CardModel,class MegaCrit.Sts2.Core.Models.CardModel)",
+          20562736
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+AdmittedParent.Receive(class AdmittedJobOutcome)",
+          15561032
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.TryMarkExpandedState(class CombatSolver.SearchNode)",
+          14684016
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+<ResolvePrimaryCardChoiceLayer>d__383.MoveNext()",
+          12896032
+        ],
+        [
+          "CombatSolver.StrategicEffectContext.Build(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,int32,int32,int32,value class CombatSolver.StrategicEffectRequirements,bool)",
+          12687696
+        ],
+        [
+          "CombatSolver.Engine.Common.PredictionTrace..ctor()",
+          10875304
+        ],
+        [
+          "CombatSolver.ForkableList`1[System.__Canon].System.Collections.Generic.IEnumerable<T>.GetEnumerator()",
+          9733952
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          9491312
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,class System.String,class System.String,int32,value class CardExecutionStage,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+          8852496
+        ],
+        [
+          "CombatSolver.Engine.Common.PredictionStateStore.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          8528000
+        ],
+        [
+          "CombatSolver.OwnedExpansionBatch`3[System.__Canon,CombatSolver.CombatBeamSolver+RawCardCandidate,System.__Canon].Own(!0)",
+          7784936
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.ForkHistoryCourseCards(class System.Collections.Generic.Dictionary`2<class MegaCrit.Sts2.Core.Entities.Players.Player,class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          7351512
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.PublishCrossTurnStandPatBaselines(class CombatSolver.SearchNode,class System.Collections.Generic.IReadOnlyList`1<value class CombatSolver.CrossTurnStandPatBaseline>)",
+          7031712
+        ],
+        [
+          "CombatSolver.PredictionCoverage+<CollectUniqueGaps>d__1.MoveNext()",
+          6932984
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.Draw(class MegaCrit.Sts2.Core.Entities.Players.Player,int32,bool)",
+          6397320
+        ],
+        [
+          "CombatSolver.PowerTurnFrontier.Prune(class System.Collections.Generic.List`1<value class System.ValueTuple`5<int32,int32,int32,int32,bool>>,int32)",
+          5330864
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.BuildAmbiguousCompressedChoicePortfolio(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,int32)",
+          5314976
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.FindBestStandPat(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,value class CombatSolver.SearchRouteTraits)",
+          5011632
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.AddToPile(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.SimCardPile,value class MegaCrit.Sts2.Core.Entities.Cards.CardPilePosition,bool)",
+          4796976
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.ForkCardDictionary(class System.Collections.Generic.Dictionary`2<class CombatSolver.Engine.Common.PredictedCard,int32>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          4689568
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState+AllCardsEnumerable.System.Collections.Generic.IEnumerable<CombatSolver.Engine.Common.PredictedCard>.GetEnumerator()",
+          4688912
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy+<>c__DisplayClass167_0.<FindBestStandPat>b__0(class CombatSolver.SearchNode)",
+          4588544
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AdmitCycleExitProbeCandidate(class System.Collections.Generic.IReadOnlyList`1<value class ActionCandidate>,class System.Collections.Generic.List`1<value class ActionCandidate>)",
+          4477216
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.Hooks.Attack.VigorPowerMirrors+State.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          4370600
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+FinalPlanOrdering.Select(class System.Collections.Generic.IReadOnlyList`1<value class System.ValueTuple`2<class CombatSolver.SearchNode,class CombatSolver.SimulationSnapshot>>,int32,bool)",
+          4355528
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.ForkCardList(class System.Collections.Generic.List`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          4157400
+        ],
+        [
+          "CombatSolver.StrategicHpRecoveryBound.ComponentHealingUpperBound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Players.Player,int32,bool,value class System.Nullable`1<int32>,class CombatSolver.PotionStrategySnapshot,value class CombatSolver.SolverPotionPolicy)",
+          4153304
+        ],
+        [
+          "CombatSolver.OwnedExpansionBatch`3+Pool[System.__Canon,CombatSolver.CombatBeamSolver+RawCardCandidate,System.__Canon].Rent()",
+          3938704
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ContinueCardPlayTailExecution(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,value class CardPlayTailStage,int32)",
+          3837600
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass631_7.<SolveCore>g__AcceptExpandedChild|60(class CombatSolver.SearchNode,class CombatSolver.SearchNode)",
+          3744136
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.RemapCachedModels(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          3733472
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AnnotateTurnOutcome(class PendingTurnOutcome,int32,int32,int32)",
+          3517824
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AttachCrossTurnSemanticStateEvidence(class CombatSolver.SearchNode,class CombatSolver.SearchNode,class System.Collections.Generic.IReadOnlyList`1<value class CombatSolver.StateFingerprint>,class System.Collections.Generic.IReadOnlyList`1<value class CombatSolver.CrossTurnStandPatBaseline>)",
+          3304712
+        ],
+        [
+          "CombatSolver.OwnedExpansionBatch`3[System.__Canon,CombatSolver.CombatBeamSolver+RawCardCandidate,System.__Canon].TransferEndTurnTo(class CombatSolver.OwnedExpansionBatch`3<!0,!1,!2>,!0,!2)",
+          3198000
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyHpLost(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,value class MegaCrit.Sts2.Core.Hooks.HpLossHookPhase,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>&,class System.Func`2<class MegaCrit.Sts2.Core.Models.AbstractModel,bool>)",
+          3091480
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.CanPlay(class CombatSolver.Engine.Common.PredictedCard,int32&,int32&)",
+          3091400
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.Record(!!0)",
+          2984800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+<ResolvePrimaryCardChoiceBranches>d__381.MoveNext()",
+          2774736
+        ],
+        [
+          "CombatSolver.ForkableDictionary`2[System.__Canon,System.Int32].EnsureWritable()",
+          2667120
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,value class MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,class System.String,class System.String)",
+          2665000
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.SortByBeamRank(class System.Collections.Generic.List`1<class CombatSolver.SearchNode>)",
+          2476056
+        ],
+        [
+          "CombatSolver.Engine.Common.SimCardPile.Insert(int32,class CombatSolver.Engine.Common.PredictedCard)",
+          2345200
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.PotionUseLineageKey(class CombatSolver.SearchNode)",
+          2238712
+        ],
+        [
+          "CombatSolver.CorePowerSupport.ApplyCardPowers(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,int32,value class System.Decimal,int32,class System.Collections.Generic.ISet`1<unsigned int32>)",
+          2238600
+        ],
+        [
+          "CombatSolver.OwnedExpansionBatch`3[System.__Canon,CombatSolver.CombatBeamSolver+RawCardCandidate,System.__Canon].Transfer(!0)",
+          2132024
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ReleaseDroppedSnapshots(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>)",
+          1926584
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.CanTriggerArtOfWarNextTurn(class MegaCrit.Sts2.Core.Entities.Players.Player)",
+          1920080
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.RankFinal(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>)",
+          1900968
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionRngSet.Fork()",
+          1812376
+        ],
+        [
+          "CombatSolver.PersistentPowerSupport.GetModifiedHandDraw(class CombatSolver.SimulatedCombatState,class MegaCrit.Sts2.Core.Entities.Players.Player,int32)",
+          1812216
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AdmitPlannedEndTurnChildren(class ExpansionBatch)",
+          1808312
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.PrepareStandPatProbes(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>)",
+          1804968
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyDamage(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+          1705600
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.PrepareRelicsBeforeSideTurnEnd(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>)",
+          1705600
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.GeneratePreparedCardAction(class CombatSolver.SearchNode,value class PreparedCardAction,class ReplayForkSeed,class System.Object,class ExpansionBatch,bool)",
+          1705600
+        ],
+        [
+          "CombatSolver.Engine.Common.PredictionStateStore..ctor(int32,int32)",
+          1599000
+        ],
+        [
+          "CombatSolver.CardChoiceSupport.GetSpec(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard)",
+          1492400
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.CreateTurnOutcome(class CombatSolver.SearchNode,class CombatSolver.SearchNode,int32,int32,int32,int32,int32)",
+          1491544
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+<>c__DisplayClass631_0.<SolveCore>g__SummarizeCandidate|0(class CombatSolver.SearchNode,bool)",
+          1390800
+        ],
+        [
+          "CombatSolver.BranchMonsterAi.CurrentMove(class CombatSolver.BranchMonsterAiState,class CombatSolver.SimulatedCombatState)",
+          1385800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.TryDamageTarget(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,value class System.Decimal,value class MegaCrit.Sts2.Core.ValueProps.ValueProp,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>&)",
+          1385800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.GetEffectiveHookListeners()",
+          1385800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy.OrderRoutingChoiceEventContexts(class System.Collections.Generic.IEnumerable`1<value class System.Collections.Generic.KeyValuePair`2<value class RoutingChoiceSignature,class System.Collections.Generic.List`1<class CombatSolver.SearchNode>>>)",
+          1292512
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.Prune(class System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>)",
+          1287032
+        ],
+        [
+          "CombatSolver.Engine.Common.MirroredHookListenerFilter.Participates(class System.Type)",
+          1279200
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ResolveRoundChoiceBranches(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot,value class System.Nullable`1<value class PrimaryChoiceMatch>,class ChoiceSearchBudget,class ChoiceOccurrenceCollector`1<value class DeferredOccurrenceChoiceBranch>)",
+          1279200
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.AfterCardDrawn(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,bool)",
+          1279200
+        ],
+        [
+          "CombatSolver.Engine.Common.PredictedCard.get_MutablePreview()",
+          1279200
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.DiversifyOrdinaryBeamBoundary(class System.Collections.Generic.IReadOnlyList`1<!!0>,class System.Collections.Generic.List`1<!!0>,class System.Collections.Generic.IReadOnlyList`1<!!0>,class System.Func`2<!!0,value class System.ValueTuple`5<float64,int32,int32,int32,bool>>,bool,class System.Func`2<!!0,value class OrdinaryBeamTacticalValues>,bool)",
+          1169016
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+          1066000
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.TryGetPocketwatchState(class MegaCrit.Sts2.Core.Entities.Players.Player,int32&,int32&,int32&)",
+          965288
+        ],
+        [
+          "CombatSolver.PlanAction.<Clone>$()",
+          959400
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.SimOrbQueue.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+          959400
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.FindCardForReplay(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,class CombatSolver.PlanAction)",
+          959400
+        ],
+        [
+          "CombatSolver.MonsterMoveSemantics.ApplyForecastMove(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.ForecastMove,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class System.Collections.Generic.ISet`1<unsigned int32>,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>)",
+          959400
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.SynchronizePanacheState(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+          959400
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ExecuteAttack(class MegaCrit.Sts2.Core.Commands.Builders.AttackCommand)",
+          959400
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.AppendStatefulRelicFingerprint(value class CombatSolver.StateFingerprintBuilder&,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+          959400
+        ],
+        [
+          "CombatSolver.SearchNode.MaterializeActions()",
+          865544
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+<AdmitPlannedEndTurnChildren>d__485.MoveNext()",
+          852808
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy+<>c.<RankBest>b__47_5(class CombatSolver.SearchNode)",
+          746472
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.Fork(class CombatSolver.Engine.Common.PredictionTrace)",
+          746200
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.RemapCachedPowers(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.PowerModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+          746200
+        ],
+        [
+          "CombatSolver.SearchReplayEvidence.Publish(class CombatSolver.SearchDiagnosticsSink,class System.String,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class System.String,class System.String)",
+          744776
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.CurrentMonsterMoves()",
+          642736
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class ReplayForkSeed,class RoundReplayCheckpointCapture,class CardChoiceReplayCapture)",
+          639640
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.CardPlayStarted(class CombatSolver.Engine.Common.PredictedCard,class MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+          639600
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+BeamRetentionPolicy+<>c.<RankBest>b__47_4(class CombatSolver.SearchNode)",
+          639600
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyEnergyCostInCombat(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,value class System.Decimal)",
+          639600
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.Complete(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistoryEntry,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistoryEntry)",
+          639600
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.BeginActionChoices(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>)",
+          639600
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.VoidFormOpportunityValue(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+          639600
+        ],
+        [
+          "CombatSolver.EndTurnPowerSupport.TriggerRegular(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,value class MegaCrit.Sts2.Core.Combat.CombatSide,class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>,int32)",
+          639600
+        ],
+        [
+          "CombatSolver.Engine.Common.PredictionTrace.Materialize(int32)",
+          639600
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.get_InvalidateCardAndOrbHookListenersObserver()",
+          639600
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class System.Collections.Generic.ISet`1<unsigned int32>,int32&,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class RoundReplayCheckpointCapture)",
+          639600
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.AppendPowerLifecycleFingerprint(value class CombatSolver.StateFingerprintBuilder&)",
+          639600
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.RestoreHookListenerCaches(class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.Common.PredictionForkContext)",
+          639600
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.DamageReceived(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult,class CombatSolver.Engine.Common.PredictedCard,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource)",
+          426400
+        ],
+        [
+          "CombatSolver.PowerLifecycleSupport.AfterCardPlayed(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.Common.PredictedCard,int32)",
+          426400
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.TightenPrimarySearchIncumbentAtTurnLayer(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,int32)",
+          426400
+        ],
+        [
+          "CombatSolver.ContinuationStamp.CapturePredicted(class MegaCrit.Sts2.Core.Entities.Players.Player,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,class CombatSolver.IntentForecast,int32)",
+          323672
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ResolvePrimaryCardChoiceBranches(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot,class CombatSolver.CardChoiceSpec,class CombatSolver.PlanCardChoice)",
+          322384
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.TriggerRelicsAfterBlockCleared(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+          322360
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AddCrossTurnPortfolio(class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class System.Collections.Generic.List`1<class CombatSolver.SearchNode>,class System.Collections.Generic.HashSet`1<class CombatSolver.SearchNode>)",
+          322016
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.RecordCardPlayed(class CombatSolver.Engine.Common.PredictedCard)",
+          320664
+        ],
+        [
+          "CombatSolver.ForkableSet`1[System.__Canon].EnsureWritable()",
+          319840
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ResolveCollectedOccurrenceChoiceBranches(class CombatSolver.SearchNode,class ChoiceOccurrenceCollector`1<value class DeferredOccurrenceChoiceBranch>)",
+          319800
+        ],
+        [
+          "CombatSolver.ForkableSet`1[System.UInt32].Fork()",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ResolvePrimaryCardChoiceLayer(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot,class PrimaryCardChoiceLayer,class PrimaryChoiceReplayFrontier)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState+ConcatenatedListenerView.GetEnumerator()",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator..ctor(class CombatSolver.Engine.Common.PredictionTrace,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionState,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionRngSet,class CombatSolver.Engine.Common.PredictionStateStore,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory,bool,bool,value class System.Nullable`1<value class CombatSolver.Engine.InCombat.Simulation.CombatTerminalStamp>,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyCardPlayCount(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,int32,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class System.Collections.Generic.List`1<class MegaCrit.Sts2.Core.Models.AbstractModel>&)",
+          319800
+        ],
+        [
+          "CombatSolver.ForkableSet`1[System.__Canon]..ctor()",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory.CardDrawn(class CombatSolver.Engine.Common.PredictedCard,bool)",
+          319800
+        ],
+        [
+          "CombatSolver.ForkableDictionary`2[System.ValueTuple`2[System.__Canon,System.__Canon],System.Int32].EnsureWritable()",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ComputeStandPat(class CombatSolver.SearchNode)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+<>c.<PowerHasSovereignBladeSource>b__933_0(class CombatSolver.Engine.Common.PredictedCard)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.CompleteCardPowerApplication(class MegaCrit.Sts2.Core.Models.CardModel)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.ContinuePlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class PlayerStartProgress,value class PlayerStartStage,class CombatSolver.CombatBeamSolver,class RoundReplayCheckpointCapture,class CombatSolver.SearchPerformanceMetrics)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.NormalizeCardAfflictions(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.RelicsParticipatingInSideTurn(class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Extensions.CombatCardGenerationExtensions.GetUnlockedCharacterCardsForCombat(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Players.Player,int32,class MegaCrit.Sts2.Core.Random.Rng,value class MegaCrit.Sts2.Core.Entities.Cards.CardMultiplayerConstraint,class System.Func`2<class MegaCrit.Sts2.Core.Models.CardModel,bool>)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.ModifyStarCost(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,value class System.Decimal)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionRngSet+Stream.Fork()",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.AfterCardEnteredCombat(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.RecordDamageReceived(class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.RecordRelicCardPlayed(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Players.Player,class MegaCrit.Sts2.Core.Models.CardModel)",
+          319800
+        ],
+        [
+          "CombatSolver.EndTurnPowerSupport.TriggerEnemyDoom(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Entities.Creatures.Creature>)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+TranspositionFrontier.TryAccept(value class TranspositionLabel)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.GetCreature(value class System.Nullable`1<unsigned int32>)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.TryPrepareExtraPlayerTurn(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Entities.Players.Player,bool&,bool&)",
+          319800
+        ],
+        [
+          "CombatSolver.PowerLifecycleSupport.ResolvePowerAmountChanges(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.BuildPrimaryCardChoiceLayer(class CombatSolver.PlanAction,class CombatSolver.SimulationSnapshot,class CombatSolver.CardChoiceSpec,class CombatSolver.PlanCardChoice)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.FlattenAttackResults(class MegaCrit.Sts2.Core.Commands.Builders.AttackCommand)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.AfterModifyingCardPlayResultLocation(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,value class MegaCrit.Sts2.Core.Entities.Cards.CardLocation,class System.Collections.Generic.IReadOnlyList`1<class MegaCrit.Sts2.Core.Models.AbstractModel>)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.BuildProjectedShuffleOrder(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class System.Collections.Generic.List`1<class CombatSolver.Engine.Common.PredictedCard>)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.GetAttackPlayStartsThisTurn(class MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+          319800
+        ],
+        [
+          "CombatSolver.SimulatedCombatState.AppendRelicResourceFingerprint(value class CombatSolver.StateFingerprintBuilder&)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver..ctor(class CombatSolver.CombatRootSnapshot,class CombatSolver.SolverDisplayNames,value class CombatSolver.BattleDamageSnapshot,class CombatSolver.SearchPolicySnapshot,value class System.Threading.CancellationToken,class System.Action`1<class CombatSolver.SolverProgress>,class CombatSolver.SolverSearchProfile,value class System.Nullable`1<value class CombatSolver.SolverPotionPolicy>,value class System.Nullable`1<value class CombatSolver.PotionFreePolicyBaseline>,value class System.Nullable`1<int32>,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,bool,value class System.Nullable`1<int32>,value class System.Nullable`1<value class CombatSolver.PrimarySearchIncumbent>,value class System.Nullable`1<int32>,int32,class System.Action`2<int32,class System.Collections.Generic.IReadOnlyList`1<class CombatSolver.EarlyTurnFrontierCandidate>>,class CombatSolver.PlanCommitment,value class System.Nullable`1<value class CombatSolver.ContinuationPurpose>,value class System.Nullable`1<value class CombatSolver.DirectSearchPurpose>)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver+ChoiceSearchBudget.CreateChildLease(int32,int32)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator.ProcessDamageResults(class System.Collections.Generic.IEnumerable`1<class MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>,class MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,value class CombatSolver.Engine.InCombat.Simulation.CombatDamageSource)",
+          319800
+        ],
+        [
+          "CombatSolver.CombatBeamSolver.AppendCyclePileShape(value class CombatSolver.StateFingerprintBuilder&,class CombatSolver.Engine.Common.SimCardPile,wchar)",
+          319800
+        ],
+        [
+          "CombatSolver.Engine.InCombat.Mirrors.HookMirrors.AfterAttack(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class MegaCrit.Sts2.Core.Commands.Builders.AttackCommand)",
+          319800
+        ]
+      ]
+    },
+    "limits": [
+      "SampleCount counts GCAllocationTick events, not allocated objects.",
+      "EstimatedBytes sums AllocationAmount64 (legacy events use AllocationAmount32). It is a sampling estimate, not an exact type allocation total.",
+      "A tick labels one sampled object type, but its weight covers allocation since the preceding tick. Small/rare types may be absent or noisy.",
+      "ConfirmedSearch requires a resolved solver/coordinator/work-item stack anchor. Root capture is explicitly excluded even with a search ancestor.",
+      "Thread ID, a CombatSolver frame, or a generic simulator/Fork frame alone never establishes search ownership.",
+      "SearchRequest includes coordination; SearchLaneInfrastructure is reported separately and is not part of ConfirmedSearch.",
+      "Missing/unresolved stacks and unanchored simulation samples remain separate; they cannot safely be assigned to search or startup.",
+      "SearchCategories are exclusive: Fork, ProjectedShuffle, SnapshotStateEvaluation, History, Other. InclusiveSearchTags overlap and must not be summed.",
+      "Trace timing is diagnostic only; instrumentation and collection change execution cost. Compare allocation samples with independent exact phase counters."
+    ],
+    "artifacts": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/profile-allocation",
+    "analysisWideSelectedStackGroups": 5000
+  },
+  "cachePrototype": {
+    "preparation": {
+      "base": "qualifiedRegentSharedProof0fa5b354",
+      "source": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/source",
+      "changes": [
+        "restore active listeners with owned model remap",
+        "rebind branch-local mirrored snapshots to immutable layouts",
+        "preserve run-cache alias of active list",
+        "extend existing native hook filter contract"
+      ],
+      "copyModOnBuild": false,
+      "productionIntegrated": false,
+      "setupFailures": [
+        "native launcher refused missing build manifest; no game started; copied source manifest/licences and unchanged qualified helper"
+      ],
+      "nativeRecords": {
+        "native-contract": {
+          "processReusable": false,
+          "processId": 165770,
+          "reusedProcess": false,
+          "developmentStrategyScriptHash": null,
+          "developmentStrategyParametersHash": null,
+          "mainAssemblyHash": "400DEA599CDEA987F5906EA4C217B5DE639D99E5E60DD982828BB88A168717D4",
+          "schemaVersion": 1,
+          "runId": "2898db5d6e904adb8a406ed414c4a664",
+          "scenarioId": "MIRRORED-HOOK-FILTER",
+          "status": "Passed",
+          "stage": "passed",
+          "characterId": "CHARACTER.REGENT",
+          "encounterId": "ENCOUNTER.THE_INSATIABLE_BOSS",
+          "seed": "FORK_HOOK_CACHE_20261005",
+          "startedAtUtc": "2026-10-04T22:38:19.9913642+00:00",
+          "elapsedMilliseconds": 30299.1937,
+          "mainThread": true,
+          "combatEnded": true,
+          "startedTurn": 1,
+          "finishedTurn": 1,
+          "managedHeapBytes": 100343296,
+          "managedFragmentedBytes": 7734712,
+          "workingSetBytes": 1545752576,
+          "privateMemoryBytes": 18643988480,
+          "solverMetrics": {
+            "gcLifecycle": {
+              "forcedCollections": 0,
+              "noGcStartAttempts": 1,
+              "noGcStarts": 1,
+              "noGcEndAttempts": 0,
+              "noGcEnds": 0,
+              "noGcRestarts": 0,
+              "noGcLosses": 0
+            },
+            "gcLifecycleAttribution": "ExclusiveSearchScope",
+            "boundary": "None",
+            "selectedExpanded": 1,
+            "selectedTransitions": 5,
+            "selectedChoiceBranches": 0,
+            "roundReplayPrefixCaptures": 0,
+            "roundReplayPrefixReuses": 0,
+            "executionChoiceCaptures": 0,
+            "executionChoiceReuses": 0,
+            "cardChoicePrefixAttempts": 0,
+            "cardChoicePrefixCaptures": 0,
+            "cardChoicePrefixReuses": 0,
+            "cardChoicePrefixFallbacks": 0,
+            "potionChoicePrefixForks": 0,
+            "potionChoicePrefixCaptures": 0,
+            "potionChoicePrefixReuses": 0,
+            "potionChoicePrefixFallbacks": 0,
+            "choiceReplayAttempts": 0,
+            "choiceReplayBudgetExhaustions": 0,
+            "choiceBranchesDroppedByBudget": 0,
+            "cycleReplayAttempts": 0,
+            "cycleReplayActions": 0,
+            "totalCycleReplayActions": 0,
+            "cycleReplayVictories": 0,
+            "cycleReplayContinuations": 0,
+            "cycleStoppedUnproductive": 0,
+            "cycleStoppedRepetitionBudget": 0,
+            "cycleStoppedFamilyBudget": 0,
+            "cycleStoppedExitBudget": 0,
+            "turnLayerBudgetStops": 0,
+            "turnLayerTimeBudgetStops": 0,
+            "turnLayerNodeBudgetStops": 0,
+            "cycleRegionsDetected": 0,
+            "cycleRegionCandidatesConsidered": 0,
+            "cycleRegionCandidatesAdmitted": 0,
+            "cycleRegionCandidatesDropped": 0,
+            "cycleRegionProgressEpochs": 0,
+            "cycleRegionProbeCandidatesAdmitted": 0,
+            "cycleRegionProgressCandidatesAdmitted": 0,
+            "cycleRegionMaxActionFamilies": 0,
+            "orderedMutationCandidatesAdmitted": 0,
+            "orderedMutationLeaseExpiredBudget": 0,
+            "orderedMutationOrdinaryFallbacks": 0,
+            "orderedMutationColdAtomicCommitted": 0,
+            "orderedMutationColdAtomicRejected": 0,
+            "totalExpanded": 1,
+            "totalTransitions": 5,
+            "totalChoiceBranches": 0,
+            "elapsedMilliseconds": 145.0292,
+            "totalElapsedMilliseconds": 165.2147,
+            "searchWorkAttributions": [
+              {
+                "mechanism": "PrimaryBeam",
+                "expandedNodes": 1,
+                "transitions": 5,
+                "choiceBranches": 0,
+                "elapsedMilliseconds": 165.2147,
+                "workerAllocatedBytes": 2987352,
+                "gen0Collections": 0,
+                "gen1Collections": 0,
+                "gen2Collections": 0,
+                "gcPauseMilliseconds": 0,
+                "maxObservedGcPauseMilliseconds": 0,
+                "recordedSolverCount": 1
+              }
+            ],
+            "workerAllocatedBytes": 2791544,
+            "totalWorkerAllocatedBytes": 2987352,
+            "totalGen0Collections": 0,
+            "totalGen1Collections": 0,
+            "totalGen2Collections": 0,
+            "totalGcPauseMilliseconds": 0,
+            "maxGcPauseMilliseconds": 0,
+            "maxParallelConcurrency": 5,
+            "parallelActionReplayWaves": 1,
+            "parallelActionReplayWorkItems": 4,
+            "maxParallelActionReplayConcurrency": 4,
+            "deferredRoundChoiceActions": 0,
+            "deferredRoundChoiceLayerWidthTotal": 0,
+            "maxDeferredRoundChoiceLayerWidth": 0,
+            "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+            "deferredRoundChoiceFinitePrimaryLayers": 0,
+            "deferredRoundChoiceFinitePendingFallbacks": 0,
+            "parallelRoundChoiceReplayWaves": 0,
+            "parallelRoundChoiceReplayWorkItems": 0,
+            "maxParallelRoundChoiceReplayConcurrency": 0,
+            "searchedTurns": 1,
+            "shufflesCrossed": 0,
+            "score": 10002249999,
+            "projectedBattleHpLost": 0,
+            "potionCount": 0,
+            "potionUses": [],
+            "onlyDeathRoutes": false,
+            "finalHp": 75,
+            "finalEnemyHp": 0,
+            "combatEndedTurn": 1,
+            "capturedAtElapsedMilliseconds": 30044.1656,
+            "firstRoutePublishedMilliseconds": 216.3308,
+            "portfolioMembers": [
+              {
+                "beamWidth": 40,
+                "secondRankBand": false,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 120000,
+                "ran": true,
+                "selected": true,
+                "compared": true,
+                "skippedReason": null,
+                "expandedNodes": 1,
+                "transitionCount": 5,
+                "termination": "None",
+                "terminal": true,
+                "won": true,
+                "battleHpLost": 0,
+                "potionCount": 0,
+                "elapsedMilliseconds": 168,
+                "allocatedBytes": 3158216,
+                "managedHeapBytesAfter": 100867008,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 90,
+                "secondRankBand": false,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 60,
+                "secondRankBand": true,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 60,
+                "secondRankBand": false,
+                "baseScoreOnly": true,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": false,
+                "boundedRefinement": false
+              },
+              {
+                "beamWidth": 24,
+                "secondRankBand": false,
+                "baseScoreOnly": false,
+                "aggressivePowerCommitment": false,
+                "nodeBudget": 0,
+                "ran": false,
+                "selected": false,
+                "compared": false,
+                "skippedReason": "AcceptableBattleHpLoss",
+                "expandedNodes": 0,
+                "transitionCount": 0,
+                "termination": null,
+                "terminal": null,
+                "won": null,
+                "battleHpLost": null,
+                "potionCount": null,
+                "elapsedMilliseconds": 0,
+                "allocatedBytes": 0,
+                "managedHeapBytesAfter": 0,
+                "offensiveRefinement": true,
+                "boundedRefinement": true
+              }
+            ],
+            "powerRouteMembers": [],
+            "peakManagedHeapBytes": 100867008,
+            "managedLiveBytes": 104330040,
+            "managedHeapBytes": 100343296,
+            "managedFragmentedBytes": 7734712,
+            "workingSetBytes": 1485385728,
+            "earlyTurnExploration": null,
+            "privateMemoryBytes": 18588381184,
+            "configuredNoGcRegionEnabled": true,
+            "configuredNoGcRegionBudgetBytes": 16000000000,
+            "gcLatencyMode": "NoGCRegion",
+            "noGcRegionActive": true,
+            "noGcRegionBudgetBytes": 16000000000,
+            "noGcRegionRolloverCount": 0
+          },
+          "replayVerification": null,
+          "generatedScenario": null,
+          "stageTimings": [
+            {
+              "stage": "created",
+              "startedMilliseconds": 0,
+              "durationMilliseconds": 1.535
+            },
+            {
+              "stage": "strategy_load",
+              "startedMilliseconds": 1.535,
+              "durationMilliseconds": 5.225
+            },
+            {
+              "stage": "game_startup",
+              "startedMilliseconds": 6.76,
+              "durationMilliseconds": 13479.414499999999
+            },
+            {
+              "stage": "start_run",
+              "startedMilliseconds": 13486.1745,
+              "durationMilliseconds": 10882.6238
+            },
+            {
+              "stage": "inject_run_relics",
+              "startedMilliseconds": 24368.7983,
+              "durationMilliseconds": 1.9055000000007567
+            },
+            {
+              "stage": "enter_encounter",
+              "startedMilliseconds": 24370.7038,
+              "durationMilliseconds": 2007.1029999999992
+            },
+            {
+              "stage": "wait_player_turn",
+              "startedMilliseconds": 26377.8068,
+              "durationMilliseconds": 2.7188999999998487
+            },
+            {
+              "stage": "inject_state",
+              "startedMilliseconds": 26380.5257,
+              "durationMilliseconds": 82.47540000000299
+            },
+            {
+              "stage": "mirrored_hook_filter",
+              "startedMilliseconds": 26463.0011,
+              "durationMilliseconds": 3127.780999999999
+            },
+            {
+              "stage": "full_auto",
+              "startedMilliseconds": 29590.7821,
+              "durationMilliseconds": 125.96749999999884
+            },
+            {
+              "stage": "wait_combat_end",
+              "startedMilliseconds": 29716.7496,
+              "durationMilliseconds": 473.72839999999997
+            },
+            {
+              "stage": "cleanup",
+              "startedMilliseconds": 30190.478,
+              "durationMilliseconds": 103.70290000000023
+            },
+            {
+              "stage": "passed",
+              "startedMilliseconds": 30294.1809,
+              "durationMilliseconds": 5.1700999999993655
+            }
+          ],
+          "completedChecks": [
+            "MirroredHookFilter:Methods=63:Models=1672:OrderDuplicatesExternalForkInvalidationPatchRefreshSharedLayoutsSegmentsNoAnchorEffectivePrefixReuseForkDispatchCacheReuse",
+            "NativeOutcome:combatEnded=True:turn=1:hp=75:maxHp=75"
+          ],
+          "error": null,
+          "finishedAtUtc": "2026-10-04T22:38:50.2903452+00:00"
+        },
+        "native-strict": {
+          "processReusable": false,
+          "processId": 169010,
+          "reusedProcess": false,
+          "developmentStrategyScriptHash": null,
+          "developmentStrategyParametersHash": null,
+          "mainAssemblyHash": "400DEA599CDEA987F5906EA4C217B5DE639D99E5E60DD982828BB88A168717D4",
+          "schemaVersion": 1,
+          "runId": "0240805e1a3048df8a82f0dc3c4b8936",
+          "scenarioId": "COMPONENT-REGENT-INCUMBENT-COMBO",
+          "status": "Passed",
+          "stage": "passed",
+          "characterId": "CHARACTER.REGENT",
+          "encounterId": "ENCOUNTER.THE_INSATIABLE_BOSS",
+          "seed": "FORK_HOOK_CACHE_STRICT_20261005",
+          "startedAtUtc": "2026-10-04T22:39:35.4031692+00:00",
+          "elapsedMilliseconds": 26931.5282,
+          "mainThread": true,
+          "combatEnded": false,
+          "startedTurn": 1,
+          "finishedTurn": 1,
+          "managedHeapBytes": 90107552,
+          "managedFragmentedBytes": 11708832,
+          "workingSetBytes": 1511362560,
+          "privateMemoryBytes": 1633628160,
+          "solverMetrics": null,
+          "replayVerification": null,
+          "generatedScenario": null,
+          "stageTimings": [
+            {
+              "stage": "created",
+              "startedMilliseconds": 0,
+              "durationMilliseconds": 1.5346
+            },
+            {
+              "stage": "strategy_load",
+              "startedMilliseconds": 1.5346,
+              "durationMilliseconds": 5.218
+            },
+            {
+              "stage": "game_startup",
+              "startedMilliseconds": 6.7526,
+              "durationMilliseconds": 13207.6882
+            },
+            {
+              "stage": "start_run",
+              "startedMilliseconds": 13214.4408,
+              "durationMilliseconds": 10751.6175
+            },
+            {
+              "stage": "inject_run_relics",
+              "startedMilliseconds": 23966.0583,
+              "durationMilliseconds": 1.538700000000972
+            },
+            {
+              "stage": "enter_encounter",
+              "startedMilliseconds": 23967.597,
+              "durationMilliseconds": 2008.4820999999974
+            },
+            {
+              "stage": "wait_player_turn",
+              "startedMilliseconds": 25976.0791,
+              "durationMilliseconds": 2.6103000000002794
+            },
+            {
+              "stage": "inject_state",
+              "startedMilliseconds": 25978.6894,
+              "durationMilliseconds": 101.76239999999962
+            },
+            {
+              "stage": "component_regent_incumbent_combo",
+              "startedMilliseconds": 26080.4518,
+              "durationMilliseconds": 731.7566000000006
+            },
+            {
+              "stage": "cleanup",
+              "startedMilliseconds": 26812.2084,
+              "durationMilliseconds": 113.81339999999909
+            },
+            {
+              "stage": "passed",
+              "startedMilliseconds": 26926.0218,
+              "durationMilliseconds": 5.722200000000157
+            }
+          ],
+          "completedChecks": [
+            "RecoveryIncumbentCombination:StrictRootZero:OldNativeEffectsReused:NewUnionAndOwnerGuards:CompleteNoPotionPilot:RequestLedger:Dop2StrictIncremental:ParentLiveRngIsolation",
+            "NativeOutcome:combatEnded=False:turn=1:hp=75:maxHp=75"
+          ],
+          "error": null,
+          "finishedAtUtc": "2026-10-04T22:40:02.3345139+00:00"
+        }
+      },
+      "build": {
+        "seconds": 13.72,
+        "warnings": 0,
+        "errors": 0,
+        "copyModOnBuild": false
+      },
+      "initialBuild": {
+        "seconds": 28.06,
+        "warnings": 1,
+        "errors": 0,
+        "reason": "duplicate primary-constructor parameter storage warning; replaced property with getter; no native test run before correction"
+      },
+      "patchFile": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/fork-hook-cache-20261005/our-cache-delta.patch"
+    },
+    "serialControl": {
+      "sequence": "ACCA serial; qualified main host; no diagnostic flags",
+      "runs": [
+        {
+          "label": "fork-hook-cache-regent-A1",
+          "wallSeconds": 16.0659367,
+          "peakWorkingSetBytes": 10943434752,
+          "quality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999753969,
+            "CombatEndedTurn": 6,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "root": "turn=1 round=1 phase=Play side=Player energy=3 hp=75/75 hand=[PREP_TIME,STRIKE_REGENT,CALAMITY,CRESCENT_SPEAR,FURNACE,GAMMA_BLAST] draw=20 discard=0 relics=[DIVINE_RIGHT,MERCURY_HOURGLASS,VEXING_PUZZLEBOX,MEMBERSHIP_CARD] enemies=[THE_INSATIABLE#1:338/341@LIQUIFY_GROUND_MOVE] total_floor=1 act_floor=0",
+          "budget": {
+            "Profile": "VeryHigh",
+            "BeamWidth": 135,
+            "MaxExpandedNodes": 500000,
+            "MaxCardBranchesPerNode": 72,
+            "MaxPileChoiceBranchesPerAction": 42,
+            "MaxHandChoiceBranchesPerAction": 54,
+            "MaxDegreeOfParallelism": 16,
+            "BudgetMilliseconds": 300000,
+            "EarlyTurnExplorationDepth": 0,
+            "EarlyTurnExplorationBudgetMilliseconds": 0,
+            "PotionPolicy": "Smart",
+            "SearchMode": "Coordinator",
+            "UsePortfolio": true,
+            "fixedSearchBudget": false,
+            "enableNoGcRegion": true,
+            "noGcRegionBudgetGigabytes": 16
+          },
+          "solverWork": {
+            "TotalExpandedNodes": null,
+            "TotalTransitions": 311838,
+            "TotalChoiceBranches": 5362,
+            "TotalWorkerAllocatedBytes": 12946731928
+          },
+          "pruneCounters": {
+            "boundary": "None",
+            "selectedExpanded": 4583,
+            "selectedTransitions": 20743,
+            "selectedChoiceBranches": 1110,
+            "totalExpanded": 79490,
+            "totalTransitions": 311838,
+            "totalChoiceBranches": 5362,
+            "choiceReplayAttempts": 1110,
+            "choiceReplayBudgetExhaustions": 0,
+            "choiceBranchesDroppedByBudget": 0,
+            "roundReplayPrefixCaptures": 0,
+            "dominatedActionsPruned": 1,
+            "topQueueActionsDropped": 0,
+            "actionAdmissionRepresentativesProtected": 0,
+            "duplicateCardBranchesPruned": 2263,
+            "shuffleBranchesPruned": 0,
+            "soldHpBranchesPruned": 0,
+            "primaryIncumbentBranchesPruned": 350,
+            "primaryIncumbentUpdates": 1,
+            "replayCount": 2,
+            "forkCount": 20743,
+            "reusedNodeSnapshots": 5123,
+            "transpositionBranchesPruned": 1005,
+            "repeatableNoProgressBranchesPruned": 0,
+            "standPatProbes": 2069,
+            "transitionCacheHits": 0,
+            "roundReplayPrefixReuses": 0,
+            "cycleRegionsDetected": 0,
+            "cycleRegionCandidatesConsidered": 0,
+            "cycleRegionCandidatesAdmitted": 0,
+            "cycleRegionCandidatesDropped": 0,
+            "cycleRegionProgressEpochs": 0,
+            "cycleRegionProbeCandidatesAdmitted": 0,
+            "cycleRegionProgressCandidatesAdmitted": 0,
+            "cycleRegionMaxActionFamilies": 0,
+            "orderedMutationCandidatesAdmitted": 0,
+            "orderedMutationLeaseExpiredBudget": 0,
+            "orderedMutationOrdinaryFallbacks": 0,
+            "orderedMutationColdAtomicCommitted": 0,
+            "orderedMutationColdAtomicRejected": 0,
+            "deferredRoundChoiceActions": 262,
+            "deferredRoundChoiceLayerWidthTotal": 1110,
+            "maxDeferredRoundChoiceLayerWidth": 32,
+            "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+            "deferredRoundChoiceFinitePrimaryLayers": 262,
+            "deferredRoundChoiceFinitePendingFallbacks": 0,
+            "parallelActionReplayWaves": 163,
+            "parallelActionReplayWorkItems": 12980,
+            "maxParallelActionReplayConcurrency": 16,
+            "parallelRoundChoiceReplayWaves": 47,
+            "parallelRoundChoiceReplayWorkItems": 1618,
+            "maxParallelRoundChoiceReplayConcurrency": 16,
+            "maxParallelConcurrency": 16,
+            "searchedTurns": 6,
+            "shufflesCrossed": 1,
+            "score": 9999753969,
+            "projectedBattleHpLost": 40,
+            "potionCount": 0,
+            "onlyDeathRoutes": false,
+            "finalHp": 35,
+            "finalEnemyHp": 0,
+            "combatEndedTurn": 6,
+            "transpositionCount": 17407,
+            "expandedTranspositionCount": 4583,
+            "transpositionLimitBypasses": 0,
+            "standPatCacheCount": 2069,
+            "threatProjectionCacheCount": 8,
+            "coverageCacheCount": 8
+          }
+        },
+        {
+          "label": "fork-hook-cache-regent-C2",
+          "wallSeconds": 16.188101,
+          "peakWorkingSetBytes": 10903621632,
+          "quality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999753969,
+            "CombatEndedTurn": 6,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "root": "turn=1 round=1 phase=Play side=Player energy=3 hp=75/75 hand=[PREP_TIME,STRIKE_REGENT,CALAMITY,CRESCENT_SPEAR,FURNACE,GAMMA_BLAST] draw=20 discard=0 relics=[DIVINE_RIGHT,MERCURY_HOURGLASS,VEXING_PUZZLEBOX,MEMBERSHIP_CARD] enemies=[THE_INSATIABLE#1:338/341@LIQUIFY_GROUND_MOVE] total_floor=1 act_floor=0",
+          "budget": {
+            "Profile": "VeryHigh",
+            "BeamWidth": 135,
+            "MaxExpandedNodes": 500000,
+            "MaxCardBranchesPerNode": 72,
+            "MaxPileChoiceBranchesPerAction": 42,
+            "MaxHandChoiceBranchesPerAction": 54,
+            "MaxDegreeOfParallelism": 16,
+            "BudgetMilliseconds": 300000,
+            "EarlyTurnExplorationDepth": 0,
+            "EarlyTurnExplorationBudgetMilliseconds": 0,
+            "PotionPolicy": "Smart",
+            "SearchMode": "Coordinator",
+            "UsePortfolio": true,
+            "fixedSearchBudget": false,
+            "enableNoGcRegion": true,
+            "noGcRegionBudgetGigabytes": 16
+          },
+          "solverWork": {
+            "TotalExpandedNodes": null,
+            "TotalTransitions": 311838,
+            "TotalChoiceBranches": 5362,
+            "TotalWorkerAllocatedBytes": 12948331120
+          },
+          "pruneCounters": {
+            "boundary": "None",
+            "selectedExpanded": 4583,
+            "selectedTransitions": 20743,
+            "selectedChoiceBranches": 1110,
+            "totalExpanded": 79490,
+            "totalTransitions": 311838,
+            "totalChoiceBranches": 5362,
+            "choiceReplayAttempts": 1110,
+            "choiceReplayBudgetExhaustions": 0,
+            "choiceBranchesDroppedByBudget": 0,
+            "roundReplayPrefixCaptures": 0,
+            "dominatedActionsPruned": 1,
+            "topQueueActionsDropped": 0,
+            "actionAdmissionRepresentativesProtected": 0,
+            "duplicateCardBranchesPruned": 2263,
+            "shuffleBranchesPruned": 0,
+            "soldHpBranchesPruned": 0,
+            "primaryIncumbentBranchesPruned": 350,
+            "primaryIncumbentUpdates": 1,
+            "replayCount": 2,
+            "forkCount": 20743,
+            "reusedNodeSnapshots": 5123,
+            "transpositionBranchesPruned": 1005,
+            "repeatableNoProgressBranchesPruned": 0,
+            "standPatProbes": 2069,
+            "transitionCacheHits": 0,
+            "roundReplayPrefixReuses": 0,
+            "cycleRegionsDetected": 0,
+            "cycleRegionCandidatesConsidered": 0,
+            "cycleRegionCandidatesAdmitted": 0,
+            "cycleRegionCandidatesDropped": 0,
+            "cycleRegionProgressEpochs": 0,
+            "cycleRegionProbeCandidatesAdmitted": 0,
+            "cycleRegionProgressCandidatesAdmitted": 0,
+            "cycleRegionMaxActionFamilies": 0,
+            "orderedMutationCandidatesAdmitted": 0,
+            "orderedMutationLeaseExpiredBudget": 0,
+            "orderedMutationOrdinaryFallbacks": 0,
+            "orderedMutationColdAtomicCommitted": 0,
+            "orderedMutationColdAtomicRejected": 0,
+            "deferredRoundChoiceActions": 262,
+            "deferredRoundChoiceLayerWidthTotal": 1110,
+            "maxDeferredRoundChoiceLayerWidth": 32,
+            "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+            "deferredRoundChoiceFinitePrimaryLayers": 262,
+            "deferredRoundChoiceFinitePendingFallbacks": 0,
+            "parallelActionReplayWaves": 163,
+            "parallelActionReplayWorkItems": 12980,
+            "maxParallelActionReplayConcurrency": 16,
+            "parallelRoundChoiceReplayWaves": 47,
+            "parallelRoundChoiceReplayWorkItems": 1618,
+            "maxParallelRoundChoiceReplayConcurrency": 16,
+            "maxParallelConcurrency": 16,
+            "searchedTurns": 6,
+            "shufflesCrossed": 1,
+            "score": 9999753969,
+            "projectedBattleHpLost": 40,
+            "potionCount": 0,
+            "onlyDeathRoutes": false,
+            "finalHp": 35,
+            "finalEnemyHp": 0,
+            "combatEndedTurn": 6,
+            "transpositionCount": 17407,
+            "expandedTranspositionCount": 4583,
+            "transpositionLimitBypasses": 0,
+            "standPatCacheCount": 2069,
+            "threatProjectionCacheCount": 8,
+            "coverageCacheCount": 8
+          }
+        },
+        {
+          "label": "fork-hook-cache-regent-C3",
+          "wallSeconds": 16.2076413,
+          "peakWorkingSetBytes": 12557037568,
+          "quality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999753969,
+            "CombatEndedTurn": 6,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "root": "turn=1 round=1 phase=Play side=Player energy=3 hp=75/75 hand=[PREP_TIME,STRIKE_REGENT,CALAMITY,CRESCENT_SPEAR,FURNACE,GAMMA_BLAST] draw=20 discard=0 relics=[DIVINE_RIGHT,MERCURY_HOURGLASS,VEXING_PUZZLEBOX,MEMBERSHIP_CARD] enemies=[THE_INSATIABLE#1:338/341@LIQUIFY_GROUND_MOVE] total_floor=1 act_floor=0",
+          "budget": {
+            "Profile": "VeryHigh",
+            "BeamWidth": 135,
+            "MaxExpandedNodes": 500000,
+            "MaxCardBranchesPerNode": 72,
+            "MaxPileChoiceBranchesPerAction": 42,
+            "MaxHandChoiceBranchesPerAction": 54,
+            "MaxDegreeOfParallelism": 16,
+            "BudgetMilliseconds": 300000,
+            "EarlyTurnExplorationDepth": 0,
+            "EarlyTurnExplorationBudgetMilliseconds": 0,
+            "PotionPolicy": "Smart",
+            "SearchMode": "Coordinator",
+            "UsePortfolio": true,
+            "fixedSearchBudget": false,
+            "enableNoGcRegion": true,
+            "noGcRegionBudgetGigabytes": 16
+          },
+          "solverWork": {
+            "TotalExpandedNodes": null,
+            "TotalTransitions": 311838,
+            "TotalChoiceBranches": 5362,
+            "TotalWorkerAllocatedBytes": 12980800256
+          },
+          "pruneCounters": {
+            "boundary": "None",
+            "selectedExpanded": 4583,
+            "selectedTransitions": 20743,
+            "selectedChoiceBranches": 1110,
+            "totalExpanded": 79490,
+            "totalTransitions": 311838,
+            "totalChoiceBranches": 5362,
+            "choiceReplayAttempts": 1110,
+            "choiceReplayBudgetExhaustions": 0,
+            "choiceBranchesDroppedByBudget": 0,
+            "roundReplayPrefixCaptures": 0,
+            "dominatedActionsPruned": 1,
+            "topQueueActionsDropped": 0,
+            "actionAdmissionRepresentativesProtected": 0,
+            "duplicateCardBranchesPruned": 2263,
+            "shuffleBranchesPruned": 0,
+            "soldHpBranchesPruned": 0,
+            "primaryIncumbentBranchesPruned": 350,
+            "primaryIncumbentUpdates": 1,
+            "replayCount": 2,
+            "forkCount": 20743,
+            "reusedNodeSnapshots": 5123,
+            "transpositionBranchesPruned": 1005,
+            "repeatableNoProgressBranchesPruned": 0,
+            "standPatProbes": 2069,
+            "transitionCacheHits": 0,
+            "roundReplayPrefixReuses": 0,
+            "cycleRegionsDetected": 0,
+            "cycleRegionCandidatesConsidered": 0,
+            "cycleRegionCandidatesAdmitted": 0,
+            "cycleRegionCandidatesDropped": 0,
+            "cycleRegionProgressEpochs": 0,
+            "cycleRegionProbeCandidatesAdmitted": 0,
+            "cycleRegionProgressCandidatesAdmitted": 0,
+            "cycleRegionMaxActionFamilies": 0,
+            "orderedMutationCandidatesAdmitted": 0,
+            "orderedMutationLeaseExpiredBudget": 0,
+            "orderedMutationOrdinaryFallbacks": 0,
+            "orderedMutationColdAtomicCommitted": 0,
+            "orderedMutationColdAtomicRejected": 0,
+            "deferredRoundChoiceActions": 262,
+            "deferredRoundChoiceLayerWidthTotal": 1110,
+            "maxDeferredRoundChoiceLayerWidth": 32,
+            "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+            "deferredRoundChoiceFinitePrimaryLayers": 262,
+            "deferredRoundChoiceFinitePendingFallbacks": 0,
+            "parallelActionReplayWaves": 163,
+            "parallelActionReplayWorkItems": 12980,
+            "maxParallelActionReplayConcurrency": 16,
+            "parallelRoundChoiceReplayWaves": 47,
+            "parallelRoundChoiceReplayWorkItems": 1618,
+            "maxParallelRoundChoiceReplayConcurrency": 16,
+            "maxParallelConcurrency": 16,
+            "searchedTurns": 6,
+            "shufflesCrossed": 1,
+            "score": 9999753969,
+            "projectedBattleHpLost": 40,
+            "potionCount": 0,
+            "onlyDeathRoutes": false,
+            "finalHp": 35,
+            "finalEnemyHp": 0,
+            "combatEndedTurn": 6,
+            "transpositionCount": 17407,
+            "expandedTranspositionCount": 4583,
+            "transpositionLimitBypasses": 0,
+            "standPatCacheCount": 2069,
+            "threatProjectionCacheCount": 8,
+            "coverageCacheCount": 8
+          }
+        },
+        {
+          "label": "fork-hook-cache-regent-A4",
+          "wallSeconds": 16.3687222,
+          "peakWorkingSetBytes": 12467556352,
+          "quality": {
+            "Won": true,
+            "OutstandingStolenResource": 0,
+            "ProjectedBattleHpLost": 40,
+            "StrategicHpDeficit": 40,
+            "PotionStrategicCost": 0,
+            "ProjectedBattlePotionCount": 0,
+            "EnemyHp": 0,
+            "Score": 9999753969,
+            "CombatEndedTurn": 6,
+            "Survives": true,
+            "DeathSaveUseCount": 0,
+            "GrowthHpCredit": 0,
+            "GrowthRewardCount": 0
+          },
+          "root": "turn=1 round=1 phase=Play side=Player energy=3 hp=75/75 hand=[PREP_TIME,STRIKE_REGENT,CALAMITY,CRESCENT_SPEAR,FURNACE,GAMMA_BLAST] draw=20 discard=0 relics=[DIVINE_RIGHT,MERCURY_HOURGLASS,VEXING_PUZZLEBOX,MEMBERSHIP_CARD] enemies=[THE_INSATIABLE#1:338/341@LIQUIFY_GROUND_MOVE] total_floor=1 act_floor=0",
+          "budget": {
+            "Profile": "VeryHigh",
+            "BeamWidth": 135,
+            "MaxExpandedNodes": 500000,
+            "MaxCardBranchesPerNode": 72,
+            "MaxPileChoiceBranchesPerAction": 42,
+            "MaxHandChoiceBranchesPerAction": 54,
+            "MaxDegreeOfParallelism": 16,
+            "BudgetMilliseconds": 300000,
+            "EarlyTurnExplorationDepth": 0,
+            "EarlyTurnExplorationBudgetMilliseconds": 0,
+            "PotionPolicy": "Smart",
+            "SearchMode": "Coordinator",
+            "UsePortfolio": true,
+            "fixedSearchBudget": false,
+            "enableNoGcRegion": true,
+            "noGcRegionBudgetGigabytes": 16
+          },
+          "solverWork": {
+            "TotalExpandedNodes": null,
+            "TotalTransitions": 311838,
+            "TotalChoiceBranches": 5362,
+            "TotalWorkerAllocatedBytes": 12935838896
+          },
+          "pruneCounters": {
+            "boundary": "None",
+            "selectedExpanded": 4583,
+            "selectedTransitions": 20743,
+            "selectedChoiceBranches": 1110,
+            "totalExpanded": 79490,
+            "totalTransitions": 311838,
+            "totalChoiceBranches": 5362,
+            "choiceReplayAttempts": 1110,
+            "choiceReplayBudgetExhaustions": 0,
+            "choiceBranchesDroppedByBudget": 0,
+            "roundReplayPrefixCaptures": 0,
+            "dominatedActionsPruned": 1,
+            "topQueueActionsDropped": 0,
+            "actionAdmissionRepresentativesProtected": 0,
+            "duplicateCardBranchesPruned": 2263,
+            "shuffleBranchesPruned": 0,
+            "soldHpBranchesPruned": 0,
+            "primaryIncumbentBranchesPruned": 350,
+            "primaryIncumbentUpdates": 1,
+            "replayCount": 2,
+            "forkCount": 20743,
+            "reusedNodeSnapshots": 5123,
+            "transpositionBranchesPruned": 1005,
+            "repeatableNoProgressBranchesPruned": 0,
+            "standPatProbes": 2069,
+            "transitionCacheHits": 0,
+            "roundReplayPrefixReuses": 0,
+            "cycleRegionsDetected": 0,
+            "cycleRegionCandidatesConsidered": 0,
+            "cycleRegionCandidatesAdmitted": 0,
+            "cycleRegionCandidatesDropped": 0,
+            "cycleRegionProgressEpochs": 0,
+            "cycleRegionProbeCandidatesAdmitted": 0,
+            "cycleRegionProgressCandidatesAdmitted": 0,
+            "cycleRegionMaxActionFamilies": 0,
+            "orderedMutationCandidatesAdmitted": 0,
+            "orderedMutationLeaseExpiredBudget": 0,
+            "orderedMutationOrdinaryFallbacks": 0,
+            "orderedMutationColdAtomicCommitted": 0,
+            "orderedMutationColdAtomicRejected": 0,
+            "deferredRoundChoiceActions": 262,
+            "deferredRoundChoiceLayerWidthTotal": 1110,
+            "maxDeferredRoundChoiceLayerWidth": 32,
+            "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+            "deferredRoundChoiceFinitePrimaryLayers": 262,
+            "deferredRoundChoiceFinitePendingFallbacks": 0,
+            "parallelActionReplayWaves": 163,
+            "parallelActionReplayWorkItems": 12980,
+            "maxParallelActionReplayConcurrency": 16,
+            "parallelRoundChoiceReplayWaves": 47,
+            "parallelRoundChoiceReplayWorkItems": 1618,
+            "maxParallelRoundChoiceReplayConcurrency": 16,
+            "maxParallelConcurrency": 16,
+            "searchedTurns": 6,
+            "shufflesCrossed": 1,
+            "score": 9999753969,
+            "projectedBattleHpLost": 40,
+            "potionCount": 0,
+            "onlyDeathRoutes": false,
+            "finalHp": 35,
+            "finalEnemyHp": 0,
+            "combatEndedTurn": 6,
+            "transpositionCount": 17407,
+            "expandedTranspositionCount": 4583,
+            "transpositionLimitBypasses": 0,
+            "standPatCacheCount": 2069,
+            "threatProjectionCacheCount": 8,
+            "coverageCacheCount": 8
+          }
+        }
+      ],
+      "medianSpeedup": 1.0012012874914122,
+      "conservativeSpeedup": 0.9912569264474037,
+      "worstRssRatio": 1.1474493934096057,
+      "sameRoot": true,
+      "sameBudget": true,
+      "sameQuality": true,
+      "samePruning": true,
+      "samePolicies": true
+    }
+  },
+  "zeroCreditForcedRoundPrototype": {
+    "preparation": {
+      "base": "qualifiedRegentSharedProof0fa5b354",
+      "source": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/source",
+      "scope": "mandatory round proof only strict greater HP loss, zero growth HP credit, no additional targets; existing PR215 table witness; no independent early incumbent",
+      "copyModOnBuild": false,
+      "productionIntegrated": false,
+      "dllSha256": "74d8634230b9f42d70edcef6eef0dc6183de82d15ba4190385431071de928b51",
+      "build": {
+        "seconds": 13.73,
+        "warnings": 0,
+        "errors": 0,
+        "copyModOnBuild": false
+      },
+      "preparationFailures": [
+        "patch-context hunk refused; preserved rejects, restored replay from qualified source and applied exact isolated change",
+        "native test initially attempted to assign derived HasGrowthTargets; removed assignment",
+        "native test initially used nonexistent Required enum; corrected to RequireAtLeastOne"
+      ],
+      "intermediateSuccessfulBuild": {
+        "seconds": 14.33,
+        "reason": "before explicit required-potion guard addition; no test run for this artifact"
+      },
+      "prototypePatch": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/forced-round-zero-credit-20261005/prototype.patch",
+      "proofBoundary": [
+        "positive root plus per-prefix remaining recovery certificate, unknown infinite keeps",
+        "zero effective growth HP budgets and no initial required growth targets; strict greater HP only, equal HP always keeps",
+        "no explicit relic/theft/forced potion goals; Smart orDisabled; no legal card/potion use left",
+        "complete P0 actual witness from existing PR215 table, no independent incumbent store",
+        "native full mandatory prefix and owned completed forward result, stable leases, cancellation drain"
+      ],
+      "nativePending": false,
+      "performancePending": false,
+      "nativeRecords": {
+        "native-silent-prune": {
+          "processReusable": false,
+          "processId": 177330,
+          "reusedProcess": false,
+          "developmentStrategyScriptHash": null,
+          "developmentStrategyParametersHash": null,
+          "mainAssemblyHash": "74D8634230B9F42D70EDCEF6EEF0DC6183DE82D15BA4190385431071DE928B51",
+          "schemaVersion": 1,
+          "runId": "472a181e6cf24dd48605b6bc098c99bc",
+          "scenarioId": "ZERO-CREDIT-FORCED-ROUND",
+          "status": "Passed",
+          "stage": "passed",
+          "characterId": "CHARACTER.SILENT",
+          "encounterId": "ENCOUNTER.NIBBITS_WEAK",
+          "seed": "ZERO_CREDIT_ROUND_20261005",
+          "startedAtUtc": "2026-10-04T22:59:59.0094327+00:00",
+          "elapsedMilliseconds": 27545.3297,
+          "mainThread": true,
+          "combatEnded": false,
+          "startedTurn": 1,
+          "finishedTurn": 2,
+          "managedHeapBytes": 93939408,
+          "managedFragmentedBytes": 14484384,
+          "workingSetBytes": 1499848704,
+          "privateMemoryBytes": 1695096832,
+          "solverMetrics": null,
+          "replayVerification": null,
+          "generatedScenario": null,
+          "stageTimings": [
+            {
+              "stage": "created",
+              "startedMilliseconds": 0,
+              "durationMilliseconds": 1.5745
+            },
+            {
+              "stage": "strategy_load",
+              "startedMilliseconds": 1.5745,
+              "durationMilliseconds": 5.3651
+            },
+            {
+              "stage": "game_startup",
+              "startedMilliseconds": 6.9396,
+              "durationMilliseconds": 13437.6888
+            },
+            {
+              "stage": "start_run",
+              "startedMilliseconds": 13444.6284,
+              "durationMilliseconds": 10980.954899999999
+            },
+            {
+              "stage": "inject_run_relics",
+              "startedMilliseconds": 24425.5833,
+              "durationMilliseconds": 2.8069000000032247
+            },
+            {
+              "stage": "enter_encounter",
+              "startedMilliseconds": 24428.3902,
+              "durationMilliseconds": 1955.608699999997
+            },
+            {
+              "stage": "wait_player_turn",
+              "startedMilliseconds": 26383.9989,
+              "durationMilliseconds": 1.7871000000013737
+            },
+            {
+              "stage": "inject_state",
+              "startedMilliseconds": 26385.786,
+              "durationMilliseconds": 1028.7106999999996
+            },
+            {
+              "stage": "cleanup",
+              "startedMilliseconds": 27414.4967,
+              "durationMilliseconds": 125.17959999999948
+            },
+            {
+              "stage": "passed",
+              "startedMilliseconds": 27539.6763,
+              "durationMilliseconds": 5.824800000002142
+            }
+          ],
+          "completedChecks": [
+            "ZeroCreditForcedRound:ActualSixteenIndependentSimulationWorkerProofs:ReleaseUnusedForwardResults:ActualNativeUnplayablePowerHand:ActualNoPlayableCardMandatoryDamage:OriginalStrictKept:NewBoundPrunedOne:PlayableStrikeRejected:ActualNativeVitalSparkTaintedCompensatedCoverage:ExistingSharedTableActualCompleteWinWitness:PositiveGrowthCreditRefused:16OwnedForks:OneFullNativeDefendAndEndTurn:ParentLiveRngIsolation",
+            "NativeOutcome:combatEnded=False:turn=2:hp=50:maxHp=70"
+          ],
+          "error": null,
+          "finishedAtUtc": "2026-10-04T23:00:26.5545952+00:00"
+        },
+        "native-regent-reuse": {
+          "processReusable": false,
+          "processId": 180457,
+          "reusedProcess": false,
+          "developmentStrategyScriptHash": null,
+          "developmentStrategyParametersHash": null,
+          "mainAssemblyHash": "74D8634230B9F42D70EDCEF6EEF0DC6183DE82D15BA4190385431071DE928B51",
+          "schemaVersion": 1,
+          "runId": "c8f30d1aca664f0788df5e3f67ad6a83",
+          "scenarioId": "ZERO-CREDIT-FORCED-ROUND-REUSE",
+          "status": "Passed",
+          "stage": "passed",
+          "characterId": "CHARACTER.REGENT",
+          "encounterId": "ENCOUNTER.THE_INSATIABLE_BOSS",
+          "seed": "ZERO_CREDIT_ROUND_20261005",
+          "startedAtUtc": "2026-10-04T23:01:21.818763+00:00",
+          "elapsedMilliseconds": 27397.7339,
+          "mainThread": true,
+          "combatEnded": false,
+          "startedTurn": 1,
+          "finishedTurn": 2,
+          "managedHeapBytes": 92778288,
+          "managedFragmentedBytes": 12585200,
+          "workingSetBytes": 1516675072,
+          "privateMemoryBytes": 1722691584,
+          "solverMetrics": null,
+          "replayVerification": null,
+          "generatedScenario": null,
+          "stageTimings": [
+            {
+              "stage": "created",
+              "startedMilliseconds": 0,
+              "durationMilliseconds": 1.5677
+            },
+            {
+              "stage": "strategy_load",
+              "startedMilliseconds": 1.5677,
+              "durationMilliseconds": 5.0637
+            },
+            {
+              "stage": "game_startup",
+              "startedMilliseconds": 6.6314,
+              "durationMilliseconds": 13192.4002
+            },
+            {
+              "stage": "start_run",
+              "startedMilliseconds": 13199.0316,
+              "durationMilliseconds": 10716.7473
+            },
+            {
+              "stage": "inject_run_relics",
+              "startedMilliseconds": 23915.7789,
+              "durationMilliseconds": 2.2475999999987835
+            },
+            {
+              "stage": "enter_encounter",
+              "startedMilliseconds": 23918.0265,
+              "durationMilliseconds": 2045.1824000000015
+            },
+            {
+              "stage": "wait_player_turn",
+              "startedMilliseconds": 25963.2089,
+              "durationMilliseconds": 2.5340999999971245
+            },
+            {
+              "stage": "inject_state",
+              "startedMilliseconds": 25965.743,
+              "durationMilliseconds": 1295.727700000003
+            },
+            {
+              "stage": "cleanup",
+              "startedMilliseconds": 27261.4707,
+              "durationMilliseconds": 130.58589999999822
+            },
+            {
+              "stage": "passed",
+              "startedMilliseconds": 27392.0566,
+              "durationMilliseconds": 5.909599999999045
+            }
+          ],
+          "completedChecks": [
+            "ZeroCreditForcedRoundReuse:ActualExpansionWorkerInheritedToken:ActualPreparedRoundCapturePath:OneOwnedResultSingleConsumptionStrictFullReplay:ActualSixteenIndependentSimulationWorkerProofs:ReleaseUnusedForwardResults:ActualNativeUnplayablePowerHand:ActualNoPlayableCardMandatoryDamage:OriginalStrictKept:NewBoundPrunedOne:PlayableStrikeRejected:ActualNativeVitalSparkTaintedCompensatedCoverage:ExistingSharedTableActualCompleteWinWitness:PositiveGrowthCreditRefused:16OwnedForks:OneFullNativeDefendAndEndTurn:ParentLiveRngIsolation",
+            "NativeOutcome:combatEnded=False:turn=2:hp=60:maxHp=75"
+          ],
+          "error": null,
+          "finishedAtUtc": "2026-10-04T23:01:49.2162633+00:00"
+        }
+      },
+      "screenSummary": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/forced-round-zero-credit-20261005/screen-summary.json",
+      "goalPassed": false
+    },
+    "screen": {
+      "scope": "single screening run, not final acceptance",
+      "candidate": {
+        "wallSeconds": 16.0031409,
+        "peakWorkingSetBytes": 10912092160,
+        "quality": {
+          "Won": true,
+          "OutstandingStolenResource": 0,
+          "ProjectedBattleHpLost": 40,
+          "StrategicHpDeficit": 40,
+          "PotionStrategicCost": 0,
+          "ProjectedBattlePotionCount": 0,
+          "EnemyHp": 0,
+          "Score": 9999753969,
+          "CombatEndedTurn": 6,
+          "Survives": true,
+          "DeathSaveUseCount": 0,
+          "GrowthHpCredit": 0,
+          "GrowthRewardCount": 0
+        },
+        "solverMetrics": {
+          "TotalCycleReplayActions": 0,
+          "TotalExpanded": 78080,
+          "TotalTransitions": 310366,
+          "TotalChoiceBranches": 5380,
+          "TotalElapsedMilliseconds": 15410.1019,
+          "TotalWorkerAllocatedBytes": 12948161544,
+          "TotalGen0Collections": 3,
+          "TotalGen1Collections": 2,
+          "TotalGen2Collections": 2,
+          "TotalGcPauseMilliseconds": 1144.298,
+          "DeferredRoundChoiceLayerWidthTotal": 1138
+        },
+        "pruneCounters": {
+          "boundary": "None",
+          "selectedExpanded": 4574,
+          "selectedTransitions": 20749,
+          "selectedChoiceBranches": 1138,
+          "totalExpanded": 78080,
+          "totalTransitions": 310366,
+          "totalChoiceBranches": 5380,
+          "choiceReplayAttempts": 1138,
+          "choiceReplayBudgetExhaustions": 0,
+          "choiceBranchesDroppedByBudget": 0,
+          "roundReplayPrefixCaptures": 0,
+          "dominatedActionsPruned": 1,
+          "topQueueActionsDropped": 0,
+          "actionAdmissionRepresentativesProtected": 0,
+          "duplicateCardBranchesPruned": 2270,
+          "shuffleBranchesPruned": 0,
+          "soldHpBranchesPruned": 0,
+          "primaryIncumbentBranchesPruned": 359,
+          "primaryIncumbentUpdates": 1,
+          "replayCount": 2,
+          "forkCount": 20758,
+          "reusedNodeSnapshots": 5114,
+          "transpositionBranchesPruned": 1005,
+          "repeatableNoProgressBranchesPruned": 0,
+          "standPatProbes": 2067,
+          "transitionCacheHits": 0,
+          "roundReplayPrefixReuses": 0,
+          "cycleRegionsDetected": 0,
+          "cycleRegionCandidatesConsidered": 0,
+          "cycleRegionCandidatesAdmitted": 0,
+          "cycleRegionCandidatesDropped": 0,
+          "cycleRegionProgressEpochs": 0,
+          "cycleRegionProbeCandidatesAdmitted": 0,
+          "cycleRegionProgressCandidatesAdmitted": 0,
+          "cycleRegionMaxActionFamilies": 0,
+          "orderedMutationCandidatesAdmitted": 0,
+          "orderedMutationLeaseExpiredBudget": 0,
+          "orderedMutationOrdinaryFallbacks": 0,
+          "orderedMutationColdAtomicCommitted": 0,
+          "orderedMutationColdAtomicRejected": 0,
+          "deferredRoundChoiceActions": 268,
+          "deferredRoundChoiceLayerWidthTotal": 1138,
+          "maxDeferredRoundChoiceLayerWidth": 32,
+          "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+          "deferredRoundChoiceFinitePrimaryLayers": 268,
+          "deferredRoundChoiceFinitePendingFallbacks": 0,
+          "parallelActionReplayWaves": 163,
+          "parallelActionReplayWorkItems": 12969,
+          "maxParallelActionReplayConcurrency": 16,
+          "parallelRoundChoiceReplayWaves": 47,
+          "parallelRoundChoiceReplayWorkItems": 1658,
+          "maxParallelRoundChoiceReplayConcurrency": 16,
+          "maxParallelConcurrency": 16,
+          "searchedTurns": 6,
+          "shufflesCrossed": 1,
+          "score": 9999753969,
+          "projectedBattleHpLost": 40,
+          "potionCount": 0,
+          "onlyDeathRoutes": false,
+          "finalHp": 35,
+          "finalEnemyHp": 0,
+          "combatEndedTurn": 6,
+          "transpositionCount": 17409,
+          "expandedTranspositionCount": 4574,
+          "transpositionLimitBypasses": 0,
+          "standPatCacheCount": 2067,
+          "threatProjectionCacheCount": 9,
+          "coverageCacheCount": 9
+        }
+      },
+      "sameRoot": true,
+      "sameBudget": true,
+      "samePolicy": true,
+      "foundationSingleSpeedup": 1.0180209686212287,
+      "originalGoalSpeedup": 1.2546427932781623,
+      "probeLogs": [
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=742 pruned=125 saved=504 reused=504 waves=24 parallel_nodes=737 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=113",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=1503 pruned=106 saved=1136 reused=1136 waves=22 parallel_nodes=1499 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=261",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=1594 pruned=163 saved=865 reused=865 waves=41 parallel_nodes=1591 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=566",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=846 pruned=117 saved=684 reused=684 waves=19 parallel_nodes=842 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=45",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=400 pruned=74 saved=314 reused=314 waves=19 parallel_nodes=397 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=12",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=809 pruned=206 saved=587 reused=587 waves=14 parallel_nodes=809 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=16",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=1152 pruned=254 saved=882 reused=882 waves=14 parallel_nodes=1152 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=16",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=788 pruned=9 saved=779 reused=779 waves=24 parallel_nodes=787 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=0",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=1190 pruned=209 saved=980 reused=980 waves=22 parallel_nodes=1188 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=1",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=555 pruned=3 saved=549 reused=549 waves=8 parallel_nodes=555 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=3",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=822 pruned=4 saved=817 reused=817 waves=9 parallel_nodes=822 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=1",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=549 pruned=3 saved=534 reused=534 waves=10 parallel_nodes=548 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=12",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=785 pruned=2 saved=777 reused=777 waves=10 parallel_nodes=784 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=6",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=549 pruned=3 saved=534 reused=534 waves=10 parallel_nodes=548 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=12",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=785 pruned=2 saved=777 reused=777 waves=10 parallel_nodes=784 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=6",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=374 pruned=136 saved=237 reused=237 waves=5 parallel_nodes=373 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=1",
+        "[CombatSolver] ZERO_CREDIT_FORCED_ROUND probes=22 pruned=0 saved=22 reused=22 waves=1 parallel_nodes=20 unknown_healing=0 pending_boundary=0 pending_choice=0 risk=0 ended=0"
+      ],
+      "finalAcceptancePending": true
+    }
+  },
+  "notValidated": [
+    "No final ACCA or fixed regression for zero-credit prototype: original twofold goal failed screening.",
+    "No new deployment, live Steam performance, complete unknown/revival/regen mechanism regression or global resource acceptance.",
+    "Existing Regent-combination Necrobinder cost70/P1 to cost115/P2 resource failure retained."
+  ]
+}
