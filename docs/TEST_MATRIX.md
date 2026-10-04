@@ -25,7 +25,7 @@ dotnet run --project tools/testing/checks/AdaptedOnPlayChecks/AdaptedOnPlayCheck
 
 原生入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId <表内场景> -TimeoutSeconds 120 -CleanupInstanceOnExit`。ROOT 使用 `-EnemyCurrentHp 1000`；PR18 使用 `-EnemyCurrentHp 1 -VerifyBaseLibCardModifierBoundary`。早先的最小准入样本通过临时 fixture 限定根、Owner 与 Fork，输出独立的 `BaseLibRootAdmission` 标记；当前完整合同输出 `BaseLibCardModifierBoundary` 与 `BaseLibGeneratedClone:NativeState:Created:Hand:Draw:Discard:Exhaust:Play:Removed`。
 
-此前完整 BaseLib 修饰器合同 Failed，runId `71984ec7e337460da825c98566898474`，22.033 秒，原文保留在 [历史卷 17](archive/development/volume-17.md#验证与范围)。本轮拆分断言的失败基线 runId `ef33630d6b52447b9279fefce87117e2`，21.952 秒，定位为入堆前的 listener 预期；生成牌修饰器和重置字段通过。当前合同按真实 BaseLib 的牌堆生命周期对照，完整通过；根因和范围见 [开发笔记](DEVELOPMENT_NOTES.md#baselib-生成牌回归合同2026-10-04)。
+此前完整 BaseLib 修饰器合同 Failed，runId `71984ec7e337460da825c98566898474`，22.033 秒，原文保留在 [历史卷 17](archive/development/volume-17.md#验证与范围)。本轮拆分断言的失败基线 runId `ef33630d6b52447b9279fefce87117e2`，21.952 秒，定位为入堆前的 listener 预期；生成牌修饰器和重置字段通过。当前合同按真实 BaseLib 的牌堆生命周期对照，完整通过；根因和范围见 [历史卷 18](archive/development/volume-18.md#baselib-生成牌回归合同2026-10-04)。
 
 Bash 使用同名 scenario 和对应长参数。本轮使用已提交 Executor 的隔离构建；临时启动器将 BaseLib 原包加入私有快照，并使用现有映像查询入口。进程身份、租约与退出清理检查保持，各次实例已删除。验证来源与未验证项见 [开发历史卷 17](archive/development/volume-17.md#验证与范围)，源码 `6a073d9e` 的历史验证见 [历史卷 16](archive/development/volume-16.md#验证与范围)。
 
