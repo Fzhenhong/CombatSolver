@@ -9278,5 +9278,20 @@
       "turnReportingNote": "Archived comparisonQuality reports turn12, both direct full-root replays report turn13; unexplained source/result reporting distinction is retained, no change to scoring or policy."
     },
     "decision": "Archived complete route remains a67HP/0potion win under both runtime replays with exactroot and parent/live isolation. Investigate normal search retention/plan/budget execution, rather than treating original route as semantically invalid. Queen normal request regression remains blocked; no route injected into solver or performance run, no new speed acceptance."
+  },
+  "researchHeavySceneCompositions": {
+    "report": "heavy-scene-compositions-20261004.md",
+    "evidence": "heavy-scene-compositions-20261004.json",
+    "status": "isolated_research_not_qualified",
+    "bestPreservedBaseSeconds": 20.0380676,
+    "targetOriginalSeconds": 37.1302198,
+    "combinedTargetSpeedup": 2,
+    "strictHealingCoverage": "7/29 unchanged",
+    "newEarliestTurnScreenSeconds": 22.2327169,
+    "actualNewTurnPrunes": 31,
+    "fullCallbackClosureComplete": false,
+    "queenLostRouteDebug": "paused_by_user_quality_block_remains",
+    "runtimePromoted": false,
+    "deployed": false
   }
 }

@@ -100,3 +100,6 @@ FIFO EndTurn：DLL`acd543c1…`、`ROUND-FIFO-DONATION-MEMO`/`cf35dfddee9d4a7d82
 
 
 女王历史路线诊断：专用`recorded-route-probe-host` v2构建2.58秒0警告/错误；原始A1的85项结构化route/evidence从原DLL及f266完整根重放，两次进程退出0，root与历史匹配、Win67/0瓶/13回合、玩家13/80、父/live不变，最终continuation和公开快照属性无差异。原档比较回合12差异保留；首宿主在根前缺旧DLL setter退出1，不是路线失效。只调用Replay，不调用Solve、不注入正常incumbent；不是原生游戏差分或性能/质量回归验收，见[报告](performance/component-healing-bound-20261003.md)。
+
+
+重场景组合隔离合同：引用索引 `0be04b532fdb4e788922ed4448498870`、稀疏派发 `e535ce52b11746c48101aeafe1b8673e`、局部上界融合 `cf341fdaa0fe4f58bc7a2278f0b87509`、连续引用查询 `bc7180ceba514cc58e1fc7c2a0e56d4c`、晚回合界 `ce571546bf1c4813a0e7493abaa2ecfa`、最早回合界 `dfb110e10f13446d9c3e185978004538` 均Passed。SILENT/NIBBITS_WEAK固定种子/敌血999，直接Beam24/1200节点/10000毫秒、Coordinator20000毫秒/宽12和8、严格DOP1/16、搜索30秒取消/启动器120秒/私有实例清理；涉及实际原生状态、父/live/RNG和独占Fork。回合界补充Defend＋EndTurn及Poison未知拒绝，首夹具旧动作缓存失败保留。ReadyToRun单列同合同通过；所有初筛未达整请求2倍，完整回调证明及最终回归未完成，无生产推广。详细逐项输入、DLL/证据及限制见[组合研究](performance/heavy-scene-compositions-20261004.md)。
