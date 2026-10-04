@@ -27,12 +27,18 @@ dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolv
 公共参数 `-CheckpointSelector start -ReplayMode SearchOnly -HeadlessFastModeForTest Instant
 -StopAfterInitialSolverResultAssertion -TimeoutSeconds 300 -CleanupInstanceOnExit`，再按夹具传
 `-ScenarioId`、`-CheckpointArchivePath` 与各主题的断言参数（逐项取自夹具 JSON）。这些命令依赖
-不入库的原包 ZIP 与本机 RitsuLib 路径，因此不写进下方矩阵启动器清单。本轮**未执行**这四条：
-预期值取自认领者的 `SearchOnly` 同根产物，首次执行与哨兵在整批验收记录，结构化证据在
-`coverage/evidence/test-evidence.json` 保持 `Pending`。
+不入库的原包 ZIP 与本机 RitsuLib 路径，因此不写进下方矩阵启动器清单。2026-10-04 已串行首次执行
+（`-CleanupInstanceOnExit`，逐条完成再下一条）：O041、O042、O044 Passed，O045 Failed，结论与
+逐字段数值见 [Q010 复现记录](community/drafts/2026-10-04/Q010-claim-reproduction.md) 的
+「同根夹具首次执行结果」一节；`coverage/evidence/test-evidence.json` 已按实际状态登记。
 
 O042 的「被迫受击 = 1」分量没有协议断言字段（只有 `RESULT … unavoidable_hp_lost=` 诊断行，
-`src/Runtime/SolverDiagnostics.cs:209`），需在验收时按 diagnostics 对账。
+`src/Runtime/SolverDiagnostics.cs:209`），本次按 diagnostics 对账成立：同一次执行里
+`unavoidable_hp_lost=1` 且 `sold_hp=4`，两者相加即断言的整场战损 5。
+
+复跑注意：带 `-CleanupInstanceOnExit` 时，`.local/headless-instances` 的实例目录偶尔删不掉
+（`game\data_sts2_windows_x86_64\0Harmony.dll` 句柄未释放），启动器因此返回退出码 1；这不改变
+`result.json` 的 `Passed` 判定，残留实例目录需手动删除后重试。
 
 ## PR #203 的机制合同
 

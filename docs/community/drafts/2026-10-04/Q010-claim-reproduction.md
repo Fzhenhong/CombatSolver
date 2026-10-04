@@ -204,6 +204,73 @@ index=4 跑了 382 节点后 `NodeLimitNotTerminal`、不参与比较）。本�
 夹具输入为 `coverage/fixtures/regressions/community/q010-o04{1,2,4,5}-same-root-*.json`，
 复跑命令见 [测试矩阵](../../../TEST_MATRIX.md)。
 
+## 同根夹具首次执行结果（2026-10-04）
+
+四条夹具串行执行（单实例锁，逐条完成再下一条），均带 `-CleanupInstanceOnExit`、
+`-CheckpointSelector start`、`-ReplayMode SearchOnly`、`Instant`、300 秒上限。
+
+| 主题 | runId | 判定 | 战损 | endTurn | boundary | 瓶 | 省血/卖血 | score | 墙钟 ms | total_expanded / total_transitions / total_elapsed_ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| O041 | `e1ef0c5f460d4128a824ba43adf2ce8f` | Passed | 17 | 6 | None | 1 | saved 16 / required 9 | 10001064970 | 39990.4 | 77995 / 322339 / 20496 |
+| O042 | `430a16e96916498b9908ef5af1fd67ff` | Passed | 5 | 7 | None | 0 | sold 4、unavoidable 1 | 10001354974 | 33805.4 | 51366 / 211256 / 13866 |
+| O044 | `c1c11f6de94b41808b0f1cfbddbc5be5` | Passed | 5 | 6 | None | 0 | unavoidable 5、sold 0 | 10001829972 | 30367.9 | 11851 / 79116 / 11296 |
+| O045 | `d67f8317705a4a9b9d355b8ce3996756`（同参数复跑 `e3632e589f2b4ef4939c49a661a2c931`） | **Failed** | 14 | 7 | None | 0 | saved 0 / required 9 | 10001209968 | 28663.1 | 10109 / 46116 / 9342 |
+
+三条 Passed 的 `score` 与认领者 `SearchOnly` 产物逐位相同（O041 10001064970、O042 10001354974、
+O044 10001829972），计划路线也与认领者产物**逐 token 相同**：O041 30 个动作、O042 26 个、O044 28 个，
+按 `turn:kind:cardId+升级位`（药水取 `potionId`）做序列比较与多重集比较都相等。因此这三条既是首次
+通过证据，也是「同一源码在同根上可重复」的证据。
+
+O044 同时是一次跨环境对照：本轮分配墙 2325295000（认领者 1283048684，No-GC 弃区比例 44% vs 24%），
+成员覆盖同为 `ran=1 compared=1`，终值、`score` 与路线全同，展开 11851 vs 11913、搜索耗时 11296ms vs
+12079ms（−6.5%）。质量无退化、耗时无明显增加，符合 AGENTS.md 第 1 节对同条件哨兵的口径。
+
+### O045 失败：覆盖率升高暴露的判据缺口，不是退化
+
+失败信息「首轮路线使用药水 0 瓶，预期为 1 瓶」。两侧输入与政策可证完全相同：`rootContinuationStamp`
+长 3776 字符、SHA256 均为 `F95E3DA5A9F50626FE74A5FF1302BB12B97690FD4924BBD3E31722E9252AD006`；
+`policy.json` 的 `executedPolicy` 逐字段无差异；`request.json` 的 seed/ascension/encounter/act/
+`enemyCurrentHp`/`checkpointSelector`/`replayMode`/`headlessFastModeForTest`/`stopFlag` 全同；`src` 与
+`tools` 相对认领者运行时零改动。同参数复跑结果一致（同 `score`、同终值）。
+
+差异只在内存余量，并沿这条链改变结果：
+
+1. 本轮墙 2319212440（认领者 1296864492），beam 60 的有界精炼成员不再被 `SkippedMemoryHeadroom`
+   拦下，于是真的跑了：`ran=3 compared=2`（认领者 `ran=1 compared=1`）。
+2. 多跑成员把**零药最优**从 20 改善到 14（`POLICY_BASELINE` 序列本轮 `20, 14, wonFalse:0`，认领者
+   `20, 0`），选中成员由 index 0（beam 90、战损 20）换成 index 1（beam 60、战损 14）。
+3. 战损 14 的 strategic 净差为 8，低于门槛 `firstPaidPotionHpRequired=9`（`BLOOD_POTION` 不在
+   `src/Search/PotionValuationRegistry.cs:19-34` 表内，取 `src/Runtime/SolverWeights.cs:99` 默认值 9；
+   本轮 `potion_reward=Unknown/-/credit=0`，无替代治疗抵免）。于是 `MaximumSmartPotionUses`
+   （`src/Search/CombatSearchCoordinator.cs:1009-1052`）返回 0，Smart 梯度在
+   `src/Search/CombatSearchCoordinator.Audits.cs:859-865` 以 `stop=no_potion_acceptable maximum=0`
+   直接返回，**整层药水搜索被跳过**。
+4. 认领者侧零药只有 20，门槛通过，梯度搜出 1 瓶省血 19、整场战损 1 的路线并选中。
+
+即：同一输入、同一政策、同一预算下，更宽的内存覆盖反而产出更差结果（14 vs 1）。缺口出在「零药更优
+→ 判定药水不可能划算 → 不搜药水层」这一步：门槛只看 strategic 净差，被更好的零药结果压低后就否证了
+整个药水层，而该层里存在终值更优的路线。这是判据口径问题，不属于「源码相对包内路线退化」，也不在本批
+修复范围。按 AGENTS.md 第 1 节，本批不改这段判据：它影响所有 Smart 政策场景，需要独立的「同根质量无
+退化 + 耗时无明显增加」哨兵，且应与门限口径偏差一起交维护者定口径。
+
+### O042 的 unavoidable 分量按 diagnostics 闭合
+
+同一次执行给出 `unavoidable_hp_lost=1` 与 `sold_hp=4`，相加即断言的整场战损 5，因此 t3 留待对账的
+「被迫受击 = 1」分量在本次得到 diagnostics 层面的确认（仍无协议断言字段，见下节工作项）。
+
+本轮 O042 同样是天然的覆盖率 A/B：分配墙 2298331032（认领者 1283575704），成员覆盖从 `ran=2` 升到
+`ran=3 compared=3`（多跑 beam 90 与 beam 54，均得 16，beam 54 因 NodeLimit 结束），`DEFERRED_OPENING_POWER
+power=FEEL_NO_PAIN hp_lost=5` 照旧触发，终值 5、`score` 与路线都不变。这正面回答 t3 的未验证项 1：
+覆盖度提高后零药层没有搜出比 16 更好的结果，5 仍来自不经门限的 deferred 补查，因此门限口径不是 O042
+终值的原因，放宽门限的收益也未在此体现。
+
+### 退出码注意
+
+带 `-CleanupInstanceOnExit` 时，实例目录 `.local/headless-instances/<实例>` 偶尔删不掉
+（`game\data_sts2_windows_x86_64\0Harmony.dll` 句柄未释放），启动器因此返回退出码 1；这不影响
+`result.json` 的 `Passed` 判定，本次四条的退出码均为 1（O045 同时是断言失败）。残留实例目录需手动
+删除后再跑下一条，本次已确认最终 `headless-instances` 为空。
+
 ## 门限口径偏差：待维护者决策的工作项
 
 O041 与 O042 的共同线索是 beam 宽度组合的精炼成员几乎全部被内存门限拦下
@@ -222,6 +289,11 @@ O041 与 O042 的共同线索是 beam 宽度组合的精炼成员几乎全部被
    `totalExpanded / 8`（O042 为 7026/8 = 878，与日志 `nodes=878` 一致），实际只分配 113047992 字节，
    而门控按宽度线性外推给它的预算是 638031970 字节，高估约 56 倍。
 
+3. **`unavoidable_hp_lost` 缺协议断言字段。** 无人测试的 `ExpectedInitial*` 只有 `soldHp`/
+   `soldHpAtMost`/`hpLostAtMost` 一类，被迫受击分量只出现在 `RESULT` 诊断行
+   （`src/Runtime/SolverDiagnostics.cs:209`），因此「战损构成」这类断言只能靠人工对账；若要机器化，
+   需要新增 `ExpectedInitialUnavoidableHpLost`，属 `src/Testing` 生产协议改动，不在本批范围。
+
 两者的直接环境诱因是 NoGC 区域被系统内存压力拒开：`GC_NO_GC_REGION_DECLINED
 percent_of_configured=24`，配置 16 GB 只能保留 3.95 GB，中途区域重建后墙降到 1.28 GB
 （`physical_load` 8.6→10.6 GB、`system_limit` 12.56 GB）。
@@ -233,15 +305,21 @@ percent_of_configured=24`，配置 16 GB 只能保留 3.95 GB，中途区域重�
 
 ## 未验证项
 
-- 尚无任何生产代码改动，因此没有「修改前失败 / 修改后通过」对照。
-- 四个同根夹具（`Q010-O041/O042/O044/O045-SAME-ROOT-*`）本轮**只落输入、未执行**：
-  预期值取自认领者已完成的 `SearchOnly` 同根产物（`.local/checkpoint-batch/Q010-O04{1,2,4,5}-*`）。
-  首次执行的通过证据在整批验收那一步补记，结构化证据当前保持 `Pending`。
-- O042 的「被迫受击 = 1」分量**没有协议断言字段**（`UnavoidableHpLost` 只在
-  `RESULT … unavoidable_hp_lost=` 诊断行输出，`src/Runtime/SolverDiagnostics.cs:209`），
-  夹具只锁可断言的 `expectedInitialSoldHp=4`；该分量靠 diagnostics 对账，记为未验证。
+- 本批无生产代码改动，因此没有「修改前失败 / 修改后通过」同输入对照；质量无退化的直接证据是
+  `git diff` 在 `src` 与 `tools` 为空，加上 O044 的同根同政策跨环境重跑终值、`score` 与路线全同。
+- 四个同根夹具已于 2026-10-04 首次执行完毕（见「同根夹具首次执行结果」）：O041/O042/O044 Passed，
+  O045 Failed；结构化证据已按实际状态登记（三条 Passed、一条 Failed）。
+- O045 的失败只在这台机器的内存余量下复现（分配墙约为认领者的 1.8 倍）。未在认领者那档余量下重跑
+  以证明「余量窄即 Passed」——该侧证据来自认领者产物，非本轮执行。
+- O042 的「被迫受击 = 1」分量仍**没有协议断言字段**（`UnavoidableHpLost` 只在
+  `RESULT … unavoidable_hp_lost=` 诊断行输出，`src/Runtime/SolverDiagnostics.cs:209`）；
+  本轮按 diagnostics 对账成立（1 + sold 4 = 5），但夹具断不到它，字段缺失作为工作项登记在门限一节。
 - O041 已定位到判据链与基准口径（见 `.local/tool-tasks/q010/O041-analysis.md`），判定为
   口径差异而非选择错误，未改码；O042 见 `.local/tool-tasks/q010/O042-analysis.md`。
-- 五个主题均未执行 `DeploySolver` 原生部署，未做成对耗时对照。
-- 两个哨兵（相邻正确场景、未改目标）尚未选定与运行。
+- 五个主题均未执行 `DeploySolver` 原生部署，未做成对耗时对照；PR 保持 Draft、等维护者对口径的答复，
+  部署对照不属于本批收口条件。
+- 质量无退化哨兵只覆盖到 O044（同根同政策同预算、跨内存档位重跑，终值/`score`/路线全同，
+  搜索耗时 11296ms vs 12079ms）。「未改目标哨兵」在本批没有对应物：没有任何搜索策略代码改动，
+  `src`/`tools` 的 diff 为空就是该哨兵的定义性证据。成对耗时只到 SearchOnly 搜索与 launcher 墙钟
+  两个口径（见上表），未做同一进程内的严格交替计时。
 - 未运行可见 Steam 会话，无 FPS 与帧时间结论。
