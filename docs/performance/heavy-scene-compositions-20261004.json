@@ -2462,5 +2462,110 @@
     },
     "memoryLimitReference": "original peak24652840960; revision3/4 ~20.4GB remain below original but much larger than fe200 base; preserve both references",
     "nativeCleanupConfirmedAll": true
+  },
+  "pendingPr215PotionCostFix": {
+    "pr": "https://github.com/Torch1230/CombatSolver/pull/215",
+    "head": "02cf2283ab0a4c86e0981e22acbfaa42f5ade47e",
+    "scope": "confirm lower potion cost equal-HP pruning defect on actual PR implementation",
+    "sourceEdits": "three Search files plus reusable minimum native contract, host route and documentation; main task runtime unchanged",
+    "nativeTimeoutSeconds": 120,
+    "performanceNotScheduled": true,
+    "build": {
+      "seconds": 12.93,
+      "warnings": 0,
+      "errors": 0
+    },
+    "expectedFailure": "same-turn equal physical/strategic HP and exactly 1 optional potion, less expensive native potion path; check actual serial-publication producer and separate shared-table consumer, plus ablation",
+    "fixtureFailures": [
+      {
+        "runId": "43a31765eaa14563a0b55b12275e2114",
+        "error": "System.InvalidOperationException: Routes do not prove a strictly cheaper equivalent resource outcome.",
+        "provesPrBug": false,
+        "instanceRemovedByLauncher": true
+      }
+    ],
+    "fixtureCorrection": "PotionValuationRegistry exact pinned source gives CureAll Elevated=45 and Shackling baseline=30; first fixture reversed expensive/cheap identities. Swapped slots; native Shackling targets none. No production source changed.",
+    "candidateFixPlan": "PrimarySearchIncumbent carries consumed explicit potion cost as immutable metadata. Equal-HP prune additionally requires branch consumed cost >= witnessed cost; missing cost keeps equality open. Reuses all PR215 table, bucket and publication logic.",
+    "confirmedBug": {
+      "runId": "0a69bcdd3c2644a6b9e73638fc153829",
+      "status": "Failed expected reproduction",
+      "costs": [
+        14,
+        9
+      ],
+      "bothSameTurnCompleteVictories": true,
+      "hpLossSame": true,
+      "explicitPotionCount": 1,
+      "sharedKeepsCheaper": false,
+      "localKeepsCheaper": false,
+      "sharedAblationKeepsCheaper": true,
+      "nativeCheapPotionFullStatePassed": true,
+      "parentLiveRngIsolationPassed": true,
+      "instanceRemovedByLauncher": true
+    },
+    "finalFix": {
+      "runId": "805b083ba9b14df89d0fb85f71a16436",
+      "status": "Passed",
+      "mainAssemblyHash": "D71F6FA4A7FD71F36387510965926EA5A72B12BA6471101C1C5C2BFD5AB16BD5",
+      "completedChecks": [
+        "Pr215PotionCost:RealCompleteVictories:SameHpTurnPotionCount:Costs=14/9:SharedKept=True:LocalKept=True:SharedAblationKept=True:NativeCheapPotionFullState:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=75:maxHp=75"
+      ],
+      "buildSeconds": 13.75,
+      "warnings": 0,
+      "errors": 0,
+      "nativeElapsedMilliseconds": 26766.2264,
+      "launcherExit": 0,
+      "instanceRemovedByLauncher": true,
+      "primaryIncumbentContractAssertions": 20,
+      "earlyTurnContinuationContractAssertions": 143,
+      "patch": "pr215-potion-cost-fix.patch"
+    },
+    "notValidated": [
+      "whole-request performance or peak RSS for this PR215 patch",
+      "fixed global regression after integration with upstream"
+    ],
+    "mainBranchUnchanged": true,
+    "additionalNativeRegression": {
+      "runId": "0bfdd959a37f49cda8f24f3adcf1a39c",
+      "status": "Passed",
+      "mainAssemblyHash": "1B3020A92A750CC1CDCE95947595961899CE8AFED1F76DDEA32543E9A469CFBA",
+      "completedChecks": [
+        "Pr215PotionCost:RealCompleteVictories:SameHpTurnPotionCount:Costs=14/9:SharedKept=True:LocalKept=True:SharedAblationKept=True:SameCostPruned=True:MissingCostKept=True:ZeroCostPruned=True:NativeCheapPotionFullState:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=75:maxHp=75"
+      ],
+      "nativeElapsedMilliseconds": 26698.0374,
+      "launcherExit": 0,
+      "instanceRemovedByLauncher": true,
+      "buildSeconds": 13.95,
+      "warnings": 0,
+      "errors": 0
+    },
+    "localFixCommit": "75583c62",
+    "upstreamDependency": {
+      "state": "OPEN",
+      "head": "02cf2283ab0a4c86e0981e22acbfaa42f5ade47e",
+      "mergedAt": null
+    },
+    "reusableNativeContract": {
+      "runId": "8cdb3b3ff63540c3ae04b52760d33065",
+      "status": "Passed",
+      "scenarioId": "POTION-COST-INCUMBENT",
+      "mainAssemblyHash": "45F70FEA12B6DD6C23AAB02E24709508F6CB07CCED109DADCC296A1005F2F925",
+      "completedChecks": [
+        "PotionCostIncumbent:RealCompleteVictories:SameHpTurnPotionCount:Costs=14/9:SharedKept=True:LocalKept=True:SharedAblationKept=True:SameCostPruned=True:MissingCostKept=True:ZeroCostPruned=True:NativeCheapPotionFullState:ParentLiveRngIsolation",
+        "NativeOutcome:combatEnded=False:turn=1:hp=75:maxHp=75"
+      ],
+      "nativeElapsedMilliseconds": 26657.1378,
+      "launcherExit": 0,
+      "instanceRemovedByLauncher": true,
+      "buildSeconds": 13.4,
+      "warnings": 0,
+      "errors": 0,
+      "fixture": "src/Testing/Contracts/Search/UnattendedTestRunner.PotionCostIncumbent.cs"
+    },
+    "documentationGateCorrection": "initially exceeded TEST_MATRIX limit (204 lines); moved details to existing strategy evidence and kept matrix an index (200 existing lines). Final documentation gate passed.",
+    "boundariesGate": "PowerShell Passed: search_files=249",
+    "reusableContractCommit": "4ae593db"
   }
 }
