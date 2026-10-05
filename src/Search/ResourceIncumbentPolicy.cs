@@ -13,7 +13,10 @@ internal static class ResourceIncumbentPolicy
 {
     private static readonly GrowthSource[] Sources = Enum.GetValues<GrowthSource>();
     internal static bool IsPlainBucket(PrimaryIncumbentBucket bucket)
-        => bucket.Growth.Total == 0 && bucket.RelicMask == 0;
+        => IsPrimaryHpBucket(bucket, allowZeroHpRelicGoals: false);
+
+    internal static bool IsPrimaryHpBucket(PrimaryIncumbentBucket bucket, bool allowZeroHpRelicGoals)
+        => bucket.Growth.Total == 0 && (bucket.RelicMask == 0 || allowZeroHpRelicGoals);
 
     internal static PrimaryIncumbentBucket CompletedBucket(SimulationSnapshot snapshot, int potions)
         => new(snapshot.OutstandingStolenResource, potions, snapshot.GrowthRewards,

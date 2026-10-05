@@ -77,7 +77,8 @@ internal static partial class CombatSearchCoordinator
     private static SolverResult? TryRunNarrowOpeningIncumbent(
         SearchPassContext context, SolverPotionPolicy? potionPolicyOverride)
     {
-        if (context.Policy.FixedBudget || context.Profile.BeamWidth < 64
+        if (!context.Root.UsesComponentHealingCertificate
+            || context.Policy.FixedBudget || context.Profile.BeamWidth < 64
             || context.Profile.SoftTimeBudgetMilliseconds < 30_000)
             return null;
         SearchBudgetWindow window = context.Budget.RequestWindow(context.Profile);

@@ -69,3 +69,7 @@ dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHa
 成长根：REGENT / FUZZY_WURM_CRAWLER_WEAK / GROWTHBUCKET20261004，飞升0、敌HP6、玩家75/75、能量3、原生遗物。清空牌组与牌堆，手牌永久Royalties、2张StrikeRegent、4张DefendRegent；抽牌堆5张StrikeRegent。测试设置 `{"growthBudgets":{"royalties":5}}`。Beam45、20000节点、20000ms。回血根使用 `coverage/fixtures/scenarios/state/not-yet-heal-resource-0170.json`，Beam20、12000节点、20000ms。完整命令与边界入口见[复跑说明](#reproduction)。
 
 耗时是单次离线观察，回血哨兵本次多0.10秒，不能称为所有场景提速。未执行原问题包恢复、完整原生自动部署、可见Steam性能、全部成长来源及正数药水档整场验证。本机产物保存在忽略目录 `.local/pr-validation/`。
+
+## 本分支与PR #207的整合边界
+
+当前分支复用此共享表。组件证书根的等HP（含更晚回合）比较还须核对实际已用药水成本；缺失见证成本保留分支。无遗物目标时还可计入剩余必须显式用药次数乘以根冻结的最低药水成本；只有组件生成闭包排除新增药水来源才消费此界，未知分支保留。组件证书根的新共享消费严格分支回复证明，未知分支不借启发式重新认证；旧遭遇认证和其他已知原版根继续上游既有政策，不能写成新增严格证明。零HP额度遗物目标保留原有本地严格HP界，同HP目标路线继续搜索；正额度、成长和追回仍有原边界。原生证据及当前上游对照见[0.49.4整合记录](../../performance/pr207-upstream-0494-integration-20261005.md)。

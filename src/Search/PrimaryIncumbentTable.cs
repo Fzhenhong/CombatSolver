@@ -6,6 +6,9 @@ internal readonly record struct PrimaryIncumbentBucket(
 /// <summary>Witnessed victories shared only by searches with the same frozen root and policy.</summary>
 internal sealed class PrimaryIncumbentTable
 {
+    internal static bool CanShareRoot(CombatRootSnapshot root)
+        => root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy;
+
     private readonly Dictionary<PrimaryIncumbentBucket, PrimarySearchIncumbent> _bounds = [];
     internal SolverResult? PotionFreeWitness { get; set; }
 

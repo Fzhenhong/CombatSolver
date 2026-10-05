@@ -2,6 +2,8 @@
 
 按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。单人共享损血剪枝的新基线验证见[策略证据](strategy/hp-loss-pruning/README.md#单人共享损血剪枝2026-10-05)。
 
+PR #207 合入0.49.4的本轮证据见[整合验收](performance/pr207-upstream-0494-integration-20261005.md)：成本、组件回复及Smart原生合同通过，零额度遗物本地/外部准入先失败后通过；最终整请求及固定回归结果按该报告更新，旧版本数字不冒充本轮通过。
+
 历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
 
 0.49.4 的额外回合镜像顺序、同根成长胜利续用、整场自动部署与上传引导验证见 [历史卷 16](archive/testing/volume-16.md)。

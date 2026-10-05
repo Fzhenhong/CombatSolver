@@ -9,6 +9,7 @@
 - [金币与最大生命回复链](gold-max-hp-healing-20261003.md)：原生差分、完整回调与保守边界。
 - [当前原生回复来源审计](native-health-source-audit-20261003.md) / [组件与间接回调](native-healing-component-audit-20261003.md)：版本锁定的命令、生命写入、生成和回调证据及未审范围。
 - [SoulNexusElite 玩家慢场景](soul-nexus-0491-research-20261004.md)：0.49.1 固定原包恢复、完整请求基线与边界。
+- [PR #207 上游0.49.4整合](pr207-upstream-0494-integration-20261005.md)：合并冲突、零额度遗物HP界恢复及本轮独立验收。
 - [全药水回复证书](native-potion-recovery-certificates-20261004.md)：完整药水类型清单、组合条件与最小原生合同。
 - [组合回复上界](component-healing-bound-20261003.md)：组件证书、Smart 后续搜索、原生合同与最终验收状态。
 - [PR #215 回复证明组合研究](pr215-recovery-proof-research-20261005.md)：复用共享表的有限回复、初始来源、代价见证与亡灵组合证据及失败范围。
