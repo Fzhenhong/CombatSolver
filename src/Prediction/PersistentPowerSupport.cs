@@ -70,8 +70,14 @@ internal static class PersistentPowerSupport
 
     public static int GetModifiedMaxEnergy(SimulatedCombatState combat, Player player)
     {
-        decimal result = Hook.ModifyMaxEnergy(combat, player, player.MaxEnergy);
-        result = AdjustTurnBasedRelicMaxEnergy(combat, player, result);
+        decimal result = combat.GetBaseMaxEnergy(player);
+        int turn = combat.GetPlayerTurnNumber(player);
+        foreach (AbstractModel listener in combat.IterateHookListeners())
+        {
+            result = listener is RelicModel relic && ReferenceEquals(relic.Owner, player) && relic is Bread or PaelsFlesh
+                ? result + GetTurnBasedMaxEnergyContribution(relic, turn)
+                : listener.ModifyMaxEnergy(player, result);
+        }
         return Math.Max(0, (int)result);
     }
 
@@ -91,24 +97,6 @@ internal static class PersistentPowerSupport
             RingOfTheSnake when turn <= 1 => relic.DynamicVars.Cards.BaseValue,
             _ => 0m,
         };
-
-    private static decimal AdjustTurnBasedRelicMaxEnergy(
-        SimulatedCombatState combat,
-        Player player,
-        decimal result)
-    {
-        int rootTurn = combat.GetRootPlayerTurnNumber(player);
-        int simulatedTurn = combat.GetPlayerTurnNumber(player);
-        if (rootTurn == simulatedTurn)
-            return result;
-
-        foreach (RelicModel relic in combat.RelicsOf(player).Where(static relic => !relic.IsMelted))
-        {
-            result -= GetTurnBasedMaxEnergyContribution(relic, rootTurn);
-            result += GetTurnBasedMaxEnergyContribution(relic, simulatedTurn);
-        }
-        return result;
-    }
 
     private static decimal GetTurnBasedMaxEnergyContribution(RelicModel relic, int turn)
         => relic switch

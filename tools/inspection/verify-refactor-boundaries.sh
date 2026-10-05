@@ -1319,7 +1319,7 @@ src/Prediction/BranchMonsterAi.cs	BranchMonsterStaticSnapshot.Capture(monster)
 src/Prediction/BranchMonsterAi.cs	state.Static.AttacksByMove
 src/Search/SimulatedCombatState.cs	_encounterSlots = inner.Encounter?.Slots.ToArray()
 src/Search/SimulatedCombatState.MonsterAi.cs	Root monster AI state was not captured
-src/Search/SimulatedCombatState.cs	Root intent state was not captured
+src/Search/SimulatedCombatState.cs	GetMonsterAiState(enemy).Current.Intents
 src/Prediction/MonsterMoveEffects.StaticValues.cs	CaptureStaticIntValues(MonsterModel monster)
 src/Search/SimulatedCombatState.MonsterAi.cs	GetMonsterStaticInt(Creature creature, string name)
 src/Engine/InCombat/Simulation/CombatPredictionState.cs	boundary.AssertCanCaptureCreature(creature)
@@ -1754,6 +1754,15 @@ for member in 'private sealed record KnownRoutePrefix(' 'private static MoveStat
     require_fixed "$maintained_testing_root/Support/UnattendedTestRunner.RouteSnapshots.cs" "$member" 'missing shared route snapshot helper'
 done
 
+extra_turn_registry="$repository_root/src/Engine/InCombat/Mirrors/Hooks/TurnEnd/ExtraTurnMirrors.cs"
+for registration in 'ShouldRegistry.Register<AmbergrisPower>' 'ShouldRegistry.Register<PaelsEye>' 'AfterRegistry.Register<AmbergrisPower>' 'AfterRegistry.Register<PaelsEye>'; do
+    require_fixed "$extra_turn_registry" "$registration" 'extra-turn native effects must use the shared registry'
+done
+for legacy in 'ShouldTakeExtraPlayerTurn(' 'ConsumeExtraTurnSources('; do
+    if rg -Fq "$legacy" "$repository_root/src/Engine/InCombat/Mirrors/HookMirrors.ExtraTurn.cs" "$repository_root/src/Search/SimulatedCombatState.ReactiveRelics.cs"; then
+        violations+=("Extra-turn effects must dispatch in listener order: $legacy")
+    fi
+done
 if ((${#violations[@]} > 0)); then
     printf '%s\n' "${violations[@]}" >&2
     printf 'Refactor boundary verification failed with %d violation(s).\n' "${#violations[@]}" >&2
