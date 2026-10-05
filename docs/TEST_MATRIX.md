@@ -12,6 +12,18 @@
 
 移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
 
+## 社区批次 Q010 与组合补搜
+
+同根夹具和质量界见 [历史卷 17](archive/testing/volume-17.md)，各阶段定位与失败证据见 [Q010 复现记录](community/drafts/2026-10-04/Q010-claim-reproduction.md)。现行组合入口按共享节点与时间准入，执行期间在每批提交边界处理内存预约、回收和停止。
+
+`python -B tools/testing/checks/BeamWidthPortfolioChecks/run.py`：105 项通过，覆盖生产成员比较、预算、截断与节点／时间门控。`dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- default-commit`：2 项真实 CLR 合同通过，覆盖不可分割提交回收续行与取消。
+
+原包搜索入口为 `tools/testing/run-unattended-test.ps1`／`.sh`，从 `start` 用 `SearchOnly` 执行 O042、O045 夹具的断言并在首个结果停止；公开原包由社区资料 Release 的 Q010.zip 提供，本地输入放 `.local`。固定同根、政策、预算与 GC 启动模式对照，单请求超时 120 秒。可见帧时间与整场自动部署分别验收。
+
+2026-10-05 合并候选以 PR `fe976544` 为基线，在同机常规 Server GC 下完成同根对照：O042 两侧 Passed，战损 5、零药、第 7 回合、评分 10001354974；展开 85893→96600、转移 356997→401152、请求搜索耗时 14.700→16.085 秒。O045 两侧 Passed，零损零药、第 9 回合、评分 10002069967，展开 19474、转移 89746，耗时 6.206→6.230 秒。两组 `rootContinuationStamp` 与实际政策分别相等；O042 增加的补搜工作和耗时如实计入，单次对照不构成通用性能承诺。
+
+候选 runId：O042 `dceaceae371d4c42b1831f5c853d5662`、O045 `9cd3f64b3cfe4a028d214117a173d3cc`。独立 BYRDONIS 哨兵 `73be250581904263b276ae1eb8ae962a` Passed，保持先前同源码基线的 16 战损、零药、第 4 回合、评分 10000919984、展开 4784／转移 18223，搜索 1.836 秒。启动策略有效关闭 NoGC，强行启用的请求在设置断言处失败，因此真实 NoGC 区域重建与可见帧时间未验证。原生测试实例均已删除。
+
 ## 0.49.1 日志站硬逻辑（2026-10-04）
 
 强制结束回合选牌、群体 Power、死亡金币回调、延迟能量／等离子球、开局小刀、回合末自动出牌、行动意图、资源隔离、反应格挡和界面归属的原生差分见 [逐类验收](issues/0.49.1-hardbugs-20261004.md#原生验收证据)。该记录保留失败基线、runId、复跑入口、第三方边界及未验证项；生产部署合同包含增量验证和计划外重算断言。
