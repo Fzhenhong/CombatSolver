@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "Latest211StageDeployedWithExplicitRemainingGoals",
+  "status": "Latest2d2aStageDeployedWithExplicitRemainingGoals",
   "upstream": {
     "commit": "c4ae4367",
     "version": "0.49.4",
@@ -9002,11 +9002,22 @@
   },
   "componentCostBoundary": "actual-cost equality preservation applies within proved component-root scope; outside it keeps existing upstream search",
   "finalCandidate": {
-    "commit": "6cc3ccf8",
-    "dllSha256": "79baf3a38b7ac2a6de719ec439a3cb1ebb0443cd412f682cc61593aa6369a7cb",
-    "manifestVersion": "0.49.4",
+    "sourceCommit": "1bb52650",
+    "upstreamCommit": "2d2a9410",
+    "dllSha256": "e04003a5710f43268b28e9ee14ea32fcbe8e35c7f59f086f524e1e48bd102c02",
+    "releaseBuildSeconds": 14.26,
+    "warningCount": 0,
+    "errorCount": 0,
     "deployment": true,
-    "releaseBuildSeconds": 14.93
+    "deployedFiles": [
+      "CombatSolver.json",
+      "CombatSolver.dll",
+      "CombatSolver.MemoryCleaner.exe",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "destination": "/home/ltlly/.local/share/Steam/steamapps/common/Slay the Spire 2/mods/CombatSolver",
+    "backup": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/pr207-opening-admission-sync-20261005/installed-mod-before-admission-final"
   },
   "inheritedQualityDifferences": [
     {
@@ -10627,22 +10638,22 @@
     }
   },
   "localDeployment": {
-    "status": "Deployed",
-    "files": [
+    "sourceCommit": "1bb52650",
+    "upstreamCommit": "2d2a9410",
+    "dllSha256": "e04003a5710f43268b28e9ee14ea32fcbe8e35c7f59f086f524e1e48bd102c02",
+    "releaseBuildSeconds": 14.26,
+    "warningCount": 0,
+    "errorCount": 0,
+    "deployment": true,
+    "deployedFiles": [
       "CombatSolver.json",
       "CombatSolver.dll",
       "CombatSolver.MemoryCleaner.exe",
       "LICENSE",
       "THIRD_PARTY_NOTICES.md"
     ],
-    "version": "0.49.4",
-    "build": "candidate-build",
-    "dllSha256": "79baf3a38b7ac2a6de719ec439a3cb1ebb0443cd412f682cc61593aa6369a7cb",
     "destination": "/home/ltlly/.local/share/Steam/steamapps/common/Slay the Spire 2/mods/CombatSolver",
-    "backup": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/pr207-pr211-sync-20261005/installed-mod-before-final",
-    "ownedSourceCacheCleaned": true,
-    "otherModsModified": false,
-    "visibleGameLaunched": false
+    "backup": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/pr207-opening-admission-sync-20261005/installed-mod-before-admission-final"
   },
   "previousC4StageCandidate": {
     "dllSha256": "22da5ab98b25ad35387ac97d0ef33d319b4a1437f45a2970ffd5c67e92333261",
@@ -47133,5 +47144,58 @@
       "otherModsModified": false,
       "visibleGameLaunched": false
     }
+  },
+  "previous211FinalCandidate": {
+    "commit": "6cc3ccf8",
+    "dllSha256": "79baf3a38b7ac2a6de719ec439a3cb1ebb0443cd412f682cc61593aa6369a7cb",
+    "manifestVersion": "0.49.4",
+    "deployment": true,
+    "releaseBuildSeconds": 14.93
+  },
+  "latestOpeningAdmissionIntegration": {
+    "upstreamCommit": "2d2a9410",
+    "mergeCommit": "1bb52650",
+    "candidate": {
+      "sourceCommit": "1bb52650",
+      "upstreamCommit": "2d2a9410",
+      "dllSha256": "e04003a5710f43268b28e9ee14ea32fcbe8e35c7f59f086f524e1e48bd102c02",
+      "releaseBuildSeconds": 14.26,
+      "warningCount": 0,
+      "errorCount": 0,
+      "deployment": true,
+      "deployedFiles": [
+        "CombatSolver.json",
+        "CombatSolver.dll",
+        "CombatSolver.MemoryCleaner.exe",
+        "LICENSE",
+        "THIRD_PARTY_NOTICES.md"
+      ],
+      "destination": "/home/ltlly/.local/share/Steam/steamapps/common/Slay the Spire 2/mods/CombatSolver",
+      "backup": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/pr207-opening-admission-sync-20261005/installed-mod-before-admission-final"
+    },
+    "nativeAdmission": {
+      "runId": "df92aa0639084f859b7d31a0bd538a15",
+      "status": "Passed",
+      "elapsedMilliseconds": 27584.0732,
+      "dllSha256": "E04003A5710F43268B28E9EE14EA32FCBE8E35C7F59F086F524E1E48BD102C02",
+      "completedChecks": [
+        "SmartOpeningAdmission:NoDrop:loss3:potions0:nodes=2",
+        "SmartOpeningAdmission:Drop:loss0:potions1:saved3:required1:nodes=3",
+        "SmartOpeningAdmission:NoDrop:loss0:potions1:saved12:required9:nodes=3",
+        "NativeOutcome:combatEnded=False:turn=1:hp=70:maxHp=70"
+      ],
+      "error": null
+    },
+    "reuseScope": {
+      "soulInitialPotionIds": [
+        "REGEN_POTION",
+        "STRENGTH_POTION"
+      ],
+      "soulAdmittedMaximumPositive": true,
+      "proof": "New behavior is only zero optional capacity early exit and BLOCK_POTION posterior capacity. Frozen Soul root has only REGEN_POTION/STRENGTH_POTION, admitted capacity positive and component closure excludes new combat potion acquisition; no branch clears relic policy. Entire measured path unaffected, reuse cc718337 ABBA and full native deployment, preserve measured and final DLL provenance separately.",
+      "fixedRegression": "Keep PR211 regression as measured evidence, not new all-root run of 2d2a9410. Some zero-capacity or Block roots change; latest minimum admission contract covers this upstream behavior. No claim all final NoGC memory verified."
+    },
+    "bashRefactorBoundariesExitCode": 0,
+    "powershellRefactorBoundariesExitCode": 0
   }
 }
