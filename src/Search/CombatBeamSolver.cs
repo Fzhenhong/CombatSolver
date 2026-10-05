@@ -92,6 +92,8 @@ internal sealed partial class CombatBeamSolver(
     private readonly int? _earliestPotionTurn = earliestPotionTurn;
     private readonly PotionFreePolicyBaseline? _potionFreePolicyBaseline = potionFreePolicyBaseline;
     private PrimarySearchIncumbent? _primaryIncumbent = primaryIncumbent;
+    private readonly PrimaryIncumbentTable _primaryIncumbents = policy.DisableSharedPrimaryIncumbentsForTesting
+        ? new() : policy.PrimaryIncumbents ?? new();
     private readonly SearchInteractionState? _interaction = policy.Interaction;
     private readonly DevelopmentSearchStrategy? _developmentStrategy = policy.DevelopmentStrategy;
     private readonly IReadOnlyList<PlanAction> _fixedPrefixActions = fixedPrefixActions ?? [];

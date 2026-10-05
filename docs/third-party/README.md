@@ -44,9 +44,9 @@ Power 的原版克隆会重置 `_internalData`。跨根保留的数据必须从�
 
 上传引导独立于内容准入：本场实际角色、牌组/战斗牌堆、遗物、怪物、Power、药水、附魔、灾厄或球来自第三方时，本场所有错误和路线反馈均省去上传引导。普通异常保留原错误类别，不把它自动归因为 Mod 未适配。原版内容场景继续提示反馈，单纯安装框架、局外修改或本场未出现的新怪物不改变该判断；设置里的主动上传入口继续可用。判断使用游戏类型来源映射，不使用角色显示名或 Mod 安装列表。
 
-规范 Power 的动态变量预热只访问原版来源。第三方 CanonicalVars 可以依赖附着后的 Owner；实际战斗实例仍在主线程物化，后台消费捕获值。规范实例和战斗实例的生命周期必须分别处理。
+规范 Power 的动态变量预热默认只访问原版来源。第三方 CanonicalVars 可以依赖附着后的 Owner；实际战斗实例仍在主线程物化，后台消费捕获值。规范实例和战斗实例的生命周期必须分别处理。第三方 Power 只要可能在搜索中第一次被施加，克隆规范实例时就会撞上后台禁止惰性创建显示变量的守卫；适配层确认其规范实例能在主线程物化后，用 `PowerDynamicVarWarmup.RegisterAdaptedCanonicalPower(Type)`（或泛型重载）登记，建根时随原版一起物化，失败照常抛出。
 
-第三方怪物当前没有完整 AI／行动登记合同，根捕获按 MonsterModel 的实际来源拒绝；修改原版 GenerateMoveStateMachine 的玩法补丁也需要对应合同。AttackIntent 必须提供可捕获的 DamageCalc；缺失时审计意图类型、构造器及原生意图计算补丁，不生成零伤害。确认来源时使用暂未适配提示，来源未知时保留明确的类型与行动诊断。BetterVanillaSTS2 的 TargetedStrengthPower 已由原包证明替换原版语义，属于已确认的玩法边界。
+第三方怪物当前没有完整 AI／行动登记合同，根捕获按 MonsterModel 的实际来源拒绝。修改原版 GenerateMoveStateMachine 的玩法补丁默认同样拒绝；出招表是模拟直接读取的活状态机，换顺序、条件或招式集合会自动跟随，适配层补齐招式效果与写死的条件分支后，用 `PredictionModPatchAudit.RegisterAdaptedMonsterMachine(Type monsterType, string modId)` 逐个声明「该 mod 对该原版怪物出招表的补丁已适配」，审计只放行登记的（出招表声明类型，mod id）组合，声明类型可以是被多个怪物继承的抽象基类，其他 mod 的补丁及意图构造器、GetSingleDamage 等审计不受影响。AttackIntent 必须提供可捕获的 DamageCalc；缺失时审计意图类型、构造器及原生意图计算补丁，不生成零伤害。确认来源时使用暂未适配提示，来源未知时保留明确的类型与行动诊断。BetterVanillaSTS2 的 TargetedStrengthPower 已由原包证明替换原版语义，属于已确认的玩法边界。
 
 原版卡牌异步 OnPlay 的 MoveNext 和 OnPlay 方法本体分别审计；现有 OnPlay 登记不覆盖 MoveNext 补丁。外部回调在已有 pending choice 时只能恢复同一选择；请求另一来源的选择会在写入前失败并保留原 pending。预见、伤害后抽牌和洗牌选择相互嵌套时，适配器必须停止当前派发并保存剩余程序阶段。基础卡牌／框架不能替代活动内容模型的来源。
 
@@ -199,6 +199,16 @@ StrategicEffectMirrors.Register<TYourPower>(requirements, evaluate, host);
 判据与泛型入口相同；`RegisterIgnored` 用于已复核的纯表现层覆写。
 完整签名、暂停和状态约束见[回合阶段镜像](turn-phase-mirrors.md)。
 
+`ExtraTurnMirrors.RegisterShouldTakeExtraTurn<TModel>(handler)` 与
+`RegisterAfterTakingExtraTurn<TModel>(handler)` 登记 `AbstractModel.ShouldTakeExtraTurn` /
+`AfterTakingExtraTurn`，接收者为 AbstractModel，上下文包含 `Player` 和分支 `Combat`。龙涎香、帕尔之眼与
+第三方来源共用镜像登记表，按原生监听顺序判断，第一个 true 结束判断。后置回调先固定全部监听成员，
+再按原顺序逐项结算；第三方可以读取此前来源已经结算的分支状态。选牌暂停交回既有动作重放。
+搜索回放与实机回合末风险评估共用同一入口。
+登记时机和冻结门与上面三张表相同；重写了却没登记的第三方类型同样停止搜索，只做表现的重写登记一个
+返回 false / 什么都不做的处理即可。按 `Type` 的重载为 `RegisterShouldTakeExtraTurn(Type, handler)` /
+`RegisterAfterTakingExtraTurn(Type, handler)`。
+
 ### 2.11 已适配 OnPlay 补丁组合
 
 `AdaptedCardOnPlayMirrors.Register<TCard>` 登记精确目标、完整补丁组合与唯一完整预测实现。
@@ -350,7 +360,6 @@ StrategicEffectMirrors.Register<TYourPower>(requirements, evaluate, host);
 | `RitsuEmptyCapabilityFastPathPatches` | 模拟隔离域的空 capability 集可直接保留原卡牌标签序列；不枚举/复制标签，不缓存分支值。非空贡献者与精确类型默认来源继续框架入口；晚注册刷新来源代次，已物化的空集合仍按框架语义处理。live 不旁路，无新增登记入口 | 精确框架适配 |
 | `DynamicVarCloneMetadataPatches` | 模拟克隆只优化已核对为空默认值的 BaseLib 提示/升级字段与 Ritsu 提示工厂；非空值照常复制，live 调用保持原框架行为。其他附加字段继续原有克隆逻辑，不属于此优化入口 | 精确框架适配 |
 | `CorePowerSupport.TriggerPlayerRegularSideTurnEndEffects`、`FlushPlayerHandAtTurnEnd`、BeforeHandDraw、AfterSideTurnStart | 常规回合末及这些抽牌/阵营时点仍无通用登记；注能核心的首回合产球由 `TriggerRelicsAfterSideTurnStart` 显式结算，准备选牌根可能早于产球，不能认为所有开局效果已在根内。其闪电伤害加成仍走只读 `ModifyOrbValue`，只读数值支持不代表产球生命周期已适配。BeforeSideTurnStart、AfterPlayerTurnStart（Early/普通/Late）及 AfterSideTurnEndLate 已开放，见 §2.10，不能互相替代 | 部分开放 |
-| `SimulatedCombatState.TryPrepareExtraPlayerTurn` / `TryPrepareLiveExtraPlayerTurn` / `ConsumeExtraTurnSources` | 额外回合的来源硬编码，只认龙涎香和帕尔之眼 | 待做 |
 | `CombatPredictionSimulator.OnPlayWrapper` | 出牌后补抽没有挂载点 | 待做 |
 | `CardChoiceSupport.RemovalPriority` 的排序口径 | 移除类选择按**单卡**估值排，不看牌库其余部分；弃牌那一侧已经是「源牌堆平均值减本牌估值」的相对口径，消耗与转变没有。表现为求解器不会为了压出无限而主动烧牌。起手牌那一层已由 §2.7 打开，相对口径这一层仍然封闭 | 待做 |
 | `ContinuationStamp.AppendCard` 的 `private=` 段与 `CombatBeamSolver.CaptureCardStateFingerprintForTesting` 的 `switch (preview)` | **卡牌**的隐藏字段按原版类型写死（利爪、基因算法、巨锤、狂暴、镰刀、疯狂科学），第三方卡牌的私有计数进不了指纹。Power 那一侧已有 `PowerHiddenStateMirrors`，见 §2.6 | 待做 |

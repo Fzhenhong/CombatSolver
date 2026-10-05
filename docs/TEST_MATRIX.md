@@ -1,8 +1,24 @@
 # CombatSolver 测试入口
 
-按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。
+按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。单人共享损血剪枝的新基线验证见[策略证据](strategy/hp-loss-pruning/README.md#单人共享损血剪枝2026-10-05)。
 
 历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
+
+## 额外回合镜像顺序（2026-10-05）
+
+`EXTRA-TURN-MIRROR-ORDER` Passed，runId `36f686e1cf2b442e836d1ab4e5bdda2d`，23.655秒。合成第三方监听者的三个位置均通过原生短路顺序、后置状态读取、完整状态、Fork 与 live 隔离及登记冻结检查；直接证据见 [登记表](../coverage/evidence/test-evidence.json)。原生回合推进哨兵 `PAELS-EYE-AUTOPOST-ORDER` Passed，runId `f1d9c6342c4b4e91aaf15bf1af4e4a76`，24.863秒，完整状态与 Fork 一致。实例已删除。
+
+PowerShell：`tools/testing/run-unattended-test.ps1 -ScenarioId EXTRA-TURN-MIRROR-ORDER -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash：`tools/testing/run-unattended-test.sh --scenario-id EXTRA-TURN-MIRROR-ORDER --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit`。帕尔之眼哨兵替换同名 ScenarioId。第三方完整 Mod 组合与可见 Steam 性能未复测。
+
+## 同根成长胜利续用（2026-10-05）
+
+`PRIMARY-INCUMBENT-REUSE` Passed，runId `7128ceee4238421bb34376b19e373dec`，22.713 秒。原生储君根连续三次请求均为第 2 回合零损胜利、成长 1 次、零药；逐转移完整前缀回放、完整质量比较、政策变化失效与 live 隔离通过，实例已删除。失败基线为 PR #215 的 `02cf2283`：第一次胜利，第二次返回未完成路线。
+
+PowerShell：`tools/testing/run-unattended-test.ps1 -ScenarioId PRIMARY-INCUMBENT-REUSE -CharacterId REGENT -Seed GROWTHBUCKET20261004 -EnemyCurrentHp 18 -TimeoutSeconds 120 -CleanupInstanceOnExit`。Bash 使用 `--scenario-id PRIMARY-INCUMBENT-REUSE --character-id REGENT --seed GROWTHBUCKET20261004 --enemy-current-hp 18 --timeout-seconds 120 --cleanup-instance-on-exit`。
+
+同根离线复跑使用[固定根](../coverage/fixtures/search/shared-growth-incumbent-reuse.json)与[成长额度](../coverage/fixtures/search/shared-growth-incumbent-settings.json)，命令见[策略说明](strategy/hp-loss-pruning/README.md#同根成长路线续用)。该合同验证原生建局上的搜索与回放；整场部署及可见 Steam 性能分别验收。
+
+两项 PR 集成后的 `SHARED-GROWTH-AUTO-DEPLOY` Passed，runId `929ad5193d8d47c0b9cdddf14d027e78`，23.095秒。使用上述固定根的牌序，原生全自动在第2回合获胜，玩家75/75、零药，首动ROYALTIES，第2回合续用，计划外重算0。固定 Beam45/20000节点/20000ms/DOP1，严格增量验证，Instant/0秒部署；实例已删除。该模式的耗时用于正确性验收。独立离线回血哨兵本轮仍为先NOT_YET再击杀、战损0，展开243/转移527，单次搜索0.65秒；保持该固定根的质量与工作量。
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
@@ -23,19 +39,7 @@ pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId CONTENT-
 
 0.49.3 的框架、局外 Mod 与 BaseLib 验证见 [历史卷 14](archive/testing/volume-14.md)。
 
-## 移动运行库内存回收（2026-10-04）
-
-`portable-runtime` 先在原回收逻辑复现 Mono 同形的 API 拒绝，修复后 5 项 Passed。直接链接生产代码并注入被拒绝的按类型 GC 信息接口，验证一次检测后不再调用、普通检查点及不可分割提交续行、取消、自动及手动真实阻塞回收、不可用暂停观测和其他异常继续传播。
-
-```bash
-dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- portable-runtime
-```
-
-桌面实际 CLR 相邻合同 `default-commit` 2 项、`checkpoint` 1 项、`diagnostic-failure` 8 项、`recovery-lifecycle` 3 项 Passed。模式均由同一 GC 工具运行，方法见[工具入口](../tools/testing/checks/CombatSolver.GcPolicyChecks/README.md)。
-
-原生 `B013-DEFAULT-GC-LIMIT` Passed，runId `ac4ee495b5ad48158c0d709a49b0abd2`，22.883 秒；包含限额、真实回收续行、退出和暂停观测缺失时的工作量累计。PowerShell 入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId B013-DEFAULT-GC-LIMIT -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 对应 `tools/testing/run-unattended-test.sh --scenario-id B013-DEFAULT-GC-LIMIT --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit`。实例已删除。
-
-原 Android 设备与原包整场回放未执行；来源、失败基线及验证范围见[开发记录](archive/development/volume-15.md#移动运行库内存回收2026-10-04)。
+移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
 
 ## 0.49.1 日志站硬逻辑（2026-10-04）
 
