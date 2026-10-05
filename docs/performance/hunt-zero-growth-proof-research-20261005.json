@@ -687,7 +687,7 @@
     "quality": null,
     "peakProcessWorkingSetBytes": null,
     "performanceAccepted": false,
-    "reason": "Native Passed; SIGSEGV at null IP on main dotnet thread PID226253, kernel and coredumpctl confirm signal11. Ordinary frozen dev06 exited without result after100.12s. Cause unproved; no whole-request speed/HP/potions/RSS acceptance, no timeout extension.",
+    "reason": "Historical failed run retained; cause was unproved at time of initial record. Later diagnostic full CLR dump proves experimental Godot.GD.Print call from Search materialization caused native string conversion crash in offline host. This failed run supplies no acceptance metrics.",
     "crashEvidence": {
       "pid": 226253,
       "signal": 11,
@@ -699,42 +699,244 @@
       "partialFinalLogLineIndex": 1494,
       "lastCompletedRouteActionIndex": 15,
       "lastCompletedRouteCard": "BLADE_OF_INK",
-      "causalAttribution": "unproved; last log is chronology, not stack-level cause",
+      "causalAttribution": "Original system-core evidence alone unproved; see crashDiagnosis for separate full CLR dump with managed stack.",
       "unchangedFailureNotRerun": true
     },
     "processLog": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hunt-zero-credit-20261005/closed-tier-screen/runs/dev06-hunt-closed-tier-C2/logs/226253-bbe9eeac947b4a42932a86f3717f4b44/process.jsonl",
-    "unprovedCause": true
+    "unprovedCause": false
   },
   "unverified": [
     "Final serial interleaved acceptance",
     "Final fixed regression",
     "Updated P0 full search after second-variant runtime change",
-    "Whole-request certificate/prune overhead and counts for failed second screen",
-    "Crash stack-level cause; no lost-route investigation resumed"
+    "Whole-request certificate overhead; selected-member173prunes does not cover all members",
+    "Cause of HP47 to62 change in empty-table prototype; no lost-route investigation resumed"
   ],
   "deployment": "Unchanged C422 production uses prior exact successful deployment; research prototypes not deployed",
   "nextHypotheses": [
     {
-      "nextCandidate": "reuse existing table presence to skip certified branch scan before any complete witnessed victory exists",
-      "reason": "Initial fixed request had 8 opening members, 4 commitments and two primary members; no witnessed win can justify pruning before table tightens. Current shared loop still certifies eligible branches with empty table.",
-      "ownership": "table presence is monotonically published under existing Tighten lock; no mutable simulator or branch cache",
-      "guard": "local member incumbent stays independent; absent table witness can only miss pruning, never wrongly prune",
-      "pending": [
-        "wait current whole request",
-        "native minimal empty/first-witness visibility and strict same-budget quality",
-        "single same frozen request screen if native passed"
-      ],
-      "doNotDuplicate": [
-        "PR215 shared table",
-        "equalHP mechanism",
-        "resource bucket semantics"
-      ],
+      "candidate": "earlier complete compliant witnessed victory or lower simulation cost",
+      "status": "research only; no schedule change implemented",
+      "constraints": "reuse existing table and policy; complete root/policy/budget/quality comparison required; no scoring or budget reductions",
       "productionIntegrated": false
     }
   ],
   "localResearchRoot": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hunt-zero-credit-20261005",
   "fixtures": {
     "initial": "fixtures/hunt-zero-growth-initial-research-20261005.patch",
-    "closedTier": "fixtures/hunt-zero-growth-closed-tier-research-20261005.patch"
+    "closedTier": "fixtures/hunt-zero-growth-closed-tier-research-20261005.patch",
+    "injectedLog": "fixtures/hunt-zero-growth-injected-log-research-20261005.patch",
+    "witnessPresence": "fixtures/hunt-witness-presence-research-20261005.patch"
+  },
+  "crashDiagnosis": {
+    "causeProved": true,
+    "historicalFailureRetained": true,
+    "diagnosticOnly": true,
+    "outerTimeoutSeconds": 120,
+    "originalSystemCoreSosError": "E_NOINTERFACE even with matching DAC; no causal stack claimed",
+    "fullDump": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hunt-crash-analysis-20261005/full.core.234319",
+    "report": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hunt-crash-analysis-20261005/full.core.234319.crashreport.json",
+    "summary": {
+      "pid": 234319,
+      "diagnosticProcess": {
+        "pid": 234319,
+        "exitCode": -11,
+        "outerTimeoutSeconds": 120,
+        "diagnosticOnly": true
+      },
+      "crashedThreadId": "0x3934f",
+      "managedFrames": [
+        {
+          "method": "Godot.NativeInterop.Marshaling.ConvertStringToNative(System.String)",
+          "file": "GodotSharp.dll",
+          "ilOffset": "0x26",
+          "token": "0x6009226"
+        },
+        {
+          "method": "Godot.GD.Print(System.String)",
+          "file": "GodotSharp.dll",
+          "ilOffset": "0x0",
+          "token": "0x6000327"
+        },
+        {
+          "method": "CombatSolver.CombatBeamSolver+<>c__DisplayClass631_0.<SolveCore>g__MaterializeSelectedRoute|9(FinalPlanSelection, Boolean, CombatSolver.SolverResultScope, Int32, Boolean, Boolean, System.Collections.Generic.IReadOnlyList`1<CombatSolver.PlanAction>)",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x58",
+          "token": "0x6005821"
+        },
+        {
+          "method": "CombatSolver.CombatBeamSolver.SolveCore()",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x33a8",
+          "token": "0x60017a3"
+        },
+        {
+          "method": "CombatSolver.CombatBeamSolver.Solve()",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x60",
+          "token": "0x60017a1"
+        },
+        {
+          "method": "CombatSolver.CombatSearchCoordinator.SearchSmartPotionGradient(CombatSolver.SearchPassContext, System.Threading.CancellationToken, CombatSolver.SolverResult, CombatSolver.SmartLayerMemoryForecast)",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x245",
+          "token": "0x6001ee3"
+        },
+        {
+          "method": "CombatSolver.CombatSearchCoordinator.AuditSmartPotionUse(CombatSolver.SearchPassContext, System.Threading.CancellationToken, CombatSolver.SolverResult, CombatSolver.SmartLayerMemoryForecast)",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x59",
+          "token": "0x6001ee1"
+        },
+        {
+          "method": "CombatSolver.CombatSearchCoordinator.RunSupplementalAudits(CombatSolver.SearchPassContext, CombatSolver.SolverResult, CombatSolver.SmartLayerMemoryForecast)",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x11f",
+          "token": "0x6001ede"
+        },
+        {
+          "method": "CombatSolver.CombatSearchCoordinator+<>c__DisplayClass16_0.<SolveCore>g__RunSearchPass|0(CombatSolver.SearchPassContext)",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x14ec",
+          "token": "0x6005a15"
+        },
+        {
+          "method": "CombatSolver.CombatSearchCoordinator.EscalateSearchWhenNoVictory(CombatSolver.SearchPassContext, CombatSolver.SearchPassResult, System.Func`2<CombatSolver.SearchPassContext,CombatSolver.SearchPassResult>, System.Func`1<Boolean>)",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x21b",
+          "token": "0x6001f0e"
+        },
+        {
+          "method": "CombatSolver.SearchRequestPipeline.Run()",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0x7d",
+          "token": "0x60028a0"
+        },
+        {
+          "method": "CombatSolver.CombatSearchCoordinator.SolveCore(CombatSolver.CombatRootSnapshot, CombatSolver.SolverDisplayNames, CombatSolver.BattleDamageSnapshot, CombatSolver.SearchPolicySnapshot, CombatSolver.SearchBudgetLedger, CombatSolver.SearchPlanDiscoveryState, System.Threading.CancellationToken, System.Action`1<CombatSolver.SolverProgress>, System.Action`1<CombatSolver.SolverResult>, System.Collections.Generic.List`1<CombatSolver.PlanAction[]>, System.Func`2<CombatSolver.SolverResult,CombatSolver.SolverResult>)",
+          "file": "CombatSolver.dll",
+          "ilOffset": "0xfffffffd",
+          "token": "0x6001eee"
+        }
+      ],
+      "sosStackPath": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hunt-crash-analysis-20261005/managed-stack-full.log",
+      "sourceFirstFrame": "CombatBeamSolver.Phases.cs467 direct Godot.GD.Print",
+      "conclusion": "Prototype instrumentation called Godot native string conversion in offline host; replace with injected Diagnostics.Info. Root, scoring, budgets and pruning logic untouched. Not a PR215/shared-witness semantic cause.",
+      "performanceEvidenceInvalid": true,
+      "noQueenLostRouteWork": true
+    },
+    "fix": "replace experimental Search-layer Godot.GD.Print with frozen policy.Diagnostics.Info; no pruning/scoring/budget/root changes",
+    "noRepeatedUnchangedSuccessfulNativeContract": true
+  },
+  "correctedClosedTierScreen": {
+    "label": "dev06-hunt-injected-log-C3",
+    "build": {
+      "seconds": 14.54,
+      "warnings": 0,
+      "errors": 0,
+      "copyModOnBuild": false
+    },
+    "dllSha256": "031ca0813c549536a6aeb41a3d713ad9b3e72fa507732a092f5b35609bda02ad",
+    "nativeSemanticsReusedRunId": "5712177f46554f3bb26229f0de3413d2",
+    "fixture": "fixtures/hunt-zero-growth-injected-log-research-20261005.patch",
+    "screen": {
+      "wallSeconds": 51.8829462,
+      "peakProcessWorkingSetBytes": 25200508928,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 47,
+        "StrategicHpDeficit": 47,
+        "PotionStrategicCost": 45,
+        "ProjectedBattlePotionCount": 1,
+        "EnemyHp": 0,
+        "Score": 9999231938,
+        "CombatEndedTurn": 10,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "sameQualityAsFirst": true,
+      "sameRoot": true,
+      "sameBudget": true,
+      "samePolicy": true,
+      "strictPrunesLog": [
+        "[CombatSolver] ZERO_GROWTH_STRICT_PRIMARY pruned=173"
+      ],
+      "totalExpanded": 413946,
+      "totalTransitions": 1579355,
+      "originalSeconds": 50.1786779,
+      "speedupVsOriginal": 0.9671516668804748,
+      "peakRatioVsFirst": 1.0701675227471574,
+      "finalAcceptance": false,
+      "speedFailed": true
+    },
+    "processLogRoot": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hunt-zero-credit-20261005/injected-log-screen",
+    "promoted": false,
+    "reason": "Complete request and unchanged quality; only0.96715x original speed; no final regression/interleaved acceptance/deployment."
+  },
+  "witnessPresencePrototype": {
+    "scope": "existing shared table presence via its own lock; skip shared branch certificates only while empty; retain first Hunt conservative P0/satisfied growth rule",
+    "base": "Qualified Regent component source + frozen first Hunt variant",
+    "build": {
+      "elapsed": "00:00:27.05",
+      "warnings": 0,
+      "errors": 0,
+      "copyModOnBuild": false
+    },
+    "dllSha256": "f22efbe367a797661561f5e051199302232a76d06dff3586303acabcd5e5fb04",
+    "native": {
+      "runId": "0ce1537149d1477b8e78b1777225211f",
+      "status": "Passed",
+      "elapsedMilliseconds": 39333.2663,
+      "completedChecks": [
+        "HuntSameBudgetDop2Strict:control=[won=True dead=False risk=False boundary=None hp=10 hunt=2 pots=0 deathsave=0 expanded=4532 transitions=11900]:candidate=[won=True dead=False risk=False boundary=None hp=10 hunt=2 pots=0 deathsave=0 expanded=120 transitions=352]",
+        "HuntRecovery:NativeFatalAndNonfatal:UnpopulatedPostCombatRewardOnly:NativeGenerationFilter:OwnedClone:AllFourPileUnknownRefusal:ActualCompleteP0Growth2Witness:UnsatisfiedGrowth1Refused:EqualHpKept:PositiveGrowthPriceRelicTheftForcedPotionRefused:StrictHigherHpActualPrune:TwoNativeTurnBoundariesTurn3Rouge:NativeBowlerGold:16Forks:FullStateRngParentLiveIsolation",
+        "NativeOutcome:combatEnded=False:turn=3:hp=46:maxHp=70"
+      ],
+      "error": null
+    },
+    "screen": {
+      "wallSeconds": 48.6656202,
+      "peakProcessWorkingSetBytes": 23493812224,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 62,
+        "StrategicHpDeficit": 62,
+        "PotionStrategicCost": 45,
+        "ProjectedBattlePotionCount": 1,
+        "EnemyHp": 0,
+        "Score": 9998331940,
+        "CombatEndedTurn": 11,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "pruneCounters": {
+        "totalExpanded": 417970,
+        "totalTransitions": 1591778,
+        "primaryIncumbentBranchesPruned": 0,
+        "primaryIncumbentUpdates": 2
+      },
+      "workEqualToPrevious": false,
+      "qualityEqualToPrevious": false,
+      "rootEqualToPrevious": true,
+      "policyEqualToPrevious": true,
+      "budgetEqualToPrevious": true,
+      "originalSeconds": 50.1786779,
+      "originalSpeedup": 1.0310908952517572,
+      "previousScreenSeconds": 50.9309547,
+      "previousScreenSpeedup": 1.046548970108471,
+      "rssRatioToPrevious": 0.9976907569398181,
+      "finalAcceptance": false
+    },
+    "fixture": "fixtures/hunt-witness-presence-research-20261005.patch",
+    "promoted": false,
+    "qualityFailed": true,
+    "causeOfFullRequestQualityChange": "unproved; fixed root/policy/budget same, work differs",
+    "noSharedTableDuplication": true
   }
 }

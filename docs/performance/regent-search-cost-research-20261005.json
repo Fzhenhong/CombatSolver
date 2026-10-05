@@ -3967,5 +3967,294 @@
       "finalSerialControlPending": true
     },
     "patch": "docs/performance/fixtures/hook-mask-layout-research-20261005.patch"
+  },
+  "maskLayoutSlotMixPrototype": {
+    "preparation": {
+      "baseSource": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hook-mask-layout-20261005/source",
+      "scope": "mix final uint hash before same2048-slot bounded metadata cache; high hook bits no longer invisible to low slot bits; ordered full match remains proof",
+      "noSharedTableChange": true,
+      "noCacheCapacityIncrease": true,
+      "noBranchValueCache": true,
+      "copyModOnBuild": false,
+      "nativePending": false,
+      "performancePending": false,
+      "productionIntegrated": false,
+      "targetOriginalSeconds": 20.0782254,
+      "targetSeconds": 10.0391127,
+      "build": {
+        "elapsed": "00:00:21.32",
+        "warnings": 0,
+        "errors": 0,
+        "copyModOnBuild": false
+      },
+      "dllSha256": "fedbc30a9dd1ca0784ca3bde9513d55f8428902c79ceb52a598bc2155be7e812",
+      "nativeRunId": "9e3882a4ced048b79489cc6c1dd56ea1",
+      "nativeStatus": "Passed",
+      "nativeElapsedMilliseconds": 30117.4719,
+      "nativeChecks": [
+        "MirroredHookFilter:Methods=63:Models=1672:OrderDuplicatesExternalForkInvalidationPatchRefreshSharedLayoutsSegmentsNoAnchorEffectivePrefixReuseEquivalentMasks",
+        "NativeOutcome:combatEnded=True:turn=1:hp=75:maxHp=75"
+      ],
+      "goalPassed": false,
+      "screenSummary": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hook-layout-slot-mix-20261005/screen-summary.json"
+    },
+    "native": {
+      "runId": "9e3882a4ced048b79489cc6c1dd56ea1",
+      "status": "Passed",
+      "elapsedMilliseconds": 30117.4719,
+      "completedChecks": [
+        "MirroredHookFilter:Methods=63:Models=1672:OrderDuplicatesExternalForkInvalidationPatchRefreshSharedLayoutsSegmentsNoAnchorEffectivePrefixReuseEquivalentMasks",
+        "NativeOutcome:combatEnded=True:turn=1:hp=75:maxHp=75"
+      ],
+      "error": null
+    },
+    "bitDemonstration": {
+      "scope": "synthetic uint hash-bit demonstration only; no native or performance claim",
+      "baseline": {
+        "plainSlot": 1234,
+        "mixedSlot": 2019
+      },
+      "rows": [
+        {
+          "bit": 11,
+          "plainSlot": 1234,
+          "mixedSlot": 1242
+        },
+        {
+          "bit": 12,
+          "plainSlot": 1234,
+          "mixedSlot": 60
+        },
+        {
+          "bit": 13,
+          "plainSlot": 1234,
+          "mixedSlot": 748
+        },
+        {
+          "bit": 14,
+          "plainSlot": 1234,
+          "mixedSlot": 1557
+        },
+        {
+          "bit": 15,
+          "plainSlot": 1234,
+          "mixedSlot": 1209
+        },
+        {
+          "bit": 16,
+          "plainSlot": 1234,
+          "mixedSlot": 1145
+        },
+        {
+          "bit": 17,
+          "plainSlot": 1234,
+          "mixedSlot": 760
+        },
+        {
+          "bit": 18,
+          "plainSlot": 1234,
+          "mixedSlot": 119
+        },
+        {
+          "bit": 19,
+          "plainSlot": 1234,
+          "mixedSlot": 707
+        },
+        {
+          "bit": 20,
+          "plainSlot": 1234,
+          "mixedSlot": 1530
+        },
+        {
+          "bit": 21,
+          "plainSlot": 1234,
+          "mixedSlot": 1623
+        },
+        {
+          "bit": 22,
+          "plainSlot": 1234,
+          "mixedSlot": 1276
+        },
+        {
+          "bit": 23,
+          "plainSlot": 1234,
+          "mixedSlot": 1008
+        },
+        {
+          "bit": 24,
+          "plainSlot": 1234,
+          "mixedSlot": 552
+        },
+        {
+          "bit": 25,
+          "plainSlot": 1234,
+          "mixedSlot": 752
+        },
+        {
+          "bit": 26,
+          "plainSlot": 1234,
+          "mixedSlot": 55
+        },
+        {
+          "bit": 27,
+          "plainSlot": 1234,
+          "mixedSlot": 164
+        },
+        {
+          "bit": 28,
+          "plainSlot": 1234,
+          "mixedSlot": 391
+        },
+        {
+          "bit": 29,
+          "plainSlot": 1234,
+          "mixedSlot": 514
+        },
+        {
+          "bit": 30,
+          "plainSlot": 1234,
+          "mixedSlot": 715
+        },
+        {
+          "bit": 31,
+          "plainSlot": 1234,
+          "mixedSlot": 562
+        }
+      ],
+      "plainUniqueSlots": 1,
+      "mixedUniqueSlots": 22,
+      "fullMatchRequired": true,
+      "remainingCollisionPossible": true
+    },
+    "screen": {
+      "wallSeconds": 16.0510219,
+      "peakProcessWorkingSetBytes": 10951372800,
+      "comparisonQuality": {
+        "Won": true,
+        "OutstandingStolenResource": 0,
+        "ProjectedBattleHpLost": 40,
+        "StrategicHpDeficit": 40,
+        "PotionStrategicCost": 0,
+        "ProjectedBattlePotionCount": 0,
+        "EnemyHp": 0,
+        "Score": 9999753969,
+        "CombatEndedTurn": 6,
+        "Survives": true,
+        "DeathSaveUseCount": 0,
+        "GrowthHpCredit": 0,
+        "GrowthRewardCount": 0
+      },
+      "budget": {
+        "Profile": "VeryHigh",
+        "BeamWidth": 135,
+        "MaxExpandedNodes": 500000,
+        "MaxCardBranchesPerNode": 72,
+        "MaxPileChoiceBranchesPerAction": 42,
+        "MaxHandChoiceBranchesPerAction": 54,
+        "MaxDegreeOfParallelism": 16,
+        "BudgetMilliseconds": 300000,
+        "EarlyTurnExplorationDepth": 0,
+        "EarlyTurnExplorationBudgetMilliseconds": 0,
+        "PotionPolicy": "Smart",
+        "SearchMode": "Coordinator",
+        "UsePortfolio": true,
+        "fixedSearchBudget": false,
+        "enableNoGcRegion": true,
+        "noGcRegionBudgetGigabytes": 16
+      },
+      "root": "turn=1 round=1 phase=Play side=Player energy=3 hp=75/75 hand=[PREP_TIME,STRIKE_REGENT,CALAMITY,CRESCENT_SPEAR,FURNACE,GAMMA_BLAST] draw=20 discard=0 relics=[DIVINE_RIGHT,MERCURY_HOURGLASS,VEXING_PUZZLEBOX,MEMBERSHIP_CARD] enemies=[THE_INSATIABLE#1:338/341@LIQUIFY_GROUND_MOVE] total_floor=1 act_floor=0",
+      "pruneCounters": {
+        "boundary": "None",
+        "selectedExpanded": 4583,
+        "selectedTransitions": 20743,
+        "selectedChoiceBranches": 1110,
+        "totalExpanded": 79490,
+        "totalTransitions": 311838,
+        "totalChoiceBranches": 5362,
+        "choiceReplayAttempts": 1110,
+        "choiceReplayBudgetExhaustions": 0,
+        "choiceBranchesDroppedByBudget": 0,
+        "roundReplayPrefixCaptures": 0,
+        "dominatedActionsPruned": 1,
+        "topQueueActionsDropped": 0,
+        "actionAdmissionRepresentativesProtected": 0,
+        "duplicateCardBranchesPruned": 2263,
+        "shuffleBranchesPruned": 0,
+        "soldHpBranchesPruned": 0,
+        "primaryIncumbentBranchesPruned": 350,
+        "primaryIncumbentUpdates": 1,
+        "replayCount": 2,
+        "forkCount": 20743,
+        "reusedNodeSnapshots": 5123,
+        "transpositionBranchesPruned": 1005,
+        "repeatableNoProgressBranchesPruned": 0,
+        "standPatProbes": 2069,
+        "transitionCacheHits": 0,
+        "roundReplayPrefixReuses": 0,
+        "cycleRegionsDetected": 0,
+        "cycleRegionCandidatesConsidered": 0,
+        "cycleRegionCandidatesAdmitted": 0,
+        "cycleRegionCandidatesDropped": 0,
+        "cycleRegionProgressEpochs": 0,
+        "cycleRegionProbeCandidatesAdmitted": 0,
+        "cycleRegionProgressCandidatesAdmitted": 0,
+        "cycleRegionMaxActionFamilies": 0,
+        "orderedMutationCandidatesAdmitted": 0,
+        "orderedMutationLeaseExpiredBudget": 0,
+        "orderedMutationOrdinaryFallbacks": 0,
+        "orderedMutationColdAtomicCommitted": 0,
+        "orderedMutationColdAtomicRejected": 0,
+        "deferredRoundChoiceActions": 262,
+        "deferredRoundChoiceLayerWidthTotal": 1110,
+        "maxDeferredRoundChoiceLayerWidth": 32,
+        "deferredRoundChoiceFiniteQuotaFallbacks": 0,
+        "deferredRoundChoiceFinitePrimaryLayers": 262,
+        "deferredRoundChoiceFinitePendingFallbacks": 0,
+        "parallelActionReplayWaves": 163,
+        "parallelActionReplayWorkItems": 12980,
+        "maxParallelActionReplayConcurrency": 16,
+        "parallelRoundChoiceReplayWaves": 47,
+        "parallelRoundChoiceReplayWorkItems": 1618,
+        "maxParallelRoundChoiceReplayConcurrency": 16,
+        "maxParallelConcurrency": 16,
+        "searchedTurns": 6,
+        "shufflesCrossed": 1,
+        "score": 9999753969,
+        "projectedBattleHpLost": 40,
+        "potionCount": 0,
+        "onlyDeathRoutes": false,
+        "finalHp": 35,
+        "finalEnemyHp": 0,
+        "combatEndedTurn": 6,
+        "transpositionCount": 17407,
+        "expandedTranspositionCount": 4583,
+        "transpositionLimitBypasses": 0,
+        "standPatCacheCount": 2069,
+        "threatProjectionCacheCount": 8,
+        "coverageCacheCount": 8
+      },
+      "sameRoot": true,
+      "sameBudget": true,
+      "sameQuality": true,
+      "sameWork": true,
+      "samePolicy": true,
+      "workerAllocatedBytes": 12261178160,
+      "maskLayoutWorkerAllocatedBytes": 12272251760,
+      "speedupVsOriginal": 1.2509001311623655,
+      "speedupVsMaskLayoutSingle": 1.0043731919648058,
+      "rssRatioVsMaskLayoutSingle": 0.9998399463296664,
+      "finalAcceptance": false,
+      "goalPassed": false,
+      "workerAllocationRatio": 0.9990976717055224,
+      "lastCumulativeLayoutLog": "[CombatSolver/Test] HOOK_LAYOUT_CACHE scope=root_cumulative hits=446909 misses=13986 collisions=11951 bypasses=0",
+      "previousLastCumulativeLayoutLog": "[CombatSolver/Test] HOOK_LAYOUT_CACHE scope=root_cumulative hits=443177 misses=17727 collisions=15813 bypasses=0",
+      "logsCannotBeSummed": true
+    },
+    "patch": "docs/performance/fixtures/hook-layout-slot-mix-research-20261005.patch",
+    "patchBase": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/hook-mask-layout-20261005/source",
+    "goalPassed": false,
+    "productionIntegrated": false,
+    "finalInterleavedAcceptancePerformed": false,
+    "fullRegressionPerformed": false
   }
 }

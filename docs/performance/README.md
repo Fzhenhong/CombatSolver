@@ -11,6 +11,6 @@
 - [SoulNexusElite 玩家慢场景](soul-nexus-0491-research-20261004.md)：0.49.1 固定原包恢复、完整请求基线与边界。
 - [全药水回复证书](native-potion-recovery-certificates-20261004.md)：完整药水类型清单、组合条件与最小原生合同。
 - [组合回复上界](component-healing-bound-20261003.md)：组件证书、Smart 后续搜索、原生合同与最终验收状态。
-- [储君搜索成本研究](regent-search-cost-research-20261005.md)：独立 CPU/分配诊断、缓存交错失败与强制回合证明初筛。
-- [TheHunt 与零额度成长证明研究](hunt-zero-growth-proof-research-20261005.md)：战后奖励来源认证、闭合药水层原生质量对照与未通过的完整请求。
+- [储君搜索成本研究](regent-search-cost-research-20261005.md)：独立 CPU/分配诊断、缓存交错失败、强制回合证明及同容量布局槽混合初筛。
+- [TheHunt 与零额度成长证明研究](hunt-zero-growth-proof-research-20261005.md)：战后奖励来源认证、闭合药水层原生质量对照、原型日志崩溃修正及空表扫描质量失败。
 - [历史实验](../archive/performance/README.md)：已完成、撤回和旧基线报告；指标只适用于报告列出的源码和输入。
