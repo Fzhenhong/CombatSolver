@@ -972,6 +972,12 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertNativeChooseOpenGateAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId is "SMART-OPENING-POTION-ADMISSION" or "SMART-OPENING-POTION-VALUE")
+            {
+                await runner.AssertSmartOpeningPotionAdmissionAsync(combatState, player,
+                    highLossOnly: request.ScenarioId == "SMART-OPENING-POTION-VALUE");
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "FIXED-PREFIX-POTION-POLICY")
             {
                 await runner.AssertFixedPrefixPotionPolicyAsync(combatState, player);
