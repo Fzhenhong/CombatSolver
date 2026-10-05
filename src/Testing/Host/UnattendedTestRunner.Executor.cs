@@ -942,6 +942,11 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertDirgeReplayResourcesAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "EXTRA-TURN-MIRROR-ORDER")
+            {
+                await runner.AssertExtraTurnMirrorsAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId is "TURN-SETUP-DELAYED-ENERGY" or "PAELS-EYE-AUTOPOST-ORDER")
             {
                 await runner.AssertTurnBoundaryOrderAsync(combatState, player);

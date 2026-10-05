@@ -171,6 +171,7 @@ internal sealed class CombatRootSnapshot
         Engine.InCombat.Mirrors.Hooks.TurnEnd.AfterSideTurnEndLateMirrors.Seal();
         Engine.InCombat.Mirrors.Hooks.TurnStart.BeforeSideTurnStartMirrors.Seal();
         Engine.InCombat.Mirrors.Hooks.TurnStart.AfterPlayerTurnStartMirrors.Seal();
+        Engine.InCombat.Mirrors.Hooks.TurnEnd.ExtraTurnMirrors.Seal();
         Stopwatch stopwatch = Stopwatch.StartNew();
 
         PredictionModPatchAudit.ValidateMonsterModels(state.Enemies.Select(enemy => enemy.Monster).OfType<MonsterModel>());

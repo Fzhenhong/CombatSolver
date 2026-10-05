@@ -102,7 +102,7 @@ internal static class LiveEndTurnRiskEvaluator
             return BuildProjection(hpBefore, simulatedPlayer, []);
         }
 
-        if (combat.ShouldTakeExtraPlayerTurn(player) || simulatedPlayer.IsDead)
+        if (Engine.InCombat.Mirrors.HookMirrors.ShouldTakeExtraTurn(simulator, combat, player) || simulatedPlayer.IsDead)
             return BuildProjection(hpBefore, simulatedPlayer, []);
 
         combat.CurrentSide = CombatSide.Enemy;
