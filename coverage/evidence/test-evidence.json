@@ -1,4 +1,12 @@
 {
+  "EXTRA-TURN-MIRROR-ORDER": {
+    "status": "Passed",
+    "level": "HeadlessNativeFullStateDifferentialAndFork",
+    "procedure": "EXTRA-TURN-MIRROR-ORDER，合成第三方监听者置于龙涎香之前、龙涎香与帕尔之眼之间、两者之后，原生 Hook 与正式镜像逐项对账。",
+    "expected": "判断短路顺序、后置读取状态、完整战斗状态一致；父 Fork 与 live 保持原值，根捕获后登记被拒绝。",
+    "observed": "36f686e1cf2b442e836d1ab4e5bdda2d Passed，23.655秒；三个位置的后置观察值依次为1、0、100，原生与模拟一致。失败基线22436356在第一个位置为原生1层、模拟0层。实例已删除。",
+    "evidence": "src/Testing/Contracts/ThirdParty/UnattendedTestRunner.ExtraTurnMirrors.cs; docs/TEST_MATRIX.md"
+  },
   "NINJA-SCROLL-ENTRY": {
     "status": "Passed",
     "level": "HeadlessNativeFullStateDifferentialAndFork",

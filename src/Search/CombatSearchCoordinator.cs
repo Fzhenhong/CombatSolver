@@ -24,6 +24,7 @@ internal static partial class CombatSearchCoordinator
             RouteAdoptionCancellationToken = cancellationToken,
             RequestWorkTotals = requestWorkTotals,
             PortfolioTelemetry = portfolioTelemetry,
+            PrimaryIncumbents = policy.PrimaryIncumbents ?? new PrimaryIncumbentTable(),
         };
         SearchInteractionState? interaction = policy.Interaction;
         if (policy.IncludeTurnSetup)
@@ -180,6 +181,14 @@ internal static partial class CombatSearchCoordinator
             selected.PortfolioTelemetry = portfolioTelemetry;
             selected.ComparisonQuality = BuildInterimResult(root, policy, selected);
             selected.ComparisonRootState = root.ContinuationStamp.StateText;
+            if (!policy.DisableRefinementIncumbentForTesting && !policy.DisableSharedPrimaryIncumbentsForTesting
+                && IsReusablePotionFreeVictory(policy, null, selected))
+            {
+                policy.PrimaryIncumbents!.Tighten(
+                    ResourceIncumbentPolicy.CompletedBucket(selected.Snapshot, 0),
+                    new(StrategicHpDeficit(root, policy, selected), selected.CombatEndedTurn!.Value));
+                policy.PrimaryIncumbents.PotionFreeWitness = selected;
+            }
             return selected;
         }
         catch (OperationCanceledException)
@@ -309,6 +318,12 @@ internal static partial class CombatSearchCoordinator
                 ? passPolicy : passPolicy with { NoveltySearch = null };
             SolverResult? initialPlanIncumbent = TryRunOpeningPlanIncumbent(
                 passContext with { Policy = beamPolicy }, initialPotionPolicyOverride);
+            if (!policy.DisableRefinementIncumbentForTesting && !policy.DisableSharedPrimaryIncumbentsForTesting
+                && beamPolicy.PrimaryIncumbents?.PotionFreeWitness is { } previousVictory
+                && IsReusablePotionFreeVictory(beamPolicy, initialPotionPolicyOverride, previousVictory)
+                && (initialPlanIncumbent == null || IsBetterPotionPolicyResult(
+                    root, beamPolicy, previousVictory, initialPlanIncumbent)))
+                initialPlanIncumbent = previousVictory;
             SolverResult SolveMember(SolverSearchProfile memberProfile, bool refinement,
                 PrimarySearchIncumbent? primaryIncumbent)
             {
@@ -912,6 +927,8 @@ internal static partial class CombatSearchCoordinator
         SolverResult result)
     {
         if (policy.EffectiveHasGrowthTargets
+            || !ResourceIncumbentPolicy.IsPlainBucket(
+                ResourceIncumbentPolicy.CompletedBucket(result.Snapshot, result.ExplicitPotionCount))
             || policy.RelicTargets.Count > 0 && !CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)
             || result.Snapshot.ProjectedDeathSaveUseCount > 0
             || !IsCompleteVictory(result)

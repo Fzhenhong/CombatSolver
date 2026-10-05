@@ -68,6 +68,8 @@ CombatRootSnapshot.Capture（主线程根）
 
 `AfterSideTurnEndLate` 的扩展使用 `AfterSideTurnEndLateMirrors.Register<TModel>`，在根捕获前完成登记；玩家和敌方共用 Hook facade，DisintegrationPower 不得恢复到独立晚期补偿。新增其他阶段时逐一核对原版顺序、选择暂停和状态所有权，不能把晚期入口当作所有回合事件的通用回调。
 
+额外回合的 `ShouldTakeExtraTurn` / `AfterTakingExtraTurn` 由 `ExtraTurnMirrors` 登记原版及第三方单项效果。判断按原生顺序短路，后置回调先固定成员再依次结算；选择暂停沿原动作重放。状态读写使用分支 Power 和遗物记录；原生顺序、完整状态和 Fork 隔离用 `EXTRA-TURN-MIRROR-ORDER` 验证。
+
 ## 3. 状态所有权清单
 
 卡牌费用等价须核对 `CardCostStateSupport` 的能量/星能基础值、有序修改层和失效条件，不能只比较当前费用。该writer同时服务出牌指纹、选牌与续用；没有修改层时保留原键。费用规则变化须覆盖原版出牌/回合末清理、Fork隔离与续用诊断字段边界。

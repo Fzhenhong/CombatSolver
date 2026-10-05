@@ -45,8 +45,11 @@
 | `.FinalPlanOrdering.cs` / `RouteQualityPolicy` | 完整路线质量与各既有投影顺序 |
 | `.StateEvaluation.cs` / `.Terminal.cs` | 评分特征、终局回放和回合结果 |
 | `SimulatedCombatState*.cs` | 分支战斗状态与动作语义 |
+| `PrimaryIncumbentTable` / `ResourceIncumbentPolicy` | 同根同政策的资源桶见证、未来收益上界与认证回退 |
 
 成员共享原请求账本；预算准入、候选合法性和取优由所属策略决定。分支状态不承担 Beam 政策；中途保路和终局比较保持明确入口。药水反事实与强制用药的硬准入先于质量比较。固定前缀构造实际父链，EndTurn 从模拟前后状态生成 `TurnOutcome`。
+
+资源桶按失窃量、用药量、成长次数向量、遗物目标组合分层。CombatRootSnapshot 冻结根成长上界，ResourceIncumbentPolicy 另在保路时只读认证分支剩余上界；不改变分支状态键或续用戳。纯成长目标在已实现次数至分支上界之间逐桶消费独立战损基准，所有可能目标均无改进空间才停止公共展开。目标集合过大或上界未知保留搜索；混合遗物目标沿用最乐观最终资源桶。Runtime 会话只携带已保留的完整零药路线及对应桶，不跨根或政策沿用数值界。
 
 预览路线的采用回放持有请求级取消令牌，单轮搜索结束与用户取消请求分别判断。强制结束回合的卡牌动作只消费自身选择，后续回合选择由AdvanceRound持有。固定前缀在仍进行的稳定父状态继续，药水统一沿正式候选政策准入。
 
@@ -70,6 +73,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 资源初始化冻结玩家基础最大能量，最大能量与抽牌按分支监听表、回合号及遗物隐藏状态结算；准备根和普通跨回合都一次性消费延迟能量。玩家 Hook 活动标志由引擎在死亡清理时关闭，Fork 继承并进入状态键，金币回调据此筛选成员。攻击意图由分支当前怪物 AI 行动派生，行动替换即时生效。
 
 回合末自动出牌先于 BeforeSideTurnEndEarly，PAELS_EYE 的手牌消耗由该 Hook 镜像拥有；额外回合资格在阶段结算后判断。部署会话区分动作、玩家结束／敌方阶段与下一玩家回合；最后一个结束阶段选择确认前解除旧会话归属。UI 的步骤和完成回调核对所属回合及当前路线快照。
+
+额外回合的判断与后置效果由 `ExtraTurnMirrors` 登记原版和第三方单项语义，`HookMirrors` 按原生监听顺序派发。后置回调使用固定成员快照，选牌暂停沿动作重放恢复；分支 Power 与帕尔之眼使用状态继续由 `SimulatedCombatState` 持有。
 
 金币命令由 `GoldGainSupport` 串联标准镜像：修改使用跑局前缀和战斗监听表，获得后的回调使用原生 null-child 跑局作用域。`SimulatedCombatState.GoldHooks` 在主线程冻结活动成员与已克隆全局来源，Fork 只读共享；遗物、药水、金币和 HP 仍从所属分支读取。未知金币 override 显式拒绝。监听参与位图为三个金币方法共用一位，只形成保守成员超集，精确方法仍由 registry 区分；不溢出或复用其他 Hook 位。`CombatPredictionSimulator.GainMaxHp` 单独实现实际封顶增量与后续 Heal，Feed、FruitJuice 和 DragonFruit 共用这一权威入口。
 
