@@ -18,6 +18,8 @@ PowerShell：`tools/testing/run-unattended-test.ps1 -ScenarioId PRIMARY-INCUMBEN
 
 同根离线复跑使用[固定根](../coverage/fixtures/search/shared-growth-incumbent-reuse.json)与[成长额度](../coverage/fixtures/search/shared-growth-incumbent-settings.json)，命令见[策略说明](strategy/hp-loss-pruning/README.md#同根成长路线续用)。该合同验证原生建局上的搜索与回放；整场部署及可见 Steam 性能分别验收。
 
+两项 PR 集成后的 `SHARED-GROWTH-AUTO-DEPLOY` Passed，runId `929ad5193d8d47c0b9cdddf14d027e78`，23.095秒。使用上述固定根的牌序，原生全自动在第2回合获胜，玩家75/75、零药，首动ROYALTIES，第2回合续用，计划外重算0。固定 Beam45/20000节点/20000ms/DOP1，严格增量验证，Instant/0秒部署；实例已删除。该模式的耗时用于正确性验收。独立离线回血哨兵本轮仍为先NOT_YET再击杀、战损0，展开243/转移527，单次搜索0.65秒；保持该固定根的质量与工作量。
+
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
 0.49.3 框架与局外 Mod 兼容性验证见 [历史卷 14](archive/testing/volume-14.md)。
