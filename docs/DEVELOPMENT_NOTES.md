@@ -17,10 +17,10 @@
 ### 第三方额外回合来源登记
 
 `ExtraTurnMirrors` 为 `ShouldTakeExtraTurn` / `AfterTakingExtraTurn` 开放第三方登记（泛型与按 `Type` 两种）。
-原版龙涎香、帕尔之眼的判断与消耗代码不动；`HookMirrors.ShouldTakeExtraTurn` / `AfterTakingExtraTurn`
-在原版结算之后只派发第三方监听者，搜索回放与 `LiveEndTurnRiskEvaluator` 改走这两个入口。重写了却没登记的
+原版龙涎香、帕尔之眼与第三方来源按原生监听顺序统一派发；`HookMirrors.ShouldTakeExtraTurn` 在首个 true 处结束判断，
+`AfterTakingExtraTurn` 固定成员后依次结算并处理选择暂停。搜索回放与 `LiveEndTurnRiskEvaluator` 共用入口。重写了却没登记的
 第三方类型按回合阶段表的口径停止搜索。监听者掩码用最后一位 `ExtraTurnCallbacks`，两个方法共用。
-没有第三方监听者时，判断与消耗的结果与此前逐位一致。
+帕尔之眼的后置回调在所属玩家获得额外回合时标记已使用，与原生方法一致；分支计数仍由 `SimulatedCombatState` 持有。
 
 ### 第三方规范 Power 预热登记
 

@@ -1,5 +1,7 @@
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Models.Relics;
 using CombatSolver.Engine.Common;
 using CombatSolver.Engine.Common.Mirrors;
 using CombatSolver.Engine.InCombat.Simulation;
@@ -14,13 +16,9 @@ using AfterRegistry = MethodMirrorRegistry<AbstractModel, ExtraTurnMirrorContext
 /// </summary>
 /// <remarks>
 /// <para>
-/// 原版只有龙涎香和帕尔之眼重写这两个钩子，它们仍由 <see cref="SimulatedCombatState.ShouldTakeExtraPlayerTurn" />
-/// 与 <see cref="SimulatedCombatState.ConsumeExtraTurnSources" /> 原样结算，这里不登记，原版行为逐位不变。
-/// 这两张表只派发<b>第三方</b>监听者，见 <see cref="HookMirrors.ShouldTakeExtraTurn" />。
+/// 龙涎香、帕尔之眼及第三方来源共用两张登记表，由 Hook facade 按原生监听顺序派发。
 /// </para>
 /// <para>
-/// 以前额外回合的来源是写死的，第三方 Power 给的额外回合在模拟里看不见，也不报：打出这类牌在搜索里
-/// 等于白白结束回合，实机却多出一个回合，执行和预测对不上而反复重算。登记之后按登记结算。
 /// 额外回合会改变「接下来还能做什么」，只记风险不够，所以和回合阶段那几张表同一口径：重写了却
 /// 没登记的，停止搜索——来源是已加载的第三方内容模型时按「暂未适配」报给玩家。只做表现的重写，
 /// 登记一个返回 <c>false</c> / 什么都不做的处理即可。
@@ -41,6 +39,25 @@ internal static class ExtraTurnMirrors
     private static readonly AfterRegistry AfterRegistry = new(AfterTakingExtraTurnMethod);
     private static readonly object RegistrationLock = new();
     private static bool _sealed;
+
+    static ExtraTurnMirrors()
+    {
+        ShouldRegistry.Register<AmbergrisPower>(static (power, context) =>
+            ReferenceEquals(power.Owner.Player, context.Player)
+            && context.Combat.GetAmount<AmbergrisPower>(power.Owner) > 0);
+        ShouldRegistry.Register<PaelsEye>(static (relic, context) =>
+            ReferenceEquals(relic.Owner, context.Player) && context.Combat.ShouldTriggerPaelsEye(relic));
+        AfterRegistry.Register<AmbergrisPower>(static (power, context) =>
+        {
+            if (ReferenceEquals(power.Owner.Player, context.Player))
+                context.Combat.SetPowerAmount(power, context.Combat.GetAmount<AmbergrisPower>(power.Owner) - 1);
+        });
+        AfterRegistry.Register<PaelsEye>(static (relic, context) =>
+        {
+            if (ReferenceEquals(relic.Owner, context.Player))
+                context.Combat.MarkPaelsEyeUsed(relic);
+        });
+    }
 
     /// <summary>登记一个类型的 <c>ShouldTakeExtraTurn</c>：返回 <c>true</c> 表示这名玩家要再来一个回合。</summary>
     public static void RegisterShouldTakeExtraTurn<TModel>(Func<TModel, ExtraTurnMirrorContext, bool> handler)
@@ -84,7 +101,7 @@ internal static class ExtraTurnMirrors
         lock (RegistrationLock) Volatile.Write(ref _sealed, true);
     }
 
-    /// <summary>一个第三方监听者要不要给额外回合。重写了却没登记的停止搜索。</summary>
+    /// <summary>判断当前监听者是否提供额外回合。</summary>
     internal static bool ShouldTakeExtraTurn(AbstractModel listener, ExtraTurnMirrorContext context)
     {
         MirrorDispatchResult<bool> result = ShouldRegistry.Invoke(listener, context, false);
@@ -93,7 +110,7 @@ internal static class ExtraTurnMirrors
         return result.Value;
     }
 
-    /// <summary>额外回合用掉之后通知一个第三方监听者。重写了却没登记的停止搜索。</summary>
+    /// <summary>结算当前监听者的额外回合后置效果。</summary>
     internal static void AfterTakingExtraTurn(AbstractModel listener, ExtraTurnMirrorContext context)
     {
         if (AfterRegistry.Invoke(listener, context).Kind == MirrorDispatchKind.Unsupported)
@@ -112,7 +129,7 @@ internal static class ExtraTurnMirrors
         if (modelType.Assembly == typeof(AbstractModel).Assembly)
         {
             throw new ArgumentException(
-                $"{modelType.FullName} 是原版类型；原版额外回合来源由 SimulatedCombatState 直接结算，不走这张表。",
+                $"{modelType.FullName} 是原版类型；原版额外回合来源使用内置镜像登记。",
                 nameof(modelType));
         }
         lock (RegistrationLock)

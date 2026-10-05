@@ -2218,6 +2218,19 @@ if ($dynamicVarDirectAccess) {
     $violations.Add('DynamicVarSet._vars direct field access must go through DynamicVarSetAccess')
 }
 
+$extraTurnRegistry = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'src/Engine/InCombat/Mirrors/Hooks/TurnEnd/ExtraTurnMirrors.cs'))
+foreach ($registration in @('ShouldRegistry.Register<AmbergrisPower>', 'ShouldRegistry.Register<PaelsEye>', 'AfterRegistry.Register<AmbergrisPower>', 'AfterRegistry.Register<PaelsEye>')) {
+    if (-not $extraTurnRegistry.Contains($registration)) {
+        $violations.Add("Extra-turn native effects must use the shared registry: $registration")
+    }
+}
+$extraTurnFacade = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'src/Engine/InCombat/Mirrors/HookMirrors.ExtraTurn.cs'))
+$extraTurnState = [IO.File]::ReadAllText((Join-Path $repositoryRoot 'src/Search/SimulatedCombatState.ReactiveRelics.cs'))
+foreach ($legacy in @('ShouldTakeExtraPlayerTurn(', 'ConsumeExtraTurnSources(')) {
+    if ($extraTurnFacade.Contains($legacy) -or $extraTurnState.Contains($legacy)) {
+        $violations.Add("Extra-turn effects must dispatch in listener order: $legacy")
+    }
+}
 if ($violations.Count -gt 0) {
     $violations | ForEach-Object { Write-Error $_ }
     throw "Refactor boundary verification failed with $($violations.Count) violation(s)."

@@ -9,25 +9,15 @@ namespace CombatSolver.Engine.InCombat.Mirrors;
 internal static partial class HookMirrors
 {
     /// <summary>
-    /// 对应 <c>Hook.ShouldTakeExtraTurn</c>：原版来源照旧由 <see cref="SimulatedCombatState.ShouldTakeExtraPlayerTurn" />
-    /// 判断，再问登记过的第三方监听者。
+    /// 按原生监听顺序判断额外回合，在第一个返回 true 的来源处结束。
     /// </summary>
-    /// <remarks>
-    /// 原生钩子是「任意一个监听者返回 true 就给」，判断本身没有副作用，所以先问原版、再问第三方，
-    /// 结果和原生遍历顺序无关。
-    /// </remarks>
     public static bool ShouldTakeExtraTurn(
         CombatPredictionSimulator simulator, SimulatedCombatState combat, Player player)
     {
         ExtraTurnMirrors.Seal();
-        if (combat.ShouldTakeExtraPlayerTurn(player))
-            return true;
-
         ExtraTurnMirrorContext? context = null;
         foreach (AbstractModel listener in IterateCombatHookListeners(simulator, MirroredHookMask.ExtraTurnCallbacks))
         {
-            if (IsBaseGameListener(listener))
-                continue;
             context ??= new ExtraTurnMirrorContext { Simulator = simulator, Player = player };
             if (ExtraTurnMirrors.ShouldTakeExtraTurn(listener, context))
                 return true;
@@ -36,33 +26,31 @@ internal static partial class HookMirrors
     }
 
     /// <summary>
-    /// 对应 <c>Hook.AfterTakingExtraTurn</c>：原版来源照旧由 <see cref="SimulatedCombatState.ConsumeExtraTurnSources" />
-    /// 结算，再通知登记过的第三方监听者。
+    /// 在固定监听快照上按原生顺序结算每个来源，选择暂停由动作重放恢复。
     /// </summary>
-    /// <remarks>
-    /// 原生钩子按监听者顺序逐个通知。这里先结算原版的龙涎香与帕尔之眼、再通知第三方；两边只改各自的状态，
-    /// 互不读取。第三方成员在开头固定下来，回调里移除自己不会影响本轮其他成员。
-    /// </remarks>
-    public static void AfterTakingExtraTurn(
+    public static bool AfterTakingExtraTurn(
         CombatPredictionSimulator simulator, SimulatedCombatState combat, Player player)
     {
         ExtraTurnMirrors.Seal();
-        combat.ConsumeExtraTurnSources(player);
-
-        List<AbstractModel>? receivers = null;
+        if (simulator.HasPendingChoice)
+            return false;
+        List<CardHookReceiver>? receivers = null;
         foreach (AbstractModel listener in IterateCombatHookListeners(simulator, MirroredHookMask.ExtraTurnCallbacks))
         {
-            if (!IsBaseGameListener(listener))
-                (receivers ??= []).Add(listener);
+            PredictedCard? card = listener is CardModel model
+                ? simulator.State.GetPlayerCombatState(model.Owner).FindCard(model) : null;
+            (receivers ??= []).Add(new CardHookReceiver(listener, card));
         }
         if (receivers is null)
-            return;
+            return true;
 
         var context = new ExtraTurnMirrorContext { Simulator = simulator, Player = player };
-        foreach (AbstractModel receiver in receivers)
-            ExtraTurnMirrors.AfterTakingExtraTurn(receiver, context);
+        foreach (CardHookReceiver receiver in receivers)
+        {
+            ExtraTurnMirrors.AfterTakingExtraTurn(receiver.Current, context);
+            if (simulator.HasPendingChoice)
+                return false;
+        }
+        return true;
     }
-
-    private static bool IsBaseGameListener(AbstractModel listener)
-        => listener.GetType().Assembly == typeof(AbstractModel).Assembly;
 }

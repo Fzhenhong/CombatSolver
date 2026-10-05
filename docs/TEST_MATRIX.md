@@ -1,6 +1,6 @@
 # CombatSolver 测试入口
 
-按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。
+按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。额外回合的原生顺序、完整状态与 Fork 合同 `EXTRA-TURN-MIRROR-ORDER` 已通过，runId `36f686e1cf2b442e836d1ab4e5bdda2d`；证据见 [登记表](../coverage/evidence/test-evidence.json)，使用两平台无人入口的同名 ScenarioId，敌生命1000、120秒上限及清理开关。
 
 历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
 

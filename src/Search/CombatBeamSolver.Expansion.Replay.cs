@@ -1227,7 +1227,8 @@ internal sealed partial class CombatBeamSolver
             // just-finished turn becomes Emotion Chip's "previous turn" window.
             if (hasActiveEmotionChip)
                 simulatedCombat.RecordRelicRoundDamage(simulator, _player, roundHistoryEntryStart);
-            Engine.InCombat.Mirrors.HookMirrors.AfterTakingExtraTurn(simulator, simulatedCombat, _player);
+            if (!Engine.InCombat.Mirrors.HookMirrors.AfterTakingExtraTurn(simulator, simulatedCombat, _player))
+                return SearchBoundaryReason.PendingChoice;
         }
 
         return AdvanceRoundPlayerStart(simulator, simulatedCombat, playerState, simulatedPlayer,
