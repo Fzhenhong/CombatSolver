@@ -20,6 +20,10 @@ PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-qua
 
 现行组合入口按共享节点与时间准入，执行期间在每批提交边界处理内存预约、回收和停止。原包 SearchOnly、Beam 组合检查及真实 CLR 合同的结果、失败与未验证项见 [历史卷 20](archive/testing/volume-20.md#社区批次-q010-与组合补搜)。
 
+## 社区批次 Q015：攻击续路
+
+O068 从原包 `start` 严格恢复，使用 [固定短搜政策](../coverage/fixtures/search/damaging-continuation-replay-policy.json)，保留原用药、成长、遗物及奖励政策。基线 7 战损／0 药／T4；当前自主搜索与原生整场部署均为 3／0／T4，零计划外重算。最小复跑命令、固定独立哨兵、失败试验与未验证项见 [Q015 记录](issues/q015-route-quality.md)。原包内保存预测的原生部署只证明路线可执行性，不充当自主搜索或性能结果。
+
 ## 开局药水补搜准入
 
 固定两槽满栏，使用原版奖励 RNG 捕获确定掉药／不掉药的搜索根。`SMART-OPENING-POTION-ADMISSION` 覆盖低损共同准入与换药抵扣，`SMART-OPENING-POTION-VALUE` 覆盖原价省血边界。失败基线、最终结果与验证范围见 [历史卷 20](archive/testing/volume-20.md#开局药水补搜准入)。

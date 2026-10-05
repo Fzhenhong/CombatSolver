@@ -180,6 +180,27 @@ internal sealed partial class CombatBeamSolver
                         || candidate.Snapshot.ProjectedPlayerHp == current.Snapshot.ProjectedPlayerHp
                             && candidate.Score > current.Score);
 
+        private static SearchNode? FindBestDamagingContinuation(IEnumerable<SearchNode> nodes)
+        {
+            SearchNode? best = null;
+            foreach (SearchNode node in nodes)
+            {
+                // Block can outrank every damaging step under the stand-pat threat
+                // projection, even when another legal play can finish the fight.
+                // Damage spent removing enemy block is progress too. Preserve one
+                // continuation with a legal attack left, not a predicted lethal.
+                if (node.IsTerminal || node.Parent == null
+                    || node.Action is not { Kind: PlanActionKind.PlayCard, EndsPlayerTurn: false }
+                    || (long)node.Snapshot.EnemyHp + node.Snapshot.EnemyBlock
+                        >= (long)node.Parent.Snapshot.EnemyHp + node.Parent.Snapshot.EnemyBlock
+                    || node.Snapshot.PlayableAttackCount <= 0)
+                    continue;
+                if (IsBetterOffensive(node, best))
+                    best = node;
+            }
+            return best;
+        }
+
         private static SearchNode? FindBestEnemyStrengthControl(IEnumerable<SearchNode> nodes)
             => nodes.Aggregate(
                 (SearchNode?)null,

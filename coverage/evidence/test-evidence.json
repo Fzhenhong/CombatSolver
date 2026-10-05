@@ -1,4 +1,12 @@
 {
+  "DAMAGING-CONTINUATION-Q015-O068": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "原始 O068 ZIP 的 start，完整 ContinuationStamp 与原生二进制恢复；原 profile 仅固定为10000ms，自主协调器搜索与整场原生部署，Instant/0秒。",
+    "expected": "同根0药路线追平合法人工3战损；无状态漂移或计划外重算。独立生成哨兵保持5战损/1药/T4。",
+    "observed": "9a4489d8生产基线7/0/T4；488511f0cd7348c5afdbdb3f60920c3b自主预测3/0/T4，原生57/75HP、零重算。哨兵61f63b71→37331b22保持5/1/T4，正常搜索8819.4→8988.8ms；每版本单样本，哨兵本轮未完整部署。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-replay-policy.json; coverage/fixtures/search/damaging-continuation-sentinel.json"
+  },
   "EXTRA-TURN-MIRROR-ORDER": {
     "status": "Passed",
     "level": "HeadlessNativeFullStateDifferentialAndFork",

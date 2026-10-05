@@ -8,6 +8,7 @@
 - [beam-width-portfolio](beam-width-portfolio.md)
 - [bounded-novelty-search-20260916](bounded-novelty-search-20260916.md)
 - [contextual-ordering-20260922](contextual-ordering-20260922.md)
+- [2026-09-02 通用循环开发记录](generic-loops-development-20260902.md)
 - [incremental-history-counters](incremental-history-counters.md)
 - [learned-portfolio-gate-20260917](learned-portfolio-gate-20260917.md)
 - [player-worldlines-20260905](player-worldlines-20260905.md)
