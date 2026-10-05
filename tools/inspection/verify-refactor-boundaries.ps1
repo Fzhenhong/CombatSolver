@@ -1346,6 +1346,20 @@ if (Select-String -LiteralPath $beamRetentionFacadePath -SimpleMatch "private Li
     $violations.Add("${beamRetentionFacadePath}: RankBest returned outside BeamRetentionPolicy")
 }
 $remainingHealingBoundPath = Join-Path $searchRoot "StrategicHpRecoveryBound.Remaining.cs"
+foreach ($componentBoundary in @(
+    @('src/Runtime/CombatRootSnapshot.cs', 'ComponentHealingRejection(rootSimulator, playerIdentity)'),
+    @('src/Search/StrategicHpRecoveryBound.Components.cs', 'Module.ModuleVersionId != ComponentAuditMvid'),
+    @('src/Search/StrategicHpRecoveryBound.Components.cs', 'state.AllCards.Concat(combat.PendingReturningCards)'),
+    @('src/Search/StrategicHpRecoveryBound.Components.cs', '!use.Automatic'),
+    @('src/Search/SimulatedCombatState.cs', 'FirstRejectedHealingRootSource('),
+    @('src/Search/CombatBeamSolver.Retention.cs', 'if (root.UsesComponentHealingCertificate)'),
+    @('src/Search/CombatBeamSolver.SmartPotionBound.cs', 'healing == int.MaxValue'),
+    @('src/Search/CombatSearchCoordinator.Audits.cs', 'PotionFreePolicyBaseline = CombatBeamSolver.CanUseComponentSmartPotionEligibility(root, policy)')
+)) {
+    if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot $componentBoundary[0]) -SimpleMatch $componentBoundary[1] -Quiet)) {
+        $violations.Add("Missing component healing certificate ownership: $($componentBoundary[0])")
+    }
+}
 foreach ($closureComponent in @("PendingReturningCards", "AllCards", "EffectivePowers()", "GetPotionSlotCount(player)", "HasCertifiedRemainingAttachments", "typeof(InfestedPrism)", "typeof(FuzzyWurmCrawler)")) {
     if (-not (Select-String -LiteralPath $remainingHealingBoundPath -SimpleMatch $closureComponent -Quiet)) {
         $violations.Add("${remainingHealingBoundPath}: remaining-healing proof lost a closure component: $closureComponent")
@@ -1384,7 +1398,7 @@ foreach ($healingBoundary in @(
     @('src/Search/CombatBeamSolver.Retention.cs', 'targets.All(target => target.HpAllowance == 0)'),
     @('src/Search/CombatBeamSolver.Retention.cs', 'allowTurnTieBound: !_strictHpBoundWithRelicTargets'),
     @('src/Search/CombatSearchCoordinator.cs', '!CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)'),
-    @('src/Search/CombatSearchCoordinator.PlanSearch.cs', 'if (!context.Root.CanCertifyRemainingHealing')
+    @('src/Search/CombatSearchCoordinator.PlanSearch.cs', 'if (!root.CanCertifyRemainingHealing')
 )) {
     if (-not (Select-String -LiteralPath (Join-Path $repositoryRoot $healingBoundary[0]) -SimpleMatch $healingBoundary[1] -Quiet)) {
         $violations.Add("Missing common healing-bound policy: $($healingBoundary[0])")
@@ -2245,6 +2259,7 @@ if ($nativeReplay.Contains('ApplyReplayStateAsync(')) {
     throw 'Native recorded replay must reconstruct state through native actions.'
 }
 $maintainedTestingRoot = Join-Path $repositoryRoot 'src/Testing'
+# Component healing and Smart eligibility contracts also belong in Contracts/Search.
 if (Get-ChildItem -LiteralPath $maintainedTestingRoot -File -Filter '*.cs') {
     throw 'Testing source belongs in its responsibility directory; keep the root for navigation.'
 }

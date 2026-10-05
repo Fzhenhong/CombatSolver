@@ -1210,6 +1210,14 @@ forbid_fixed "$beam_entry_path" 'public SolverResult Solve()' 'Solve returned to
 beam_retention_facade_path="$search_root/CombatBeamSolver.Retention.cs"
 forbid_fixed "$beam_retention_facade_path" 'private List<SearchNode> RankBest(' 'RankBest returned outside BeamRetentionPolicy:'
 remaining_healing_bound_path="$search_root/StrategicHpRecoveryBound.Remaining.cs"
+require_fixed "$repository_root/src/Runtime/CombatRootSnapshot.cs" 'ComponentHealingRejection(rootSimulator, playerIdentity)' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.Components.cs" 'Module.ModuleVersionId != ComponentAuditMvid' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.Components.cs" 'state.AllCards.Concat(combat.PendingReturningCards)' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/StrategicHpRecoveryBound.Components.cs" '!use.Automatic' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/SimulatedCombatState.cs" 'FirstRejectedHealingRootSource(' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/CombatBeamSolver.Retention.cs" 'if (root.UsesComponentHealingCertificate)' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/CombatBeamSolver.SmartPotionBound.cs" 'healing == int.MaxValue' 'component healing certificate ownership changed:'
+require_fixed "$repository_root/src/Search/CombatSearchCoordinator.Audits.cs" 'PotionFreePolicyBaseline = CombatBeamSolver.CanUseComponentSmartPotionEligibility(root, policy)' 'component healing certificate ownership changed:'
 require_fixed "$repository_root/src/Runtime/CombatRootSnapshot.cs" 'CanCertifyRemainingHealingEnvironment(' 'remaining-healing environment proof is not frozen at the root:'
 require_fixed "$beam_retention_facade_path" 'root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy' 'healing pruning requires a frozen certificate or native-source policy:'
 require_fixed "$repository_root/src/Runtime/CombatRootSnapshot.cs" 'CanUseKnownNativeHealingPolicy(' 'native healing policy eligibility must be frozen at the root:'
@@ -1233,7 +1241,7 @@ require_fixed "$beam_retention_facade_path" '_strictHpBoundWithRelicTargets = Ca
 require_fixed "$beam_retention_facade_path" 'targets.All(target => target.HpAllowance == 0)' 'missing zero-allowance objective gate:'
 require_fixed "$beam_retention_facade_path" 'allowTurnTieBound: !_strictHpBoundWithRelicTargets' 'equal-HP counter routes must keep later turns:'
 require_fixed "$search_root/CombatSearchCoordinator.cs" '!CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)' 'shared incumbent must retain objective eligibility:'
-require_fixed "$search_root/CombatSearchCoordinator.PlanSearch.cs" 'if (!context.Root.CanCertifyRemainingHealing' 'speculative early plans require the existing certified-root schedule:'
+require_fixed "$search_root/CombatSearchCoordinator.PlanSearch.cs" 'if (!root.CanCertifyRemainingHealing' 'speculative early plans require the existing certified-root schedule:'
 require_fixed \
     "$beam_phases_path" \
     'TightenPrimarySearchIncumbentAtTurnLayer(' \
@@ -1729,6 +1737,7 @@ if rg -q -F '._vars' "$repository_root/src" --glob '!**/DynamicVarSetAccess.cs';
 fi
 
 maintained_testing_root="$repository_root/src/Testing"
+# Component healing and Smart eligibility contracts also belong in Contracts/Search.
 for file in "$maintained_testing_root"/*.cs; do
     if [[ -f "$file" ]]; then
         violations+=("Testing source belongs in its responsibility directory; keep the root for navigation.")

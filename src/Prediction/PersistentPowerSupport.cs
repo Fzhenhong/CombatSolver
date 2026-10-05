@@ -42,27 +42,31 @@ internal static class PersistentPowerSupport
         Player player,
         int baseDraw)
     {
+        // Preserve the native normal/late listener passes. Audited turn/counter
+        // relics read the branch directly, never Owner.PlayerCombatState in live.
         decimal result = baseDraw;
-        int turn = combat.GetPlayerTurnNumber(player);
+        int simulatedTurn = combat.GetPlayerTurnNumber(player);
         foreach (AbstractModel listener in combat.IterateHookListeners())
         {
-            if (listener is RelicModel relic && ReferenceEquals(relic.Owner, player))
+            if (listener is RelicModel relic && IsBranchOwnedHandDrawRelic(relic))
             {
-                if (relic is BagOfPreparation or BigMushroom or BoomingConch or RingOfTheDrake or RingOfTheSnake)
-                {
-                    result += GetTurnBasedHandDrawContribution(relic, combat, turn);
-                    continue;
-                }
-                if (relic is Pendulum or Pocketwatch or PollinousCore)
-                {
-                    result += combat.GetStatefulRelicHandDrawContribution(relic, player, turn);
-                    continue;
-                }
+                if (ReferenceEquals(relic.Owner, player) && !relic.IsMelted)
+                    result += GetTurnBasedHandDrawContribution(relic, combat, simulatedTurn)
+                        + combat.GetStatefulRelicHandDrawContribution(relic, player, simulatedTurn);
             }
-            result = listener.ModifyHandDraw(player, result);
+            else
+                result = listener.ModifyHandDraw(player, result);
         }
+        foreach (AbstractModel listener in combat.IterateHookListeners())
+            result = listener.ModifyHandDrawLate(player, result);
         return Math.Max(0, (int)result);
     }
+
+    private static bool IsBranchOwnedHandDrawRelic(RelicModel relic)
+        => relic.GetType() == typeof(BagOfPreparation) || relic.GetType() == typeof(BigMushroom)
+            || relic.GetType() == typeof(BoomingConch) || relic.GetType() == typeof(RingOfTheDrake)
+            || relic.GetType() == typeof(RingOfTheSnake) || relic.GetType() == typeof(Pendulum)
+            || relic.GetType() == typeof(Pocketwatch) || relic.GetType() == typeof(PollinousCore);
 
     public static int GetModifiedMaxEnergy(SimulatedCombatState combat, Player player)
     {

@@ -58,6 +58,8 @@
 
 `StrategicHpRecoveryBound` 在根快照中冻结回复环境资格，由 `.Remaining` 维护已审计来源闭包和分支剩余上界，未知来源保持无限上界。`.KnownSources` 单独提供当前原版已知来源策略，忽略尚未生成的随机药水回复；该策略资格不构成严格闭包证书。已有完整合规胜利可以沿既有 Retention 和组合成员入口提供界；主搜索之前的计划安排仍只对严格认证根开放，其余根保留原阶段顺序。
 
+`.Components` 组合逐项审查的卡牌、生成池、Power、遗物、药水和敌人证明，并锁定审计的原生 MVID。Runtime 在稳定根捕获证书及拒绝原因；模拟状态只提供已捕获的战斗、永久牌组和全局监听前缀，不读取 live。资格随根冻结，分支上界重新检查牌堆、待返回牌、层数和用药记录，未知来源不调用已知来源估计来收紧无限界。Smart 的精确用药层及开局用药后续搜索复用同一节血门槛；完整无药胜利基线经既有 continuation 请求传递，成长、遗物、强制用药、资源追回和保命资源门禁仍保留。证书是搜索元数据，不进入战斗指纹或续用文本。
+
 ## 4. 模拟与 Prediction
 
 | 位置 | 职责 |
@@ -90,6 +92,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 ## 6. Testing
 
 源码按 [Testing 入口](../src/Testing/README.md) 收纳：Host 持有编排与协议，Support 持有共享差分辅助，Replay 持有恢复；Contracts 按 Combat/Search/Runtime/UI/ThirdParty 分组，Regressions 保存社区和报告回归。各目录沿用原程序集与 partial 类型。
+
+组件剩余回复上界和 Smart 用药资格合同位于 `Contracts/Search`；根状态与完整原生差分仍由既有 Support/Runtime 合同提供，不改变 partial 方法、请求路由或状态所有权。
 
 | 入口 | 所有权 |
 | --- | --- |

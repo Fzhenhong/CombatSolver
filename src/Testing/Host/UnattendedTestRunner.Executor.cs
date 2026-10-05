@@ -1077,6 +1077,34 @@ internal sealed partial class UnattendedTestRunner
                 return Observation(combatEnded: false);
             }
 
+            if (request.ScenarioId == "ZERO-ALLOWANCE-RELIC-INCUMBENT")
+            {
+                runner.SetStage("zero_allowance_relic_incumbent");
+                await runner.AssertZeroAllowanceRelicIncumbentAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "POTION-COST-INCUMBENT")
+            {
+                runner.SetStage("potion_cost_incumbent");
+                await runner.AssertPotionCostIncumbentAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "COMPONENT-SMART-BOUND")
+            {
+                runner.SetStage("component_smart_bound");
+                await runner.AssertComponentSmartBoundAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
+            if (request.ScenarioId == "COMPONENT-HEALING-BOUND")
+            {
+                runner.SetStage("component_healing_bound");
+                await runner.AssertComponentHealingAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+
             if (request.ScenarioId == "IRON-GENERATION-HEALING")
             {
                 runner.SetStage("iron_generation_healing");
