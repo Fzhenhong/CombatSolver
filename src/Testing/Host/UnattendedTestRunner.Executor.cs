@@ -63,6 +63,11 @@ internal sealed partial class UnattendedTestRunner
                     await runner.AssertKnownHealingPolicyAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "PRIMARY-INCUMBENT-REUSE")
+            {
+                await runner.AssertPrimaryIncumbentReuseAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "KNOWN-HEALING-OPENING")
             {
                 runner.SetStage("known_healing_opening");
