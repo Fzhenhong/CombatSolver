@@ -14,4 +14,4 @@
 
 失败基线 runId `ef33630d6b52447b9279fefce87117e2`，21.952 秒，拆分断言明确失败于入堆前的 listener 要求，其他生成牌字段通过。修正后的完整 `PR18-FOREIGN-ONPLAY-BOUNDARY -VerifyBaseLibCardModifierBoundary` Passed，runId `646fb5504eb445efbaa14fe8068f84b0`，23.892 秒，输出 `BaseLibGeneratedClone:NativeState:Created:Hand:Draw:Discard:Exhaust:Play:Removed`。同进程原有 OnPlay 边界及一次普通原版求解部署 Passed，玩家 HP=80，敌人 HP=0；测试修饰器在求解前移除，这不是任意修饰器效果的整场适配证明。
 
-两次原生运行均加载安装的 BaseLib 3.4.7 与 RitsuLib 原包，采用已提交 Executor 的隔离编译输入，保留工作区原有临时接线。临时启动器使用已有映像查询入口，保留进程身份、租约与清理检查；总超时 120 秒，实例均已删除。复跑入口与范围见 [测试矩阵](../../TEST_MATRIX.md#0493-框架与局外-mod-兼容性2026-10-04)。本轮源码修改属于 Testing；既有克隆、监听与兼容门禁实现通过原生合同验证。
+两次原生运行均加载安装的 BaseLib 3.4.7 与 RitsuLib 原包，采用已提交 Executor 的隔离编译输入，保留工作区原有临时接线。临时启动器使用已有映像查询入口，保留进程身份、租约与清理检查；总超时 120 秒，实例均已删除。复跑入口与范围见 [测试历史卷 14](../testing/volume-14.md#0493-框架与局外-mod-兼容性2026-10-04)。本轮源码修改属于 Testing；既有克隆、监听与兼容门禁实现通过原生合同验证。
