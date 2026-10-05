@@ -1,4 +1,6 @@
 {
+  "手动操作改变了战斗状态，已丢弃过期结果，请重新计算。": "Manual input changed the combat state. The outdated result was discarded. Recalculate to continue.",
+  "战斗状态在计算期间发生变化，已丢弃过期结果。": "The combat state changed during calculation. The outdated result was discarded.",
   "循环 ×{0}": "Loop ×{0}",
   "框内 {0} 个动作按顺序重复 {1} 次，共 {2} 个动作": "Repeat the {0} actions inside this group in order {1} times ({2} actions total)",
   "另有 {0} 回合未展开显示": "{0} more turns not shown",

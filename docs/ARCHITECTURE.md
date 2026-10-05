@@ -15,6 +15,7 @@
 | `src/Runtime/Entry.cs` | 初始化、战斗生命周期接线 |
 | `SolverController.cs` | 主线程请求、结果接收、续用、部署和自动执行 |
 | `SolverControllerSessions.cs` | 战斗、搜索、部署会话生命周期 |
+| `CombatBugReportUploadPolicy.cs` / `CombatBugReportDescription.cs` | 当前战斗内容的上传引导资格与真实错误分类；搜索会话单独记录期间玩家输入 |
 | `CombatRootSnapshot.cs` | 在主线程捕获并核对稳定根 |
 | `ContinuationStamp.cs` | live / predicted 跨回合一致性和字段差异 |
 | `SearchGcPolicy.cs` | 进程 GC、NoGC 和跨战斗回收协调 |
@@ -45,14 +46,19 @@
 | `.FinalPlanOrdering.cs` / `RouteQualityPolicy` | 完整路线质量与各既有投影顺序 |
 | `.StateEvaluation.cs` / `.Terminal.cs` | 评分特征、终局回放和回合结果 |
 | `SimulatedCombatState*.cs` | 分支战斗状态与动作语义 |
+| `PrimaryIncumbentTable` / `ResourceIncumbentPolicy` | 同根同政策的资源桶见证、未来收益上界与认证回退 |
 
 成员共享原请求账本；预算准入、候选合法性和取优由所属策略决定。分支状态不承担 Beam 政策；中途保路和终局比较保持明确入口。药水反事实与强制用药的硬准入先于质量比较。固定前缀构造实际父链，EndTurn 从模拟前后状态生成 `TurnOutcome`。
 
-`CombatSearchCoordinator.Audits` 的智能开局药水补搜逐成员扣除请求剩余节点和时间。无药路线只有死亡、尚无完整胜利时，最后一个生成能力成员可复用同药水选择成员自生的完整首回合动作，并在其他复合前缀前调度；缓存只存纯值动作，不持有节点或实机状态。仍占原成员名额，沿既有前缀回放重建调度基线、普通排序及药水资格比较，不增加配置容量。
+`CombatSearchCoordinator.Audits` 的智能开局药水补搜逐成员扣除请求剩余节点和时间。开局成员沿用智能梯度同一次请求计算出的用药准入上限，首回合及损血边界续搜也受该上限约束；保留上游净差、必然受击及整场战损三轴准入。无药路线只有死亡、尚无完整胜利时，最后一个生成能力成员可复用同药水选择成员自生的完整首回合动作，并在其他复合前缀前调度；缓存只存纯值动作，不持有节点或实机状态。仍占原成员名额，沿既有前缀回放重建调度基线、普通排序及药水资格比较，不增加配置容量。
 
 取得安全、最多两瓶且仍损血的完整胜利后，仅一个剩余复合成员可复用该路线最后损血回合之前的完整动作；边界由结果已有的逐回合损血摘要确定，前缀须含登记能力且结束于上一回合。消费原成员宽度，并从共享剩余节点/时间中按剩余名额分配一份有界续搜额度；其他成员保持原前缀和政策。全程只使用当前结果的纯值动作与摘要，最终仍按整场政策取优，不解析报告、不持有节点图或读取实机。
 
 `PowerCommitmentRetention` 按机制族、登记能力集合、药水数量与回合选择有界代表；能力激活顺序不重复占席，不同能力集合不因族相同而合并。Beam 只保护实际代表，其他能力节点不预占代表配额；替换保持容量和既有必保节点。完整状态键、转置支配及终局政策不消费这种启发式分组。显式路径观察只复制纯值承诺及独立字符串数组，不保留节点或模拟器。
+
+组合补搜入口按基线完成情况与节点、时间余量准入。每个成员在 `CombatBeamSolver.Phases` 的提交边界预约内存，Runtime 检查点执行回收和区域重建，连续无进展时结束当前成员；成员可跨多个区域完成，累计分配量由组合诊断记录。
+
+资源桶按失窃量、用药量、成长次数向量、遗物目标组合分层。CombatRootSnapshot 冻结根成长上界，ResourceIncumbentPolicy 另在保路时只读认证分支剩余上界；不改变分支状态键或续用戳。纯成长目标在已实现次数至分支上界之间逐桶消费独立战损基准，所有可能目标均无改进空间才停止公共展开。目标集合过大或上界未知保留搜索；混合遗物目标沿用最乐观最终资源桶。Runtime 会话只携带已保留的完整零药路线及对应桶，不跨根或政策沿用数值界。
 
 预览路线的采用回放持有请求级取消令牌，单轮搜索结束与用户取消请求分别判断。强制结束回合的卡牌动作只消费自身选择，后续回合选择由AdvanceRound持有。固定前缀在仍进行的稳定父状态继续，药水统一沿正式候选政策准入。
 
@@ -77,6 +83,8 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 
 回合末自动出牌先于 BeforeSideTurnEndEarly，PAELS_EYE 的手牌消耗由该 Hook 镜像拥有；额外回合资格在阶段结算后判断。部署会话区分动作、玩家结束／敌方阶段与下一玩家回合；最后一个结束阶段选择确认前解除旧会话归属。UI 的步骤和完成回调核对所属回合及当前路线快照。
 
+额外回合的判断与后置效果由 `ExtraTurnMirrors` 登记原版和第三方单项语义，`HookMirrors` 按原生监听顺序派发。后置回调使用固定成员快照，选牌暂停沿动作重放恢复；分支 Power 与帕尔之眼使用状态继续由 `SimulatedCombatState` 持有。
+
 金币命令由 `GoldGainSupport` 串联标准镜像：修改使用跑局前缀和战斗监听表，获得后的回调使用原生 null-child 跑局作用域。`SimulatedCombatState.GoldHooks` 在主线程冻结活动成员与已克隆全局来源，Fork 只读共享；遗物、药水、金币和 HP 仍从所属分支读取。未知金币 override 显式拒绝。监听参与位图为三个金币方法共用一位，只形成保守成员超集，精确方法仍由 registry 区分；不溢出或复用其他 Hook 位。`CombatPredictionSimulator.GainMaxHp` 单独实现实际封顶增量与后续 Heal，Feed、FruitJuice 和 DragonFruit 共用这一权威入口。
 
 ## 5. UI
@@ -96,7 +104,7 @@ Fork 发生在动作、选牌、Power、死亡和出牌事务允许复制的稳�
 | `ScenarioBuilder` | 建局与状态注入 |
 | `Executor` | 差分、搜索、部署执行及临时设置 |
 | `Assertions` | 执行前后断言 |
-| `Writer` | 结果协议和原子写入 |
+| `Writer` | 结果协议和原子写入；求解侧实测值（含 `UnavoidableHpLost`）在此进入 `UnattendedSolverMetrics`，两平台 launcher 的 `ExpectedInitial*` 参数只做透传，断言落在 Contracts |
 
 原生与模拟核对完整状态、顺序、引用、RNG 和续用合同。离线宿主只产搜索指标；headless 不证明真实可见布局或帧时间。入口见 [无人测试](HEADLESS_TESTING.md)、[离线宿主](OFFLINE_SEARCH_HARNESS.md)、[测试证据](TEST_MATRIX.md)。
 

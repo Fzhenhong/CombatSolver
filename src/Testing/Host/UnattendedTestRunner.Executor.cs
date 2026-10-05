@@ -73,6 +73,11 @@ internal sealed partial class UnattendedTestRunner
                     await runner.AssertKnownHealingPolicyAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "PRIMARY-INCUMBENT-REUSE")
+            {
+                await runner.AssertPrimaryIncumbentReuseAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId == "KNOWN-HEALING-OPENING")
             {
                 runner.SetStage("known_healing_opening");
@@ -947,6 +952,11 @@ internal sealed partial class UnattendedTestRunner
                 await runner.AssertDirgeReplayResourcesAsync(combatState, player);
                 return Observation(combatEnded: false);
             }
+            if (request.ScenarioId == "EXTRA-TURN-MIRROR-ORDER")
+            {
+                await runner.AssertExtraTurnMirrorsAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
             if (request.ScenarioId is "TURN-SETUP-DELAYED-ENERGY" or "PAELS-EYE-AUTOPOST-ORDER")
             {
                 await runner.AssertTurnBoundaryOrderAsync(combatState, player);
@@ -970,6 +980,12 @@ internal sealed partial class UnattendedTestRunner
             if (request.ScenarioId == "NATIVE-CHOOSE-OPEN-GATE")
             {
                 await runner.AssertNativeChooseOpenGateAsync(combatState, player);
+                return Observation(combatEnded: false);
+            }
+            if (request.ScenarioId is "SMART-OPENING-POTION-ADMISSION" or "SMART-OPENING-POTION-VALUE")
+            {
+                await runner.AssertSmartOpeningPotionAdmissionAsync(combatState, player,
+                    highLossOnly: request.ScenarioId == "SMART-OPENING-POTION-VALUE");
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId == "FIXED-PREFIX-POTION-POLICY")

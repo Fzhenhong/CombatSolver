@@ -299,25 +299,79 @@ internal sealed partial class CombatBeamSolver
 
     private List<SearchNode> ApplyPrimaryIncumbentBound(List<SearchNode> retained)
     {
-        // Per-event growth can repeat; the HP-only floor is not a bound on this objective.
-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
-            || _theftPolicy == SolverTheftPolicy.PreserveResources || _primaryIncumbent is not { } incumbent)
-            return retained;
-
-        List<SearchNode> bounded = ApplyPrimaryIncumbentBoundCore(
+        List<SearchNode> bounded = retained;
+        int pruned = 0;
+        int certifiedHealingBoundPruned = 0;
+        if (!_hasGrowthTargets && root.InitialGrowthRewards.Total == 0
+            && _theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent
+            && retained.All(node => ResourceIncumbentPolicy.IsPlainBucket(
+                ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, 0))))
+            bounded = ApplyPrimaryIncumbentBoundCore(
             retained,
             incumbent,
-            out int pruned,
+            out pruned,
             _strategicBossHpRelief,
             root.HasOnlyPostCombatHealing,
             root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy
                 ? RemainingHealingPotential : null,
-            out int certifiedHealingBoundPruned,
-            allowTurnTieBound: !_strictHpBoundWithRelicTargets);
+            out certifiedHealingBoundPruned,
+            allowTurnTieBound: !_strictHpBoundWithRelicTargets,
+            pruneEqualHp: policy.RelicTargets.Count == 0);
+        // A node may still move to a higher potion tier. Only use its current
+        // tier's witness when explicit use is closed by the member's policy.
+        List<SearchNode>? sharedBounded = null;
+        for (int index = 0; index < bounded.Count && !policy.DisableSharedPrimaryIncumbentsForTesting; index++)
+        {
+            SearchNode node = bounded[index];
+            int uses = ExplicitPotionUseCount(node);
+            bool potionTierClosed = CanUseSharedPotionTier(uses, _maximumPotionUses,
+                _forceAllPotionsDisabled, _potionPolicy, _potionStrategy.HasForcedDirectives);
+            int lootBucket = node.Snapshot.OutstandingStolenResource;
+            if (_theftPolicy == SolverTheftPolicy.PreserveResources && node.Snapshot.HasSimulator)
+                lootBucket = ((SimulatedCombatState)((CombatPredictionSimulator)node.Snapshot.Simulator).State.CombatState)
+                    .MinimumOutstandingStolenResource((CombatPredictionSimulator)node.Snapshot.Simulator);
+            bool eligible = !node.IsTerminal && !node.Snapshot.HasRisk && potionTierClosed;
+            int hpLowerBound = eligible ? StrategicHpLowerBound(node.Snapshot, _strategicBossHpRelief,
+                Math.Min(RemainingHealingPotential(node.Snapshot), node.Snapshot.FutureHealPotential)) : 0;
+            bool prune = eligible
+                && ResourceIncumbentPolicy.TryOptimisticBucket(policy, root.ExhaustingGrowthUpperBound,
+                    node.Snapshot, lootBucket, uses, out var resourceBucket, out int rewardCredit)
+                && _primaryIncumbents.TryGet(resourceBucket, out var shared)
+                && ShouldPruneByPrimaryIncumbent(
+                    hpLowerBound - rewardCredit,
+                    node.Turn, shared, allowTurnTieBound: !_strictHpBoundWithRelicTargets,
+                    pruneEqualHp: true);
+            if (!prune && eligible && !policy.IgnoreLongTermRewards && policy.RelicTargets.Count == 0
+                && (_hasGrowthTargets || node.Snapshot.GrowthRewards.Total != 0)
+                && node.Snapshot.HasSimulator)
+            {
+                var simulator = (CombatPredictionSimulator)node.Snapshot.Simulator;
+                var remainingUpper = ResourceIncumbentPolicy.CaptureExhaustingGrowthUpperBound(
+                    simulator, root.PlayerIdentity);
+                prune = ResourceIncumbentPolicy.PruneGrowthTargets(policy, remainingUpper,
+                    node.Snapshot.GrowthRewards, lootBucket, uses, hpLowerBound,
+                    _primaryIncumbents, out _, out _);
+            }
+            if (prune)
+            {
+                if (sharedBounded == null)
+                    sharedBounded = bounded.GetRange(0, index);
+                pruned++;
+            }
+            else
+                sharedBounded?.Add(node);
+        }
+        bounded = sharedBounded ?? bounded;
         _run.PrimaryIncumbentBranchesPruned += pruned;
         _run.PrimaryIncumbentCertifiedHealingBoundBranchesPruned += certifiedHealingBoundPruned;
         return bounded;
     }
+
+    internal static bool CanUseSharedPotionTier(int uses, int? maximum,
+        bool forceAllDisabled, SolverPotionPolicy potionPolicy, bool hasForcedDirectives)
+        => forceAllDisabled
+            || potionPolicy == SolverPotionPolicy.Disabled && !hasForcedDirectives
+            || maximum is { } limit && uses >= limit;
 
     internal static List<SearchNode> ApplyPrimaryIncumbentBound(
         List<SearchNode> retained,
@@ -325,7 +379,8 @@ internal sealed partial class CombatBeamSolver
         out int pruned,
         BossHpRelief bossHpRelief = BossHpRelief.None,
         Func<SimulationSnapshot, int>? remainingHealingPotential = null,
-        bool allowTurnTieBound = true)
+        bool allowTurnTieBound = true,
+        bool pruneEqualHp = false)
         => ApplyPrimaryIncumbentBoundCore(
             retained,
             incumbent,
@@ -334,7 +389,8 @@ internal sealed partial class CombatBeamSolver
             false,
             remainingHealingPotential,
             out _,
-            allowTurnTieBound);
+            allowTurnTieBound,
+            pruneEqualHp);
 
     private static List<SearchNode> ApplyPrimaryIncumbentBoundCore(
         List<SearchNode> retained,
@@ -344,7 +400,8 @@ internal sealed partial class CombatBeamSolver
         bool rootHasCertifiedHealingBound,
         Func<SimulationSnapshot, int>? remainingHealingPotential,
         out int certifiedHealingBoundPruned,
-        bool allowTurnTieBound = true)
+        bool allowTurnTieBound = true,
+        bool pruneEqualHp = false)
     {
         pruned = 0;
         certifiedHealingBoundPruned = 0;
@@ -358,14 +415,16 @@ internal sealed partial class CombatBeamSolver
                     StrategicHpLowerBound(node.Snapshot, bossHpRelief, futureHealPotential),
                     node.Turn,
                     incumbent,
-                    allowTurnTieBound))
+                    allowTurnTieBound,
+                    pruneEqualHp && !node.IsTerminal && !node.Snapshot.HasRisk))
             {
                 if (rootHasCertifiedHealingBound
                     && !ShouldPruneByPrimaryIncumbent(
                         StrategicHpLowerBound(node.Snapshot, bossHpRelief, baselineFutureHealPotential),
                         node.Turn,
                         incumbent,
-                        allowTurnTieBound))
+                        allowTurnTieBound,
+                        pruneEqualHp && !node.IsTerminal && !node.Snapshot.HasRisk))
                 {
                     certifiedHealingBoundPruned++;
                 }
@@ -412,7 +471,9 @@ internal sealed partial class CombatBeamSolver
                 (CombatPredictionSimulator)snapshot.Simulator, _player,
                 root.PostCombatRelicHeal.UnconditionalHeal + root.PostCombatRelicHeal.WoundedHeal,
                 includePotionHealing: !_forceAllPotionsDisabled,
-                maximumExplicitPotionUses: _maximumPotionUses));
+                maximumExplicitPotionUses: _maximumPotionUses,
+                ignoreExhaustedFeed: root.ExhaustingGrowthUpperBound is { } upper
+                    && snapshot.GrowthRewards.Feed >= upper.Feed));
         return certifiedPotential;
     }
 
@@ -435,8 +496,10 @@ internal sealed partial class CombatBeamSolver
         int strategicHpLowerBound,
         int turn,
         PrimarySearchIncumbent incumbent,
-        bool allowTurnTieBound = true)
+        bool allowTurnTieBound = true,
+        bool pruneEqualHp = false)
         => strategicHpLowerBound > incumbent.StrategicHpDeficit
+            || pruneEqualHp && strategicHpLowerBound == incumbent.StrategicHpDeficit
             || allowTurnTieBound && strategicHpLowerBound == incumbent.StrategicHpDeficit
                 && turn > incumbent.CombatEndedTurn;
 
@@ -507,9 +570,6 @@ internal sealed partial class CombatBeamSolver
         IReadOnlyList<SearchNode> retained,
         int completedTurnLayers)
     {
-        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets
-            || _theftPolicy == SolverTheftPolicy.PreserveResources)
-            return false;
         bool canEstablishPotionFreeIncumbent = _minimumPotionUses == 0
             && _potionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart;
         // The strict-primary escape in FinalPlanOrdering is guaranteed to make an
@@ -526,6 +586,7 @@ internal sealed partial class CombatBeamSolver
             return false;
         }
 
+        bool bucketUpdated = false;
         PrimarySearchIncumbent? tightened = _primaryIncumbent;
         foreach (SearchNode node in retained)
         {
@@ -557,7 +618,30 @@ internal sealed partial class CombatBeamSolver
                     + ActEndingBossPolicy.RankedPostCombatRelicHeal(
                         root.PostCombatRelicHeal, true, node.Snapshot.PlayerHp, node.Snapshot.PlayerMaxHp),
                 _strategicBossHpRelief,
-                node.Snapshot.DeathSaveHpRestored);
+                node.Snapshot.DeathSaveHpRestored) - node.Snapshot.StrategicHpCredit;
+            var resourceBucket = ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, explicitPotionUses);
+            PrimarySearchIncumbent? classIncumbent = _primaryIncumbents.TryGet(
+                resourceBucket, out var witnessed)
+                    ? witnessed : null;
+            if (TryTightenPrimarySearchIncumbent(
+                _potionFreePolicyBaseline,
+                _minimumPotionUses,
+                _maximumPotionUses,
+                candidateCompleteVictory: true,
+                candidateSatisfiesHardRules: !node.Snapshot.HasRisk,
+                explicitPotionUses,
+                strategicHpDeficit,
+                node.Snapshot.CombatEndedTurn,
+                ref classIncumbent,
+                effectivePotionPolicy: _potionPolicy,
+                candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount))
+            {
+                bucketUpdated |= _primaryIncumbents.Tighten(resourceBucket, classIncumbent!.Value);
+            }
+            if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
+                || !ResourceIncumbentPolicy.IsPlainBucket(resourceBucket)
+                || _theftPolicy == SolverTheftPolicy.PreserveResources)
+                continue;
             TryTightenPrimarySearchIncumbent(
                 _potionFreePolicyBaseline,
                 _minimumPotionUses,
@@ -572,9 +656,17 @@ internal sealed partial class CombatBeamSolver
                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount);
         }
 
-        if (Nullable.Equals(tightened, _primaryIncumbent))
-            return false;
-
+        if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
+            || _theftPolicy == SolverTheftPolicy.PreserveResources
+            || Nullable.Equals(tightened, _primaryIncumbent))
+        {
+            if (bucketUpdated)
+            {
+                _run.PrimaryIncumbentUpdates++;
+                policy.Diagnostics.Info("[CombatSolver/Test] PRIMARY_INCUMBENT_UPDATE source=resource_bucket");
+            }
+            return bucketUpdated;
+        }
         PrimarySearchIncumbent? previous = _primaryIncumbent;
         _primaryIncumbent = tightened;
         _run.PrimaryIncumbentUpdates++;

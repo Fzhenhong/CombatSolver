@@ -12,10 +12,6 @@ namespace CombatSolver;
 
 internal sealed partial class SimulatedCombatState
 {
-    public bool ShouldTakeExtraPlayerTurn(Player player)
-        => GetAmount<AmbergrisPower>(player.Creature) > 0
-            || RelicsOf(player).OfType<PaelsEye>().Any(relic => !relic.IsMelted && ShouldTriggerPaelsEye(relic));
-
     public bool ShouldTriggerPaelsEye(PaelsEye relic)
     {
         Player player = relic.Owner;
@@ -29,6 +25,12 @@ internal sealed partial class SimulatedCombatState
 
     public bool IsPaelsEyeUnused(PaelsEye relic)
         => GetStatefulRelicState(relic).Current == 0;
+
+    public void MarkPaelsEyeUsed(PaelsEye relic)
+    {
+        StatefulRelicState state = GetStatefulRelicState(relic);
+        SetStatefulRelicState(relic, state with { Current = 1 });
+    }
 
     public static bool TriggerPaelsEye(
         CombatPredictionSimulator simulator,
@@ -44,23 +46,6 @@ internal sealed partial class SimulatedCombatState
         if (simulator.IsRecordingActionRelicTriggers)
             simulator.RecordRelicTrigger(relic, "：额外回合");
         return true;
-    }
-
-    public void ConsumeExtraTurnSources(Player player)
-    {
-        int ambergris = GetAmount<AmbergrisPower>(player.Creature);
-        if (ambergris > 0)
-            SetAmount<AmbergrisPower>(player.Creature, ambergris - 1);
-        foreach (PaelsEye relic in RelicsOf(player).OfType<PaelsEye>().Where(static relic => !relic.IsMelted))
-        {
-            StatefulRelicState state = GetStatefulRelicState(relic);
-            if (state.Current == 0
-                && state.Previous != 0
-                && GetManualCardsPlayedThisTurn(player.Creature) == 0)
-            {
-                SetStatefulRelicState(relic, state with { Current = 1 });
-            }
-        }
     }
 
     public void TriggerRelicsAfterPotionUsed(

@@ -1,46 +1,47 @@
 # CombatSolver 测试入口
 
-按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。
+按改动选择最小验证层，方法见 [无人测试](HEADLESS_TESTING.md) 与 [社区验收](community/testing-guide.md)。以下命令提供当前复跑入口，不表示本轮已执行。单人共享损血剪枝的新基线验证见[策略证据](strategy/hp-loss-pruning/README.md#单人共享损血剪枝2026-10-05)。
 
 历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
 
-## Q002 旧费用层恢复与女王样例（2026-10-04）
+Q002合并前的0.49.2验证见[阶段归档](archive/testing/q002-0492-validation-20261005.md)，当前主题与失败证据见[Q002记录](issues/q002-route-quality.md)。0.49.4首次合并后开局药水准入及O002替代样例通过；O001/O003/O005质量断言失败，O004达到120秒上限。零HP额度遗物目标的兼容试验虽通过既有原生合同，但O005仍23损且O002退化35损，已撤回；完整来源、失败及后续验证见Q002记录，不将旧结果称本轮通过。
 
-O001 原包后续检查点：修改前 `317a1464939346af89cf0ca2b4b5abde` 事件30失败；完整费用证据迁移后 `a68f84cd88194fac94a61d3b848b86f8` Passed（86.20s），83事件至T12/HP76，原生二进制、全部续用及保存费用层一致。旧格式选择事件30/35/70。T12自主5秒搜索 `4033201f172c4fc784c22ec5fe541a8f` 与原生 `d502fbe6806a4d09a8f908b76148a030` 均Passed（29.23/33.58s），完整根/政策/8步动作一致，T13累计9损获胜，计划外重算0；原生账本72+13治疗−9损=76，前缀含T2玩家虚弱药水1瓶，续打未新增用药。这是T12阶段证据。最终原开局固定5,000ms/Beam135/500,000节点/DOP8正常 `df1b8cacb8f2417195f6a6dea6233eef` 与原生 `295dc393611841d3b36fcf9e6a19b5cd` Passed（44.80/59.62s）：均自主T11/9损/无药，原生账本72+13治疗−9损=76、计划外重算0；完整根/政策一致，58步动作不同。正常27,534.61ms、83,226展开/615,310转移，对同条件死亡基线24,178.26ms增加13.9%，不作提速结论。倒计时5边界合同 `7519ea80ad4e4428a0ea3f002a5bacc0`、最终选牌1200组合同 `66475a33303f4115806aece07449b6f1` 通过；O005最终哨兵 `ab81556584864da296b008e122109dc0` 同根/政策/动作仍8损，12,980.61ms。广泛回收枚举导致哨兵22损的失败已保留，最终仅有效倒计时场景开启有序代表。
-B014/T015 原版储君女王报告 `ba79d87499a4455bbba4a51baf381eea`：修正前 `dc932ebf39d34de1af68b2fdeb35db79` 首个可操作状态的临时星能层失败；嵌套字段解析修正后 `73a44262f64943caa7601cf167c40988` Passed（17.09s），开战/首个可操作状态/原生二进制/全部费用层严格一致。原开局固定30,000ms/Beam60/120,000节点/DOP8正常 `bcfd7fda57cb414781059d1e897c5305` 与原生 `76a94a8704fa43e8aa8e6ab0e1fd4255` Passed（47.37/53.14s）：同完整根/政策/动作，T6实际16损/无药获胜、HP75→59、计划外重算0；实例均删除。2026-10-05用户选其为O002独立替代样例；当前正式源码原生`3c83f6b283a641c196e73e736d8fd8ce`通过，清理五组一次性诊断后的最终冻结构建原生`eb3f0f670ff84fe882dd29835fdcd92b` Passed（54.99s）：T6实际16损/无药/重算0、HP75→59，完整根/政策/动作与上述30秒正常基线相同，搜索29,904.4745ms/48,548展开/363,762转移；实例删除。测试覆盖清理后Executor正常部署边界；生产源码不变，其他主题复用各自正式证据，不称本次重跑。它不能证明原包123→55或新的女王路线优化。恢复复跑使用 `-CheckpointArchivePath <原报告ZIP> -CheckpointSelector start -ReplayMode RestoreOnly -HeadlessFastModeForTest Instant -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 使用对应长参数，搜索/部署需另提供该显式诊断政策。
-费用与选择边界 `REPLAY-BOUNDARY-CONTRACT` run `884c35b87ac94e77b1632914fd34001a` Passed（20.20s），覆盖旧格式证据门、能量/星能费用、持续时间、选牌来源/原生身份/私有字段差异拒绝及临时星能非零费用和独立清除条件。完整调查范围见[Q002](issues/q002-route-quality.md#o002-其他女王材料筛选2026-10-04)。
-
-## Q002 O004 原预算与开局补搜隔离（2026-10-04）
-
-旧基线证据见[阶段归档](archive/testing/q002-pre-0492-validation-20261004.md#q002-o004-原预算与开局补搜隔离2026-10-04)；新版复验见[Q002](issues/q002-route-quality.md#0492-迁移与当前验收2026-10-04)。
-
-0.49.2最终正常 `a3aa4942898749b596ddf9496c2b1df7`（87.95s）与原生 `1877c9bc8a444f0197108bfb8a2b02b1`（103.57s）均Passed：自主4损/2瓶、实际HP51→47，完整根/政策/动作一致，Instant/0秒、计划外重算0。正常搜索68,687.7751ms、120,000展开/829,271转移；同根同政策8损对照67,070.9665ms、120,000展开/815,738转移。只替换一个既有复合成员为最后损血回合之前的自生边界续搜；失败分组/多边界实验已撤回，统计及Linux/可见性能未验证范围见当前Q002记录。
-
-## Q002 O003 能力代表保路（2026-10-04）
-
-0.49.2同T3根正常 `204260429b594ac0bc5cecef76cf880d` 与原生 `9bbf2ccae62c4874b301b440c066fadd` 为T10/2损、无新增用药、重算0。2026-10-05原T1正常协调器 `b37d0ca27961493192537daf04f4318c` 自主T10/1损；正式源码原生 `d8c5dd15078345189f89dae70133deef` Passed（101.94s）：实际1损/2回血/血清T2槽0一瓶、HP53→54、敌方0/重算0，完整根/政策/选中动作相同。固定4秒/250,000节点/Beam90/DOP8、原18能力成员及各25,000节点/4,000ms不增；正常诊断基线未获胜68,502.46ms→候选70,032.38ms，正式源码搜索70,975.77ms。最终O005哨兵 `df207b5296f941ff8e5d82e6dc3b83ec` 同根/政策/动作仍T9/8损/无药，原5秒/120,000节点/Beam60/DOP16，12,777.62ms≤旧12,980.61ms。原T1验收使用start/DeploySolver/Instant/ExpectedUnexpectedReplansAtMost=0/ExpectedFinishedPlayerHpAtLeast=53/ExpectedFinishedTurnAtMost=15/TimeoutSeconds=120/CleanupInstanceOnExit及显式4秒政策。失败/撤回实验、固定构建来源与性能限制见[当前证据](issues/q002-route-quality.md#o003-t1-自主生成与后续损血修整2026-10-05)；原180秒profile、Linux及可见性能未验证。
-
-旧版其余 Q002 机制证据与 Windows 初始化验证统一见[阶段归档](archive/testing/q002-pre-0492-validation-20261004.md)。
-
-0.49.2固定O005哨兵正常 `0a5a9de1965c4db19b4f5e6def77d7e6` 与原生 `c65456526c624a7cbf48d016bac4ef64` Passed：8损/无药、完整根/政策/动作一致、计划外重算0；正常13,272.9438ms、53,757展开/195,855转移，原生实际8损/2回血/自伤8/未归因0/终局HP32。先前17损哨兵及23损对照失败已保留；不足10,000ms的既有成员先建立登记能力后恢复质量，不增加四成员预算。跨版旧性能、Linux及可见性能口径见当前Q002记录。
-
-## 倾泻与手空效果边界（2026-10-03）
+0.49.4 的额外回合镜像顺序、同根成长胜利续用、整场自动部署与上传引导验证见 [历史卷 16](archive/testing/volume-16.md)。
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
 
-## 移动运行库内存回收（2026-10-04）
+0.49.3 的框架、局外 Mod 与 BaseLib 验证见 [历史卷 14](archive/testing/volume-14.md)。
 
-`portable-runtime` 先在原回收逻辑复现 Mono 同形的 API 拒绝，修复后 5 项 Passed。直接链接生产代码并注入被拒绝的按类型 GC 信息接口，验证一次检测后不再调用、普通检查点及不可分割提交续行、取消、自动及手动真实阻塞回收、不可用暂停观测和其他异常继续传播。
+移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
 
-```bash
-dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- portable-runtime
+## 社区批次 Q010 与组合补搜
+
+同根夹具和质量界见 [历史卷 17](archive/testing/volume-17.md)，各阶段定位与失败证据见 [Q010 复现记录](community/drafts/2026-10-04/Q010-claim-reproduction.md)。现行组合入口按共享节点与时间准入，执行期间在每批提交边界处理内存预约、回收和停止。
+
+`python -B tools/testing/checks/BeamWidthPortfolioChecks/run.py`：105 项通过，覆盖生产成员比较、预算、截断与节点／时间门控。`dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- default-commit`：2 项真实 CLR 合同通过，覆盖不可分割提交回收续行与取消。
+
+原包搜索入口为 `tools/testing/run-unattended-test.ps1`／`.sh`，从 `start` 用 `SearchOnly` 执行 O042、O045 夹具的断言并在首个结果停止；公开原包由社区资料 Release 的 Q010.zip 提供，本地输入放 `.local`。固定同根、政策、预算与 GC 启动模式对照，单请求超时 120 秒。可见帧时间与整场自动部署分别验收。
+
+2026-10-05 合并候选以 PR `fe976544` 为基线，在同机常规 Server GC 下完成同根对照：O042 两侧 Passed，战损 5、零药、第 7 回合、评分 10001354974；展开 85893→96600、转移 356997→401152、请求搜索耗时 14.700→16.085 秒。O045 两侧 Passed，零损零药、第 9 回合、评分 10002069967，展开 19474、转移 89746，耗时 6.206→6.230 秒。两组 `rootContinuationStamp` 与实际政策分别相等；O042 增加的补搜工作和耗时如实计入，单次对照不构成通用性能承诺。
+
+候选 runId：O042 `dceaceae371d4c42b1831f5c853d5662`、O045 `9cd3f64b3cfe4a028d214117a173d3cc`。独立 BYRDONIS 哨兵 `73be250581904263b276ae1eb8ae962a` Passed，保持先前同源码基线的 16 战损、零药、第 4 回合、评分 10000919984、展开 4784／转移 18223，搜索 1.836 秒。启动策略有效关闭 NoGC，强行启用的请求在设置断言处失败，因此真实 NoGC 区域重建与可见帧时间未验证。原生测试实例均已删除。
+
+## 开局药水补搜准入
+
+`SMART-OPENING-POTION-ADMISSION` 固定两槽满栏，使用原版奖励 RNG 捕获确定掉药／不掉药的搜索根。最小合同覆盖低战损时两类药水搜索的共同准入、换药抵扣后可接受的用药路线，以及原价省血达标的路线；检查真实战斗与冻结根保持一致。
+
+```text
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId SMART-OPENING-POTION-ADMISSION -CharacterId SILENT -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -EnableNoGcRegionForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit
+./tools/testing/run-unattended-test.sh --scenario-id SMART-OPENING-POTION-ADMISSION --character-id SILENT --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --enable-no-gc-region-for-test 0 --timeout-seconds 120 --cleanup-instance-on-exit
 ```
 
-桌面实际 CLR 相邻合同 `default-commit` 2 项、`checkpoint` 1 项、`diagnostic-failure` 8 项、`recovery-lifecycle` 3 项 Passed。模式均由同一 GC 工具运行，方法见[工具入口](../tools/testing/checks/CombatSolver.GcPolicyChecks/README.md)。
+2026-10-05：`cc718337` 的生产源码在同一夹具中 Failed，runId `b0a21e369c6c4fab9bf57038efee2a17`。两槽满、确定不掉药、零药胜利 3 战损及梯度拒绝断言均通过，随后在“零准入配额应在生成具体药水前缀之前结束”断言处失败。此证据来自最小原生场景，玩家原战斗与可见界面尚未回放。
 
-原生 `B013-DEFAULT-GC-LIMIT` Passed，runId `ac4ee495b5ad48158c0d709a49b0abd2`，22.883 秒；包含限额、真实回收续行、退出和暂停观测缺失时的工作量累计。PowerShell 入口为 `tools/testing/run-unattended-test.ps1 -ScenarioId B013-DEFAULT-GC-LIMIT -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 对应 `tools/testing/run-unattended-test.sh --scenario-id B013-DEFAULT-GC-LIMIT --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit`。实例已删除。
+夹具建立时两次前置断言失败：铁甲战士首局使用教程奖励，无法提供确定预测；A0 默认有三个药水槽，放入两瓶尚未满栏。最终入口使用静默猎手并显式固定两槽。
 
-原 Android 设备与原包整场回放未执行；来源、失败基线及验证范围见[开发记录](archive/development/volume-15.md#移动运行库内存回收2026-10-04)。
+修复后的 runId `2613abde700a4f6994c275f15831d4af` 中，低损跳过与换药抵扣两项通过：不掉药保留 3 战损／零药，展开 2 节点且生成前缀与具体药水进度均未出现；确定掉药时选中零战损／一药，实际省血 3、要求 1，展开 3 节点。该请求整体为 Failed：原价省血哨兵只增加主动扣血，搜索可绕行，预设的 12 HP 基线没有成立。
+
+哨兵补入敌方力量，使零药的低损绕行成本高于主动扣血。`SMART-OPENING-POTION-VALUE` 只复跑这项修改后的边界，runId `b4533ab82c1e4f5e9e18b54bb8794c54` Passed（23.271 秒，包含建局）：确定不掉药时保留零战损／一药，省血 12、要求 9，展开 3 节点；真实战斗与冻结根一致。使用上述命令将 ScenarioId 改为 `SMART-OPENING-POTION-VALUE` 可单独执行。两项已通过输入未变，结果沿用同一生产源码的既有证据。Release 构建、结构门禁、文档与工具检查通过；实例由启动器清理。原玩家战斗、整场自动部署和可见 UI 尚未验证，不将最小搜索结果外推为实机耗时结论。
 
 ## 0.49.1 日志站硬逻辑（2026-10-04）
 
