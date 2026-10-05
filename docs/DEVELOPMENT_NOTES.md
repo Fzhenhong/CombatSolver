@@ -5,3 +5,9 @@
 历史记录见 [归档索引](archive/development/README.md)。0.50.0 的 PR #207、PR #211、智能药水与组合补搜定稿见 [历史卷 20](archive/development/volume-20.md)，玩家说明见 [0.50.0 更新日志](releases/0.50.0-RELEASE_NOTES.md)。各渠道发布结果以 `releases/CombatSolver-0.50.0.publish-state.json` 的统一发布记录为准。
 
 性能研究的逐次结果、失败与未验证项保留在同卷及 [性能专题](performance/README.md)。
+
+## 下一版本（开发中）
+
+### Q002 能力与药水边界续搜（PR #213）
+
+接入 [shun-tong](https://github.com/shun-tong) 的 [PR #213](https://github.com/Torch1230/CombatSolver/pull/213)：在现有组合成员及共享节点、时间预算内，从搜索自主生成的能力、用药和后续损血边界继续求解，改善长战斗路线。整合沿用 0.50.0 的组件回复证明、药水成本保护与智能开局药水准入。回放入口恢复完整搜索 profile 与录制开关，历史阶段见 [卷 21](archive/development/volume-21.md)，当前主线的同根质量及耗时证据见 [Q002 记录](issues/q002-route-quality.md#0500-主线整合2026-10-05)。
