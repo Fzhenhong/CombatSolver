@@ -42,6 +42,17 @@ Rebased validation is recorded in [the test matrix](../../TEST_MATRIX.md). Histo
 
 Offline comparisons do not prove native automatic deployment, visible Steam frame time, all growth sources, all positive potion tiers or global optimality. The upstream comparison harness receives the same test-only resource-settings loader; upstream production source is unchanged.
 
+## 同根成长路线续用
+
+完整零药胜利以完整结果参与下一次同根请求的选优，成长与遗物收益沿原政策比较；纯 HP 剪枝资格单独判断。固定成长根的敌方生命为 18，需要跨回合获胜，用于覆盖携带成长见证后的再次搜索。
+
+```powershell
+$env:OFFLINE_HARNESS_RESOURCE_SETTINGS = 'coverage/fixtures/search/shared-growth-incumbent-settings.json'
+dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll --request coverage/fixtures/search/shared-growth-incumbent-reuse.json --label growth-reuse --out .local/growth-reuse --beam 45 --nodes 20000 --budget-ms 20000 --dop 1 --potion-policy Disabled --search-mode Coordinator --use-portfolio --verify-shared-incumbent-reuse
+```
+
+`02cf2283` 的该根第一次为第 2 回合零损胜利，第二次为未完成路线。修复后同根续用和政策变化失效通过。原生 `PRIMARY-INCUMBENT-REUSE` 连续三次请求、完整质量、严格增量回放和 live 隔离通过，直接证据见[测试矩阵](../../TEST_MATRIX.md#同根成长胜利续用2026-10-05)。续用模式累计多次请求的执行时间，只用于正确性检查。
+
 ## 单人共享损血剪枝（2026-10-05）
 
 基线 `5d28a1cfa`（0.49.3），游戏 0.111.0 / RitsuLib 0.6.5。候选主项目及离线宿主 Release 构建均 0 警告、0 错误。初次构建缺 net48 引用程序集，使用本机已有 NuGet 引用包的 FrameworkPathOverride 后构建成功；未修改上游构建配置。

@@ -11,15 +11,22 @@ internal static partial class CombatSearchCoordinator
         SolverPotionPolicy? memberPotionPolicyOverride, SolverResult incumbent)
         => !policy.DisableRefinementIncumbentForTesting
             && (root.CanCertifyRemainingHealing || root.UsesKnownNativeHealingPolicy)
-            && (memberPotionPolicyOverride ?? policy.PotionPolicy)
-                is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart
-            && !policy.PotionStrategy.HasForcedDirectives
-            && incumbent.ResultScope == SolverResultScope.SearchCompletion
-            && incumbent.BoundaryReason == SearchBoundaryReason.None
-            && incumbent.ExplicitPotionCount == 0
-            && !incumbent.Snapshot.HasRisk
+            && IsReusablePotionFreeVictory(policy, memberPotionPolicyOverride, incumbent)
                 ? BuildPrimarySearchIncumbent(root, policy, incumbent)
                 : null;
+
+    private static bool IsReusablePotionFreeVictory(
+        SearchPolicySnapshot policy, SolverPotionPolicy? memberPotionPolicyOverride, SolverResult result)
+        => (memberPotionPolicyOverride ?? policy.PotionPolicy)
+                is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart
+            && !policy.PotionStrategy.HasForcedDirectives
+            && result.ResultScope == SolverResultScope.SearchCompletion
+            && result.BoundaryReason == SearchBoundaryReason.None
+            && result.ExplicitPotionCount == 0
+            && !result.Snapshot.HasRisk
+            && result.Snapshot.ProjectedDeathSaveUseCount == 0
+            && result.CombatEndedTurn.HasValue
+            && IsCompleteVictory(result);
 
     /// <summary>
     /// 主搜索的宽度组合接线，开关开关两种情况都走这里，所以逐成员诊断和

@@ -182,16 +182,11 @@ internal static partial class CombatSearchCoordinator
             selected.ComparisonQuality = BuildInterimResult(root, policy, selected);
             selected.ComparisonRootState = root.ContinuationStamp.StateText;
             if (!policy.DisableRefinementIncumbentForTesting && !policy.DisableSharedPrimaryIncumbentsForTesting
-                && selected.ExplicitPotionCount == 0 && !selected.Snapshot.HasRisk
-                && selected.BoundaryReason == SearchBoundaryReason.None
-                && !policy.PotionStrategy.HasForcedDirectives && IsCompleteVictory(selected)
-                && selected.CombatEndedTurn is { } endedTurn
-                && selected.Snapshot.ProjectedDeathSaveUseCount == 0
-                && policy.PotionPolicy is SolverPotionPolicy.Disabled or SolverPotionPolicy.Smart)
+                && IsReusablePotionFreeVictory(policy, null, selected))
             {
                 policy.PrimaryIncumbents!.Tighten(
                     ResourceIncumbentPolicy.CompletedBucket(selected.Snapshot, 0),
-                    new(StrategicHpDeficit(root, policy, selected), endedTurn));
+                    new(StrategicHpDeficit(root, policy, selected), selected.CombatEndedTurn!.Value));
                 policy.PrimaryIncumbents.PotionFreeWitness = selected;
             }
             return selected;
@@ -325,8 +320,7 @@ internal static partial class CombatSearchCoordinator
                 passContext with { Policy = beamPolicy }, initialPotionPolicyOverride);
             if (!policy.DisableRefinementIncumbentForTesting && !policy.DisableSharedPrimaryIncumbentsForTesting
                 && beamPolicy.PrimaryIncumbents?.PotionFreeWitness is { } previousVictory
-                && BuildRefinementPrimarySearchIncumbent(root, beamPolicy,
-                    initialPotionPolicyOverride, previousVictory) != null
+                && IsReusablePotionFreeVictory(beamPolicy, initialPotionPolicyOverride, previousVictory)
                 && (initialPlanIncumbent == null || IsBetterPotionPolicyResult(
                     root, beamPolicy, previousVictory, initialPlanIncumbent)))
                 initialPlanIncumbent = previousVictory;

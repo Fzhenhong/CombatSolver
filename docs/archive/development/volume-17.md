@@ -18,6 +18,6 @@ Mod ID 和程序集名用于来源展示。局外 Mod 使用既有战斗外 Hook
 
 真实 BaseLib 完整 `VerifyBaseLibCardModifierBoundary` 合同 Failed：runId `71984ec7e337460da825c98566898474`，22.033 秒。根捕获与父子预测修饰器／Owner 隔离检查通过，之后在生成牌克隆检查报告“游戏玩法生成的卡牌克隆没有独立复制 BaseLib CardModifier 状态、Owner、listener 或官方生成卡字段”。该失败与准入分别记录，相关克隆实现保持原源码；本轮没有修复或确认其具体字段原因。
 
-原生私有快照包含安装的 BaseLib 3.4.7 DLL、PCK、manifest 和 RitsuLib。构建使用已提交 Executor 的隔离接线，保留工作区原有 Issue 212 临时接线；启动器使用已有映像查询入口，保留精确进程身份与租约检查。请求总超时为 120 秒，均带 `CleanupInstanceOnExit`；临时构建和启动辅助在交付后删除。命令见 [测试矩阵](../../TEST_MATRIX.md#0493-框架与局外-mod-兼容性2026-10-04)。
+原生私有快照包含安装的 BaseLib 3.4.7 DLL、PCK、manifest 和 RitsuLib。构建使用已提交 Executor 的隔离接线，保留工作区原有 Issue 212 临时接线；启动器使用已有映像查询入口，保留精确进程身份与租约检查。请求总超时为 120 秒，均带 `CleanupInstanceOnExit`；临时构建和启动辅助在交付后删除。命令见 [测试历史卷 14](../testing/volume-14.md#0493-框架与局外-mod-兼容性2026-10-04)。
 
 BetterVanillaSTS2 原包及其各项配置、任意第三方内容完整适配、可见 Steam 交互和性能未执行。本轮局外兼容性证据来自真实商店入口的同类补丁；原生框架验证采用安装的 BaseLib 原包。
