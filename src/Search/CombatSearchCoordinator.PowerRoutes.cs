@@ -410,7 +410,7 @@ internal static partial class CombatSearchCoordinator
                     int repairMember = memberIndex - forcedRepairFirstMember;
                     if (repairMember is 0 or 1)
                     {
-                        PlanAction[]? boundary = FindForcedPowerTurnBoundary(root, policy, candidate);
+                        PlanAction[]? boundary = FindForcedPowerTurnBoundary(root, policy, prefixBuilder, candidate);
                         if (boundary != null && (forcedTurnBoundary == null
                             || boundary[^1].Turn < forcedTurnBoundary[^1].Turn))
                             forcedTurnBoundary = boundary;

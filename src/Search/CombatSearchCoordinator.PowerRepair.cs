@@ -23,10 +23,9 @@ internal static partial class CombatSearchCoordinator
     }
 
     private static PlanAction[]? FindForcedPowerTurnBoundary(
-        CombatRootSnapshot root, SearchPolicySnapshot policy, SolverResult candidate)
+        CombatRootSnapshot root, SearchPolicySnapshot policy, CombatBeamSolver builder,
+        SolverResult candidate)
     {
-        if (candidate.Snapshot.PlayerDead || candidate.Snapshot.HasRisk)
-            return null;
         IReadOnlyList<PlanAction> actions = candidate.BestNode.Actions;
         for (int count = 1; count <= actions.Count; count++)
         {
@@ -35,7 +34,7 @@ internal static partial class CombatSearchCoordinator
                 continue;
             PlanAction[] prefix = actions.Take(count).ToArray();
             if (policy.PotionStrategy.EvaluateForcedUses(prefix, root.HasRenewablePotionShapedRock)
-                .AllForcedUsesSatisfied)
+                .AllForcedUsesSatisfied && builder.CanContinueAtPrefix(prefix))
                 return prefix;
         }
         return null;
