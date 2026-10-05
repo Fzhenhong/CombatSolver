@@ -15,6 +15,7 @@
 | `src/Runtime/Entry.cs` | 初始化、战斗生命周期接线 |
 | `SolverController.cs` | 主线程请求、结果接收、续用、部署和自动执行 |
 | `SolverControllerSessions.cs` | 战斗、搜索、部署会话生命周期 |
+| `CombatBugReportUploadPolicy.cs` / `CombatBugReportDescription.cs` | 当前战斗内容的上传引导资格与真实错误分类；搜索会话单独记录期间玩家输入 |
 | `CombatRootSnapshot.cs` | 在主线程捕获并核对稳定根 |
 | `ContinuationStamp.cs` | live / predicted 跨回合一致性和字段差异 |
 | `SearchGcPolicy.cs` | 进程 GC、NoGC 和跨战斗回收协调 |
