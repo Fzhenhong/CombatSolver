@@ -177,3 +177,11 @@ L0：原生回复审计工具迁入tools/inspection后构建和真实DLL扫描�
 ## 性能研究分支
 
 既有组件、药水、魂枢及未达标原型的合同与历史结果见[历史卷18](archive/testing/volume-18.md)。PR #207最新上游整合、逐次ABBA、23根品质回归及NoGC波动/超时限制见[当前验收](performance/pr207-upstream-0494-integration-20261005.md)。
+
+## Captured hand-size consistency (contributor draft)
+
+The 0.48.1 native fixture registers the actual optional BaseLib `IMaxHandSizeModifier`, captures root/sibling at13, changes the live limit to16, then restores13. Check stable old-root key/predicted stamp, sibling isolation, fresh key separation and exact live continuation restoration. Native generated Dredge13 and CrashLanding5 also compare complete predicted/actual state. Adapter's equivalent fix is disabled.
+
+Source baseline `2ead87d9c9e35b1588a760efff0bd6154545a77c`; tested candidate SHA-256 `04c70a0c0ff4d9169a8184a327beae1e246bca75179ed8bd521331e08d384d1c`. Both native inputs pass; small uncached search sentinel timing remains NotPassed.
+
+Rebased 0.50.0 source at `0d290fbee7e2779d2cebd8b8f652d82d00b6e8fc`: Release build passed with SDK9.0.318, RitsuLib0.6.5 and game0.111.0, no warnings/errors. `CopyModOnBuild=false`, ancestor props/targets imports disabled. Fresh native and performance acceptance on this base are not claimed.
