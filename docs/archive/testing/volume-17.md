@@ -47,5 +47,3 @@ O042 的「被迫受击 = 1」分量现为机器断言：夹具带 `expectedInit
 复跑注意：带 `-CleanupInstanceOnExit` 时，`.local/headless-instances` 的实例目录偶尔删不掉
 （`game\data_sts2_windows_x86_64\0Harmony.dll` 句柄未释放），启动器因此返回退出码 1；这不改变
 `result.json` 的 `Passed` 判定，残留实例目录需手动删除后重试。
-||||||| 5d28a1cf
-||||||| a6c241b2

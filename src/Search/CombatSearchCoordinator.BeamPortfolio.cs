@@ -46,8 +46,8 @@ internal static partial class CombatSearchCoordinator
     /// </para>
     /// <para>
     /// 精炼成员的准入全部交给 <see cref="BeamWidthPortfolioGate" />：基线必须已经把这一宽度搜干净、
-    /// 自己没吃掉超过四分之一的时间预算，剩余节点、剩余时间、现有内存压力信号报告的余量都够按宽度
-    /// 外推的估算，才会启动。成员顺序执行，不并行。
+    /// 自己没吃掉超过四分之一的时间预算，剩余节点和剩余时间满足原有门槛，才会启动。
+    /// 内存由每个成员执行期间的逐批预约和 Runtime 回收检查点处理。成员顺序执行。
     /// </para>
     /// </remarks>
     private static SolverResult RunBeamWidthPortfolioPass(
@@ -145,11 +145,6 @@ internal static partial class CombatSearchCoordinator
             long memberElapsed = Math.Max(0, passClock.ElapsedMilliseconds - startedMilliseconds);
             long memberAllocated = Math.Max(
                 0, GC.GetTotalAllocatedBytes(precise: false) - allocatedBefore);
-            // 与 memberAllocated 同一时刻取信号自其自身起点的累计量，作为同一起点的内存成本基数：
-            // 区域中途重建时基线跨在信号起点两侧，这两个数会明显不同。
-            long signalAllocatedAtEnd = policy.MemoryPressureSignal.IsEnabled
-                ? policy.MemoryPressureSignal.AllocatedBytes
-                : 0;
             long managedHeapAfter = GC.GetTotalMemory(forceFullCollection: false);
             SearchRequestWorkSnapshot after = totals.Snapshot();
             long expanded = after.ExpandedNodes - before.ExpandedNodes;
@@ -186,9 +181,7 @@ internal static partial class CombatSearchCoordinator
                     IsProvenZeroDamageRoute(root, policy, memberResult),
                     memberElapsed,
                     expanded,
-                    memberAllocated,
-                    effectiveProfile.BeamWidth,
-                    signalAllocatedAtEnd);
+                    effectiveProfile.BeamWidth);
                 baselineObserved = true;
                 telemetry.RecordFirstRoutePublished(passClock.Elapsed.TotalMilliseconds);
                 publishBaseline?.Invoke(memberResult);
@@ -208,21 +201,6 @@ internal static partial class CombatSearchCoordinator
             };
         }
 
-        // 有界精炼成员按它实际拿到的节点配额投影成本（配额与组合器 :284-285 同一条 totalExpanded / 8
-        // 规则），其余成员保持按宽度外推。基数一律用同一起点的量。只改估算口径，不动任何预算值。
-        long? BoundedMemberMemoryCost(BeamWidthPortfolioMemberSpec member)
-        {
-            if (!member.BoundedRefinement || !baselineObserved || baseline.ExpandedNodes <= 0)
-                return null;
-            long quota = Math.Min(
-                profile.MaxExpandedNodes - expandedByMembers,
-                expandedByMembers / BeamWidthPortfolio.BoundedRefinementWorkDivisor);
-            if (quota <= 0)
-                return null;
-            return BeamWidthPortfolioGate.EstimateQuotaCost(
-                BeamWidthPortfolioGate.BaselineMemoryCostBase(baseline), baseline.ExpandedNodes, quota);
-        }
-
         string? RejectMember(BeamWidthPortfolioMemberSpec member)
         {
             if (!baselineObserved)
@@ -234,19 +212,7 @@ internal static partial class CombatSearchCoordinator
                 ? PowerCommitmentPortfolioGate.Reject(hasReachablePower)
                 : BeamWidthPortfolioGate.RejectRefinement(
                     baseline, member.BeamWidth, profile.MaxExpandedNodes - expandedByMembers,
-                    RemainingMilliseconds(), profile.SoftTimeBudgetMilliseconds,
-                    policy.MemoryPressureSignal.RemainingBytes,
-                    BoundedMemberMemoryCost(member));
-            if (rejection == BeamWidthPortfolioGate.SkippedMemoryHeadroom && policy.MeasurePhasePerformance)
-            {
-                policy.Diagnostics.Info(
-                    $"[CombatSolver/Test] BEAM_WIDTH_PORTFOLIO_GATE member={member} " +
-                    $"memory_cost={BoundedMemberMemoryCost(member) ?? -1} " +
-                    $"remaining_bytes={policy.MemoryPressureSignal.RemainingBytes} " +
-                    $"baseline_allocated={baseline.AllocatedBytes} " +
-                    $"baseline_from_origin={baseline.AllocatedBytesFromOrigin} " +
-                    $"baseline_nodes={baseline.ExpandedNodes}");
-            }
+                    RemainingMilliseconds(), profile.SoftTimeBudgetMilliseconds);
             // 学习型跳过器未见过能力承诺或进攻精炼成员，不由它裁决这些新策略。
             if (rejection != null || experiment == null || member.AggressivePowerCommitment
                 || member.OffensiveRefinement)

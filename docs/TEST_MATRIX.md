@@ -4,22 +4,6 @@
 
 历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
 
-0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。社区批次 Q010 的同根夹具、首次执行结果与「夹具锁定质量界」政策见 [历史卷 17](archive/testing/volume-17.md)，认领者复现记录见 [Q010 复现记录](community/drafts/2026-10-04/Q010-claim-reproduction.md)。
-## 额外回合镜像顺序（2026-10-05）
-
-`EXTRA-TURN-MIRROR-ORDER` Passed，runId `36f686e1cf2b442e836d1ab4e5bdda2d`，23.655秒。合成第三方监听者的三个位置均通过原生短路顺序、后置状态读取、完整状态、Fork 与 live 隔离及登记冻结检查；直接证据见 [登记表](../coverage/evidence/test-evidence.json)。原生回合推进哨兵 `PAELS-EYE-AUTOPOST-ORDER` Passed，runId `f1d9c6342c4b4e91aaf15bf1af4e4a76`，24.863秒，完整状态与 Fork 一致。实例已删除。
-
-PowerShell：`tools/testing/run-unattended-test.ps1 -ScenarioId EXTRA-TURN-MIRROR-ORDER -EnemyCurrentHp 1000 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash：`tools/testing/run-unattended-test.sh --scenario-id EXTRA-TURN-MIRROR-ORDER --enemy-current-hp 1000 --timeout-seconds 120 --cleanup-instance-on-exit`。帕尔之眼哨兵替换同名 ScenarioId。第三方完整 Mod 组合与可见 Steam 性能未复测。
-
-## 同根成长胜利续用（2026-10-05）
-
-`PRIMARY-INCUMBENT-REUSE` Passed，runId `7128ceee4238421bb34376b19e373dec`，22.713 秒。原生储君根连续三次请求均为第 2 回合零损胜利、成长 1 次、零药；逐转移完整前缀回放、完整质量比较、政策变化失效与 live 隔离通过，实例已删除。失败基线为 PR #215 的 `02cf2283`：第一次胜利，第二次返回未完成路线。
-
-PowerShell：`tools/testing/run-unattended-test.ps1 -ScenarioId PRIMARY-INCUMBENT-REUSE -CharacterId REGENT -Seed GROWTHBUCKET20261004 -EnemyCurrentHp 18 -TimeoutSeconds 120 -CleanupInstanceOnExit`。Bash 使用 `--scenario-id PRIMARY-INCUMBENT-REUSE --character-id REGENT --seed GROWTHBUCKET20261004 --enemy-current-hp 18 --timeout-seconds 120 --cleanup-instance-on-exit`。
-
-同根离线复跑使用[固定根](../coverage/fixtures/search/shared-growth-incumbent-reuse.json)与[成长额度](../coverage/fixtures/search/shared-growth-incumbent-settings.json)，命令见[策略说明](strategy/hp-loss-pruning/README.md#同根成长路线续用)。该合同验证原生建局上的搜索与回放；整场部署及可见 Steam 性能分别验收。
-
-两项 PR 集成后的 `SHARED-GROWTH-AUTO-DEPLOY` Passed，runId `929ad5193d8d47c0b9cdddf14d027e78`，23.095秒。使用上述固定根的牌序，原生全自动在第2回合获胜，玩家75/75、零药，首动ROYALTIES，第2回合续用，计划外重算0。固定 Beam45/20000节点/20000ms/DOP1，严格增量验证，Instant/0秒部署；实例已删除。该模式的耗时用于正确性验收。独立离线回血哨兵本轮仍为先NOT_YET再击杀、战损0，展开243/转移527，单次搜索0.65秒；保持该固定根的质量与工作量。
 0.49.4 的额外回合镜像顺序、同根成长胜利续用、整场自动部署与上传引导验证见 [历史卷 16](archive/testing/volume-16.md)。
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
@@ -27,6 +11,18 @@ PowerShell：`tools/testing/run-unattended-test.ps1 -ScenarioId PRIMARY-INCUMBEN
 0.49.3 的框架、局外 Mod 与 BaseLib 验证见 [历史卷 14](archive/testing/volume-14.md)。
 
 移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
+
+## 社区批次 Q010 与组合补搜
+
+同根夹具和质量界见 [历史卷 17](archive/testing/volume-17.md)，各阶段定位与失败证据见 [Q010 复现记录](community/drafts/2026-10-04/Q010-claim-reproduction.md)。现行组合入口按共享节点与时间准入，执行期间在每批提交边界处理内存预约、回收和停止。
+
+`python -B tools/testing/checks/BeamWidthPortfolioChecks/run.py`：105 项通过，覆盖生产成员比较、预算、截断与节点／时间门控。`dotnet run --project tools/testing/checks/CombatSolver.GcPolicyChecks/CombatSolver.GcPolicyChecks.csproj -c Release -- default-commit`：2 项真实 CLR 合同通过，覆盖不可分割提交回收续行与取消。
+
+原包搜索入口为 `tools/testing/run-unattended-test.ps1`／`.sh`，从 `start` 用 `SearchOnly` 执行 O042、O045 夹具的断言并在首个结果停止；公开原包由社区资料 Release 的 Q010.zip 提供，本地输入放 `.local`。固定同根、政策、预算与 GC 启动模式对照，单请求超时 120 秒。可见帧时间与整场自动部署分别验收。
+
+2026-10-05 合并候选以 PR `fe976544` 为基线，在同机常规 Server GC 下完成同根对照：O042 两侧 Passed，战损 5、零药、第 7 回合、评分 10001354974；展开 85893→96600、转移 356997→401152、请求搜索耗时 14.700→16.085 秒。O045 两侧 Passed，零损零药、第 9 回合、评分 10002069967，展开 19474、转移 89746，耗时 6.206→6.230 秒。两组 `rootContinuationStamp` 与实际政策分别相等；O042 增加的补搜工作和耗时如实计入，单次对照不构成通用性能承诺。
+
+候选 runId：O042 `dceaceae371d4c42b1831f5c853d5662`、O045 `9cd3f64b3cfe4a028d214117a173d3cc`。独立 BYRDONIS 哨兵 `73be250581904263b276ae1eb8ae962a` Passed，保持先前同源码基线的 16 战损、零药、第 4 回合、评分 10000919984、展开 4784／转移 18223，搜索 1.836 秒。启动策略有效关闭 NoGC，强行启用的请求在设置断言处失败，因此真实 NoGC 区域重建与可见帧时间未验证。原生测试实例均已删除。
 
 ## 0.49.1 日志站硬逻辑（2026-10-04）
 
