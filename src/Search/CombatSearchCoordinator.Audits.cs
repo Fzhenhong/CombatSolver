@@ -634,9 +634,11 @@ internal static partial class CombatSearchCoordinator
         try
         {
             SolverResult gradient = SearchSmartPotionGradient(
-                context, callerCancellationToken, primary, memoryForecast);
+                context, callerCancellationToken, primary, memoryForecast,
+                out int maximumOptionalPotionUses);
             if (policy.IncludeTurnSetup
                 || gradient.ResultScope != SolverResultScope.SearchCompletion
+                || maximumOptionalPotionUses == 0
                 || policy.PotionStrategy.HasForcedDirectives
                 || battleDamage.PotionsUsedSoFar != 0
                 || CanFinishNativeLouseZeroDamageRoute(root, policy, gradient)
@@ -764,8 +766,7 @@ internal static partial class CombatSearchCoordinator
                         ContinuationPurpose.SmartOpeningPotionPosterior,
                         prefix, routeProfile, SolverPotionPolicy.RequireAtLeastOne,
                         prefix[0].PotionId == "BLOCK_POTION"
-                            ? Math.Min(2, MaximumSmartPotionUses(root, policy,
-                                potionFreeWon: false, potionFreeHpDeficit: 0))
+                            ? Math.Min(2, maximumOptionalPotionUses)
                             : 1, CombatBeamSolver.CanUseComponentSmartPotionEligibility(root, policy) ? 1 : null)
                     {
                         ResetFixedPrefixSchedulingBaseline = false,
@@ -850,7 +851,8 @@ internal static partial class CombatSearchCoordinator
         SearchPassContext context,
         CancellationToken callerCancellationToken,
         SolverResult potionFree,
-        SmartLayerMemoryForecast memoryForecast)
+        SmartLayerMemoryForecast memoryForecast,
+        out int maximumOptionalPotionUses)
     {
         CombatRootSnapshot root = context.Root;
         SolverDisplayNames displayNames = context.DisplayNames;
@@ -868,7 +870,7 @@ internal static partial class CombatSearchCoordinator
             && !potionFree.Snapshot.PlayerDead
             && potionFree.Snapshot.ProjectedPlayerHp > 0;
         int potionFreeDeficit = StrategicHpDeficit(root, policy, potionFree);
-        int maximumOptionalPotionUses = MaximumSmartPotionUses(
+        maximumOptionalPotionUses = MaximumSmartPotionUses(
             root,
             policy,
             potionFreeWon,
