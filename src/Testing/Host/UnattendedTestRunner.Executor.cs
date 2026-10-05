@@ -39,44 +39,14 @@ internal sealed partial class UnattendedTestRunner
             bool expectedCardPlayed = request.ExpectedPlayedCardId == null;
             bool expectedPotionUsed = request.ExpectedUsedPotionId == null;
             bool expectedPlayerPowerObserved = request.ExpectedObservedPlayerPowerId == null;
-            if (request.ScenarioId is "Q002-O004-OPENING-POTION-POSTERIOR" or "Q002-O004-OPENING-POTION-RANK"
-                or "Q002-O004-OPENING-POTION-PATH" or "Q002-O004-TURN-BOUNDARY-MEMBER"
-                or "Q002-O004-POSTERIOR-FRONTIER" or "Q002-O004-FRONTIER-CONTINUATION"
-                or "Q002-O004-SELECTED-TURN-CONTINUATION" or "Q002-O004-BOUNDARY-POTION-POWER")
-            {
-                await runner.RunQ002OpeningPotionPosteriorAsync(combatState, player,
-                    baseScoreOnly: request.ScenarioId == "Q002-O004-OPENING-POTION-POSTERIOR",
-                    tracePath: request.ScenarioId == "Q002-O004-OPENING-POTION-PATH",
-                    boundaryMember: request.ScenarioId == "Q002-O004-TURN-BOUNDARY-MEMBER",
-                    frontierMember: request.ScenarioId is "Q002-O004-POSTERIOR-FRONTIER"
-                        or "Q002-O004-FRONTIER-CONTINUATION" or "Q002-O004-SELECTED-TURN-CONTINUATION",
-                    continueFrontier: request.ScenarioId is "Q002-O004-FRONTIER-CONTINUATION"
-                        or "Q002-O004-SELECTED-TURN-CONTINUATION",
-                    continueSelectedTurn: request.ScenarioId == "Q002-O004-SELECTED-TURN-CONTINUATION",
-                    boundaryPotionPower: request.ScenarioId == "Q002-O004-BOUNDARY-POTION-POWER");
-                return Observation(combatEnded: false);
-            }
             if (request.ScenarioId == "CHECKPOINT-PROFILE-CONTRACT")
             {
                 runner.AssertCheckpointProfileContract(combatState);
                 return Observation(combatEnded: false);
             }
-            if (request.ScenarioId == "Q002-O005-OPENING-PATH")
-            {
-                await runner.RunQ002TestSubjectOpeningPathAsync(combatState, player);
-                return Observation(combatEnded: false);
-            }
             if (request.ScenarioId == "CHECKPOINT-RECORDED-PLAN-PATH")
             {
                 await runner.PrepareRecordedPlanDeploymentAsync(combatState, deploy: false);
-                return Observation(combatEnded: false);
-            }
-            if (request.ScenarioId is "Q002-O003-PLAYER-T3-PATH" or "Q002-O003-TURN-BOUNDARY-MEMBER"
-                or "Q002-O003-BOUNDARY-POWER-PATH")
-            {
-                await runner.RunQ002MercuryPlayerTurnPathAsync(combatState, player,
-                    boundaryMember: request.ScenarioId == "Q002-O003-TURN-BOUNDARY-MEMBER",
-                    boundaryPowerPath: request.ScenarioId == "Q002-O003-BOUNDARY-POWER-PATH");
                 return Observation(combatEnded: false);
             }
             if (request.ScenarioId == "CALCULATED-HISTORY-FREEZE")

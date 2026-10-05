@@ -80,13 +80,7 @@ v2 索引保存稳定战斗/检查点 ID、永久递增编号、原生事件位�
 
 同一输入使用 `CHECKPOINT-RECORDED-PLAN-PATH`、`ReplayMode=SearchOnly`，将冻结路线作为只读观察目标运行正常协调器；不把参照动作注入候选或评分。`RecordedPrediction-path-trace.json` 保存准确动作和完整状态的生成、转置、保留与展开事件，观察器丢事件时显式失败。路径诊断耗时不能作正常性能证据。两种模式都要求原生录制和对应检查点的完整获胜预测，旧身份不匹配时失败，不删去费用层或改写录制内容。Power Potion 等已录制前缀与未来预测用药分别计算，不能漏掉前缀消耗。
 
-Q002 O003 的玩家T3干预另用 `Q002-O003-PLAYER-T3-PATH`、原ZIP、selector `4052e28b38544018ab6f3f9b2acd8c8e:5`、`ReplayMode=RestoreOnly`、显式短预算政策和EvidenceDirectory。夹具严格核对原生9事件与影子6动作的T4状态、冻结T3及保存获胜后续，再观察正常T3搜索的第7步完整候选池。纯值观察同时复制能力承诺，别名接获胜后续只证明战斗可执行，不保证搜索调度历史等价；场景不把玩家排列注入生产搜索。复跑与质量范围见[Q002验收](TEST_MATRIX.md#q002-o003-能力代表保路2026-10-04)。
-
-`Q002-O003-TURN-BOUNDARY-MEMBER`使用同一ZIP/selector/RestoreOnly，原10秒政策。复用6步完整/增量与9事件原生边界证明，随后固定该前缀，各以5秒/30,000节点比较既有`resetFixedPrefixSchedulingBaseline=false/true`；两组均禁止新增用药、使用普通排序。此模式不重跑已验证47步保存后缀，不采集路径观察。输出`O003-boundary-reset-False.json`及`True.json`的真实profile、动作、结果和统计；搜索后严格检查实机T4与冻结T3不变。固定前缀入口未建立普通扩展的能力承诺，故此对照不证明普通能力承诺历史是唯一根因，也不是协调器自主质量或性能验收。
-
-O004补搜隔离使用 `Q002-O004-OPENING-POTION-POSTERIOR` / `Q002-O004-OPENING-POTION-RANK` / `Q002-O004-OPENING-POTION-PATH`、原ZIP/start、RestoreOnly、原政策及EvidenceDirectory。前者固定同一生成/打牌前缀与30秒/60,000节点成员预算，比较最多1/2瓶；RANK保留2瓶，只取消BaseScoreOnly；PATH在同一普通排序成员中观察首回合及T2共8步，只采集第6步真实整池。夹具先核对4个原生事件的完整戳、推进后的冻结开局及82动作获胜后缀。前缀仅注入这项诊断，不能作开局自主路线质量、正常协调器性能或整场原生部署结论；结果保存 `O004-posterior-root.json` 和各成员的profile/动作/统计。
-
-`Q002-O004-TURN-BOUNDARY-MEMBER`固定保存路线的完整首回合，以相同30秒/60,000节点/Beam90、最多2瓶和普通排序续搜，沿既有开关重建进展基线。`Q002-O004-POSTERIOR-FRONTIER`保留原两步前缀，只复制进度回调中的去重首回合候选（上限64，明确输出是否达到上限），不采集后续预览状态。`Q002-O004-FRONTIER-CONTINUATION`先运行上述成员，再用其最后首回合候选作第二个相同预算的续搜成员；保存profile和完整动作，候选截断/不存在/未结束回合时明确失败。两个成员不是一个30秒总预算，不作正常性能样本。三模式仅核对原生4事件后的T1 setup、冻结根及预测前缀；未对原生T2或整场执行作结论，均在搜索后核对实机与冻结开局不变。
+Q002 专属固定路线/成员诊断已在任务收尾移除；失败证据与[历史用法](archive/testing/q002-pre-0492-validation-20261004.md#一次性诊断入口的历史用法)保留，当前使用上述通用保存预测及正常搜索/部署入口。
 
 包协议与顺序文件：`dotnet run --project tools/replay/CheckpointTool/CheckpointTool.csproj -c Release -- self-test`。边界门禁使用 `verify-refactor-boundaries.ps1` / `.sh`。
 

@@ -31,9 +31,7 @@ internal sealed partial class UnattendedTestRunner
         IReadOnlyDictionary<string, IReadOnlyList<KnownRoutePrefix>>? frozenVariants = null,
         int? observedRetentionStep = null,
         BossHpStrategy? finalBossStrategyOverride = null,
-        KnownRouteSearchContext? frozenSearchContext = null,
-        PlanAction[]? diagnosticFixedPrefix = null,
-        SolverSearchProfile? diagnosticMemberProfile = null)
+        KnownRouteSearchContext? frozenSearchContext = null)
     {
         if (prefixes.Count == 0
             || (requiredRetentionStep is { } step && (step < 1 || step > prefixes.Count))
@@ -56,11 +54,7 @@ internal sealed partial class UnattendedTestRunner
                 : variants.Values.Select(variant => variant.Prefixes[retentionStep - 1].StateKey).ToHashSet()
             : null;
         string[] expectedActions = prefixes.Select(prefix => KnownRouteActionIdentity(prefix.Action)).ToArray();
-        int firstObservedIndex = diagnosticFixedPrefix?.Length ?? 0;
-        if (firstObservedIndex >= prefixes.Count
-            || diagnosticFixedPrefix != null && !diagnosticFixedPrefix.Select(KnownRouteActionIdentity)
-                .SequenceEqual(expectedActions.Take(firstObservedIndex)))
-            throw new InvalidOperationException("Fixed diagnostic prefix differs from the strictly replayed witness.");
+        const int firstObservedIndex = 0;
         List<SearchPathObservation> observations = [];
         object observationGate = new();
         int dropped = 0;
@@ -102,14 +96,8 @@ internal sealed partial class UnattendedTestRunner
             {
                 using IDisposable gc = SearchGcPolicy.EnterLowLatencySearch(settings.EnableNoGcRegion,
                     settings.NoGcRegionBudgetBytes, policy.MemoryPressureSignal, cancellation.Token);
-                return diagnosticFixedPrefix == null
-                    ? CombatSearchCoordinator.Solve(root, names, damage, policy,
-                        cancellation.Token, progressCallback: null)
-                    : new CombatBeamSolver(root, names, damage, policy,
-                        cancellation.Token, searchProfile: diagnosticMemberProfile ?? policy.Profile,
-                        potionPolicyOverride: SolverPotionPolicy.Disabled, maximumPotionUses: 0,
-                        fixedPrefixActions: diagnosticFixedPrefix,
-                        resetFixedPrefixSchedulingBaseline: true).Solve();
+                return CombatSearchCoordinator.Solve(root, names, damage, policy,
+                    cancellation.Token, progressCallback: null);
             }
             finally { thread.Priority = previous; }
         }, cancellation.Token);
@@ -187,7 +175,7 @@ internal sealed partial class UnattendedTestRunner
         if (!string.IsNullOrWhiteSpace(_request.EvidenceDirectory))
             _writer.WriteGeneratedArtifact(sample + "-path-trace.json", new
             {
-                sample, dropped, diagnosticFixedPrefix, diagnosticMemberProfile, firstObservedIndex,
+                sample, dropped, firstObservedIndex,
                 prefixes = prefixes.Select((prefix, index) => new
                 {
                     step = index + 1, prefix.Action, prefix.StateKey, prefix.Turn,
