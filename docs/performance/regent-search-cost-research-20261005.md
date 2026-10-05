@@ -68,6 +68,14 @@ Release28.10秒，零警告／错误。原生 `c7b320d61c634347b2bd003ad1bfe530`
 
 另外复用此前同一份199Hz CPU trace及已记录MONOTONIC窗口，没有重新采搜索：229个含MemberInfoCache.AddMethod的调用链约占采样周期1.801%。示例来自Harmony/MonoMod的OnMethodCompiled编译通知，不能把最近自有调用者当作原始反射调用归因，也不能据此提出克隆阶段方法查找缓存。原始trace及新的分组、示例保留在JSON索引中。
 
+## 同一CPU trace的排他归因与快照前证明机会
+
+继续复用上述16505条调用链及原MONOTONIC窗口，按最近自有职责作排他分类：Replay40.206%、Snapshot27.696%、Fork10.105%、Retention2.060%、其他自有职责11.690%、没有可解析自有调用者8.243%。各项同用300711199208周期分母；它们是采样归因，不能当作删除某职责后的速度收益。含有Snapshot或Fork的Replay栈只计到对应内层职责；含EvaluatePreparedCardAction42.861%等包容统计仍重叠，不可相加。
+
+为现有trace尝试精确原生符号：本机CoreCLR9.0.19与JIT构建ID分别82927210ebb7f1c90226072e16ff67da59ec9fe7、139f2ebfd8169392f7ebd3930ad2209f3cd7491c，与trace MMAP记录一致。dotnet-symbol10.0.745401的微软服务查询、Arch debuginfod及对应历史debug包均未取得匹配符号，404与下载工具输出保留。未把最近托管调用者当作已解析的原生叶，也未再次采样。
+
+独立被动诊断在原完整Snapshot捕获后每128次查询已有严格共享证明，不改策略、动作、预算或剪枝；完整dev08仍为战损40、无药、第6回合。312012次观察、2437个样本中，严格战损已被胜利界封闭100个（4.103%）；1753个界仍可改进、318个药水层未闭合、142个缺少见证、124个终局/风险。查询总计60.687毫秒是跨线程累计诊断成本。该比例没有按CPU加权，不能证明可在捕获前廉价判断或删除完整Snapshot；因此未实现改动Replay返回类型的提前快照裁剪。诊断耗时不纳入性能验收。
+
 ## 产物与限制
 
 [逐次证据](regent-search-cost-research-20261005.json)保留完整质量/政策/计数、native runId、失败构建及绝对本地产物路径。[缓存补丁](fixtures/fork-hook-cache-research-20261005.patch)与[回合证明补丁](fixtures/zero-credit-forced-round-research-20261005.patch)只用于复现研究，均基于保留的储君组合源码，未纳入正式运行时。

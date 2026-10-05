@@ -4723,5 +4723,593 @@
       ],
       "mainRuntimeAndDeploymentReused": "C422 behavior/source/dependencies unchanged; previously qualified build/deployment reused, no repeat build/deploy"
     }
+  },
+  "reusedTraceExclusiveRoles": {
+    "scope": "reuse unchanged199Hzcycles:u trace and saved approximateMONOTONIC window; whole CPU window across threads, not wall-time attribution",
+    "noNewSearchOrProfiler": true,
+    "source": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/profile-cpu/perf.data",
+    "sourceMap": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/regent-shared-proof/profile-cpu/managed-perf.map",
+    "recordedWindowStart": 1183153.6369643689,
+    "cycles": 300711199208,
+    "chains": 16505,
+    "sameCycleDenominatorAsOriginalLeafAnalysis": true,
+    "exclusiveClasses": {
+      "other_owned": 35152389940,
+      "no_resolved_owned_caller": 24786618866,
+      "retention_excluding_other": 6194279521,
+      "fork_excluding_snapshot": 30387704320,
+      "snapshot": 83285832966,
+      "replay_excluding_snapshot_fork": 120904373595
+    },
+    "classSamples": {
+      "other_owned": 2206,
+      "no_resolved_owned_caller": 1268,
+      "retention_excluding_other": 344,
+      "fork_excluding_snapshot": 1725,
+      "snapshot": 4457,
+      "replay_excluding_snapshot_fork": 6505
+    },
+    "inclusiveOwnedRows": [
+      {
+        "method": "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane::Run()",
+        "cycles": 251221556473,
+        "percentOfWindow": 83.54246770145453
+      },
+      {
+        "method": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture)",
+        "cycles": 234341005255,
+        "percentOfWindow": 77.92892511891712
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedExpansionJob::Execute(class CombatSolver.CombatBeamSolver/ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+        "cycles": 222257303163,
+        "percentOfWindow": 73.91055063741275
+      },
+      {
+        "method": "!!0 [CombatSolver] CombatSolver.SearchTransitionGuard::Execute(class CombatSolver.PlanAction,valuetype CombatSolver.StateFingerprint,int32,class [System.Runtime]System.Func`1<!!0>)",
+        "cycles": 205223257195,
+        "percentOfWindow": 68.24596414616683
+      },
+      {
+        "method": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0::<ReplayAction>b__0()",
+        "cycles": 205053226760,
+        "percentOfWindow": 68.18942137840567
+      },
+      {
+        "method": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Replay(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class CombatSolver.CombatBeamSolver/RoundReplayCheckpoint,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class CombatSolver.CombatBeamSolver/ContinuationCapture)",
+        "cycles": 204795443059,
+        "percentOfWindow": 68.10369670247775
+      },
+      {
+        "method": "instance class CombatSolver.CombatBeamSolver/PreparedCardActionEvaluation [CombatSolver] CombatSolver.CombatBeamSolver::EvaluatePreparedCardAction(class CombatSolver.SearchNode,valuetype CombatSolver.CombatBeamSolver/PreparedCardAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,object,bool)",
+        "cycles": 128886568494,
+        "percentOfWindow": 42.86058145937225
+      },
+      {
+        "method": "instance class CombatSolver.CombatBeamSolver/DeferredCardActionProbe [CombatSolver] CombatSolver.CombatBeamSolver::GeneratePreparedCardAction(class CombatSolver.SearchNode,valuetype CombatSolver.CombatBeamSolver/PreparedCardAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,object,class CombatSolver.CombatBeamSolver/ExpansionBatch,bool)",
+        "cycles": 128694341449,
+        "percentOfWindow": 42.79665732036237
+      },
+      {
+        "method": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,valuetype CombatSolver.SearchBoundaryReason,class [System.Runtime]System.Collections.Generic.IReadOnlySet`1<uint32>)",
+        "cycles": 83285832966,
+        "percentOfWindow": 27.696285733738744
+      },
+      {
+        "method": "instance valuetype CombatSolver.CombatBeamSolver/PreparedEndTurnEvaluation [CombatSolver] CombatSolver.CombatBeamSolver::EvaluatePreparedEndTurn(class CombatSolver.SearchNode,object,class CombatSolver.CombatBeamSolver/PrimaryChoiceReplayFrontier)",
+        "cycles": 79769595906,
+        "percentOfWindow": 26.526978747746565
+      },
+      {
+        "method": "instance valuetype CombatSolver.SearchBoundaryReason [CombatSolver] CombatSolver.CombatBeamSolver::AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class [System.Runtime]System.Collections.Generic.ISet`1<uint32>,int32&,class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture)",
+        "cycles": 64737493141,
+        "percentOfWindow": 21.52812842072486
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane::Run()[OptimizedTier1OSR]",
+        "cycles": 63671011887,
+        "percentOfWindow": 21.173475432472728
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::OnPlayWrapper(class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,valuetype [sts2]MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,class CombatSolver.Engine.Common.PredictionTraceFrame&,string,string)",
+        "cycles": 43173152598,
+        "percentOfWindow": 14.357015206519598
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::ManualPlay(class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictionTraceFrame&)",
+        "cycles": 41889915133,
+        "percentOfWindow": 13.93028102821838
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::ContinueCardPlayExecution(class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,bool,valuetype [sts2]MegaCrit.Sts2.Core.Entities.Cards.ResourceInfo,valuetype [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardLocation,int32,string,string,int32,valuetype CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator/CardExecutionStage,class [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardPlay,int32,int32)",
+        "cycles": 34930711067,
+        "percentOfWindow": 11.616032644942715
+      },
+      {
+        "method": "instance valuetype CombatSolver.SearchBoundaryReason [CombatSolver] CombatSolver.CombatBeamSolver::AdvanceRoundPlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState,int32,class [System.Runtime]System.Collections.Generic.ISet`1<uint32>,int32&,class CombatSolver.TurnStartChoiceCursor,bool,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture)",
+        "cycles": 30867645807,
+        "percentOfWindow": 10.264880685620573
+      },
+      {
+        "method": "instance class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::Fork()",
+        "cycles": 30273937410,
+        "percentOfWindow": 10.067445938074195
+      },
+      {
+        "method": "instance class CombatSolver.CombatBeamSolver/ReplayForkSeed [CombatSolver] CombatSolver.CombatBeamSolver::PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,object)",
+        "cycles": 28621306033,
+        "percentOfWindow": 9.517871668358726
+      },
+      {
+        "method": "instance class CombatSolver.CombatBeamSolver/ReplayForkSeed [CombatSolver] CombatSolver.CombatBeamSolver::PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+        "cycles": 27835853909,
+        "percentOfWindow": 9.25667350677755
+      },
+      {
+        "method": "instance class CombatSolver.Engine.InCombat.Simulation.CombatPredictionState [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionState::Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "cycles": 26685963228,
+        "percentOfWindow": 8.874283132216
+      },
+      {
+        "method": "valuetype CombatSolver.SearchBoundaryReason [CombatSolver] CombatSolver.CombatBeamSolver::ContinuePlayerStart(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.CombatBeamSolver/PlayerStartProgress,valuetype CombatSolver.CombatBeamSolver/PlayerStartStage,class CombatSolver.CombatBeamSolver,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.SearchPerformanceMetrics)",
+        "cycles": 25946031427,
+        "percentOfWindow": 8.62822252557787
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+StandPatJob::Execute(class CombatSolver.CombatBeamSolver/ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+        "cycles": 25657133390,
+        "percentOfWindow": 8.532150933378816
+      },
+      {
+        "method": "instance valuetype CombatSolver.CombatBeamSolver/StandPatEvaluation [CombatSolver] CombatSolver.CombatBeamSolver::ComputeStandPat(class CombatSolver.SearchNode)",
+        "cycles": 25500978739,
+        "percentOfWindow": 8.480222487943037
+      },
+      {
+        "method": "class OfflineSearchHarness.ModRuntime/SearchOutcome [OfflineSearchHarness] OfflineSearchHarness.ModRuntime::RunSearchDetailed(class [sts2]MegaCrit.Sts2.Core.Combat.CombatState,class OfflineSearchHarness.HarnessOptions,class OfflineSearchHarness.MainLoopContext,class [CombatSolver]CombatSolver.UnattendedTestRunner/OfflineScenarioSession)",
+        "cycles": 24586801217,
+        "percentOfWindow": 8.17621734134134
+      },
+      {
+        "method": "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::Solve(class CombatSolver.CombatRootSnapshot,class CombatSolver.SolverDisplayNames,valuetype CombatSolver.BattleDamageSnapshot,class CombatSolver.SearchPolicySnapshot,valuetype [System.Runtime]System.Threading.CancellationToken,class [System.Runtime]System.Action`1<class CombatSolver.SolverProgress>)",
+        "cycles": 24338785331,
+        "percentOfWindow": 8.093740903266132
+      },
+      {
+        "method": "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.SearchRequestPipeline::Run()",
+        "cycles": 24319051234,
+        "percentOfWindow": 8.087178428355996
+      },
+      {
+        "method": "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::SolveCore(class CombatSolver.CombatRootSnapshot,class CombatSolver.SolverDisplayNames,valuetype CombatSolver.BattleDamageSnapshot,class CombatSolver.SearchPolicySnapshot,class CombatSolver.SearchBudgetLedger,class CombatSolver.SearchPlanDiscoveryState,valuetype [System.Runtime]System.Threading.CancellationToken,class [System.Runtime]System.Action`1<class CombatSolver.SolverProgress>,class [System.Runtime]System.Action`1<class CombatSolver.SolverResult>,class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.PlanAction[]>,class [System.Runtime]System.Func`2<class CombatSolver.SolverResult,class CombatSolver.SolverResult>)",
+        "cycles": 24319051234,
+        "percentOfWindow": 8.087178428355996
+      },
+      {
+        "method": "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatBeamSolver::Solve()",
+        "cycles": 23905162966,
+        "percentOfWindow": 7.949541962175128
+      },
+      {
+        "method": "instance valuetype CombatSolver.SearchPassResult [CombatSolver] CombatSolver.CombatSearchCoordinator+<>c__DisplayClass16_0::<SolveCore>g__RunSearchPass|0(class CombatSolver.SearchPassContext)",
+        "cycles": 23446607183,
+        "percentOfWindow": 7.797051538071295
+      },
+      {
+        "method": "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatBeamSolver::SolveCore()",
+        "cycles": 23387902310,
+        "percentOfWindow": 7.777529527200195
+      },
+      {
+        "method": "instance class [sts2]MegaCrit.Sts2.Core.Combat.ICombatState [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "cycles": 18709278246,
+        "percentOfWindow": 6.221676577152989
+      },
+      {
+        "method": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)",
+        "cycles": 17346883462,
+        "percentOfWindow": 5.7686190297160405
+      },
+      {
+        "method": "instance valuetype CombatSolver.StateFingerprint [CombatSolver] CombatSolver.CombatBeamSolver::BuildStateKey(int32,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,class [System.Runtime]System.Collections.Generic.IReadOnlySet`1<uint32>)",
+        "cycles": 16389411548,
+        "percentOfWindow": 5.450216550353201
+      },
+      {
+        "method": "instance valuetype CombatSolver.Engine.Common.Mirrors.MirrorDispatchResult [CombatSolver] CombatSolver.Engine.Common.Mirrors.MethodMirrorRegistry`2[System.__Canon,System.__Canon]::Invoke(!0,!1)",
+        "cycles": 15396568358,
+        "percentOfWindow": 5.120051530688184
+      },
+      {
+        "method": "valuetype CombatSolver.Engine.Common.Mirrors.MirrorDispatchResult [CombatSolver] CombatSolver.Engine.InCombat.Mirrors.Cards.OnPlay.CardOnPlayMirrors::Invoke(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+        "cycles": 15189042672,
+        "percentOfWindow": 5.051039905399013
+      },
+      {
+        "method": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::GetMirroredHookListeners(bool)",
+        "cycles": 13801231805,
+        "percentOfWindow": 4.589530367126026
+      },
+      {
+        "method": "valuetype [System.Runtime]System.Decimal [CombatSolver] CombatSolver.Engine.InCombat.Mirrors.HookMirrors::ModifyDamage(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,valuetype [System.Runtime]System.Decimal,valuetype [sts2]MegaCrit.Sts2.Core.ValueProps.ValueProp,class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+        "cycles": 12075119109,
+        "percentOfWindow": 4.015520253586471
+      },
+      {
+        "method": "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator+<>c__DisplayClass16_2::<SolveCore>g__RunBaseline|5(class CombatSolver.SolverSearchProfile)",
+        "cycles": 11716354381,
+        "percentOfWindow": 3.8962148439625865
+      },
+      {
+        "method": "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::RunBeamWidthPortfolioPass(class CombatSolver.SearchPassContext,class [System.Runtime]System.Func`4<class CombatSolver.SolverSearchProfile,bool,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.PrimarySearchIncumbent>,class CombatSolver.SolverResult>,class [System.Runtime]System.Action`1<class CombatSolver.SolverResult>,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.SolverPotionPolicy>,class CombatSolver.SolverResult)",
+        "cycles": 11716354381,
+        "percentOfWindow": 3.8962148439625865
+      },
+      {
+        "method": "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator+<>c__DisplayClass16_2::<SolveCore>g__RunPrimary|6()",
+        "cycles": 11716354381,
+        "percentOfWindow": 3.8962148439625865
+      },
+      {
+        "method": "class CombatSolver.BeamWidthPortfolioOutcome`1<!!0> [CombatSolver] CombatSolver.BeamWidthPortfolio::Run(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<valuetype CombatSolver.BeamWidthPortfolioMemberSpec>,int32,class CombatSolver.SolverSearchProfile,class [System.Runtime]System.Func`2<class CombatSolver.SolverSearchProfile,valuetype CombatSolver.BeamWidthPortfolioRun`1<!!0>>,class [System.Runtime]System.Func`3<!!0,!!0,bool>,class [System.Runtime]System.Func`2<valuetype CombatSolver.BeamWidthPortfolioMemberSpec,string>,class [System.Runtime]System.Action`1<string>)",
+        "cycles": 11716354381,
+        "percentOfWindow": 3.8962148439625865
+      },
+      {
+        "method": "instance valuetype CombatSolver.BeamWidthPortfolioRun`1<class CombatSolver.SolverResult> [CombatSolver] CombatSolver.CombatSearchCoordinator+<>c__DisplayClass10_0::<RunBeamWidthPortfolioPass>g__RunMember|1(class CombatSolver.SolverSearchProfile)",
+        "cycles": 11688822214,
+        "percentOfWindow": 3.8870591600131648
+      },
+      {
+        "method": "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator+<>c__DisplayClass16_2::<SolveCore>g__SolveMember|3(class CombatSolver.SolverSearchProfile,bool,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.PrimarySearchIncumbent>)",
+        "cycles": 11668131899,
+        "percentOfWindow": 3.8801786996064713
+      },
+      {
+        "method": "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.FrontierContinuationScheduler::Dispatch(class CombatSolver.ContinuationSearchRequest)",
+        "cycles": 11300677199,
+        "percentOfWindow": 3.7579834834097396
+      },
+      {
+        "method": "instance valuetype CombatSolver.CombatBeamSolver/ThreatProjection [CombatSolver] CombatSolver.CombatBeamSolver::ProjectHpAfterThreat(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.Engine.InCombat.Simulation.SimCreatureState)",
+        "cycles": 10854105501,
+        "percentOfWindow": 3.609478306623454
+      }
+    ],
+    "nearestOwnedRows": [
+      {
+        "method": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerFilter::Filter(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.MirroredHookListenerLayout&)",
+        "cycles": 10347126936,
+        "percentOfWindow": 3.44088512940383
+      },
+      {
+        "method": "!!0 [CombatSolver] CombatSolver.Engine.Common.PredictionUtils::CloneModelForSimulation(!!0)",
+        "cycles": 7260754720,
+        "percentOfWindow": 2.414527539753444
+      },
+      {
+        "method": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,valuetype CombatSolver.SearchBoundaryReason,class [System.Runtime]System.Collections.Generic.IReadOnlySet`1<uint32>)",
+        "cycles": 7174844505,
+        "percentOfWindow": 2.3859585289463086
+      },
+      {
+        "method": "class [System.Runtime]System.Threading.Tasks.Task`1<valuetype CombatSolver.SearchGcPolicy/BackgroundGen2Completion> [CombatSolver] CombatSolver.SearchGcPolicy::CollectGeneration2ForAutomaticReclaimAsync(bool)",
+        "cycles": 5361332205,
+        "percentOfWindow": 1.782884115763045
+      },
+      {
+        "method": "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)",
+        "cycles": 5157324403,
+        "percentOfWindow": 1.7150423451414964
+      },
+      {
+        "method": "instance valuetype [System.Runtime]System.ValueTuple`2<valuetype CombatSolver.StateFingerprint,int32> [CombatSolver] CombatSolver.CombatBeamSolver::BuildProjectedShuffleOrder(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.Engine.Common.PredictedCard>)",
+        "cycles": 4105356577,
+        "percentOfWindow": 1.3652157245265586
+      },
+      {
+        "method": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::GetBaseHookListeners()",
+        "cycles": 3949822857,
+        "percentOfWindow": 1.313493766578322
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.Common.MirroredHookListenerLayout::Matches(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>)",
+        "cycles": 3741986177,
+        "percentOfWindow": 1.244378721795357
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::IsCombatEnding()",
+        "cycles": 3718880260,
+        "percentOfWindow": 1.2366949650676875
+      },
+      {
+        "method": "class [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardPile [CombatSolver] CombatSolver.SimulationCardPileLookupFastPath::Find(class [sts2]MegaCrit.Sts2.Core.Models.CardModel)",
+        "cycles": 3237459541,
+        "percentOfWindow": 1.0766009212582301
+      },
+      {
+        "method": "valuetype CombatSolver.StrategicEffectContext [CombatSolver] CombatSolver.StrategicEffectContext::Build(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,int32,int32,int32,valuetype CombatSolver.StrategicEffectRequirements,bool)",
+        "cycles": 3222812004,
+        "percentOfWindow": 1.071729956346189
+      },
+      {
+        "method": "instance class [sts2]MegaCrit.Sts2.Core.Combat.ICombatState [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "cycles": 3140548589,
+        "percentOfWindow": 1.0443736705754356
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.SimulatedCombatState+ConcatenatedListenerView+<GetEnumerator>d__13::MoveNext()",
+        "cycles": 3134580115,
+        "percentOfWindow": 1.0423888845030447
+      },
+      {
+        "method": "instance int32 [CombatSolver] CombatSolver.SimulatedCombatState::GetAmount(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+        "cycles": 3008668046,
+        "percentOfWindow": 1.0005174579211211
+      },
+      {
+        "method": "float64 [CombatSolver] CombatSolver.CardChoiceSupport::DynamicVarBaseValue(class [sts2]MegaCrit.Sts2.Core.Localization.DynamicVars.DynamicVarSet,string)",
+        "cycles": 2924681645,
+        "percentOfWindow": 0.9725882018038897
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::CanPlay(class CombatSolver.Engine.Common.PredictedCard,int32&,int32&)",
+        "cycles": 2735575339,
+        "percentOfWindow": 0.909701848885189
+      },
+      {
+        "method": "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictedCard::CompareTo(class CombatSolver.Engine.Common.PredictedCard)",
+        "cycles": 2555406875,
+        "percentOfWindow": 0.8497877304637536
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.SimulatedCombatState::NormalizeCardAfflictions(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+        "cycles": 2370476283,
+        "percentOfWindow": 0.7882899902774678
+      },
+      {
+        "method": "instance class CombatSolver.Engine.InCombat.Simulation.CombatPredictionState [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionState::Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "cycles": 2339779557,
+        "percentOfWindow": 0.7780819481158031
+      },
+      {
+        "method": "instance class [sts2]MegaCrit.Sts2.Core.Models.CardModel [CombatSolver] CombatSolver.Engine.Common.PredictedCard::get_Preview()",
+        "cycles": 2325009145,
+        "percentOfWindow": 0.7731701217392326
+      },
+      {
+        "method": "instance class CombatSolver.Engine.InCombat.Simulation.CombatPredictionCardGenerationOptionsEntry [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionHistory::FindLatestCardGenerationOptions(class CombatSolver.Engine.Common.PredictedCard)",
+        "cycles": 2150948932,
+        "percentOfWindow": 0.7152872715299846
+      },
+      {
+        "method": "bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictedCardExtensions::HasKeyword(class CombatSolver.Engine.Common.PredictedCard,class CombatSolver.Engine.InCombat.Simulation.CombatPredictionState,valuetype [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardKeyword)",
+        "cycles": 2147762357,
+        "percentOfWindow": 0.7142275920074419
+      },
+      {
+        "method": "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Replay(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class CombatSolver.CombatBeamSolver/RoundReplayCheckpoint,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class CombatSolver.CombatBeamSolver/ContinuationCapture)",
+        "cycles": 2101155422,
+        "percentOfWindow": 0.6987286896976006
+      },
+      {
+        "method": "instance valuetype [System.Runtime]System.ValueTuple`2<int32,int32> [CombatSolver] CombatSolver.CombatBeamSolver::CaptureEnergyRefundWindow(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState,class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.Engine.Common.PredictedCard>,valuetype CombatSolver.StrategicEffectContext,bool)",
+        "cycles": 2081355515,
+        "percentOfWindow": 0.6921443300022689
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane::Run()",
+        "cycles": 2062024164,
+        "percentOfWindow": 0.6857157862530125
+      },
+      {
+        "method": "instance class CombatSolver.Engine.Common.SimCardPile [CombatSolver] CombatSolver.Engine.Common.SimCardPile::Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "cycles": 1933178884,
+        "percentOfWindow": 0.6428689350750894
+      },
+      {
+        "method": "instance class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel [CombatSolver] CombatSolver.SimulatedCombatState+ConcatenatedListenerView::get_Item(int32)",
+        "cycles": 1880665408,
+        "percentOfWindow": 0.6254058422011599
+      },
+      {
+        "method": "class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::RemapCachedModels(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "cycles": 1862854854,
+        "percentOfWindow": 0.6194830318612362
+      },
+      {
+        "method": "int32 [CombatSolver] CombatSolver.PersistentPowerSupport::GetModifiedMaxEnergy(class CombatSolver.SimulatedCombatState,class [sts2]MegaCrit.Sts2.Core.Entities.Players.Player)",
+        "cycles": 1850949456,
+        "percentOfWindow": 0.6155239515106021
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.SimulatedCombatState::NormalizePowerAfflictions(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+        "cycles": 1829972923,
+        "percentOfWindow": 0.6085483107445624
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Mirrors.HookMirrors+HookListenerEnumerable+Enumerator::MoveNext()",
+        "cycles": 1824499399,
+        "percentOfWindow": 0.6067281178104729
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::TryDamageTarget(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,valuetype [System.Runtime]System.Decimal,valuetype [sts2]MegaCrit.Sts2.Core.ValueProps.ValueProp,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardPlay,valuetype CombatSolver.Engine.InCombat.Simulation.CombatDamageSource,class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.DamageResult>&)",
+        "cycles": 1690173081,
+        "percentOfWindow": 0.5620585749554735
+      },
+      {
+        "method": "instance valuetype CombatSolver.SearchBoundaryReason [CombatSolver] CombatSolver.CombatBeamSolver::AdvanceRound(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,int32,class [System.Runtime]System.Collections.Generic.ISet`1<uint32>,int32&,class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanCardChoice>,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture)",
+        "cycles": 1646461672,
+        "percentOfWindow": 0.5475225652840262
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.SimulatedCombatState::NormalizeSwordSageReplays(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator)",
+        "cycles": 1593189965,
+        "percentOfWindow": 0.5298073264966765
+      },
+      {
+        "method": "instance class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::GetEffectiveHookListeners()",
+        "cycles": 1565094954,
+        "percentOfWindow": 0.5204644716000197
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionCreatureSemantics.IsPrimaryEnemy(class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature)",
+        "cycles": 1563605403,
+        "percentOfWindow": 0.5199691288911605
+      },
+      {
+        "method": "valuetype [System.Runtime]System.Decimal [CombatSolver] CombatSolver.Engine.InCombat.Mirrors.HookMirrors::ModifyDamage(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,valuetype [System.Runtime]System.Decimal,valuetype [sts2]MegaCrit.Sts2.Core.ValueProps.ValueProp,class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardPlay)",
+        "cycles": 1505035715,
+        "percentOfWindow": 0.5004920731133051
+      },
+      {
+        "method": "bool [CombatSolver] CombatSolver.CorePowerSupport::ApplyCardPowers(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.Common.PredictedCard,class [sts2]MegaCrit.Sts2.Core.Entities.Cards.CardPlay,class [sts2]MegaCrit.Sts2.Core.Entities.Creatures.Creature,int32,valuetype [System.Runtime]System.Decimal,int32,class [System.Runtime]System.Collections.Generic.ISet`1<uint32>)",
+        "cycles": 1483458689,
+        "percentOfWindow": 0.49331674141404397
+      },
+      {
+        "method": "void [CombatSolver] CombatSolver.CombatBeamSolver::AppendCyclePileShape(valuetype CombatSolver.StateFingerprintBuilder&,class CombatSolver.Engine.Common.SimCardPile,char)",
+        "cycles": 1473549928,
+        "percentOfWindow": 0.49002163267645876
+      },
+      {
+        "method": "float64 [CombatSolver] CombatSolver.CardChoiceSupport::CardValue(class [sts2]MegaCrit.Sts2.Core.Models.CardModel)",
+        "cycles": 1448578713,
+        "percentOfWindow": 0.4817175804609882
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.StateFingerprintBuilder::Add(uint64)",
+        "cycles": 1447383082,
+        "percentOfWindow": 0.48131997937291804
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.Engine.InCombat.Simulation.SimPlayerCombatState+Enumerator::MoveNext()",
+        "cycles": 1390395396,
+        "percentOfWindow": 0.46236901041995193
+      },
+      {
+        "method": "instance bool [CombatSolver] CombatSolver.PredictionCoverage+<CollectUniqueGaps>d__1::MoveNext()",
+        "cycles": 1353807766,
+        "percentOfWindow": 0.4502019777000656
+      },
+      {
+        "method": "instance void [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedJobWave::Publish(class CombatSolver.CombatBeamSolver/AdmittedJobOutcome)",
+        "cycles": 1311757250,
+        "percentOfWindow": 0.4362182896595966
+      },
+      {
+        "method": "object [CombatSolver] CombatSolver.Engine.Common.PredictedCard+PreviewStorage::RegisterIdentity(class [sts2]MegaCrit.Sts2.Core.Models.CardModel,class [sts2]MegaCrit.Sts2.Core.Models.CardModel)",
+        "cycles": 1296201618,
+        "percentOfWindow": 0.4310453423131161
+      }
+    ],
+    "examples": {
+      "other_owned": [
+        "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane::.ctor(class CombatSolver.CombatBeamSolver/ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver,int32)",
+        "instance class CombatSolver.CombatBeamSolver/ParallelExpansionExecutor/ExpansionLane[] [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor::EnsureBackgroundLanes()",
+        "instance class CombatSolver.CombatBeamSolver/ExpansionWorkerOutcome[] [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor::EvaluateQueuedParents(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class [System.Runtime]System.Action`2<int32,class CombatSolver.CombatBeamSolver/ExpansionBatch>)",
+        "instance class CombatSolver.CombatBeamSolver/ExpansionWorkerOutcome[] [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor::Evaluate(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class [System.Runtime]System.Action`2<int32,class CombatSolver.CombatBeamSolver/ExpansionBatch>)",
+        "instance class CombatSolver.CombatBeamSolver/ExpansionWorkerOutcome[] [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor::Execute(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.SearchNode>,class [System.Runtime]System.Action`2<class CombatSolver.SearchNode,class CombatSolver.SearchNode>,class [System.Runtime]System.Action`1<class CombatSolver.SearchNode>,class [System.Runtime]System.Action`2<int32,class CombatSolver.CombatBeamSolver/ExpansionBatch>)",
+        "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatBeamSolver::SolveCore()",
+        "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatBeamSolver::Solve()",
+        "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::TryRunNarrowOpeningIncumbent(class CombatSolver.SearchPassContext,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.SolverPotionPolicy>)",
+        "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::TryRunOpeningPlanIncumbent(class CombatSolver.SearchPassContext,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.SolverPotionPolicy>)",
+        "instance valuetype CombatSolver.SearchPassResult [CombatSolver] CombatSolver.CombatSearchCoordinator+<>c__DisplayClass16_0::<SolveCore>g__RunSearchPass|0(class CombatSolver.SearchPassContext)",
+        "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.SearchRequestPipeline::Run()",
+        "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::SolveCore(class CombatSolver.CombatRootSnapshot,class CombatSolver.SolverDisplayNames,valuetype CombatSolver.BattleDamageSnapshot,class CombatSolver.SearchPolicySnapshot,class CombatSolver.SearchBudgetLedger,class CombatSolver.SearchPlanDiscoveryState,valuetype [System.Runtime]System.Threading.CancellationToken,class [System.Runtime]System.Action`1<class CombatSolver.SolverProgress>,class [System.Runtime]System.Action`1<class CombatSolver.SolverResult>,class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.PlanAction[]>,class [System.Runtime]System.Func`2<class CombatSolver.SolverResult,class CombatSolver.SolverResult>)"
+      ],
+      "no_resolved_owned_caller": [],
+      "retention_excluding_other": [
+        "valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Interop.CoreCLR+V60::InvokeCompileMethod(native int,native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)",
+        "instance valuetype MonoMod.Core.Interop.CoreCLR/CorJitResult [0Harmony] MonoMod.Core.Platforms.Runtimes.Core60Runtime+JitHookDelegateHolder::CompileMethodHook(native int,native int,valuetype MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO*,uint32,uint8**,uint32*)",
+        "unmanaged thiscall int32 [0Harmony] dynamicClass::IL_STUB_ReversePInvoke(int64,int64,MonoMod.Core.Interop.CoreCLR/V21/CORINFO_METHOD_INFO /* MT: 0x7f32a4837f30 */*,uint32,System.UIntPtr /* MT: 0x7f32a28b71e8 */*,System.UInt32 /* MT: 0x7f32a2891f00 */*)",
+        "instance class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.SearchNode> [CombatSolver] CombatSolver.CombatBeamSolver::Prune(class [System.Runtime]System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>)",
+        "instance class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.SearchNode> [CombatSolver] CombatSolver.CombatBeamSolver+<>c__DisplayClass631_0::<SolveCore>g__PruneAtMemoryBoundary|22(class [System.Runtime]System.Collections.Generic.IEnumerable`1<class CombatSolver.SearchNode>,int32,string,int32,int32)",
+        "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatBeamSolver::SolveCore()",
+        "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatBeamSolver::Solve()",
+        "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::TryRunNarrowOpeningIncumbent(class CombatSolver.SearchPassContext,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.SolverPotionPolicy>)",
+        "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::TryRunOpeningPlanIncumbent(class CombatSolver.SearchPassContext,valuetype [System.Runtime]System.Nullable`1<valuetype CombatSolver.SolverPotionPolicy>)",
+        "instance valuetype CombatSolver.SearchPassResult [CombatSolver] CombatSolver.CombatSearchCoordinator+<>c__DisplayClass16_0::<SolveCore>g__RunSearchPass|0(class CombatSolver.SearchPassContext)",
+        "instance class CombatSolver.SolverResult [CombatSolver] CombatSolver.SearchRequestPipeline::Run()",
+        "class CombatSolver.SolverResult [CombatSolver] CombatSolver.CombatSearchCoordinator::SolveCore(class CombatSolver.CombatRootSnapshot,class CombatSolver.SolverDisplayNames,valuetype CombatSolver.BattleDamageSnapshot,class CombatSolver.SearchPolicySnapshot,class CombatSolver.SearchBudgetLedger,class CombatSolver.SearchPlanDiscoveryState,valuetype [System.Runtime]System.Threading.CancellationToken,class [System.Runtime]System.Action`1<class CombatSolver.SolverProgress>,class [System.Runtime]System.Action`1<class CombatSolver.SolverResult>,class [System.Collections]System.Collections.Generic.List`1<class CombatSolver.PlanAction[]>,class [System.Runtime]System.Func`2<class CombatSolver.SolverResult,class CombatSolver.SolverResult>)"
+      ],
+      "fork_excluding_snapshot": [
+        "instance int32 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::Find(object)",
+        "instance !!0 [CombatSolver] CombatSolver.Engine.Common.PredictionForkContext::RemapOrSelf(!!0)",
+        "class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel> [CombatSolver] CombatSolver.SimulatedCombatState::RemapCachedModels(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class [sts2]MegaCrit.Sts2.Core.Models.AbstractModel>,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "instance void [CombatSolver] CombatSolver.SimulatedCombatState::RestoreHookListenerCaches(class CombatSolver.SimulatedCombatState,class CombatSolver.Engine.Common.PredictionForkContext)",
+        "instance class [sts2]MegaCrit.Sts2.Core.Combat.ICombatState [CombatSolver] CombatSolver.SimulatedCombatState::CombatSolver.Engine.Common.ICombatPredictionForkableState.Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "instance class CombatSolver.Engine.InCombat.Simulation.CombatPredictionState [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionState::Fork(class CombatSolver.Engine.Common.PredictionForkContext)",
+        "instance class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator [CombatSolver] CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator::Fork()",
+        "instance class CombatSolver.CombatBeamSolver/ReplayForkSeed [CombatSolver] CombatSolver.CombatBeamSolver::PrepareReplayForkSeedCore(class CombatSolver.SimulationSnapshot)",
+        "instance class CombatSolver.CombatBeamSolver/ReplayForkSeed [CombatSolver] CombatSolver.CombatBeamSolver::PrepareReplayForkSeed(class CombatSolver.SimulationSnapshot,object)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture)",
+        "instance class CombatSolver.CombatBeamSolver/DeferredCardActionProbe [CombatSolver] CombatSolver.CombatBeamSolver::GeneratePreparedCardAction(class CombatSolver.SearchNode,valuetype CombatSolver.CombatBeamSolver/PreparedCardAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,object,class CombatSolver.CombatBeamSolver/ExpansionBatch,bool)",
+        "instance class CombatSolver.CombatBeamSolver/PreparedCardActionEvaluation [CombatSolver] CombatSolver.CombatBeamSolver::EvaluatePreparedCardAction(class CombatSolver.SearchNode,valuetype CombatSolver.CombatBeamSolver/PreparedCardAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,object,bool)"
+      ],
+      "snapshot": [
+        "valuetype CombatSolver.CombatBeamSolver/ThreatFocus [CombatSolver] CombatSolver.CombatBeamSolver::BuildThreatFocus(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.SimulatedCombatState)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Snapshot(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,int32,int32,int32,valuetype CombatSolver.SearchBoundaryReason,class [System.Runtime]System.Collections.Generic.IReadOnlySet`1<uint32>)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Replay(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class CombatSolver.CombatBeamSolver/RoundReplayCheckpoint,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class CombatSolver.CombatBeamSolver/ContinuationCapture)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0::<ReplayAction>b__0()",
+        "!!0 [CombatSolver] CombatSolver.SearchTransitionGuard::Execute(class CombatSolver.PlanAction,valuetype CombatSolver.StateFingerprint,int32,class [System.Runtime]System.Func`1<!!0>)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture)",
+        "instance class CombatSolver.CombatBeamSolver/DeferredCardActionProbe [CombatSolver] CombatSolver.CombatBeamSolver::GeneratePreparedCardAction(class CombatSolver.SearchNode,valuetype CombatSolver.CombatBeamSolver/PreparedCardAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,object,class CombatSolver.CombatBeamSolver/ExpansionBatch,bool)",
+        "instance class CombatSolver.CombatBeamSolver/PreparedCardActionEvaluation [CombatSolver] CombatSolver.CombatBeamSolver::EvaluatePreparedCardAction(class CombatSolver.SearchNode,valuetype CombatSolver.CombatBeamSolver/PreparedCardAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,object,bool)",
+        "instance void [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedExpansionJob::Execute(class CombatSolver.CombatBeamSolver/ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+        "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane::Run()"
+      ],
+      "replay_excluding_snapshot_fork": [
+        "instance bool [CombatSolver] CombatSolver.CombatBeamSolver::ShouldCaptureExecution(class CombatSolver.Engine.InCombat.Simulation.CombatPredictionSimulator,class CombatSolver.PlanAction)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::Replay(class [System.Runtime]System.Collections.Generic.IReadOnlyList`1<class CombatSolver.PlanAction>,class CombatSolver.SimulationSnapshot,int32,int32,class CombatSolver.Engine.InCombat.Simulation.ActionRelicTriggerRecorder,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.SearchReplayEvidence,class CombatSolver.CombatBeamSolver/RoundReplayCheckpoint,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture,class CombatSolver.Engine.InCombat.Simulation.ManualCardChoiceFrame,class CombatSolver.PotionChoiceFrame,bool,bool,class CombatSolver.CombatBeamSolver/ContinuationCapture)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver+<>c__DisplayClass469_0::<ReplayAction>b__0()",
+        "!!0 [CombatSolver] CombatSolver.SearchTransitionGuard::Execute(class CombatSolver.PlanAction,valuetype CombatSolver.StateFingerprint,int32,class [System.Runtime]System.Func`1<!!0>)",
+        "instance class CombatSolver.SimulationSnapshot [CombatSolver] CombatSolver.CombatBeamSolver::ReplayAction(class CombatSolver.SearchNode,class CombatSolver.PlanAction,class CombatSolver.CombatBeamSolver/ReplayForkSeed,class CombatSolver.CombatBeamSolver/RoundReplayCheckpointCapture,class CombatSolver.CombatBeamSolver/CardChoiceReplayCapture)",
+        "instance valuetype CombatSolver.CombatBeamSolver/PreparedEndTurnEvaluation [CombatSolver] CombatSolver.CombatBeamSolver::EvaluatePreparedEndTurn(class CombatSolver.SearchNode,object,class CombatSolver.CombatBeamSolver/PrimaryChoiceReplayFrontier)",
+        "instance void [CombatSolver] CombatSolver.CombatBeamSolver+AdmittedExpansionJob::Execute(class CombatSolver.CombatBeamSolver/ParallelExpansionExecutor,class CombatSolver.CombatBeamSolver)",
+        "instance void [CombatSolver] CombatSolver.CombatBeamSolver+ParallelExpansionExecutor+ExpansionLane::Run()"
+      ]
+    },
+    "limitations": [
+      "frame-pointer chains may miss async/tail/inlined frames",
+      "nearest owned caller is not necessarily physical native caller",
+      "inclusive rows overlap; cannot sum",
+      "runtime/JIT native symbols unresolved; preserve unknown",
+      "approximate window includes request GC and JIT"
+    ]
+  },
+  "runtimeSymbolicationAttempt": {
+    "matchingRuntimeBuildId": "82927210ebb7f1c90226072e16ff67da59ec9fe7",
+    "matchingJitBuildId": "139f2ebfd8169392f7ebd3930ad2209f3cd7491c",
+    "dotnetSymbolVersion": "10.0.745401",
+    "exactDebugFilesObtained": false,
+    "sources": [
+      "Microsoft symbol server",
+      "Arch debuginfod",
+      "Arch archive debug package"
+    ],
+    "result": "404",
+    "artifactRoot": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/runtime-symbolication-20261005",
+    "noNewProfile": true
+  },
+  "snapshotProofOpportunity": {
+    "buildSeconds": 27.79,
+    "dllSha256": "2d3f5ee7d508af6de980081c525f963321f98d69445a2bf9af7cf2accf031237",
+    "observations": 312012,
+    "sampleStride": 128,
+    "samples": 2437,
+    "strictlyBounded": 100,
+    "strictlyBoundedFraction": 0.04103405826836274,
+    "boundNotStrict": 1753,
+    "openPotionTier": 318,
+    "missingWitness": 142,
+    "terminalOrRisk": 124,
+    "queryAggregateMilliseconds": 60.686542,
+    "diagnosticOnly": true,
+    "hpLoss": 40,
+    "potionCount": 0,
+    "turn": 6,
+    "artifactRoot": "/home/ltlly/Code/nmslmod/CombatSolver-healing-bound-general-20261003/.local/tool-tasks/snapshot-proof-opportunity-20261005",
+    "notPromoted": "small unweighted opportunity does not justify invasive pre-snapshot replay API changes"
   }
 }
