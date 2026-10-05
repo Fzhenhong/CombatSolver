@@ -51,7 +51,7 @@ $env:OFFLINE_HARNESS_RESOURCE_SETTINGS = 'coverage/fixtures/search/shared-growth
 dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHarness.dll --request coverage/fixtures/search/shared-growth-incumbent-reuse.json --label growth-reuse --out .local/growth-reuse --beam 45 --nodes 20000 --budget-ms 20000 --dop 1 --potion-policy Disabled --search-mode Coordinator --use-portfolio --verify-shared-incumbent-reuse
 ```
 
-`02cf2283` 的该根第一次为第 2 回合零损胜利，第二次为未完成路线。修复后同根续用和政策变化失效通过。原生 `PRIMARY-INCUMBENT-REUSE` 连续三次请求、完整质量、严格增量回放和 live 隔离通过，直接证据见[测试矩阵](../../TEST_MATRIX.md#同根成长胜利续用2026-10-05)。续用模式累计多次请求的执行时间，只用于正确性检查。
+`02cf2283` 的该根第一次为第 2 回合零损胜利，第二次为未完成路线。修复后同根续用和政策变化失效通过。原生 `PRIMARY-INCUMBENT-REUSE` 连续三次请求、完整质量、严格增量回放和 live 隔离通过，直接证据见[测试矩阵](../../archive/testing/volume-16.md#同根成长胜利续用2026-10-05)。续用模式累计多次请求的执行时间，只用于正确性检查。
 
 ## 单人共享损血剪枝（2026-10-05）
 
