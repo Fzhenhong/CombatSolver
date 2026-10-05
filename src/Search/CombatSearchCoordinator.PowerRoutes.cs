@@ -246,6 +246,22 @@ internal static partial class CombatSearchCoordinator
             Math.Max(
                 MinimumPowerRouteMilliseconds,
                 profile.SoftTimeBudgetMilliseconds / totalMembers));
+        // Replace two ordinary compound-prefix pairs, retaining the same member
+        // count, total widths and per-member allowances. Forced potion layers have
+        // no eligible potion-free incumbent; their generated windows stay separate.
+        PlanAction[]? revealedPowerPrefix = profile.ReallocatedRefinementPortfolio
+            && potionPolicyOverride == null && policy.PotionStrategy.HasForcedDirectives
+            && variants.Length == 2 && prefixes.Count > 3
+            && prefixes.TakeLast(2).All(prefix => prefix.Length == 2
+                && !powerUpgradePrefixes.Contains(PowerPrefixKey(prefix))
+                && prefix.All(action => action.Kind == PlanActionKind.PlayCard
+                    && PowerCardValuationModels.Registry.ContainsCardId(action.CardId!)))
+                ? BuildRevealedPowerRepairPrefix(prefixBuilder, openingPowers, profile) : null;
+        int forcedRepairFirstMember = totalMembers - 4;
+        PlanAction[]? forcedTurnBoundary = null;
+        PlanAction[]? forcedLossRepairPrefix = null;
+        bool forcedWarmStarted = false;
+        int forcedWarmPrefixCount = 0;
         policy.Diagnostics.Info(
             $"[CombatSolver/Test] POWER_ROUTE_PORTFOLIO start singles={openingPowers.Length} " +
             $"prefixes={prefixes.Count} variants={variants.Length} members={totalMembers} " +
@@ -283,6 +299,36 @@ internal static partial class CombatSearchCoordinator
                 }
 
                 PlanAction[] continuationPrefix = prefix;
+                string? forcedRepairStage = null;
+                if (revealedPowerPrefix != null && memberIndex >= forcedRepairFirstMember)
+                {
+                    int repairMember = memberIndex - forcedRepairFirstMember;
+                    if (repairMember < 2)
+                    {
+                        continuationPrefix = revealedPowerPrefix;
+                        forcedRepairStage = "revealed_power";
+                    }
+                    else if (repairMember == 2 && forcedTurnBoundary != null)
+                    {
+                        PlanAction? power = prefixBuilder.BuildPowerActionsAfterPrefix(forcedTurnBoundary)
+                            .FirstOrDefault(action => PowerCardValuationModels.Registry.ContainsCardId(action.CardId!));
+                        continuationPrefix = power == null ? forcedTurnBoundary : [.. forcedTurnBoundary, power];
+                        variant = new(BeamWidthPortfolio.ScaledWidth(profile.BeamWidth,
+                            BeamWidthPortfolio.WideRefinementRatio));
+                        forcedWarmStarted = true;
+                        forcedWarmPrefixCount = continuationPrefix.Length;
+                        forcedRepairStage = "forced_turn_boundary";
+                    }
+                    else if (repairMember == 3 && forcedWarmStarted)
+                    {
+                        variant = new(profile.BeamWidth);
+                        if (forcedLossRepairPrefix != null)
+                        {
+                            continuationPrefix = forcedLossRepairPrefix;
+                            forcedRepairStage = "first_later_loss";
+                        }
+                    }
+                }
                 bool continueSelectedTurn = false;
                 bool deferredPowerMember = variants.Length == 4 && memberIndex == 1
                     && configuredVariant.BeamWidth > profile.BeamWidth;
@@ -359,6 +405,19 @@ internal static partial class CombatSearchCoordinator
 
                 PopulateSingleSessionTotals(candidate);
                 bool won = IsCompleteVictory(candidate);
+                if (revealedPowerPrefix != null)
+                {
+                    int repairMember = memberIndex - forcedRepairFirstMember;
+                    if (repairMember is 0 or 1)
+                    {
+                        PlanAction[]? boundary = FindForcedPowerTurnBoundary(root, policy, candidate);
+                        if (boundary != null && (forcedTurnBoundary == null
+                            || boundary[^1].Turn < forcedTurnBoundary[^1].Turn))
+                            forcedTurnBoundary = boundary;
+                    }
+                    else if (repairMember == 2 && forcedWarmStarted)
+                        forcedLossRepairPrefix = FindFirstLaterLossRepairPrefix(candidate, forcedWarmPrefixCount);
+                }
                 bool improved = IsBetterPotionPolicyResult(root, policy, candidate, selected);
                 if (improved)
                     selected = candidate;
@@ -387,6 +446,8 @@ internal static partial class CombatSearchCoordinator
                     elapsed,
                     allocated,
                     GC.GetTotalMemory(forceFullCollection: false)));
+                policy.Diagnostics.Info(
+                    $"[CombatSolver/Test] POWER_ROUTE_REPAIR member={memberIndex} stage={forcedRepairStage ?? "ordinary"}");
                 policy.Diagnostics.Info(
                     $"[CombatSolver/Test] POWER_ROUTE_PORTFOLIO_MEMBER index={memberIndex++} " +
                     $"prefix={prefixText} beam={variant.BeamWidth} " +

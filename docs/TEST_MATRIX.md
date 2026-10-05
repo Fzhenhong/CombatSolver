@@ -18,7 +18,7 @@ B014/T015 原版储君女王报告 `ba79d87499a4455bbba4a51baf381eea`：修正�
 
 ## Q002 O003 能力代表保路（2026-10-04）
 
-0.49.2正常搜索 `204260429b594ac0bc5cecef76cf880d` 与原生 `9bbf2ccae62c4874b301b440c066fadd` Passed：同T3完整根/政策/动作，T10实际2损/2回血、无新增用药、四类重算合计0。原四成员预算及135/90宽度保持。 T1十秒4332a652超时；两秒024a5ac8仅预测41损获胜，未原生验证。四秒同根/政策基线582e3914与候选eb519b0a均未获胜，生产试验撤回，不能标开局质量通过；详见[本轮诊断](issues/q002-route-quality.md#o003-t1-开局诊断与撤回试验2026-10-04)。统计、失败实验和T1/Linux未验证范围见[Q002](issues/q002-route-quality.md#0492-迁移与当前验收2026-10-04)；旧基线见[阶段归档](archive/testing/q002-pre-0492-validation-20261004.md#q002-o003-能力代表保路2026-10-04)。
+0.49.2同T3根正常 `204260429b594ac0bc5cecef76cf880d` 与原生 `9bbf2ccae62c4874b301b440c066fadd` 为T10/2损、无新增用药、重算0。2026-10-05原T1正常协调器 `b37d0ca27961493192537daf04f4318c` 自主T10/1损；正式源码原生 `d8c5dd15078345189f89dae70133deef` Passed（101.94s）：实际1损/2回血/血清T2槽0一瓶、HP53→54、敌方0/重算0，完整根/政策/选中动作相同。固定4秒/250,000节点/Beam90/DOP8、原18能力成员及各25,000节点/4,000ms不增；正常诊断基线未获胜68,502.46ms→候选70,032.38ms，正式源码搜索70,975.77ms。最终O005哨兵 `df207b5296f941ff8e5d82e6dc3b83ec` 同根/政策/动作仍T9/8损/无药，原5秒/120,000节点/Beam60/DOP16，12,777.62ms≤旧12,980.61ms。原T1验收使用start/DeploySolver/Instant/ExpectedUnexpectedReplansAtMost=0/ExpectedFinishedPlayerHpAtLeast=53/ExpectedFinishedTurnAtMost=15/TimeoutSeconds=120/CleanupInstanceOnExit及显式4秒政策。失败/撤回实验、固定构建来源与性能限制见[当前证据](issues/q002-route-quality.md#o003-t1-自主生成与后续损血修整2026-10-05)；原180秒profile、Linux及可见性能未验证。
 
 旧版其余 Q002 机制证据与 Windows 初始化验证统一见[阶段归档](archive/testing/q002-pre-0492-validation-20261004.md)。
 
