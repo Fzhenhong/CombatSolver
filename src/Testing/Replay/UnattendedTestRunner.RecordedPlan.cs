@@ -84,7 +84,12 @@ internal sealed partial class UnattendedTestRunner
             || result.CombatEndedTurn != recorded["combatEndedTurn"]!.GetValue<int>()
             || result.ProjectedBattleHpLost != recorded["projectedBattleHpLost"]!.GetValue<int>()
             || result.BestNode.Actions.Count != actions.Length || result.ExpandedNodes != 0)
-            throw new InvalidOperationException("Strict recorded prediction differs from its saved winning outcome.");
+            throw new InvalidOperationException("Strict recorded prediction differs from its saved winning outcome: "
+                + $"actual won={result.Snapshot.AllEnemiesDead}, deathTurn={result.DeathTurn}, "
+                + $"turn={result.CombatEndedTurn}, hpLost={result.ProjectedBattleHpLost}, "
+                + $"actions={result.BestNode.Actions.Count}, expanded={result.ExpandedNodes}; "
+                + $"expected turn={recorded["combatEndedTurn"]}, "
+                + $"hpLost={recorded["projectedBattleHpLost"]}, actions={actions.Length}.");
         _completedChecks.Add($"RecordedPrediction:StrictReplay:IncrementalEquivalent:Actions={actions.Length}:Expanded=0");
         if (!deploy)
         {
