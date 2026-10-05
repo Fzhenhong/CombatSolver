@@ -177,7 +177,19 @@ unavoidable 断言已全链接通并用正反对照验证：断 `expectedInitial
 
 两处合并后变化：① O045 的 `expectedInitialPotionCount=1` 等值断言被移除——零药达 proj=0 后，等值会把更好的路线判 Failed，正是质量界政策禁止的「锁环境快照」；判别力由 `projAtMost=1` 承担（缺陷形貌 14 仍会踩破）。该次 `axis_widened` 未触发：`no_potion_acceptable` 成立是因零药已最优而非药水层被否证，与 W2 互为印证。② O042 本轮 `ran=2`、无 GATE 行，翻转现场证据仍取 2026-10-04 的 `0945a847`/`0265fa83` 成对记录，未重复采集。
 
-门禁与文档：`TEST_MATRIX.md` 上游自身已占 200 行阈值，本批 Q010 节（46 行）整体移入 [历史卷 14](../../../archive/testing/volume-14.md)，本页与 `TEST_MATRIX` 留短入口；审核稿链接随上游迁移更正；`verify-documentation` 由 errors=3 降为 **errors=0**（同批草稿入 archive 后豁免规则生效，非本批放宽）。
+门禁与文档：`TEST_MATRIX.md` 上游自身已占 200 行阈值，本批 Q010 节（46 行）整体移入 [历史卷 15](../../../archive/testing/volume-15.md)，本页与 `TEST_MATRIX` 留短入口；审核稿链接随上游迁移更正；`verify-documentation` 由 errors=3 降为 **errors=0**（同批草稿入 archive 后豁免规则生效，非本批放宽）。
+
+## 二次合并（`c4ae4367`）发现的 W1 引发退化与修复（2026-10-05，Refs #210）
+
+上游再次推进（`a6c241b2`→`c4ae4367`，0.49.4 发版、额外回合与共享损血剪枝、第三方适配登记），merge 提交 `2be865e0`。冲突四处（`DEVELOPMENT_NOTES` / `TEST_MATRIX` / `archive/testing/README` / `volume-15` 编号撞车），处理：上游已占 14/15/16 卷，本批 Q010 卷由 14 顺延为 **17**，上游各卷原样保留；两侧新增章节全部保留。
+
+**合并后重跑四份夹具，O045 由 Passed 变 Failed（proj=12），定位为本批 W1 引进的退化，已修：**
+
+- 上游单独行为（`a6c241b2` 构建）：成员 `ran=2 compared=1`，选中 index=0（beam=90，净差 22）⇒ 门槛通过 ⇒ 梯度搜到 `hp_deficit=-6 / saved=22` ⇒ **proj=0, 1 瓶, Passed**。
+- 本批 W1 放行 beam=60 成员后：`ran=3 compared=2`，选中 index=1（净差 12、整场战损 12）⇒ `MaximumSmartPotionUses` 以**净差 6**（< 门槛 9）与**必然受击 0** 两轴都算出 0 ⇒ `stop=no_potion_acceptable maximum=0` ⇒ 整层药水搜索被跳过 ⇒ **proj=12, 0 瓶, Failed**。
+- 根因：门槛的两条轴在「更好的零药解」上会一起塌到门槛以下——净差被既有治疗扣低、必然受击在已减伤路线为 0——而这场仗仍有 12 点战损可省。W2 当初只补了必然受击轴，兜不住本例。
+- 修复（`Audits.cs` +20/−14）：门槛取三轴更宽者，新增 **`ProjectedBattleHpLost`（整场预计战损）** 轴，梯度入口与停止点两处同改；预算（beam / 节点 / 时间 / No-GC）零改动，比较规则未动，仍只放宽「跑不跑药水层」。
+- 修复后实测：O045 **Passed，proj=0、0 瓶、score=10002069967**（比上游自己的 `proj=0, 1 瓶` 更省一瓶药）。
 
 ## 未验证项
 
