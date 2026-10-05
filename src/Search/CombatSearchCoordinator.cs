@@ -927,8 +927,9 @@ internal static partial class CombatSearchCoordinator
         SolverResult result)
     {
         if (policy.EffectiveHasGrowthTargets
-            || !ResourceIncumbentPolicy.IsPlainBucket(
-                ResourceIncumbentPolicy.CompletedBucket(result.Snapshot, result.ExplicitPotionCount))
+            || !ResourceIncumbentPolicy.CanUseScalarHpBound(
+                ResourceIncumbentPolicy.CompletedBucket(result.Snapshot, result.ExplicitPotionCount),
+                CombatBeamSolver.CanUseStrictHpRelicBound(root, policy))
             || policy.RelicTargets.Count > 0 && !CombatBeamSolver.CanUseStrictHpRelicBound(root, policy)
             || result.Snapshot.ProjectedDeathSaveUseCount > 0
             || !IsCompleteVictory(result)

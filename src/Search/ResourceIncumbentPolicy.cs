@@ -12,8 +12,10 @@ namespace CombatSolver;
 internal static class ResourceIncumbentPolicy
 {
     private static readonly GrowthSource[] Sources = Enum.GetValues<GrowthSource>();
-    internal static bool IsPlainBucket(PrimaryIncumbentBucket bucket)
-        => bucket.Growth.Total == 0 && bucket.RelicMask == 0;
+    // With zero HP allowance, counters only break HP ties. A victory in any
+    // counter bucket can therefore bound strictly worse HP, but never equal HP.
+    internal static bool CanUseScalarHpBound(PrimaryIncumbentBucket bucket, bool strictHpRelicBound)
+        => bucket.Growth.Total == 0 && (bucket.RelicMask == 0 || strictHpRelicBound);
 
     internal static PrimaryIncumbentBucket CompletedBucket(SimulationSnapshot snapshot, int potions)
         => new(snapshot.OutstandingStolenResource, potions, snapshot.GrowthRewards,

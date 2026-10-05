@@ -302,10 +302,10 @@ internal sealed partial class CombatBeamSolver
         List<SearchNode> bounded = retained;
         int pruned = 0;
         int certifiedHealingBoundPruned = 0;
-        if (!_hasGrowthTargets && root.InitialGrowthRewards.Total == 0
+        if ((!_hasGrowthTargets || _strictHpBoundWithRelicTargets) && root.InitialGrowthRewards.Total == 0
             && _theftPolicy != SolverTheftPolicy.PreserveResources && _primaryIncumbent is { } incumbent
-            && retained.All(node => ResourceIncumbentPolicy.IsPlainBucket(
-                ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, 0))))
+            && retained.All(node => ResourceIncumbentPolicy.CanUseScalarHpBound(
+                ResourceIncumbentPolicy.CompletedBucket(node.Snapshot, 0), _strictHpBoundWithRelicTargets)))
             bounded = ApplyPrimaryIncumbentBoundCore(
             retained,
             incumbent,
@@ -638,8 +638,8 @@ internal sealed partial class CombatBeamSolver
             {
                 bucketUpdated |= _primaryIncumbents.Tighten(resourceBucket, classIncumbent!.Value);
             }
-            if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
-                || !ResourceIncumbentPolicy.IsPlainBucket(resourceBucket)
+            if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets || root.InitialGrowthRewards.Total != 0
+                || !ResourceIncumbentPolicy.CanUseScalarHpBound(resourceBucket, _strictHpBoundWithRelicTargets)
                 || _theftPolicy == SolverTheftPolicy.PreserveResources)
                 continue;
             TryTightenPrimarySearchIncumbent(
@@ -656,7 +656,7 @@ internal sealed partial class CombatBeamSolver
                 candidateDeathSaveUseCount: node.Snapshot.ProjectedDeathSaveUseCount);
         }
 
-        if (_hasGrowthTargets || root.InitialGrowthRewards.Total != 0
+        if (_hasGrowthTargets && !_strictHpBoundWithRelicTargets || root.InitialGrowthRewards.Total != 0
             || _theftPolicy == SolverTheftPolicy.PreserveResources
             || Nullable.Equals(tightened, _primaryIncumbent))
         {
