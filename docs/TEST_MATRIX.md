@@ -24,7 +24,7 @@ PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-qua
 
 O068 从原包 `start` 严格恢复，使用 [固定短搜政策](../coverage/fixtures/search/damaging-continuation-replay-policy.json)，保留原用药、成长、遗物及奖励政策。基线 7 战损／0 药／T4；当前自主搜索与原生整场部署均为 3／0／T4，零计划外重算。最小复跑命令、固定独立哨兵、失败试验与未验证项见 [Q015 记录](issues/q015-route-quality.md)。原包内保存预测的原生部署只证明路线可执行性，不充当自主搜索或性能结果。
 
-同一攻击续路因素在 O069 开战短搜自主原生部署40战损／零药，折算低于人工32／1药1HP；O070 自主原生部署20／零药，战损追平人工、晚1回合。O066 原T4比较根保持主线已取得的3／1药并原生执行；开战短搜未追平。O067 的[强制敏捷药政策](../coverage/fixtures/search/damaging-continuation-forced-dexterity-policy.json)同根目标≤7仍 Failed（当前9），不计为通过。
+同一攻击续路因素在 O069 开战短搜自主原生部署40战损／零药，折算低于人工32／1药1HP；O070 自主原生部署20／零药，战损追平人工、晚1回合。O066 原T4比较根保持主线已取得的3／1药并原生执行；开战短搜未追平。O067 的[强制敏捷药政策](../coverage/fixtures/search/damaging-continuation-forced-dexterity-policy.json)同根目标≤7仍 Failed；安全选牌续路部分改进正常预测及原生执行8／1／T7，固定独立哨兵保持5／1／T4，不计为≤7通过。
 
 ## 开局药水补搜准入
 

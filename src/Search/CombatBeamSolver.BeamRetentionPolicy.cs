@@ -939,6 +939,7 @@ internal sealed partial class CombatBeamSolver
                         routingNodes,
                         FindBestTargetPressure(routingNodes));
                     List<SearchNode> candidates = [];
+                    AddRoutingCandidate(candidates, FindBestSafeRoutingContinuation(routingNodes));
                     if (routingNodes.Min(ActionsSinceRetainedRoutingChoice) <= 1)
                     {
                         AddRoutingCandidate(candidates, group.BestSetup);

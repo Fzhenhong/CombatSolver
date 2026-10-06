@@ -12,7 +12,7 @@
     "level": "HeadlessSearchQualityWithVerifiedHumanWitness",
     "procedure": "原包start、原比较Force敏捷药政策，90/250000/DOP4固定10000ms；保存T6后缀严格回放并原生部署7/1/T7。",
     "expected": "自主零死亡完胜、1敏捷药，整场战损≤7。",
-    "observed": "df5ba655主线12/1/T7；aaf1ca3e攻击续路候选9/1/T7，26474.4649ms/15416907976B，≤7断言失败，未自主部署。两次防守续路试验仍9，已撤回；约40分钟未追平，跳过并保留差2。人工42820d98原生7/1/T7、零搜索和重算；完整开战派生见证严格7，但不能作为自主发现。",
+    "observed": "df5ba655主线12/1/T7；aaf1ca3e攻击续路9/1。续查两项12损试验已撤回；安全选牌续路d6966fba正常8/1/T7，≤7断言仍失败。部分改进原生验收9cfc5305 Passed8/1/T7，实际48/77HP、零重算；19932.9962ms/15033332960B。固定哨兵29b616e6保持5/1/T4、7019.9963ms/2431824120B。第17/18步已展开至第29步，第30步仍落选。人工42820d98原生7/1/T7、零搜索和重算；完整开战派生见证严格7，仅作诊断，不是自主发现。",
     "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-forced-dexterity-policy.json"
   },
   "DAMAGING-CONTINUATION-Q015-O069": {
