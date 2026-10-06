@@ -8,13 +8,21 @@
 
 PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-quality.md#0494-重新验证2026-10-05)。当前 0.50.0 主线整合使用 O003、O004、O005 同根、同政策对照，结果与复跑预算见 [当前验收](issues/q002-route-quality.md#0500-主线整合2026-10-05)。
 
-0.49.4 的额外回合镜像顺序、同根成长胜利续用、整场自动部署与上传引导验证见 [历史卷 16](archive/testing/volume-16.md)。
+## Ctrl+F9 面板可见性（PR #226）
 
-0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
+`OVERLAY-VISIBILITY-LIFECYCLE` 在原生单人战斗中验证快捷键输入、已有及新建 CanvasLayer 的隐藏状态、禁用／手动／搜索中／停止显示、监控刷新，以及 `BeginCombat` 重置后的初始化消费与恢复显示。初始化置位在重置返回时断言，可操作边界的初始化完成在等待旧会话释放后断言。使用现有停止开关在初始合同后结束，搜索状态显示通过 UI 入口注入。
 
-0.49.3 的框架、局外 Mod 与 BaseLib 验证见 [历史卷 14](archive/testing/volume-14.md)。
+```powershell
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId OVERLAY-VISIBILITY-LIFECYCLE -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -StopAfterCombatRootSnapshotAssertion -EnableNoGcRegionForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit
+```
 
-移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
+```bash
+./tools/testing/run-unattended-test.sh --scenario-id OVERLAY-VISIBILITY-LIFECYCLE --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --stop-after-combat-root-snapshot-assertion --enable-no-gc-region-for-test 0 --timeout-seconds 120 --cleanup-instance-on-exit
+```
+
+2026-10-06 本轮失败证据：PR 头 `0725fe21` 加入新图层断言后，runId `2f55f493930144c6800f6835042f134a` 在新建 CanvasLayer 默认可见边界 Failed。直接应用快捷键隐藏意图后，runId `53fc7f11eff84cb4b2d6b7e9cb27ddc4` 通过快捷键、新图层及各显示入口，随后重置断言 Failed：等待旧会话释放期间监控已消费初始化请求。合同按实际生命周期在重置返回时检查置位，在释放后检查完成状态。
+
+最终 runId `37ee21f7569a43c3b5fed01a4e5b4d28` Passed（22.66 秒），三组界面合同全部通过；玩家原生结果保持回合 1、80/80 HP。全部三次请求均完成实例目录清理。本轮 .NET SDK 9.0.300 Release 构建为 0 警告、0 错误，结构门禁、工具检查和文档检查通过。可见 Steam 人工操作、完整 SL 场景和 Linux 运行未验证；贡献者提供的实机记录保留在 PR 正文。
 
 ## 社区批次 Q010 与组合补搜
 

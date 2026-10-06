@@ -21,5 +21,6 @@
 - [strategy-optimization-20260923](strategy-optimization-20260923.md)
 - [strategy-optimization-directions-20260927](strategy-optimization-directions-20260927.md)
 - [strategy-optimization-part1-handoff-20260927](strategy-optimization-part1-handoff-20260927.md)
+- [Q015 排查历史（2026-10-06）](q015-investigation-20261006.md)
 - [STRATEGY_OPTIMIZATION_LOG](STRATEGY_OPTIMIZATION_LOG.md)
 - [worldline-top150-20260926](worldline-top150-20260926.md)
