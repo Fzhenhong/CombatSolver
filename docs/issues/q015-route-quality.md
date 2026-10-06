@@ -58,6 +58,23 @@ O066在约06:04UTC开始额外开战排查，06:31UTC取得自主原生达标结
 
 O066开战自主路线28动作，T1使用1瓶异鱼之油，实际初始／最终均41/75HP，损血／回血／自伤／未归因损血均0。折算0＋9＝9，优于已原生验证的人工3＋9＝12，少3；旧7／1路线折算16的差距已解决。其他主题按药水机会成本比较；O070的晚一回合限制保留。全部使用原政策的固定短搜，没有原档位120／180秒或可见Steam帧时间结论。每版本单样本及时间切片工作量不构成普遍性能收益证明。
 
+## PR前自检与主线合并（2026-10-06）
+
+已合入main `a0b7cf0f`（PR #226），合并提交`d30f95c4`。开发记录的唯一文本冲突保留双方内容；Q015生产搜索与`057bb3c7`一致，新增主线UI／Runtime初始化来源独立标明。原五个主题证据继续复用；合并版最短O068原包开战整场补验`c885cebc3ca74a2eb761320f9ee188f0` Passed：3／0／T4，实际57/75HP，零计划外重算，831.787ms／174686272B，请求19.35秒。
+
+固定哨兵另补一对正常独立进程原生整场验证。维护输入仅将mode从Search改为Deploy，牌组、种子、RNG、预算及政策字段均不变；双方完整rootContinuationStamp、原生开局JSON、executedPolicy及runtime字段逐项相等。CLR9.0.7、ServerGC开启、NoGC关闭、相同DOP2／无详细日志／冷进程；Instant／0秒部署。
+
+| 版本／runId | 预测与实际战损／药／回合 | 实际HP／重算 | 展开／转移 | 搜索ms／分配B |
+| --- | --- | --- | --- | --- |
+| 9a4489d8生产基线／`d3a448e499ba47c2905aca0f610f5fbe` | 5／1／T4 | 51/70／0 | 17480／68036 | 8250.8126／2445527152 |
+| 合并版d30f95c4／`abe046108c234fad8d8d6bff20aef6c0` | 5／1／T4 | 51/70／0 | 17589／67841 | 7998.459／2437694640 |
+
+两端Passed，质量无退化；本对搜索耗时8.25→8.00秒、分配约减少0.32%，工作量相近。每版仅一个正常原生部署样本，不外推统计上的普遍提速／性能不退化。请求分别28.83／28.65秒，实例均清理。此补验完成该哨兵整场可执行性验证，不追溯修改前文首结果验证的历史范围。
+
+合并版DLL SHA256 `7EC25A979A6F0AD26D4A13115C5B2D41EC011185F80EF169899A17D5BA0DB1C6`，最终五文件部署核对均一致。Release构建0编译错误、4条NU1900警告（NuGet漏洞数据服务无法连接；漏洞数据获取未验证）。结构、工具、文档、coverage及提交差异检查通过；失败记录保留：一次构建未完成时私有快照冻结拒绝启动，未进搜索；一次哨兵原生请求被夹具内Search模式覆盖，`70be332dd1ea45b4973f1d0d1aaeaa25`在搜索完成后因T4原生预期Failed，未执行整场。构建完成／使用明确Deploy模式后取得上方成功证据，没有绕过门禁。
+
+验收范围仍为固定短搜；原档位120／180秒、Linux与可见Steam帧时间未验证。PR使用Refs #222，请维护者审阅范围，尚未推送或创建PR。
+
 ## 可重跑入口
 
 ### 命令
@@ -75,3 +92,13 @@ pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-DAM
 ```
 
 Linux 使用 `tools/testing/run-unattended-test.sh` 的对应 kebab-case 参数。维护的 JSON 输入不含个人路径、原始存档或玩家动作。
+
+补验哨兵整场：在`.local/validation/q015/`复制维护输入并仅改mode，沿用上方哨兵的全部参数，移除首结果停止参数，增加零重算与最终HP断言。控制组另传`-CombatSolverBuildDir <9a4489d8独立构建目录>`，原始基线二进制不提交。
+
+```powershell
+New-Item -ItemType Directory -Force .local/validation/q015 | Out-Null
+$q015Sentinel = Get-Content -Raw coverage/fixtures/search/damaging-continuation-sentinel.json | ConvertFrom-Json
+$q015Sentinel.mode = 'Deploy'
+$q015Sentinel | ConvertTo-Json -Depth 20 | Set-Content .local/validation/q015/sentinel-deploy.json -Encoding utf8
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-SENTINEL-DEPLOY -GeneratedScenarioPath .local/validation/q015/sentinel-deploy.json -PerformancePresetForTest Custom -SearchBeamWidthForTest 60 -SearchMaxExpandedNodesForTest 120000 -SearchBudgetOverrideMilliseconds 30000 -FixedSearchBudget -SearchMaxDegreeOfParallelismForTest 2 -EnableNoGcRegionForTest 0 -EnableDetailedDiagnosticLogsForTest 0 -PotionPolicyForTest Smart -RuntimeProfile default -DeploymentFastModeForTest Instant -DeploymentInterActionDelaySecondsForTest 0 -ExpectedInitialProjectedBattleHpLostAtMost 5 -ExpectedInitialPotionCount 1 -ExpectedInitialFinalEnemyHpAtMost 0 -ExpectedUnexpectedReplansAtMost 0 -ExpectedFinishedTurnAtMost 4 -ExpectedFinishedPlayerHpAtLeast 51 -EvidenceDirectory .local/validation/q015/sentinel-deploy -TimeoutSeconds 120 -CleanupInstanceOnExit
+```

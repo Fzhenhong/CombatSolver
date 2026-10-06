@@ -2893,5 +2893,13 @@
     "expected": "按每瓶9HP，整场折算成本不劣于原生完整人工3损/1异鱼之油的12；无计划外重算。",
     "observed": "主线42f90c67为36/0/T12，限定弃牌版本3449f77d为7/1/T8、折算16。仅追加死亡增援窗口识别后7e3d9c9ff0df468fada865f1aa33e5b4自主原生0/1异鱼之油/T6，实际41/75HP，损血/回血/自伤/未归因损血均0，零重算；28791展开/103540转移/8387.9231ms/4767277264B。28动作，T1用药，折算9较人工12少3。人工e2995e4e37动作原生3/1/T9、零额外搜索和重算，参照动作未注入生产。",
     "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-medium-replay-policy.json"
+  },
+  "DAMAGING-CONTINUATION-Q015-SENTINEL-DEPLOY": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "BYRDONIS_ELITE/SILENT维护输入仅改mode=Deploy；独立进程基线9a4489d8与合并版d30f95c4，同Custom60/120000/固定30000ms/DOP2/Smart/ServerGC/NoGC关闭/无详细日志，Instant/0秒整场部署。",
+    "expected": "完整原生开局、ContinuationStamp及执行政策相等，双方获胜、5损/1药/T4、零重算；正常搜索耗时无明显增加。",
+    "observed": "基线d3a448e499ba47c2905aca0f610f5fbe与候选abe046108c234fad8d8d6bff20aef6c0均Passed、51/70HP、零重算；完整开局/根/政策/runtime相等。17480/68036/8250.8126ms/2445527152B → 17589/67841/7998.459ms/2437694640B。单对样本不外推普遍性能收益。合并版O068 c885cebc3ca74a2eb761320f9ee188f0原生3/0/T4、57/75HP、零重算通过；其余生产搜索未变的原五主题证据复用。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-sentinel.json"
   }
 }
