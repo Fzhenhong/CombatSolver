@@ -1,16 +1,16 @@
 # Q015 路线质量
 
-[Issue #222](https://github.com/Torch1230/CombatSolver/issues/222)，O066～O070 同一批次。贡献分支从主线 `9a4489d8`（manifest 0.50.0）开始；PR #213 已被主线合入。本记录不代替全批验收，不关闭 Issue。原始任务预测见 [发布材料](../archive/community/2026-10-05-worldlines/Q015.md)。
+[Issue #222](https://github.com/Torch1230/CombatSolver/issues/222)，O066～O070 同一批次。贡献分支从主线 `9a4489d8`（manifest 0.50.0）开始；PR #213 已被主线合入。本记录保存本地验收证据，不自动关闭 Issue。原始任务预测见 [发布材料](../archive/community/2026-10-05-worldlines/Q015.md)。
 
 ## 状态（2026-10-06）
 
 | 条目 | 当前证据 | 状态 |
 | --- | --- | --- |
-| O068 海洋混混／储君 | 同开战根，基线 7／0药／T4；候选自主搜索及原生执行 3／0药／T4、零意外重算 | 已追平人工合法路线；独立哨兵预测保持 |
-| O066 异蛙寄生虫／储君 | 原 T4 比较根：主线3／1／T9，候选自主搜索及原生部署3／1异鱼之油／T9、零重算 | 原比较根已由主线解决；开战10秒短搜仍有差距 |
-| O067 感染棱柱／静默猎手 | 保存后缀原生7／1敏捷药／T7；同开战根主线12／1，攻击续路9／1，安全选牌续路自主原生8／1 | 部分改进已验收；仍差1，≤7目标未通过 |
-| O069 灵魂枢纽／亡灵契约师 | 保存后缀原生32／1格挡药／T7；同开战根主线62／0，候选自主搜索和原生40／0／T13、零重算 | 折算优于人工1；裸战损未追平32 |
-| O070 永世沙漏／故障机器人 | 同开战根主线36／0／T12；候选自主搜索和原生20／0／T11、零重算 | 战损追平人工20／0；比人工晚1回合 |
+| O068 海洋混混／储君 | 同开战根主线7／0；最终自主原生3／0／T4、零重算 | 折算追平；详细比较限制见下文 |
+| O066 异蛙寄生虫／储君 | 同开战根主线36／0／T12；最终自主原生0／1异鱼之油／T6，实际41/75HP、零重算 | 折算9优于已原生验证的人工12；原T4根兼容验证通过 |
+| O067 感染棱柱／静默猎手 | 同开战根主线12／1；最终自主原生7／1／T7、零重算 | 折算追平；详细比较限制见下文 |
+| O069 灵魂枢纽／亡灵契约师 | 同开战根主线62／0；最终自主原生40／0／T13、零重算 | 折算少1；详细比较限制见下文 |
+| O070 永世沙漏／故障机器人 | 同开战根主线36／0；最终自主原生20／0／T11、零重算 | 折算追平；详细比较限制见下文 |
 
 ## O068：候选产生，但破盾续路被淘汰
 
@@ -20,7 +20,7 @@
 
 只读整池诊断共 2791 事件、零丢失。窄成员宽度 36 的局部边界中有 80 个原始候选；倒数第二步原始排名 37，未进入最终保留集。必保代表置换后，原本较靠前的攻击候选也落选。防守估值偏好已经出防御的分支，而 T4 第一击只是消耗敌方格挡，敌人 HP 仍为 4，第二击才取胜。
 
-生产改动只有一个因素：既有按药水数量分组的保路入口，在原名额内保留一个刚减少敌方 HP＋格挡、仍可合法出攻击的非终局候选。合法攻击数量从现有手牌合法性循环冻结，保路不读模拟器；它是启发式提示，不是可达击杀证明，不进入指纹或 ContinuationStamp。沿用既有进攻代表比较器，不改终局政策，不按卡名或遭遇特化。
+O068 的独立改动只有一个因素：既有按药水数量分组的保路入口，在原名额内保留一个刚减少敌方 HP＋格挡、仍可合法出攻击的非终局候选。合法攻击数量从现有手牌合法性循环冻结，保路不读模拟器；它是启发式提示，不是可达击杀证明，不进入指纹或 ContinuationStamp。沿用既有进攻代表比较器，不改终局政策，不按卡名或遭遇特化。后续O067追加的两项独立因素及兼容性验证见下文。
 
 ## O068 验证与失败试验
 
@@ -62,7 +62,7 @@ runId 分别为 `61f63b7118a04bb79db8074288fefc61`、`37331b22dcf24a90b00b33ed3d
 
 另从开战 `start` 比较固定10秒：主线36损／0药／T12（`42f90c670ce94611bf0393bdd7d32f53`，20591展开／79619转移／9905.6302ms／3697811576B）；候选17／0／T9（`de66e079e272430d867fd46a920391b5`，26249／96098／9921.7557ms／4394040680B）。候选因预期1药的断言 Failed，尚未原生部署，也未追平3损＋1药的折算12损目标。原日志还混有 startTurn1 的37动作旧计划与T4复用结果，不能拿旧17预测当成本轮开战短搜基线或混算区间；原档位120秒未验证，不扩大短搜预算继续调参。
 
-## O067：安全选牌续路部分改进，仍差1
+## O067：弃牌续路与延迟伤害结束回合探测
 
 报告 `cc243a922beb4965995c911f8ff9fb60`，session `3e88aff1627f423e8a26c4fb2fd9b652`。原包 `:5`／cursor36／T6 的6动作保存后缀已逐步核对增量／完整回放并原生执行（`42820d9838434ca9ab71b2d971cb2c71`）：整场7战损，原生49/77 HP，T7获胜。敏捷药水在录制的T1已经喝过，后缀0药不等于整场0药；整场共1瓶、零额外搜索和重算。
 
@@ -95,9 +95,25 @@ runId 分别为 `61f63b7118a04bb79db8074288fefc61`、`37331b22dcf24a90b00b33ed3d
 
 第二个试验的第17步诊断 `6a8366c30be6401b8da1d345870273e4` Passed，1873事件、零丢失：目标排名47／711，选牌名额23、必保32、最终名额49，确实展开。随后第18步只进入剪枝输入；不能因第17步专用整池记录未出现第18步，断言其在全局排名前丢失。改用第18步观察后，`6f45daf0302d48d690e31a3efb3a4f5c` Passed，1415事件、零丢失：该延迟伤害状态在边界26排名189／482，同一上下文内没有获得保留名额。它预计HP49、能量0、延迟伤害17；先保留的直接攻击／后续抽牌分支预计HP同为49、延迟伤害10，但敌方HP更低且后续抽牌价值更高。第17步单独存活尚不足以兑现7损路线。两项试验均未原生部署，预算、名额、终局政策未扩大。
 
-第三项只改变同一上下文内的代表优先级：已出牌、覆盖当前预计受击的非终局续路，依次按预计HP、已有直接／延迟进攻进展、可达手牌价值和既有进攻比较器排序；不增加选牌名额、不改变支配、状态键或终局政策。第18步诊断 `04f6bb6aeb254f02b52767889791192c` Passed，1500事件、零丢失：该状态排名215／465、选牌名额53、必保63、最终81，已展开，人工等价状态随后一直展开到第29步。按≤8、1药、完胜的独立部分改进目标原生验收 `9cfc5305351d4f10a8e5300fccbb4533` Passed：实际48/77HP、T7、零计划外重算，67609展开／339664转移／19932.9962ms／15033332960B。固定独立哨兵 `29b616e61d9647f7b8636950ce140079` Passed，保持5／1／T4，17589展开／67841转移／7019.9963ms／2431824120B；相对同根主线基线分配约增加0.25%，不同时间的单样本不证明普遍提速。该验收不替代人工≤7的目标，仍差1；仅保留这个已原生验证并通过哨兵的部分改进。
+第三项只改变同一上下文内的代表优先级：已出牌、覆盖当前预计受击的非终局续路，依次按预计HP、已有直接／延迟进攻进展、可达手牌价值和既有进攻比较器排序；不增加选牌名额、不改变支配、状态键或终局政策。第18步诊断 `04f6bb6aeb254f02b52767889791192c` Passed，1500事件、零丢失：该状态排名215／465、选牌名额53、必保63、最终81，已展开，人工等价状态随后一直展开到第29步。按≤8、1药、完胜的独立部分改进目标原生验收 `9cfc5305351d4f10a8e5300fccbb4533` Passed：实际48/77HP、T7、零计划外重算，67609展开／339664转移／19932.9962ms／15033332960B。固定独立哨兵 `29b616e61d9647f7b8636950ce140079` Passed，保持5／1／T4，17589展开／67841转移／7019.9963ms／2431824120B；相对同根主线基线分配约增加0.25%，不同时间的单样本不证明普遍提速。这是当时的部分改进证据，不替代人工≤7目标；该宽选牌范围随后在O070失败，最终由下方限定弃牌范围版本取代。
 
 第30步完整候选池诊断 `2adbee0a8fa643bd8c0562b0d9f7a7e3`：2478事件、零丢失；宽度135成员边界53共有954候选，目标排名221、父排名18、没有获得最终名额，也没有当回合选牌签名。目标实际HP49，但静态预计HP25、敌方HP35、延迟伤害32。相同用药数量的 Control 候选按静态预计HP取前8个，其预计HP均37；目标因此未进入既有结束回合试算。候选池另有实际HP49、敌方HP35、延迟伤害39的状态，同样未保留。冻结延迟伤害估值不是结束回合击杀证明，仍必须交给已有试算及实际终局验收。
+
+在8损部分改进单独完成原生及哨兵验收后，再验证第二个独立因素：Control 结束回合探测的原8个名额中，保留一个冻结延迟伤害估值不低于敌方剩余HP的非终局候选，按已实现累计战损、当前HP、敌方HP及原分数选代表。候选只进入已有实际结束回合试算，不按估值直接宣告击杀；探测上限、Beam、profile、终局排序、状态等价及实际模拟语义不改。该因素不按报告、遭遇或卡名特化。
+
+收窄选牌范围前的候选正常搜索及 Instant／0秒原生整场部署 `87eb7c9d4e2f4efcbf17572733c3356a` Passed：7／1敏捷药／T7，实际49/77HP、零计划外重算；68000展开／342086转移／20003.6511ms／15164090128B。本轮开始约05:12UTC，05:42UTC已取得O067原生达标结果；随后其他主题的复验暴露下方O070退步，不能据该单例及哨兵直接判定整批完成。
+
+该候选固定独立哨兵 `5dfc8c3a36414a37880a83b1c208ec21` Passed，5／1／T4、17589展开／67841转移／7258.7316ms／2434927792B。主线正常基线8819.4325ms／2425680760B，分配约增加0.38%；8损中间版本7019.9963ms／2431824120B。不同时间单样本不证明普遍提速。
+
+### O070 回归与弃牌范围纠正
+
+完整批次复验暴露范围问题：宽选牌优先级＋延迟伤害探测在O070正常搜索 `0e3b221763d4460cb2d39cb8396f5947` 得到21／0／T10，88596展开／370660转移／22382.525ms／21928937128B，≤20断言 Failed，未原生部署。仅撤去探测因素后，宽选牌优先级 `3c528dd1ec2f468da013f462ab869732` 为44／0／T10，93480／375154／21003.3637ms／23050090392B，同样 Failed、未部署。两个失败版本均不作为最终兼容结果。
+
+O070 的路线选择为 `MoveToHand`，属于弃牌堆取回手牌；O067 的定位依据为 `Discard`。将安全续路优先级限定为 `Discard`／`DiscardAndDraw`，取回及生成手牌继续沿用原候选代表顺序；这是选择效果边界，不按角色、卡名或遭遇特化。保留原8个名额内的延迟伤害探测因素。限定后的 O070 正常搜索和原生整场执行 `b6ab9489059a42209e2789f80b55b90d` Passed：20／0／T11，实际54/75HP、零重算，81957展开／333181转移／19018.5074ms／19719305456B。
+
+最终限定范围的 O067 正常自主搜索和原生整场执行 `513d9628ffe644559a33ad0b695ca525` Passed：**7／1敏捷药／T7**、实际49/77HP、零重算，67961展开／340075转移／21162.3535ms／15119974416B。战损、用药及回合追平人工；较主线少5损，较仅攻击续路少2损。参照动作从未注入生产搜索。
+
+最终固定独立哨兵 `416fcbad8199411eab0ea58894140ad6` Passed：5／1／T4，17589展开／67841转移／7119.7149ms／2444295768B；相对主线固定基线分配约增加0.77%，不同时间单样本未见明显耗时增加，不证明普遍提速。哨兵本轮仍为首结果验证，不宣称其完整原生部署或可见Steam帧时间通过。两个退步的宽范围版本只保留失败记录，最终生产采用限定弃牌范围的版本。
 
 ## O069：省药后的整场成本
 
@@ -126,16 +142,63 @@ runId 分别为 `61f63b7118a04bb79db8074288fefc61`、`37331b22dcf24a90b00b33ed3d
 
 正常 runId `5fdc455e4b16491ebdddbc190d13fb23`、`7357a242a1f54baeb26b38f3aed590c7`。没有新增生产因素；O068攻击续路改动使本根少16战损，药水数量不变，整场战损追平人工20，但比人工T10晚一回合。总搜索包含既有组合成员，不能宣称请求总预算10秒；每版本单样本，不外推普遍性能收益。原档位120秒和可见Steam帧时间未验证。
 
+## 限定弃牌范围版本的整批复验（追加窗口识别前）
+
+下表五项均使用同一最终Release产物，正常自主搜索后以Instant／0秒原生执行完胜，计划外重算均为0。O066明确为原报告T4比较根，其余为开战根。旧宽选牌版本曾在O069取得31／0／T9，但未通过O070兼容验证，已经被取代；当前O069应报告40／0。
+
+| 项目 | runId | 战损／药／回合 | 实际HP | 展开／转移 | 搜索ms／分配B |
+| --- | --- | --- | --- | --- | --- |
+| O066 T4 | `c1eed1afed7a491ab8d2efae5781aa4d` | 3／1异鱼之油／T9 | 38/75 | 6610／22888 | 3378.4922／1052992424 |
+| O067 开战 | `513d9628ffe644559a33ad0b695ca525` | 7／1敏捷药／T7 | 49/77 | 67961／340075 | 21162.3535／15119974416 |
+| O068 开战 | `a5fd0f12977347d9a891a9f55742d4cd` | 3／0／T4 | 57/75 | 1858／4935 | 788.5691／174702224 |
+| O069 开战 | `5f4516610f0845a6b98aeea8cd0f0df6` | 40／0／T13 | 33/84 | 42606／208949 | 9941.2426／8910010832 |
+| O070 开战 | `b6ab9489059a42209e2789f80b55b90d` | 20／0／T11 | 54/75 | 81957／333181 | 19018.5074／19719305456 |
+
+O066首次复验在搜索开始前因启动进程不符合实例私有程序身份而失败（`4d8b8b85d6404a4faf68e425a7bf6d34`）；实例已清理，保留身份检查后换新实例取得上表结果。不是求解器质量失败，不推定未经证明的启动原因。最终哨兵见O067节；以上每版本单样本，固定时间切片内实际工作量不同，不宣称普遍性能收益。五个原比较点通过，不等于额外开战目标或原档位长搜已通过。
+
+最终版本另测O066开战（`3449f77d7946432b87b231ce149176a9`）：7战损、1异鱼之油、T8，30623展开／109830转移／8434.6757ms／5048200976B。实际仅正常预测、未原生部署；单独的≤12裸战损断言Passed，但社区折算成本7＋9＝16，高于人工3＋9＝12，差4，应按质量目标Failed记录。开战与T4比较根均41/75HP，同持异鱼之油与复制药；原生记录到T4前未损血、未用药，不能用比较区间差异解释这4点缺口。
+
+O066额外开战诊断从原生事件中核对前三回合15动作，加上T4实际君王之剑及已验证21动作后缀，生成37动作派生见证，只存`.local/`、原ZIP不改。君王之剑状态键取原预测中同状态实例，目标身份按原生T4记录修正；严格逐步增量／完整回放再次核对。`c4c9bfb18bbe4d899b5a0ef4377ad4c8` Passed：37动作、3损、1异鱼之油、T9、0展开，1044条只读观察无丢失，live/root未改；不是自主发现或这条完整派生路线的原生部署证据。
+
+改用第17步观察，`75b7ed9f31d34bf782f083ebbb2a2e98` Passed，832条观察无丢失。第16步T4出剑的无药等价状态在宽度60成员保留并展开；第17步用药后的等价状态只在T1已用油的成员中出现，不应断言搜索实际枚举了人工T4用油顺序。该状态进入宽度60边界32的239个候选，排名137、父排名3，没有必保或最终名额。实际/预计HP41、敌75、能量1、持续增益26、可达手牌12，与排名136且获必保的代表相同，但完整状态键不同；目标累计敌方损血60、16动作，先保留代表50、15动作。人工具体动作顺序未注入搜索；此证据指向代表排序缺少历史进展区分，尚不证明任意改序都能改善完整请求。
+
+仅替换同药水谱系、预计HP和敌HP相同后的同分顺序，优先累计敌方损血，再按原分数：正常请求`017bfa3aafea48149e2142f0ff066a17`仍7／1／T8，30746展开／110064转移／8691.7628ms／5042146472B，≤3断言Failed、未原生部署。该试验的第18步只读观察`b6725c37611a478a98483fab7f7ec8ab`Passed，768事件无丢失：第17步等价状态已保留／展开，第18步防御候选排名105却无必保／最终名额，后续未出现。局部保留改善未兑现整场质量，试验已撤回。
+
+第18步同池同时有异蛙本体尚余1HP和本体已死、四个扭动虫合计75HP的状态。当前药水谱系代表在预计HP相同后先比较敌方剩余HP，因此优先尚未触发死亡增援的阶段；不能把这1HP当作整个遭遇只余1HP。现有模拟器正确结算死亡增援，冻结敌HP统计当前／复活中的敌人；未生成的主要敌人不计入当前HP。后续应定位跨增援阶段保路及弃置顺序的可兑现收益，不能将上述局部排序试验包装成语义修复，也不应为本包硬编码卡序或预计增援HP。
+
+完整派生见证的原生部署层补验`e2995e4e2a79437f9d821da5c6f5b472`Passed：从41/75HP开战严格回放37动作、0展开，实际38/75HP、3战损、1异鱼之油在T4使用、T9完胜；0额外搜索、0计划外重算，未归因损血0。这证明人工整场12折算成本确实可执行，不是自主搜索达标证据。
+
+此前补验误将场景名设为普通自主部署入口，`eb185e5063be4777ac7b9aca09e7f320`实际执行了当前自主7／1／T8路线，原生34/75HP、零重算；没有执行固定37动作，应按自主路线原生证据记录，折算成本仍16、未达人工12。派生包仅追加用于诊断的索引预测，原始开战状态、原生录制和政策输入不改；普通自主入口未读取或注入该参照路线。误设入口后，已使用明确的`CHECKPOINT-RECORDED-PLAN-DEPLOYMENT`完成上方独立人工验证，不将两者混算。
+
+## 最终版本：死亡增援窗口与同源验收
+
+O066在约06:04UTC开始额外开战排查，06:31UTC取得自主原生达标结果。失败的累计伤害同分试验已撤回；仅新增一个独立因素：冻结的AliveEnemyMask显示旧敌退出且新敌入场时，沿用既有RevivalWindow通道。原先仅判断复活数量或总HP变化，会漏掉击杀旧敌后增援使总HP上升的阶段。与此前7／1版本逐项核对，完整开战根ContinuationStamp及全部executedPolicy字段一致，政策差异为{}。识别不读模拟器，不新增通道名额，不预计未知增援HP，不改实际死亡／召唤语义、状态等价、预算或终局排序，不按报告、角色、卡名或遭遇特化。
+
+同一最终Release程序集（SHA256 `7AB45F25ADCF5C5A02B4160A57E8EBCBB0E16252C3EDB033636ACBCFFF143CB7`）完成下表验收。五个主题均已从原始开战根自主搜索并原生执行完胜，零计划外重算；另保留O066原T4根兼容结果。固定哨兵仍为首结果验证，不宣称完整原生部署。
+
+| 项目 | runId | 战损／药／回合 | 实际HP | 展开／转移 | 搜索ms／分配B |
+| --- | --- | --- | --- | --- | --- |
+| O066 开战 | `7e3d9c9ff0df468fada865f1aa33e5b4` | 0／1／T6 | 41/75 | 28791／103540 | 8387.9231／4767277264 |
+| O066 T4 | `47029c7049664b59b8e81a50b6a945cb` | 3／1／T9 | 38/75 | 6610／22888 | 3591.7788／1054352448 |
+| O067 开战 | `de73b24602e146858527361186b28789` | 7／1／T7 | 49/77 | 68008／342121 | 21164.1224／15145573792 |
+| O068 开战 | `bda4c827af34449e94a680d16a4acc02` | 3／0／T4 | 57/75 | 1858／4935 | 869.8396／175002488 |
+| O069 开战 | `08b7b882dcb64ed48640f4e5964cf4e5` | 40／0／T13 | 33/84 | 40584／201764 | 9942.3624／8587474376 |
+| O070 开战 | `e8ebefd702364afabdf763bb7b3c5dd2` | 20／0／T11 | 54/75 | 81957／333181 | 19042.4303／19742803040 |
+| 独立哨兵 | `f1ecad1682dd49b397489a5f4214fad2` | 5／1／T4 | 首结果；未完整部署 | 17589／67841 | 7475.2308／2435604896 |
+
+O066开战自主路线28动作，T1使用1瓶异鱼之油，实际初始／最终均41/75HP，损血／回血／自伤／未归因损血均0。折算0＋9＝9，优于已原生验证的人工3＋9＝12，少3；旧7／1路线折算16的差距已解决。其他主题按药水机会成本比较；O070的晚一回合限制保留。全部使用原政策的固定短搜，没有原档位120／180秒或可见Steam帧时间结论。每版本单样本及时间切片工作量不构成普遍性能收益证明。
+
 ## 可重跑入口
 
 ### 命令
 
-先从 [Q015 官方资料](https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q015.zip) 取得对应子包；`<O068.zip>` 等表示原始子包，不是临时派生见证。按本机情况补充游戏／Ritsu 路径。O067 的目标断言仍失败；其他命令对应已记录的实际验证范围。
+先从 [Q015 官方资料](https://github.com/Torch1230/CombatSolver/releases/download/community-tasks-2026-10-02/Q015.zip) 取得对应子包；`<O068.zip>` 等表示原始子包，不是临时派生见证。按本机情况补充游戏／Ritsu 路径。各命令对应下方已记录的实际验证范围。
 
 ```powershell
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-O066-START-DEPLOY -CheckpointArchivePath <O066.zip> -CheckpointSelector start -ReplayMode DeploySolver -ReplayPolicyOverridePath coverage/fixtures/search/damaging-continuation-medium-replay-policy.json -ExpectedInitialProjectedBattleHpLostAtMost 3 -ExpectedInitialPotionCount 1 -ExpectedInitialFinalEnemyHpAtMost 0 -EvidenceDirectory .local/validation/q015/o066-start -TimeoutSeconds 120 -CleanupInstanceOnExit
 pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-O068-DEPLOY -CheckpointArchivePath <O068.zip> -CheckpointSelector start -ReplayMode DeploySolver -ReplayPolicyOverridePath coverage/fixtures/search/damaging-continuation-replay-policy.json -ExpectedInitialProjectedBattleHpLostAtMost 3 -ExpectedInitialPotionCount 0 -ExpectedInitialFinalEnemyHpAtMost 0 -EvidenceDirectory .local/validation/q015/o068 -TimeoutSeconds 120 -CleanupInstanceOnExit
 pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-O066-T4-DEPLOY -CheckpointArchivePath <O066.zip> -CheckpointSelector 03b561868c6d4ceea599655def8da459:9 -ReplayMode DeploySolver -ReplayPolicyOverridePath coverage/fixtures/search/damaging-continuation-medium-replay-policy.json -ExpectedInitialProjectedBattleHpLostAtMost 3 -ExpectedInitialPotionCount 1 -ExpectedInitialFinalEnemyHpAtMost 0 -EvidenceDirectory .local/validation/q015/o066 -TimeoutSeconds 120 -CleanupInstanceOnExit
-pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-O067-OPEN-TARGET -CheckpointArchivePath <O067.zip> -CheckpointSelector start -ReplayMode SearchOnly -ReplayPolicyOverridePath coverage/fixtures/search/damaging-continuation-forced-dexterity-policy.json -ExpectedInitialProjectedBattleHpLostAtMost 7 -ExpectedInitialPotionCount 1 -ExpectedInitialFinalEnemyHpAtMost 0 -EvidenceDirectory .local/validation/q015/o067 -TimeoutSeconds 120 -CleanupInstanceOnExit
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-O067-DEPLOY -CheckpointArchivePath <O067.zip> -CheckpointSelector start -ReplayMode DeploySolver -ReplayPolicyOverridePath coverage/fixtures/search/damaging-continuation-forced-dexterity-policy.json -ExpectedInitialProjectedBattleHpLostAtMost 7 -ExpectedInitialPotionCount 1 -ExpectedInitialFinalEnemyHpAtMost 0 -EvidenceDirectory .local/validation/q015/o067 -TimeoutSeconds 120 -CleanupInstanceOnExit
 pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-O069-POTION-COST-DEPLOY -CheckpointArchivePath <O069.zip> -CheckpointSelector start -ReplayMode DeploySolver -ReplayPolicyOverridePath coverage/fixtures/search/damaging-continuation-replay-policy.json -ExpectedInitialProjectedBattleHpLostAtMost 41 -ExpectedInitialPotionCount 0 -ExpectedInitialFinalEnemyHpAtMost 0 -EvidenceDirectory .local/validation/q015/o069 -TimeoutSeconds 120 -CleanupInstanceOnExit
 pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-O070-DEPLOY -CheckpointArchivePath <O070.zip> -CheckpointSelector start -ReplayMode DeploySolver -ReplayPolicyOverridePath coverage/fixtures/search/damaging-continuation-medium-replay-policy.json -ExpectedInitialProjectedBattleHpLostAtMost 20 -ExpectedInitialPotionCount 0 -ExpectedInitialFinalEnemyHpAtMost 0 -EvidenceDirectory .local/validation/q015/o070 -TimeoutSeconds 120 -CleanupInstanceOnExit
 pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId Q015-DAMAGING-CONTINUATION-SENTINEL -GeneratedScenarioPath coverage/fixtures/search/damaging-continuation-sentinel.json -PerformancePresetForTest Custom -SearchBeamWidthForTest 60 -SearchMaxExpandedNodesForTest 120000 -SearchBudgetOverrideMilliseconds 30000 -FixedSearchBudget -SearchMaxDegreeOfParallelismForTest 2 -EnableNoGcRegionForTest 0 -EnableDetailedDiagnosticLogsForTest 0 -PotionPolicyForTest Smart -RuntimeProfile default -ExpectedInitialProjectedBattleHpLostAtMost 5 -ExpectedInitialPotionCount 1 -ExpectedInitialFinalEnemyHpAtMost 0 -StopAfterInitialSolverResultAssertion -EvidenceDirectory .local/validation/q015/sentinel -TimeoutSeconds 120 -CleanupInstanceOnExit

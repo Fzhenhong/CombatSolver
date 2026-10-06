@@ -484,12 +484,12 @@ internal sealed partial class CombatBeamSolver
             return count;
         }
 
-        private static SearchNode? FindBestSafeRoutingContinuation(IReadOnlyList<SearchNode> nodes)
+        private static SearchNode? FindBestSafeDiscardContinuation(IReadOnlyList<SearchNode> nodes)
         {
             SearchNode? best = null;
             foreach (SearchNode node in nodes)
             {
-                // Within one choice context, keep a continuation that covers incoming
+                // Within one discard context, keep a continuation that covers incoming
                 // damage while advancing damage (including delayed damage). This is a
                 // frozen heuristic, not a proof that ending the turn is safe.
                 if (node.IsTerminal || node.Parent == null

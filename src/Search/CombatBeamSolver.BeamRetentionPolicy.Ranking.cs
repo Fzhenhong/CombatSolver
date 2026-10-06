@@ -705,6 +705,28 @@ internal sealed partial class CombatBeamSolver
                 .Take(limit)
                 .ToList();
 
+            if (trait == SearchRouteTraits.Control)
+            {
+                // Static incoming damage ignores some delayed kills. Reserve one of
+                // the existing probes for a possible finish, then let the exact
+                // stand-pat rollout decide; the frozen estimate is not lethal proof.
+                SearchNode? delayedFinish = nodes
+                    .Where(node => !node.IsTerminal && node.Traits.HasFlag(trait)
+                        && node.Snapshot.EnemyHp > 0
+                        && node.Snapshot.DelayedDamageValue >= node.Snapshot.EnemyHp)
+                    .OrderBy(node => node.Snapshot.CumulativePlayerHpLost)
+                    .ThenByDescending(node => node.Snapshot.PlayerHp)
+                    .ThenBy(node => node.Snapshot.EnemyHp)
+                    .ThenByDescending(node => node.Score)
+                    .FirstOrDefault();
+                if (delayedFinish != null && !ContainsReference(probes, delayedFinish))
+                {
+                    if (probes.Count == limit)
+                        probes.RemoveAt(limit - 1);
+                    probes.Add(delayedFinish);
+                }
+            }
+
             _prepareStandPat?.Invoke(probes);
             SearchNode? best = null;
             StandPatEvaluation bestEvaluation = default;

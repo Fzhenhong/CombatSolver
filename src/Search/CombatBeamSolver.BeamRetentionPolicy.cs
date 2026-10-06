@@ -939,7 +939,11 @@ internal sealed partial class CombatBeamSolver
                         routingNodes,
                         FindBestTargetPressure(routingNodes));
                     List<SearchNode> candidates = [];
-                    AddRoutingCandidate(candidates, FindBestSafeRoutingContinuation(routingNodes));
+                    if (orderedRoutingContexts[contextIndex].Key.Effect
+                        is PlanChoiceEffect.Discard or PlanChoiceEffect.DiscardAndDraw)
+                    {
+                        AddRoutingCandidate(candidates, FindBestSafeDiscardContinuation(routingNodes));
+                    }
                     if (routingNodes.Min(ActionsSinceRetainedRoutingChoice) <= 1)
                     {
                         AddRoutingCandidate(candidates, group.BestSetup);
