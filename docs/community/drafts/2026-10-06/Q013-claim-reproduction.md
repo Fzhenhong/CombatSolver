@@ -211,3 +211,31 @@ O056 部署存活两次原生实测都是 62 血（maxHp 107），即 107 − 45
 ### 归档口径（提请维护者定夺）
 
 本文件现在 210 行 / 19.6 KiB，行数刚越过 AGENTS.md 第 9 节给活动开发/测试记录的 200 行阈值（体积仍在 32 KiB 内）。按 §9 本应把已完成轮次压成短入口或移入 `docs/archive/`，本批不自行归档：搬迁会牵动 `docs/TEST_MATRIX.md`、`coverage/evidence/test-evidence.json` 与账本里的相对路径同步，把一次收口变成结构搬迁，风险大于收益。是否归档请维护者定夺，不默认放行（与 Q010 同一口径）。
+
+## 第六轮：合并上游后的夹具复跑与兼容性阻塞（2026-10-06）
+
+PR #228 与 `origin/main` 冲突（只在 `docs/TEST_MATRIX.md`：同一位置的两个新增段落），已合并 `6031debd`（merge `aa99e0d6`，两侧段落都保留）。合并带来上游 `89798a78`「Include captured hand limits in continuation and combat fingerprints」，因此按 AGENTS 第 8 节以新二进制重跑七条夹具。
+
+新二进制：Release 0 警告 0 错误，SHA256 `760E4D65A0E41058E3EC4F92A6D77F65ADD263E7B3B0FB82DD43B472E757ADC5`（与合并前 `5CFA2B35…B00A459` 不同，即本轮确实在跑合并后的件）。
+
+**七条夹具在合并后的主线上全部 `restore_mismatch`，一条都没有进入搜索：**
+
+| 夹具 | runId | 对账差异 |
+| --- | --- | --- |
+| O056 同根 | `50ffffe330fa42e6b4f7bc64c92c7597` | `field_count expected=24 actual=25`，`first_extra_actual={max_hand_size=10}` |
+| O057 同根 | `04247c2698c74dfc9f58db34f219f4c8` | `expected=30 actual=31`，同上 |
+| O058 同根 | `f918beb6b0ce4566ba502670bb762dd6` | `expected=27 actual=28`，同上 |
+| O059 同根 | `51a293ddee5f48808ac4961d2ee745a7` | `expected=24 actual=25`，同上 |
+| O060 同根 | `5a164002c7064a36a7920a8f8f28e11d` | `expected=27 actual=28`，同上 |
+| O056 部署 | `c3487e835ecf4558985aafa2a0b6792b` | `expected=24 actual=25`，同上 |
+| O060 部署 | `24d7b169dc224ffa82c094006d285b3d` | `expected=27 actual=28`，同上 |
+
+根因不在本批：`src/Runtime/ContinuationStamp.cs:115`（live 侧）与 `:181`（模拟侧）无条件把 `;max_hand_size=<值>` 追加进续用文本，而 `:58-64` 的比较要求 `Split(';')` 之后字段数相等，缺失即报 `field_count`。这些玩家包录制于 `89798a78` 之前（包内版本 0.49.3 / 0.49.4 / 0.50.0），续用文本里没有该字段，于是任何旧包在合并后的主线上都在 `native_replay_events` 阶段失败，搜索根本没开始，也就谈不上质量或耗时对照。
+
+包内静态取证（解包到 `.local/tool-tasks/q013/inspect/`，只读包字节、未改原 ZIP）：O056 包 46 个文件、O058 包 44 个文件，`max_hand_size` 命中数均为 **0**；同法取证的 **Q010 已合并批次**包（O044，47 个文件）同样为 0。也就是说 Q010 的四条同根夹具在新主线上同样不可复跑——这是静态推断加一处包内取证，没有用无头实测确认（合并 `6031debd` 后跑 `q010-o044-same-root-target.json` 得到 `Headless host admission timed out`，用户可见游戏进程占住宿主准入，依约未终止该进程），所以登记为待维护者或下轮复跑确认。
+
+与 `docs/CHECKPOINT_REPLAY.md` 的既有旧包兼容条目对照：该页写了 0.48.0 前 `cost-state` 的旧格式比较（:41）、`FlameHp` 的零值迁移（:37）、缺失政策的 `-ReplayPolicyOverridePath` 显式补齐（:49），但 `max_hand_size` 不属于其中任何一条，代码里也没有对应的 legacy 分支。按该页 :47「旧包兼容不代表所有历史包都已逐包验证」，这条边界需要维护者决定处置方式：给续用比较加旧格式分支、把该字段改为可选后缀，还是让受影响批次重新录包。本批不引入生产代码改动去绕过它——改状态指纹的比较规则属于搜索/模拟生命周期职责，且会动到别的批次已锁定的证据。
+
+因此本轮的收口结论限定为：**七条夹具在基点 `0d290fbe`（0.50.0 定稿，即本批认领时的主线状态）上按夹具本体全部 Passed**（第五轮的 `5CFA2B35…B00A459` 二进制），无退化证据成立；**合并 `6031debd` 后七条全部因旧包容续用指纹不匹配而无法恢复**，该阻塞与五个主题本身无关，登记在上面待处置。
+
+另外两条同批次未跑成的项与本轮无关的既有事实：`post-merge` 首跑时 O056/O057 同根与 O060 部署三条报 `Headless host admission timed out`（用户可见游戏 PID 22240 在跑），准入释放后已补跑，结果就是上表的三条，全部进入 `native_replay_events` 并给出 `restore_mismatch`。

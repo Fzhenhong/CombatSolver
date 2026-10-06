@@ -30,12 +30,9 @@ PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-qua
 
 ## 社区批次 Q013 同根哨兵与部署夹具
 
-Q013（O056–O060，#220 / PR #228）的五条同根 `SearchOnly` 质量界夹具与两条 `DeploySolver` 夹具位于 `coverage/fixtures/regressions/community/q013-*.json`，逐条结果、失败基线与未验证项见 `coverage/evidence/test-evidence.json` 的 `Q013-*` 条目与[认领者记录](community/drafts/2026-10-06/Q013-claim-reproduction.md)。
+Q013（O056–O060，#220 / PR #228）的五条同根 `SearchOnly` 质量界夹具与两条 `DeploySolver` 夹具位于 `coverage/fixtures/regressions/community/q013-*.json`；逐条结果、失败基线与未验证项见 `coverage/evidence/test-evidence.json` 的 `Q013-*` 条目与[认领者记录](community/drafts/2026-10-06/Q013-claim-reproduction.md)。夹具依赖不入库的玩家原包 ZIP，故本页不提供行首可执行命令（与 Q010 同口径，矩阵可复跑清单条数不变）：复跑时把夹具 JSON 字段逐个传给 `tools/testing/run-unattended-test.ps1`，显式带 `-Sts2GameRoot` / `-RitsuWorkshopRoot` / `-CleanupInstanceOnExit`，判定以 `result.json.status` 为准（带实例清理时 launcher 退出码 1 不代表失败）。
 
-七份夹具依赖不入库的玩家原包 ZIP（`.local/issue-bundles/Q013-O0NN/raw/*.zip`），因此本页不提供行首可执行命令，避免 `run-headless-matrix.ps1` 把不可复跑的条目抓进清单（与 Q010 同口径）。复跑方式：把夹具 JSON 的字段逐个传给 `tools/testing/run-unattended-test.ps1`，显式带 `-Sts2GameRoot` / `-RitsuWorkshopRoot` / `-CleanupInstanceOnExit`，`exitOnComplete` 与 `stopAfterInitialSolverResultAssertion` 作为开关传入。判定以 `result.json.status` 为准；带实例清理时 launcher 退出码 1 不代表失败（`0Harmony.dll` 句柄未释放）。
-
-认领提交未改 `src`（`git diff --name-only 0d290fbe 0143d82f -- src` 为空），五条同根哨兵与两条部署夹具锁的是各主题当时的实际产出质量界，不构成改良值达标声明：O056/O057/O059 未达包内改良值，O060 默认预算下终值于 35～43 摆动，O058 的缺口位于同一次请求内后续搜索的运行态，另行立项。合并上游 `6031debd`（含智能药水机会成本与手牌上限状态指纹）后按新二进制重跑的结果见认领者记录第五轮之后追加的合并复跑节。
-
+认领提交未改 `src`（`git diff --name-only 0d290fbe 0143d82f -- src` 为空），七条夹具在基点 `0d290fbe` 上按夹具本体全部 Passed；界锁各主题当时的实际产出，不构成改良值达标声明（O056/O057/O059 未达包内改良值，O060 默认预算下终值 35～43 摆动，O058 缺口在同一次请求内后续搜索的运行态）。合并 `6031debd` 后（`89798a78` 把 `max_hand_size` 写进续用指纹）七条全部在 `native_replay_events` 报 `restore_mismatch` 而未进入搜索，属旧包容兼容性边界，逐条 runId、包内取证与待处置口径见认领者记录第六轮。
 ## 开局药水补搜准入
 
 固定两槽满栏，使用原版奖励 RNG 捕获确定掉药／不掉药的搜索根。`SMART-OPENING-POTION-ADMISSION` 覆盖低损共同准入与换药抵扣，`SMART-OPENING-POTION-VALUE` 覆盖原价省血边界。失败基线、最终结果与验证范围见 [历史卷 20](archive/testing/volume-20.md#开局药水补搜准入)。
