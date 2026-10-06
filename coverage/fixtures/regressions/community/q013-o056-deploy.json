@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "Q013-O056-DEPLOY",
+  "description": "永世沙漏 / 铁甲战士；部署侧实测 T7 结束、剩 55 血、敌人消灭、0 计划外重算（搜索侧预测战损 42）。部署口径：combat_start 恢复后原生执行求解器路线，`Instant` / 0 秒，核对计划外重算为 0。",
+  "characterId": "IRONCLAD",
+  "encounterId": "AEONGLASS_BOSS",
+  "seed": "UW3RC93RE2J9",
+  "ascension": 10,
+  "actIndexForTest": 3,
+  "checkpointArchivePath": ".local/issue-bundles/Q013-O056/raw/837d5e68074e4f0ab7df9efe56dfcfd9.zip",
+  "checkpointSelector": "start",
+  "replayMode": "DeploySolver",
+  "enemyCurrentHp": 1,
+  "expectedFinishedTurnAtMost": 7,
+  "expectedFinishedPlayerHpAtLeast": 55,
+  "expectedUnexpectedReplansAtMost": 0,
+  "headlessFastModeForTest": "Instant",
+  "timeoutSeconds": 300,
+  "exitOnComplete": true
+}
