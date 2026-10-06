@@ -108,3 +108,19 @@ O060 在默认 120 秒请求超时下会 timeout，用 300 秒外部超时后自
 ## 本 PR 的范围
 
 当前 PR 只包含复现与定位记录，没有生产代码改动。搜索侧的两次实现尝试（追加更宽的补搜成员、用主搜索语义加宽重跑）以及能力路线加宽变体，都因实测没有改善任何一个主题而回退，判据留在上面的单变量对照里。
+
+## 回归哨兵结果（2026-10-06）
+
+五条同根哨兵按 `coverage/fixtures/regressions/community/q013-o0NN-same-root.json` 串行执行（`run-unattended-test.ps1`，`-ReplayMode SearchOnly`、`-CheckpointSelector start`、`Instant`、`-StopAfterInitialSolverResultAssertion`、`-CleanupInstanceOnExit`，超时 300 秒）：
+
+| 主题 | 断言 | 实测 | 结果 |
+| --- | --- | --- | --- |
+| O056 | proj ≤ 42、0 瓶、胜利、非死亡路线 | — | **未通过**：`launcher_failed`，两次都是 `exit_code=-1073741571`（栈溢出） |
+| O057 | proj ≤ 40、胜利 | 40，0 瓶 | Passed |
+| O058 | proj ≤ 63 | 63，判死 | Passed（锁现状，不锁结论） |
+| O059 | proj ≤ 30、0 瓶、胜利 | 30，0 瓶 | Passed |
+| O060 | proj ≤ 43、0 瓶、胜利 | 43，0 瓶 | Passed |
+
+**O060 的达标需要更正。** 默认搜索预算（包内 `softTimeBudgetMilliseconds=120000`）下，哨兵实测 43，与包内原值一致，也就是默认预算下没有任何改善；只有在外部超时放宽到 300 秒、让搜索自然收敛到 131 秒之后才拿到 32。按 AGENTS 第 8 节「不能用改变预算换取通过」，这一条应记为「在比默认更宽的时间预算下达标」，不能当作默认预算下的达标。夹具按默认预算锁 ≤43，预算条件写进 `description`。
+
+O056 的栈溢出只在 unattended 入口复现：同包、同参数在 `run-checkpoint-batch.ps1` 的 `SearchOnly` 下多次正常返回（42 / 0 瓶 / T7）。因此该主题目前没有通过型哨兵，记为未验证，需要先查 unattended 入口的栈溢出，或者换一个能覆盖该遭遇的哨兵入口。
