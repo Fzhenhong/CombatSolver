@@ -20,13 +20,7 @@ PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-qua
 
 `OVERLAY-VISIBILITY-LIFECYCLE` 在原生单人战斗中验证快捷键输入、已有及新建 CanvasLayer 的隐藏状态、禁用／手动／搜索中／停止显示、监控刷新，以及 `BeginCombat` 重置后的初始化消费与恢复显示。初始化置位在重置返回时断言，可操作边界的初始化完成在等待旧会话释放后断言。使用现有停止开关在初始合同后结束，搜索状态显示通过 UI 入口注入。
 
-```powershell
-pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId OVERLAY-VISIBILITY-LIFECYCLE -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -StopAfterCombatRootSnapshotAssertion -EnableNoGcRegionForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit
-```
-
-```bash
-./tools/testing/run-unattended-test.sh --scenario-id OVERLAY-VISIBILITY-LIFECYCLE --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --stop-after-combat-root-snapshot-assertion --enable-no-gc-region-for-test 0 --timeout-seconds 120 --cleanup-instance-on-exit
-```
+PowerShell：`pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId OVERLAY-VISIBILITY-LIFECYCLE -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -StopAfterCombatRootSnapshotAssertion -EnableNoGcRegionForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash：`./tools/testing/run-unattended-test.sh --scenario-id OVERLAY-VISIBILITY-LIFECYCLE --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --stop-after-combat-root-snapshot-assertion --enable-no-gc-region-for-test 0 --timeout-seconds 120 --cleanup-instance-on-exit`。
 
 2026-10-06 本轮失败证据：PR 头 `0725fe21` 加入新图层断言后，runId `2f55f493930144c6800f6835042f134a` 在新建 CanvasLayer 默认可见边界 Failed。直接应用快捷键隐藏意图后，runId `53fc7f11eff84cb4b2d6b7e9cb27ddc4` 通过快捷键、新图层及各显示入口，随后重置断言 Failed：等待旧会话释放期间监控已消费初始化请求。合同按实际生命周期在重置返回时检查置位，在释放后检查完成状态。
 
@@ -195,3 +189,11 @@ L0：原生回复审计工具迁入tools/inspection后构建和真实DLL扫描�
 ## 性能研究分支
 
 既有组件、药水、魂枢及未达标原型的合同与历史结果见[历史卷18](archive/testing/volume-18.md)。PR #207最新上游整合、逐次ABBA、23根品质回归及NoGC波动/超时限制见[当前验收](performance/pr207-upstream-0494-integration-20261005.md)。
+
+## 手牌上限状态一致性（PR #224）
+
+贡献者[测试记录](https://github.com/tianyilt/HextechSolverCompat/blob/main/docs/TESTING-PR-HAND-LIMIT-20261003.md)来自 0.48.1：可选 BaseLib `IMaxHandSizeModifier` 的上限 13→16→13 验证旧根／兄弟隔离、新根指纹区分与续用戳恢复，Dredge 13、CrashLanding 5 完整实际／预测状态通过，兼容层同项修复关闭。基线 `2ead87d9c9e35b1588a760efff0bd6154545a77c`，候选 SHA-256 `04c70a0c0ff4d9169a8184a327beae1e246bca75179ed8bd521331e08d384d1c`。耗时门槛 NotPassed：中位数 17.0191→24.3435 ms，保留 76.4900 ms 尾项，CPU 负载未测，因果归属未知。重定基至 0.50.0 `0d290fbee7e2779d2cebd8b8f652d82d00b6e8fc` 后仅构建通过（SDK 9.0.318、RitsuLib 0.6.5、游戏 0.111.0、零警告／错误、关闭自动部署与祖先 props/targets 导入），原生与耗时证据仍属 0.48.1。
+
+当前原版根／Fork 复跑：PowerShell 使用 `tools/testing/run-unattended-test.ps1 -ScenarioId HAND-LIMIT-ROOT-CONSISTENCY -EnemyCurrentHp 1000 -VerifyCombatRootSnapshot -StopAfterCombatRootSnapshotAssertion -EnableNoGcRegionForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit`；Bash 使用 `./tools/testing/run-unattended-test.sh --scenario-id HAND-LIMIT-ROOT-CONSISTENCY --enemy-current-hp 1000 --verify-combat-root-snapshot --stop-after-combat-root-snapshot-assertion --enable-no-gc-region-for-test 0 --timeout-seconds 120 --cleanup-instance-on-exit`，两端默认 IRONCLAD／FUZZY_WURM_CRAWLER_WEAK。
+
+2026-10-06 合并验证：SDK 9.0.300 Release 构建零警告／错误；上述原版合同 runId `63b5712a8b034b8388dbf4d71f42c311` Passed（22.56 秒），核对基础手牌上限、根与 Fork 的 live/predicted 续用文本及捕获隔离，实例目录已删除。动态上限 13→16、Dredge／CrashLanding 与耗时对照本轮未复测，历史 NotPassed 保留。

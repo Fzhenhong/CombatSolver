@@ -8,6 +8,12 @@
 
 ## 下一版本（开发中）
 
+### 手牌上限状态一致性（PR #224）
+
+接入 [tianyilt](https://github.com/tianyilt) 的 [PR #224](https://github.com/Torch1230/CombatSolver/pull/224)：实战续用文本记录框架返回的最终手牌上限，预测续用文本与搜索指纹记录根捕获的上限，使不同上限的状态在续用和判重时可区分。
+
+根和 Fork 继续共享捕获时冻结的玩家顺序与上限，后台匹配读取分支已有值。贡献者使用可选手牌上限接口的历史原生证据、未通过的耗时门槛和本轮验证范围见[测试矩阵](TEST_MATRIX.md#手牌上限状态一致性pr-224)。
+
 ### Ctrl+F9 面板可见性（PR #226）
 
 接入 [link20031019](https://github.com/link20031019) 的 [PR #226](https://github.com/Torch1230/CombatSolver/pull/226)：Ctrl+F9 选择的隐藏状态在界面刷新和战斗重置后持续生效，再次按键恢复显示，游戏重启后重置。
