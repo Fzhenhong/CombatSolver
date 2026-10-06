@@ -111,7 +111,7 @@ O060 在默认 120 秒请求超时下会 timeout，用 300 秒外部超时后自
 
 ## 回归哨兵结果（2026-10-06）
 
-五条同根哨兵按 `coverage/fixtures/regressions/community/q013-o0NN-same-root.json` 串行执行（`run-unattended-test.ps1`，`-ReplayMode SearchOnly`、`-CheckpointSelector start`、`Instant`、`-StopAfterInitialSolverResultAssertion`、`-CleanupInstanceOnExit`，超时 300 秒）：
+五条同根哨兵按 `coverage/fixtures/regressions/community/q013-o056-same-root.json（同批另四条同目录）` 串行执行（`run-unattended-test.ps1`，`-ReplayMode SearchOnly`、`-CheckpointSelector start`、`Instant`、`-StopAfterInitialSolverResultAssertion`、`-CleanupInstanceOnExit`，超时 300 秒）：
 
 | 主题 | 断言 | 实测 | 结果 |
 | --- | --- | --- | --- |
