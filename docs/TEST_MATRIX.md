@@ -16,6 +16,22 @@ PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-qua
 
 移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
 
+## Ctrl+F9 面板可见性（PR #226）
+
+`OVERLAY-VISIBILITY-LIFECYCLE` 在原生单人战斗中验证快捷键输入、已有及新建 CanvasLayer 的隐藏状态、禁用／手动／搜索中／停止显示、监控刷新，以及 `BeginCombat` 重置后的初始化消费与恢复显示。初始化置位在重置返回时断言，可操作边界的初始化完成在等待旧会话释放后断言。使用现有停止开关在初始合同后结束，搜索状态显示通过 UI 入口注入。
+
+```powershell
+pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId OVERLAY-VISIBILITY-LIFECYCLE -CharacterId IRONCLAD -EncounterId FUZZY_WURM_CRAWLER_WEAK -EnemyCurrentHp 1000 -StopAfterCombatRootSnapshotAssertion -EnableNoGcRegionForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit
+```
+
+```bash
+./tools/testing/run-unattended-test.sh --scenario-id OVERLAY-VISIBILITY-LIFECYCLE --character-id IRONCLAD --encounter-id FUZZY_WURM_CRAWLER_WEAK --enemy-current-hp 1000 --stop-after-combat-root-snapshot-assertion --enable-no-gc-region-for-test 0 --timeout-seconds 120 --cleanup-instance-on-exit
+```
+
+2026-10-06 本轮失败证据：PR 头 `0725fe21` 加入新图层断言后，runId `2f55f493930144c6800f6835042f134a` 在新建 CanvasLayer 默认可见边界 Failed。直接应用快捷键隐藏意图后，runId `53fc7f11eff84cb4b2d6b7e9cb27ddc4` 通过快捷键、新图层及各显示入口，随后重置断言 Failed：等待旧会话释放期间监控已消费初始化请求。合同按实际生命周期在重置返回时检查置位，在释放后检查完成状态。
+
+最终 runId `37ee21f7569a43c3b5fed01a4e5b4d28` Passed（22.66 秒），三组界面合同全部通过；玩家原生结果保持回合 1、80/80 HP。全部三次请求均完成实例目录清理。本轮 .NET SDK 9.0.300 Release 构建为 0 警告、0 错误，结构门禁、工具检查和文档检查通过。可见 Steam 人工操作、完整 SL 场景和 Linux 运行未验证；贡献者提供的实机记录保留在 PR 正文。
+
 ## 社区批次 Q010 与组合补搜
 
 现行组合入口按共享节点与时间准入，执行期间在每批提交边界处理内存预约、回收和停止。原包 SearchOnly、Beam 组合检查及真实 CLR 合同的结果、失败与未验证项见 [历史卷 20](archive/testing/volume-20.md#社区批次-q010-与组合补搜)。

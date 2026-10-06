@@ -157,9 +157,7 @@ internal static class SolverOverlay
     private static Vector2 _panelPosition = new(SolverUiTokens.Size.PanelMargin, SolverUiTokens.Size.PanelMargin);
     private static Vector2 _requestedPanelPosition = new(SolverUiTokens.Size.PanelMargin, SolverUiTokens.Size.PanelMargin);
 
-    // Ctrl+F9 的用户隐藏意图，必须与 _layer.Visible 分开保存：渲染漏斗（ShowLayer）
-    // 与“是否需要在可操作边界初始化”的判断曾共用 _layer.Visible，导致隐藏被立刻覆盖。
-    // 该意图一经设定便一直保持（跨战斗），只有再次按下 Ctrl+F9 才会清除。
+    // Ctrl+F9 的隐藏意图跨战斗保持，图层每次呈现均采用该状态。
     private static bool _userHiddenFromShortcut;
     // 战斗（重）开始后，是否仍需要在可操作边界初始化一次界面。
     private static bool _initializationPending = true;
@@ -170,9 +168,8 @@ internal static class SolverOverlay
     internal static bool InitializationPending => _initializationPending;
 
     /// <summary>
-    /// 战斗生命周期重置（[BeginCombat] 与战斗结束）后调用：要求界面在下一个可操作边界
-    /// 重新初始化。此处刻意不清除 <see cref="_userHiddenFromShortcut"/>，
-    /// 以便 Ctrl+F9 的隐藏能跨战斗保持。
+    /// 战斗生命周期重置后，要求界面在下一个可操作边界重新初始化；
+    /// <see cref="_userHiddenFromShortcut"/> 独立保存快捷键隐藏意图。
     /// </summary>
     internal static void MarkInitializationPending()
     {
@@ -459,13 +456,14 @@ internal static class SolverOverlay
         InputEventKey shortcut = new() { Pressed = true, CtrlPressed = true, Keycode = Key.F9 };
         try
         {
+            _userHiddenFromShortcut = false;
+            ShowLayer();
             bool ignored = !_inputBridge.Handle(wrong) && !_inputBridge.Handle(repeated)
-                && _layer.Visible == originalVisible;
-            bool first = _inputBridge.Handle(shortcut) && _layer.Visible != originalVisible;
-            // 回归：隐藏后必须经得起重新渲染。每帧的 MonitorCombatPresence 与回合结束的
-            // 自动计算都会走 ShowLayer，旧实现用它把界面无条件设回可见，隐藏因此失效。
+                && _layer.Visible;
+            bool first = _inputBridge.Handle(shortcut) && !_layer.Visible;
+            // 覆盖已有图层刷新、初始化请求和新图层的默认可见性。
             bool survivesRender = ShowLayerRespectsShortcutHideForTesting();
-            bool second = _inputBridge.Handle(shortcut) && _layer.Visible == originalVisible;
+            bool second = _inputBridge.Handle(shortcut) && _layer.Visible;
             return ignored && first && survivesRender && second;
         }
         finally
@@ -476,8 +474,7 @@ internal static class SolverOverlay
         }
     }
     /// <summary>
-    /// 要求当前处于 Ctrl+F9 隐藏状态时：渲染漏斗保持隐藏，
-    /// 且战斗（重）开始登记的重新初始化请求不会让隐藏失效。
+    /// 验证隐藏意图在呈现、初始化请求和图层重建边界持续生效。
     /// </summary>
     private static bool ShowLayerRespectsShortcutHideForTesting()
     {
@@ -486,10 +483,23 @@ internal static class SolverOverlay
         ShowLayer();
         if (_layer.Visible)
             return false;
-        // 模拟下一场战斗的重置：只登记初始化请求，不得清除用户的隐藏意图。
+        // 初始化请求与快捷键隐藏意图分别维护。
         MarkInitializationPending();
         ShowLayer();
-        return !_layer.Visible;
+        if (_layer.Visible || InitializationPending)
+            return false;
+        CanvasLayer originalLayer = _layer;
+        using CanvasLayer replacement = new();
+        try
+        {
+            _layer = replacement;
+            ShowLayer();
+            return !_layer.Visible;
+        }
+        finally
+        {
+            _layer = originalLayer;
+        }
     }
     internal static float OverlayOpacityForTesting => _panel?.Modulate.A ?? 1f;
     internal static int? CurrentSnapshotTurnForTesting => _lastSnapshot?.StartTurnNumber;
@@ -2617,11 +2627,10 @@ internal static class SolverOverlay
 
     private static void ShowLayer()
     {
-        // 渲染路径已经跑过，本回合不再需要初始化。
+        // 呈现路径完成后消费初始化请求，并应用用户选择的可见性。
         _initializationPending = false;
-        // 用户用 Ctrl+F9 隐藏后，任何渲染都不得把界面重新显示出来。
-        if (_layer != null && !_userHiddenFromShortcut)
-            _layer.Visible = true;
+        if (_layer != null)
+            _layer.Visible = !_userHiddenFromShortcut;
     }
 
     internal static bool ToggleVisibilityFromShortcut()
