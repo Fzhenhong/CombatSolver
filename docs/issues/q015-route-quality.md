@@ -75,6 +75,24 @@ O066开战自主路线28动作，T1使用1瓶异鱼之油，实际初始／最�
 
 验收范围仍为固定短搜；原档位120／180秒、Linux与可见Steam帧时间未验证。PR使用Refs #222，请维护者审阅范围，尚未推送或创建PR。
 
+## PR #227提交时的主线更新与旧报告兼容
+
+创建[PR #227](https://github.com/Torch1230/CombatSolver/pull/227)时main已推进至`b2d23a05`，新增PR #224的手牌上限续用字段／指纹；已以`6f702e43`合入并保留该修复，开发记录文本冲突保留双方内容。Q015自有Search保路改动保持，不能把本次上游状态键变化混称为此前同源构建。
+
+新增字段使原始O068包首次恢复`7c3af4f4151e435aaedf168e098fc1d3` Failed：expected24／actual25，唯一新增字段max_hand_size=10，尚未进入搜索。补充Testing兼容提交`952778fd`：仅完整原生checkpoint已核验、旧期望缺字段且当前末尾唯一默认10时迁移缺失字段，所有旧字段严格比较；原始ZIP不改，Runtime／Search的现行手牌上限校验不改。无原生核验、非默认13／0、显式冲突、重复／错位及其他牌或RNG差异均拒绝。旧未记录非默认上限不作为已验证。
+
+同源DLL SHA256 `E24F038A630A2D37A038C4511DF618F869193AFE257309F021830C09CB8973F4`完成以下必要补验，实例全部清理：
+
+| 范围／runId | 结果 | 展开／转移 | 正常搜索ms／分配B |
+| --- | --- | --- | --- |
+| REPLAY-BOUNDARY-CONTRACT／`584dceb12637437fb6d5b39e813e4913` | Passed，默认字段须显式核验门禁；非默认、显式冲突、重复、位置、牌／RNG漂移拒绝 | 合同，不作搜索质量样本 | 请求18.68秒 |
+| 原始O068开战／`4dddc0ccdab04f9497d28baa4509442c` | Passed，3／0／T4、57/75HP、零重算；continuation／native-state及legacyDefaultHandLimitVerified均true | 1858／4935 | 876.9917／175051304 |
+| 独立哨兵整场／`319191f08dce419ca14845719a2d421f` | Passed，5／1／T4、51/70HP、零重算 | 17447／67690 | 7336.4416／2427558280 |
+
+后两项完整开战续用文本仅移除末尾新增默认字段后，与上一阶段逐字相等，执行政策完整相等；新字段仍参与现行模拟／原生续用对账。其余Q015主题保留合入PR #224之前的同源整场证据，本阶段只复跑受影响旧包路径、严格负合同和独立哨兵；不声明五份全部在新手牌上限版本复测。最新哨兵7.34秒为单个正常样本，上文8.25→8.00秒成对数据仍属原阶段，不冒充最新main成对性能测试。Release构建0错误、3条NuGet漏洞数据联网警告，原档位长搜／Linux／可见Steam性能与旧非默认手牌上限仍未验证。
+
+旧报告负合同复跑：`pwsh -NoProfile -File tools/testing/run-unattended-test.ps1 -ScenarioId REPLAY-BOUNDARY-CONTRACT -EnableNoGcRegionForTest 0 -TimeoutSeconds 120 -CleanupInstanceOnExit`；补充本机游戏／Ritsu路径。原包与哨兵整场命令沿用下方入口。
+
 ## 可重跑入口
 
 ### 命令

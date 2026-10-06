@@ -91,3 +91,5 @@ Q002 专属固定路线/成员诊断已在任务收尾移除；失败证据与[�
 恢复继续执行游戏构建、模型解码、原生事件、完整 ContinuationStamp 与可比较的 native-state 校验。缺少实际使用的模型、事件无法解码或状态不同仍按具体错误失败；只有完整校验通过才标记 `restorationVerified=true`。求解器已有的第三方不兼容门禁保持独立。
 
 游戏模块标识（MVID）仅记录在 `replayVerification.gameModuleComparison` 的 `expected`、`actual` 与 `matches` 中，不因标识不同提前拒绝恢复。同一版本的不同平台构建可以有不同MVID；兼容性由实际模型/事件解码和状态对账决定，标识相同也不跳过对账。旧包缺少模型编号映射且编号表不同时，原生二进制仍标为不可比较，只有全部已记录ContinuationStamp字段匹配才报告 `restored_continuation`，不宣称完整原生状态恢复。
+
+旧原版录制缺少PR #224新增的`max_hand_size`字段时，仅Testing原生回放在完整native-state核验通过、实际最终字段为唯一默认`max_hand_size=10`时迁移该缺失字段，并记录`legacyDefaultHandLimitVerified`。所有已记录字段仍逐项比较；无完整原生核验、非默认上限、显式冲突、重复或错位字段继续失败。该兼容不恢复历史未记录的非默认上限，不修改原始包、生产续用或搜索状态等价。

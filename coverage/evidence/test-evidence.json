@@ -2901,5 +2901,13 @@
     "expected": "完整原生开局、ContinuationStamp及执行政策相等，双方获胜、5损/1药/T4、零重算；正常搜索耗时无明显增加。",
     "observed": "基线d3a448e499ba47c2905aca0f610f5fbe与候选abe046108c234fad8d8d6bff20aef6c0均Passed、51/70HP、零重算；完整开局/根/政策/runtime相等。17480/68036/8250.8126ms/2445527152B → 17589/67841/7998.459ms/2437694640B。单对样本不外推普遍性能收益。合并版O068 c885cebc3ca74a2eb761320f9ee188f0原生3/0/T4、57/75HP、零重算通过；其余生产搜索未变的原五主题证据复用。",
     "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-sentinel.json"
+  },
+  "Q015-LEGACY-DEFAULT-HAND-LIMIT": {
+    "status": "Passed",
+    "level": "HeadlessNativeReplayAndStrictBoundaryContract",
+    "procedure": "合入main b2d23a05/PR224后，仅Testing在完整原生checkpoint核验且旧期望缺字段、实际唯一末尾默认10时迁移max_hand_size。现行生产续用/指纹不变，原包不改。",
+    "expected": "无门禁、非默认、显式冲突、重复、错位和其他状态漂移严格拒绝；原O068原生恢复及整场3/0/T4，固定哨兵5/1/T4，无计划外重算。",
+    "observed": "旧O068 7c3af4f4151e435aaedf168e098fc1d3在搜索前field_count24/25失败。严格合同584dceb12637437fb6d5b39e813e4913 Passed；原O0684dddc0ccdab04f9497d28baa4509442c Passed、57/75HP、完整native-state核验及迁移标记true；哨兵319191f08dce419ca14845719a2d421f Passed、51/70HP；后两项零重算，旧根字段除新增默认字段外及政策完整一致。新版本仅复测列出范围，其余主题沿用上游更新前证据。非默认旧上限不作为已验证。",
+    "evidence": "docs/issues/q015-route-quality.md; docs/CHECKPOINT_REPLAY.md; coverage/fixtures/search/damaging-continuation-sentinel.json"
   }
 }
