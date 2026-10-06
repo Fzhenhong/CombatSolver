@@ -6,6 +6,8 @@
 
 历史记录见 [归档索引](archive/testing/README.md)，0.48.1 的验证、失败与未验证项见 [历史卷 12](archive/testing/volume-12.md)。
 
+PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-quality.md#0494-重新验证2026-10-05)。当前 0.50.0 主线整合使用 O003、O004、O005 同根、同政策对照，结果与复跑预算见 [当前验收](issues/q002-route-quality.md#0500-主线整合2026-10-05)。
+
 0.49.4 的额外回合镜像顺序、同根成长胜利续用、整场自动部署与上传引导验证见 [历史卷 16](archive/testing/volume-16.md)。
 
 0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
@@ -14,10 +16,17 @@
 
 移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
 
+## Ctrl+F9 面板可见性（PR #226）
+
+快捷键、新图层、重置和监控合同的通过、失败与可见验证范围见[历史卷21](archive/testing/volume-21.md#ctrlf9-面板可见性pr-226)。
+
 ## 社区批次 Q010 与组合补搜
 
 现行组合入口按共享节点与时间准入，执行期间在每批提交边界处理内存预约、回收和停止。原包 SearchOnly、Beam 组合检查及真实 CLR 合同的结果、失败与未验证项见 [历史卷 20](archive/testing/volume-20.md#社区批次-q010-与组合补搜)。
 
+## 0.50.1 智能药水机会成本
+
+终局单药／双药低收益拒绝与 Force、奖励抵扣、原价高收益哨兵由 `SMART-OPENING-POTION-ADMISSION` 覆盖；跨成员比较由 `python -B tools/testing/checks/BeamWidthPortfolioChecks/run.py` 覆盖（118项通过）。原生 runId `d9629992ac31423586c7465510c18f6d` Passed（23.63秒，含建局），实例已清理。失败基线、同根材料与未验证范围见[问题记录](issues/potion-opportunity-20261006.md)。
 
 ## 社区批次 Q013 同根哨兵与部署夹具
 
@@ -25,7 +34,7 @@ Q013（O056–O060，#220 / PR #228）的五条同根 `SearchOnly` 质量界夹�
 
 七份夹具依赖不入库的玩家原包 ZIP（`.local/issue-bundles/Q013-O0NN/raw/*.zip`），因此本页不提供行首可执行命令，避免 `run-headless-matrix.ps1` 把不可复跑的条目抓进清单（与 Q010 同口径）。复跑方式：把夹具 JSON 的字段逐个传给 `tools/testing/run-unattended-test.ps1`，显式带 `-Sts2GameRoot` / `-RitsuWorkshopRoot` / `-CleanupInstanceOnExit`，`exitOnComplete` 与 `stopAfterInitialSolverResultAssertion` 作为开关传入。判定以 `result.json.status` 为准；带实例清理时 launcher 退出码 1 不代表失败（`0Harmony.dll` 句柄未释放）。
 
-本批无生产代码改动：`git diff --name-only 0d290fbe..HEAD -- src` 为空。五条同根哨兵与两条部署夹具锁的是各主题当前实际产出的质量界，不构成改良值达标声明：O056/O057/O059 未达包内改良值，O060 在默认预算下终值于 35～43 摆动，O058 的缺口位于同一次请求内后续搜索的运行态，另行立项。
+认领提交未改 `src`（`git diff --name-only 0d290fbe 0143d82f -- src` 为空），五条同根哨兵与两条部署夹具锁的是各主题当时的实际产出质量界，不构成改良值达标声明：O056/O057/O059 未达包内改良值，O060 默认预算下终值于 35～43 摆动，O058 的缺口位于同一次请求内后续搜索的运行态，另行立项。合并上游 `6031debd`（含智能药水机会成本与手牌上限状态指纹）后按新二进制重跑的结果见认领者记录第五轮之后追加的合并复跑节。
 
 ## 开局药水补搜准入
 
@@ -186,3 +195,7 @@ L0：原生回复审计工具迁入tools/inspection后构建和真实DLL扫描�
 ## 性能研究分支
 
 既有组件、药水、魂枢及未达标原型的合同与历史结果见[历史卷18](archive/testing/volume-18.md)。PR #207最新上游整合、逐次ABBA、23根品质回归及NoGC波动/超时限制见[当前验收](performance/pr207-upstream-0494-integration-20261005.md)。
+
+## 手牌上限状态一致性（PR #224）
+
+原版根／Fork 合同与贡献者的动态上限及耗时证据见[历史卷21](archive/testing/volume-21.md#手牌上限状态一致性pr-224)。
