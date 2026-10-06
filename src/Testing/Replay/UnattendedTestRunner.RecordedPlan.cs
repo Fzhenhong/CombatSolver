@@ -95,7 +95,8 @@ internal sealed partial class UnattendedTestRunner
         {
             await RunKnownRoutePathTraceAsync(combat, player, prefixes, "RecordedPrediction",
                 "recorded_plan_search_path",
-                observedRetentionStep: actions.Length > 1 ? actions.Length - 1 : null,
+                observedRetentionStep: _request.RecordedPlanRetentionStepForTest
+                    ?? (actions.Length > 1 ? actions.Length - 1 : null),
                 frozenSearchContext: new(root, names, damage, policy));
             return;
         }
