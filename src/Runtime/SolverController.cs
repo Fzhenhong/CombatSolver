@@ -2122,6 +2122,9 @@ internal static partial class SolverController
         LastSearchFailureForTesting = null;
         BattleDamageTracker.Reset();
         SolverOverlay.Hide();
+        // 战斗重置会拆掉界面，必须显式登记“需要在下一个可操作边界重新初始化”，
+        // 否则 MonitorCombatPresence 不会再填充界面。用户此前的 Ctrl+F9 隐藏意图不受影响。
+        SolverOverlay.MarkInitializationPending();
         bool unattendedRequestActive = UnattendedAsyncActivityTracker.IsRequestActive;
         Task regionExit = unattendedRequestActive
             ? Task.CompletedTask
@@ -2279,7 +2282,9 @@ internal static partial class SolverController
         }
         BattleDamageTracker.Observe(current);
         // SL may replace the combat after TurnStarted. Reattach at the playable boundary.
-        if (!SolverOverlay.IsVisible && !IsSearching && !IsDeploying
+        // 这里刻意不用 SolverOverlay.IsVisible：那个值也表示“用户是否用 Ctrl+F9 隐藏了界面”，
+        // 用它当初始化判据会让每帧的隐藏操作立刻触发一次重新显示。
+        if (SolverOverlay.InitializationPending && !IsSearching && !IsDeploying
             && !PendingCombatDeferredOperations.Any(task => !task.IsCompleted)
             && !PlayerTurnSetupCoordinator.IsManaging(current)
             && current.Players.Count == 1
