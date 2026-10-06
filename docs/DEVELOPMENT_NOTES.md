@@ -8,6 +8,12 @@
 
 ## 下一版本（开发中）
 
+### Ctrl+F9 面板可见性（PR #226）
+
+接入 [link20031019](https://github.com/link20031019) 的 [PR #226](https://github.com/Torch1230/CombatSolver/pull/226)：Ctrl+F9 选择的隐藏状态在界面刷新和战斗重置后持续生效，再次按键恢复显示，游戏重启后重置。
+
+UI 独立保存快捷键隐藏意图与初始化请求，Runtime 在战斗重置后登记下一可操作边界的初始化。每次呈现直接应用用户选择的可见性，覆盖已有图层与新建图层的默认可见状态。最小合同与本轮审计证据见[测试矩阵](TEST_MATRIX.md#ctrlf9-面板可见性pr-226)。
+
 ### Q002 能力与药水边界续搜（PR #213）
 
 接入 [shun-tong](https://github.com/shun-tong) 的 [PR #213](https://github.com/Torch1230/CombatSolver/pull/213)：在现有组合成员及共享节点、时间预算内，从搜索自主生成的能力、用药和后续损血边界继续求解，改善长战斗路线。整合沿用 0.50.0 的组件回复证明、药水成本保护与智能开局药水准入。回放入口恢复完整搜索 profile 与录制开关，历史阶段见 [卷 21](archive/development/volume-21.md)，当前主线的同根质量及耗时证据见 [Q002 记录](issues/q002-route-quality.md#0500-主线整合2026-10-05)。
