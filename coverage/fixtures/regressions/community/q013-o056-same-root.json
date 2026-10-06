@@ -6,7 +6,7 @@
   "encounterId": "AEONGLASS_BOSS",
   "seed": "UW3RC93RE2J9",
   "ascension": 10,
-  "actIndexForTest": 3,
+  "actIndexForTest": 2,
   "checkpointArchivePath": ".local/issue-bundles/Q013-O056/raw/837d5e68074e4f0ab7df9efe56dfcfd9.zip",
   "checkpointSelector": "start",
   "replayMode": "SearchOnly",

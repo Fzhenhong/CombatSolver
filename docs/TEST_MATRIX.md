@@ -18,6 +18,15 @@
 
 现行组合入口按共享节点与时间准入，执行期间在每批提交边界处理内存预约、回收和停止。原包 SearchOnly、Beam 组合检查及真实 CLR 合同的结果、失败与未验证项见 [历史卷 20](archive/testing/volume-20.md#社区批次-q010-与组合补搜)。
 
+
+## 社区批次 Q013 同根哨兵与部署夹具
+
+Q013（O056–O060，#220 / PR #228）的五条同根 `SearchOnly` 质量界夹具与两条 `DeploySolver` 夹具位于 `coverage/fixtures/regressions/community/q013-*.json`，逐条结果、失败基线与未验证项见 `coverage/evidence/test-evidence.json` 的 `Q013-*` 条目与[认领者记录](community/drafts/2026-10-06/Q013-claim-reproduction.md)。
+
+七份夹具依赖不入库的玩家原包 ZIP（`.local/issue-bundles/Q013-O0NN/raw/*.zip`），因此本页不提供行首可执行命令，避免 `run-headless-matrix.ps1` 把不可复跑的条目抓进清单（与 Q010 同口径）。复跑方式：把夹具 JSON 的字段逐个传给 `tools/testing/run-unattended-test.ps1`，显式带 `-Sts2GameRoot` / `-RitsuWorkshopRoot` / `-CleanupInstanceOnExit`，`exitOnComplete` 与 `stopAfterInitialSolverResultAssertion` 作为开关传入。判定以 `result.json.status` 为准；带实例清理时 launcher 退出码 1 不代表失败（`0Harmony.dll` 句柄未释放）。
+
+本批无生产代码改动：`git diff --name-only 0d290fbe..HEAD -- src` 为空。五条同根哨兵与两条部署夹具锁的是各主题当前实际产出的质量界，不构成改良值达标声明：O056/O057/O059 未达包内改良值，O060 在默认预算下终值于 35～43 摆动，O058 的缺口位于同一次请求内后续搜索的运行态，另行立项。
+
 ## 开局药水补搜准入
 
 固定两槽满栏，使用原版奖励 RNG 捕获确定掉药／不掉药的搜索根。`SMART-OPENING-POTION-ADMISSION` 覆盖低损共同准入与换药抵扣，`SMART-OPENING-POTION-VALUE` 覆盖原价省血边界。失败基线、最终结果与验证范围见 [历史卷 20](archive/testing/volume-20.md#开局药水补搜准入)。
