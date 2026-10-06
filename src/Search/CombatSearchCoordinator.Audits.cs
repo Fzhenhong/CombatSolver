@@ -23,7 +23,9 @@ internal static partial class CombatSearchCoordinator
                 $"[CombatSolver/Test] SUPPLEMENTAL_AUDIT_BUDGET exhausted=true " +
                 $"elapsed_ms={requestClock.ElapsedMilliseconds} " +
                 $"budget_ms={profile.SoftTimeBudgetMilliseconds}");
-            return primary;
+            return SmartPotionAuditMinimumMilliseconds(context, primary) > remainingMilliseconds
+                ? SearchSmartPotionGradientWithMinimumBudget(context, primary, memoryForecast)
+                : primary;
         }
 
         using CancellationTokenSource deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -39,8 +41,9 @@ internal static partial class CombatSearchCoordinator
             if (!policy.PotionStrategy.HasForcedDirectives
                 && HasReachedAcceptableBattleHpLoss(policy, selected))
                 return selected;
-            selected = AuditSmartPotionUse(
-                auditContext, cancellationToken, selected, memoryForecast);
+            selected = SmartPotionAuditMinimumMilliseconds(context, selected) > context.RemainingMilliseconds
+                ? SearchSmartPotionGradientWithMinimumBudget(context, selected, memoryForecast)
+                : AuditSmartPotionUse(auditContext, cancellationToken, selected, memoryForecast);
             if (selected.ResultScope == SolverResultScope.SearchCompletion)
                 selected = RunPlanSearchPass(auditContext, selected);
             if (selected.ResultScope != SolverResultScope.SearchCompletion)
@@ -613,6 +616,60 @@ internal static partial class CombatSearchCoordinator
             $"selected_saved={auditedSelection.PotionHpSaved} " +
             $"selected_required={auditedSelection.PotionHpRequired}");
         return auditedSelection;
+    }
+
+    /// <summary>
+    /// Smart searches the primary with potions disabled and leaves every optional potion to this audit. When the
+    /// time-bound primary spends the whole request budget, a zero floor would skip the audit on exactly the roots
+    /// where the primary could not finish, so a potion that wins outright would never be considered.
+    /// </summary>
+    private static long SmartPotionAuditMinimumMilliseconds(SearchPassContext context, SolverResult primary)
+        => context.Policy.PotionPolicy == SolverPotionPolicy.Smart
+            && !context.Policy.PotionStrategy.HasForcedDirectives
+            && !context.Policy.IncludeTurnSetup
+            && primary.ResultScope == SolverResultScope.SearchCompletion
+            && primary.ExplicitPotionCount == 0
+            && context.Root.SearchablePotions.Count > 0
+                ? DedicatedMemberMilliseconds(context.Profile)
+                : 0;
+
+    /// <summary>
+    /// Runs only the Smart potion gradient under its own floor. The posterior opening-prefix searches of
+    /// <see cref="AuditSmartPotionUse"/> draw from the exhausted request ledger and stay skipped, so no other
+    /// audit is extended.
+    /// </summary>
+    /// <remarks>
+    /// Each layer gets the floor as its soft budget so it stops on its own and keeps its anytime best route; the
+    /// gradient discards a layer that is cancelled mid-search, and the O049 root found its 0-loss potion route
+    /// 16 s into a layer that a 30 s cancellation then threw away. The token adds one sixth of the floor for that
+    /// layer's wrap-up (55 ms observed there) and has fired by the time the gradient checks it before the next
+    /// layer, so the floor costs one layer rather than one per optional potion.
+    /// </remarks>
+    private static SolverResult SearchSmartPotionGradientWithMinimumBudget(
+        SearchPassContext context, SolverResult primary, SmartLayerMemoryForecast memoryForecast)
+    {
+        CancellationToken callerCancellationToken = context.CancellationToken;
+        long minimumMilliseconds = SmartPotionAuditMinimumMilliseconds(context, primary);
+        context.Policy.Diagnostics.Info(
+            $"[CombatSolver/Test] SMART_POTION_AUDIT_MINIMUM_BUDGET " +
+            $"remaining_ms={context.RemainingMilliseconds} minimum_ms={minimumMilliseconds}");
+        using CancellationTokenSource deadline = CancellationTokenSource.CreateLinkedTokenSource(callerCancellationToken);
+        deadline.CancelAfter(TimeSpan.FromMilliseconds(minimumMilliseconds + minimumMilliseconds / 6));
+        SearchPassContext minimumContext = context with
+        {
+            CancellationToken = deadline.Token,
+            Profile = context.Profile with { SoftTimeBudgetMilliseconds = (int)minimumMilliseconds },
+        };
+        try
+        {
+            return SearchSmartPotionGradient(
+                minimumContext, callerCancellationToken, primary, memoryForecast, out _);
+        }
+        catch (OperationCanceledException)
+            when (deadline.IsCancellationRequested && !callerCancellationToken.IsCancellationRequested)
+        {
+            return primary;
+        }
     }
 
     private static SolverResult AuditSmartPotionUse(
