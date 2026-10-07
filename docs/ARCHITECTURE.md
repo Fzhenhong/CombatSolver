@@ -40,6 +40,7 @@
 | `FrontierContinuationScheduler` | 固定前缀成员派发与用途归因 |
 | `CombatBeamSolver.cs` / `.Models.cs` | 不可变根配置、策略接线、节点和运行上下文 |
 | `.Phases.cs` / `.Expansion.cs` | Solve 阶段和动作回放入口 |
+| `CombatSearchCoordinator.BossTempo.cs` / `CombatBeamSolver.BossTempo.cs` | 首领追加额度、迭代偏差深度优先遍历及独立转置 |
 | `.ParallelExpansion.cs` / `.AdmittedExpansion.cs` | 固定 worker lane、已准入作业及确定性提交 |
 | `.PrimaryChoiceReplay.cs` | 原预算必经的首层选择回放与暂存 |
 | `.BeamRetentionPolicy.cs` | 去重、Beam、多样性、选择保路、药水配额与 Pareto |
@@ -69,6 +70,8 @@
 `.Components` 组合逐项审查的卡牌、生成池、Power、遗物、药水和敌人证明，并锁定审计的原生 MVID。Runtime 在稳定根捕获证书及拒绝原因；模拟状态只提供已捕获的战斗、永久牌组和全局监听前缀，不读取 live。资格随根冻结，分支上界重新检查牌堆、待返回牌、层数和用药记录，未知来源不调用已知来源估计来收紧无限界。Smart 的精确用药层及开局用药后续搜索复用同一节血门槛；完整无药胜利基线经既有 continuation 请求传递，成长、遗物、强制用药、资源追回和保命资源门禁仍保留。证书是搜索元数据，不进入战斗指纹或续用文本。
 
 Smart 药水梯度在主成员耗尽时间时拥有一个独立成员时间：仅对无强制指令、无显式用药的完整搜索结果和可搜索药水启用，首个可选层使用软预算的 1/5（1–30 秒）及 1/6 收尾窗口。梯度显式限制层数；后置开局前缀仍按请求账本准入。该成员的工作进入原请求总账本。
+
+首领成员在原请求的主搜和后处理完成后运行，按 `EncounterRoomType.Boss` 准入。节点和软时间分别追加原配置的 1/5，工作累计到同一个请求账本。每轮偏差额度递增，使用独立模拟器、待处理栈和 `(完整状态键, 剩余偏差)` 转置表；共享的资源桶见证只存纯值。动作展开和选牌语义复用原实现，中途顺序优先能力铺垫与进攻并按 HP 单次计价；最后只接纳安全完整胜利，沿既有结果政策取优。`Phases` 提供内存预约、进度、取消与接管边界，待处理快照由成员释放。
 
 ## 4. 模拟与 Prediction
 

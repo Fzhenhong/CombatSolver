@@ -37,15 +37,20 @@ internal sealed partial class UnattendedTestRunner
         using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(Math.Max(1, _request.TimeoutSeconds - _stopwatch.Elapsed.TotalSeconds)));
         foreach (NoveltyBenchmarkVariant options in variants)
         {
-            if (options.Scheduler is not ("beam" or "bfws" or "portfolio"))
-                throw new InvalidDataException("Expected beam, bfws or portfolio.");
+            if (options.Scheduler is not ("beam" or "bfws" or "portfolio" or "tempo" or "tempo-portfolio"))
+                throw new InvalidDataException("Expected beam, bfws, portfolio, tempo or tempo-portfolio.");
             var policy = captured with { UseNoveltyPortfolio = options.Scheduler == "portfolio",
+                UseBossTempoSearch = options.Scheduler == "tempo-portfolio",
+                BossTempoSearch = options.Scheduler == "tempo" ? new(2) : null,
                 NoveltySearch = options.Scheduler == "bfws" ? new() : null, FixedBudget = true,
-                Profile = captured.Profile with { SoftTimeBudgetMilliseconds = captured.BudgetOverrideMilliseconds ?? captured.Profile.SoftTimeBudgetMilliseconds } };
-            if (options.Scheduler == "portfolio" && !smart)
+                Profile = captured.Profile with { SoftTimeBudgetMilliseconds = captured.BudgetOverrideMilliseconds ?? captured.Profile.SoftTimeBudgetMilliseconds,
+                    BossTempoHpPricing = options.Scheduler == "tempo" } };
+            if (options.Scheduler is "portfolio" or "tempo-portfolio" && !smart)
                 throw new InvalidDataException("Portfolio benchmarks require the request coordinator (smart.flag).");
             if (options.Scheduler == "bfws" && smart)
                 throw new InvalidDataException("Standalone novelty benchmarks require a direct solver.");
+            if (options.Scheduler == "tempo" && smart)
+                throw new InvalidDataException("Standalone tempo benchmarks require a direct solver.");
             CombatBugReportExporter.RecordSearchPolicy(combat, policy);
             SetStage($"novelty_benchmark_{options.Scheduler}");
             // A direct single solver with explicit potions disabled isolates scheduling.
@@ -73,7 +78,8 @@ internal sealed partial class UnattendedTestRunner
             }, cancellation.Token);
             _writer.CaptureSolverResult(result);
             var report = new { options, policy.Profile, ordinal = reports.Count,
-                result = SolverDiagnostics.DescribeResult(result), research = (object?)result.NoveltyPortfolio ?? result.NoveltySearch ?? (object)new { stop = "beam" },
+                result = SolverDiagnostics.DescribeResult(result), research = (object?)result.BossTempoSearch
+                    ?? result.BossTempoIteration ?? (object?)result.NoveltyPortfolio ?? result.NoveltySearch ?? (object)new { stop = "beam" },
                 actions = result.BestNode.Actions, effectivePolicy = CombatBugReportExporter.LatestEffectivePolicy,
                 quality = CombatSearchCoordinator.DescribeNoveltyQualityForTesting(root, policy, result),
                 growthRewards = result.Snapshot.GrowthRewards, relicCounters = result.Snapshot.RelicCounters,
