@@ -210,11 +210,7 @@ O056 部署存活两次原生实测都是 62 血（maxHp 107），即 107 − 45
 
 ### 归档口径（提请维护者定夺）
 
-本文件现在 210 行 / 19.6 KiB，行数刚越过 AGENTS.md 第 9 节给活动开发/测试记录的 200 行阈值（体积仍在 32 KiB 内）。按 §9 本应把已完成轮次压成短入口或移入 `docs/archive/`，本批不自行归档：搬迁会牵动 `docs/TEST_MATRIX.md`、`coverage/evidence/test-evidence.json` 与账本里的相对路径同步，把一次收口变成结构搬迁，风险大于收益。是否归档请维护者定夺，不默认放行（与 Q010 同一口径）。
-
-## 第六轮：合并上游后的夹具复跑与兼容性阻塞（2026-10-06）
-
-PR #228 与 `origin/main` 冲突（只在 `docs/TEST_MATRIX.md`：同一位置的两个新增段落），已合并 `6031debd`（merge `aa99e0d6`，两侧段落都保留）。合并带来上游 `89798a78`「Include captured hand limits in continuation and combat fingerprints」，因此按 AGENTS 第 8 节以新二进制重跑七条夹具。
+本文件现已 315 行 / 32.9 KiB，**同时越过 AGENTS.md 第 9 节给活动开发/测试记录的 200 行与 32 KiB 两个阈值**（第七、八轮把定位做到判据层后越过体积线）。按 §9 本应把已完成轮次压成短入口或移入 `docs/archive/`，本批仍不自行归档：搬迁会牵动 `docs/TEST_MATRIX.md`、`coverage/evidence/test-evidence.json` 与账本里的相对路径同步，把一次收口变成结构搬迁；且七、八两轮的结论尚未经维护者确认。是否归档请维护者定夺，不默认放行（与 Q010 同口径）。来上游 `89798a78`「Include captured hand limits in continuation and combat fingerprints」，因此按 AGENTS 第 8 节以新二进制重跑七条夹具。
 
 新二进制：Release 0 警告 0 错误，SHA256 `760E4D65A0E41058E3EC4F92A6D77F65ADD263E7B3B0FB82DD43B472E757ADC5`（与合并前 `5CFA2B35…B00A459` 不同，即本轮确实在跑合并后的件）。
 
@@ -281,3 +277,34 @@ PR #228 与 `origin/main` 冲突（只在 `docs/TEST_MATRIX.md`：同一位置�
 - O057 的 w90 只在本机、本构建上复现两次，未在别档内存/别机构复测；
 - 合并后的主线上无法复跑（#231），因此上述结论限定在 0143d82f 源码；
 - 未改任何生产代码，`src` 相对基点仍为空 diff；本轮所有运行产物在 `.local/tool-tasks/q013/rootcause/`，临时 worktree 在 `.local/tool-tasks/q013/wt-premearge`（收尾应删除并 `git worktree prune`）。
+
+## 第八轮：排除预算与枚举上限，锁定「每层保留池」（2026-10-06）
+
+第七轮把两个主题的分歧点定位到单步，但没说清更优的那条线是「没生成」还是「生成了被丢掉」。本轮用现有 CLI 做穷举式判别：固定包内默认宽度，逐个只动一个变量。
+
+**O057 固定在 beamWidth=60（包内原值）**，五个单变量全部仍是 40：
+
+| 变量 | 值 | 结果 | boundary | runId |
+| --- | --- | --- | --- | --- |
+| 节点上限 | 120000 → 300000 | 40 | None | `560bdc914f67464d8a944853d875d761` |
+| 节点上限 | 120000 → 1000000 | 40 | None | `7d80e3a4d12a4dc1aa7ab4834280ba92` |
+| 分支枚举 | 32/18/24 → 64/36/48 | 40 | NodeLimit | `4983882075b0410da7f933200a04b704` |
+| 节点 + 枚举 | 300000 + 64/36/48 | 40 | TimeLimit | `aa9524863eeb4b61b97fbe1af26b1c9c` |
+| 软时间预算 | 120000 → 300000 | 40 | NodeLimit | `53c452aef032472a88c7f789c385a464` |
+
+**O059 固定在 beamWidth=90（包内原值）**，三个单变量全部仍是 30，且 `choiceBranches` 三次都是 2785（说明这三个变量在该根上完全没改变搜索）：
+
+| 变量 | 值 | 结果 | runId |
+| --- | --- | --- | --- |
+| 节点上限 | 250000 → 600000 | 30 | `f0662b367be74c068f113c0948639db0` |
+| 分支枚举 | 48/28/36 → 96/56/72 | 30 | `9c027e0ac2984f668dd316653eba79b7` |
+| 节点 + 枚举 | 600000 + 96/56/72 | 30 | `f2868bf4e01c473db02e96454d904d06` |
+
+注意 boundary 列：节点抬到 300000 仍撞 `NodeLimit`，节点与枚举同时抬高后改撞 `TimeLimit`——抬高一种预算只是换成另一种先到，结果一格不动。**结论**：两个主题的缺口都不是预算截断、也不是分支枚举截断——抬高节点、抬高软时间预算、把每节点分支上限翻倍，默认宽度下的结果一格不动。剩下的唯一解释是**每层的排序保留池**（beamWidth 本身就是该池的容量）：更优线可达（O057 在 w90 拿到 22，两次复现；O059 在 w180/240 拿到 28），只是默认宽度下没被选中。这解释了为什么 O057 会出现非单调（60→90→120→180→240 对应 40/22/40/40/35）：池子大小一变，选中节点与 incumbent 的比较轨迹就变了，而中段 incumbent 剪枝计数确实差了三倍（w60 `primaryIncumbentBranchesPruned=2308` 对 w90 的 735）。
+
+**过程中确认的两条事实**：
+
+- 这两个包的 `replay/checkpoint.json` 里 `index.searchResults` **计数为 0**，即没有录制获胜预测；因此仓库现成的 `CHECKPOINT-RECORDED-PLAN-PATH` 追踪链在这两个包上没有可用输入。实跑该场景得到的是通用首轮搜索结果（`InitialWorldlineSummary` / `InitialPolicy` / `NativeOutcome`，40、Passed），没有任何 `RecordedPrediction:*` 检查——它为何走了通用路径本轮未追（没去查该场景的前置条件），只作观察记录。
+- 想追「哪一层保留规则丢的」，需要挂 `SearchPathObserver` 观察器（`src/Search/SearchDiagnosticsSink.cs:17`，阶段含 `PrunedInput`/`GlobalRetention`/`RetentionPoolFinal` 等）。`UnattendedTestRunner` 是 partial class，观察器与 `FreezeKnownRoutePrefix` 都是它的私有成员，一次性探针可以写成同 partial 的 `.local` 源码显式接入构建，不需要改生产代码的派发；本轮未做。
+
+**待决定**：是否在本批内实现保留层改动。它落在 `CombatBeamSolver.BeamRetentionPolicy.cs` 的必保代表列表（`AddRequired(...)`，见 :1237-1295），形状可仿 #227 的 `FindBestDamagingContinuation`——但那是全主题共享的搜索行为，按仓库要求需要「同根、同政策、同预算下质量无退化 + 耗时无明显增加」的哨兵验收，且本批的验收口径是「跑回归哨兵证明无退化」，不等于要求实现这些主题的改良。本批 `src` 仍为空 diff。
