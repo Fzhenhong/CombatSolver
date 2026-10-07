@@ -117,8 +117,10 @@ internal static partial class CombatSearchCoordinator
             searches++;
             if (candidate is { ResultScope: not SolverResultScope.SearchCompletion }) return candidate;
             bool accepted = Accept(candidate);
+            string prefixSeq = string.Join(">", prefix.Actions.Select(a => a.Kind));
             policy.Diagnostics.Info($"[CombatSolver/Test] BOSS_TEMPO_CONTINUATION "
                 + $"eliminated={prefix.EliminatedEnemies} prefix_potions={prefix.PotionCount} "
+                + $"prefix_actions={prefix.Actions.Length} prefix_seq={(prefixSeq.Length > 240 ? prefixSeq[..240] + "…" : prefixSeq)} "
                 + $"won={candidate != null && IsCompleteVictory(candidate)} "
                 + $"hp_lost={candidate?.ProjectedBattleHpLost} potions={candidate?.ProjectedBattlePotionCount} improved={accepted} "
                 + $"searched_turns={candidate?.SearchedTurns} boundary={candidate?.BoundaryReason} expanded={candidate?.ExpandedNodes}");
