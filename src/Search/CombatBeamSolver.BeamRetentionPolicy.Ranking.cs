@@ -185,12 +185,13 @@ internal sealed partial class CombatBeamSolver
             SearchNode? best = null;
             foreach (SearchNode node in nodes)
             {
-                // Block can outrank every damaging step under the stand-pat threat
-                // projection, even when another legal play can finish the fight.
-                // Damage spent removing enemy block is progress too. Preserve one
-                // continuation with a legal attack left, not a predicted lethal.
+                // Preserve a shield-breaking step with a legal follow-up attack
+                // when the exposed enemies fit within the frozen reachable hand value.
+                // This is a finishing-route heuristic; the simulator resolves the attacks.
                 if (node.IsTerminal || node.Parent == null
                     || node.Action is not { Kind: PlanActionKind.PlayCard, EndsPlayerTurn: false }
+                    || node.Snapshot.EnemyBlock >= node.Parent.Snapshot.EnemyBlock
+                    || node.Snapshot.EnemyHp > node.Snapshot.ReachableHandValue
                     || (long)node.Snapshot.EnemyHp + node.Snapshot.EnemyBlock
                         >= (long)node.Parent.Snapshot.EnemyHp + node.Parent.Snapshot.EnemyBlock
                     || node.Snapshot.PlayableAttackCount <= 0)
