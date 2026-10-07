@@ -37,8 +37,8 @@ internal sealed partial class UnattendedTestRunner
         using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(Math.Max(1, _request.TimeoutSeconds - _stopwatch.Elapsed.TotalSeconds)));
         foreach (NoveltyBenchmarkVariant options in variants)
         {
-            if (options.Scheduler is not ("beam" or "bfws" or "portfolio" or "tempo" or "tempo-portfolio" or "request"))
-                throw new InvalidDataException("Expected beam, bfws, portfolio, tempo, tempo-portfolio or request.");
+            if (options.Scheduler is not ("beam" or "bfws" or "portfolio" or "tempo" or "tempo-portfolio" or "request" or "replay"))
+                throw new InvalidDataException("Expected beam, bfws, portfolio, tempo, tempo-portfolio, request or replay.");
             if (options.BossTempoSearch.HasValue && options.Scheduler != "request")
                 throw new InvalidDataException("BossTempoSearch requires the request scheduler.");
             var policy = captured with { UseNoveltyPortfolio = options.Scheduler == "request"
@@ -57,8 +57,17 @@ internal sealed partial class UnattendedTestRunner
                 throw new InvalidDataException("Standalone tempo benchmarks require a direct solver.");
             CombatBugReportExporter.RecordSearchPolicy(combat, policy);
             SetStage($"novelty_benchmark_{options.Scheduler}");
+            using JsonDocument? frozen = options.Scheduler == "replay"
+                ? JsonDocument.Parse(File.ReadAllText(Path.Combine(area, "frozen-plan.json"))) : null;
+            PlanAction[]? frozenActions = frozen?.RootElement.GetProperty("actions")
+                .Deserialize<PlanAction[]>(UnattendedTestFiles.JsonOptions);
+            if (frozen != null && (smart || frozenActions is not { Length: > 0 }))
+                throw new InvalidDataException("Frozen plan replay requires a nonempty route and a direct solver.");
             // A direct single solver with explicit potions disabled isolates scheduling.
-            SolverResult SolveVariant() => smart
+            SolverResult SolveVariant() => frozenActions != null
+                ? new CombatBeamSolver(root, names, damage, policy, cancellation.Token,
+                    searchProfile: policy.Profile, fixedPrefixActions: frozenActions).Solve()
+                : smart
                 ? CombatSearchCoordinator.Solve(root, names, damage, policy, cancellation.Token, null)
                 : new CombatBeamSolver(root, names, damage, policy, cancellation.Token,
                     searchProfile: policy.Profile, potionPolicyOverride: SolverPotionPolicy.Disabled,
@@ -80,6 +89,17 @@ internal sealed partial class UnattendedTestRunner
                 }
                 return scoped;
             }, cancellation.Token);
+            if (frozen != null)
+            {
+                JsonElement quality = frozen.RootElement.GetProperty("quality");
+                if (result.ExpandedNodes != 0 || !result.Snapshot.AllEnemiesDead || result.Snapshot.PlayerDead || result.Snapshot.HasRisk
+                    || result.ProjectedBattleHpLost != quality.GetProperty("projectedBattleHpLost").GetInt32()
+                    || result.ProjectedBattlePotionCount != quality.GetProperty("projectedBattlePotionCount").GetInt32()
+                    || result.CombatEndedTurn != quality.GetProperty("combatEndedTurn").GetInt32()
+                    || result.BestNode.Actions.Count != frozenActions!.Length)
+                    throw new InvalidOperationException("Frozen plan replay differed from its saved outcome.");
+                _completedChecks.Add("NoveltySearch:FrozenPlan:ExactOutcome:Expanded=0");
+            }
             _writer.CaptureSolverResult(result);
             var report = new { options, policy.Profile, ordinal = reports.Count,
                 result = SolverDiagnostics.DescribeResult(result), research = (object?)result.BossTempoSearch
@@ -111,8 +131,10 @@ internal sealed partial class UnattendedTestRunner
                 SolverController.SetStopFullAutoOnWorseRecalculation(false, persist: false);
                 _protocolHost.EnableAutomaticTurnSearch();
                 bool observedEnd = false;
+                (long ActionStarted, int Turn, int Hp, bool Deploying, bool FullAuto, bool Paused)? lastProgress = null;
                 try
                 {
+                    SetStage("novelty_native_deployment");
                     SolverController.StartPredictedRouteForTesting(_host, combat, result, state =>
                     {
                         observedEnd = true;
@@ -121,6 +143,22 @@ internal sealed partial class UnattendedTestRunner
                     while (CombatManager.Instance.IsInProgress)
                     {
                         EnsureWithinDeadline();
+                        var progress = (SolverController.LastDeployedActionStartedAtMillisecondsForTesting,
+                            player.PlayerCombatState!.TurnNumber, player.Creature.CurrentHp,
+                            SolverController.IsDeploying, SolverController.FullAutoEnabled,
+                            SolverController.AutomaticSearchPaused);
+                        if (lastProgress != progress)
+                        {
+                            lastProgress = progress;
+                            _writer.WriteGeneratedArtifact("native-progress.json", new
+                            {
+                                actionStarted = progress.Item1, turn = progress.Item2, hp = progress.Item3,
+                                deploying = progress.Item4, fullAuto = progress.Item5, paused = progress.Item6,
+                                audit = SolverController.ReplanAuditForBugReport,
+                            });
+                        }
+                        if (!observedEnd && (SolverController.AutomaticSearchPaused || !SolverController.FullAutoEnabled))
+                            throw new InvalidOperationException("Native benchmark deployment paused: " + SolverController.ReplanAuditForBugReport);
                         if (SolverController.UnexpectedReplanCount != 0 || SolverController.LastSearchFailureForTesting != null)
                             throw new InvalidOperationException("Native benchmark deployment replanned or failed: " + SolverController.ReplanAuditForBugReport);
                         await NextFrameAsync();

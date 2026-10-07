@@ -120,7 +120,8 @@ internal static partial class CombatSearchCoordinator
             policy.Diagnostics.Info($"[CombatSolver/Test] BOSS_TEMPO_CONTINUATION "
                 + $"eliminated={prefix.EliminatedEnemies} prefix_potions={prefix.PotionCount} "
                 + $"won={candidate != null && IsCompleteVictory(candidate)} "
-                + $"hp_lost={candidate?.ProjectedBattleHpLost} potions={candidate?.ProjectedBattlePotionCount} improved={accepted}");
+                + $"hp_lost={candidate?.ProjectedBattleHpLost} potions={candidate?.ProjectedBattlePotionCount} improved={accepted} "
+                + $"searched_turns={candidate?.SearchedTurns} boundary={candidate?.BoundaryReason} expanded={candidate?.ExpandedNodes}");
             if (candidate?.BoundaryReason == SearchBoundaryReason.MemoryNoProgress)
             { stop = "memory_no_progress"; break; }
         }
