@@ -1,4 +1,44 @@
 {
+  "DAMAGING-CONTINUATION-Q015-O070": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "O070 原包start，完整ContinuationStamp与原生状态恢复，原Medium/60/120000/DOP8政策仅固定10000ms，正常搜索与Instant/0秒原生整场部署。",
+    "expected": "零药完胜、整场战损≤20，无计划外重算；不以结束回合替代战损目标。",
+    "observed": "主线同开战根36/0/T12；宽选牌21/0与44/0失败版本已取代；最终限定弃牌、延迟伤害实际探测及死亡增援窗口识别，同源自主原生e8ebefd702364afabdf763bb7b3c5dd2为20/0/T11，实际54HP、零重算；81957展开/333181转移/19042.4303ms/19742803040B。人工6754c133原生20/0/T10，含13自伤；当前晚1回合。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-medium-replay-policy.json"
+  },
+  "DAMAGING-CONTINUATION-Q015-O067": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "原包start、原比较Force敏捷药政策，90/250000/DOP4固定10000ms；正常自主搜索后Instant/0秒原生整场执行，保存T6后缀与派生完整见证只作对照。",
+    "expected": "自主零死亡完胜、1敏捷药，整场战损≤7。",
+    "observed": "主线12/1/T7，攻击续路9/1；宽选牌版本因O070退步被限定弃牌范围取代；最终限定弃牌、延迟伤害实际探测及死亡增援窗口识别，同源自主原生de73b24602e146858527361186b28789为7/1/T7，实际49HP、零重算；68008展开/342121转移/21164.1224ms/15145573792B。人工42820d98原生7/1/T7，参照动作未注入生产；最终固定哨兵f1ecad1682dd49b397489a5f4214fad2保持5/1/T4、7475.2308ms/2435604896B，首结果验证，单样本不外推普遍提速。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-forced-dexterity-policy.json"
+  },
+  "DAMAGING-CONTINUATION-Q015-O069": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "O069 原包 start，完整 ContinuationStamp 和原生状态恢复；原High/90/250000/DOP8政策仅固定10000ms，正常搜索后Instant/0秒完整原生部署。",
+    "expected": "零药获胜、战损≤41，按每药9HP不劣于人工32战损/1格挡药；无计划外重算。",
+    "observed": "主线同开战根62/0/T11；宽选牌31/0试验未通过O070兼容，不作最终结果；最终限定弃牌、延迟伤害实际探测及死亡增援窗口识别，同源自主原生08b7b882dcb64ed48640f4e5964cf4e5为40/0/T13，实际33HP、零重算；40584展开/201764转移/9942.3624ms/8587474376B。人工45061c6b原生32/1/T7，折算41；当前折算40，裸战损与回合差分别记录，不外推普遍性能收益。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-replay-policy.json"
+  },
+  "DAMAGING-CONTINUATION-Q015-O066-T4": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "O066 原包 :9/cursor19/T4，严格 ContinuationStamp 与原生状态恢复，原Medium政策仅固定为10000ms；9a4489d8和攻击续路候选独立进程正常搜索。候选自主路线原生整场执行。",
+    "expected": "保持主线已取得的同根3战损/1异鱼之油/T9，无部署漂移或计划外重算；不把开战旧计划混入T4比较。",
+    "observed": "主线同T4根已3/1/T9；最终限定弃牌、延迟伤害实际探测及死亡增援窗口识别，同源自主原生47029c7049664b59b8e81a50b6a945cb为3/1/T9，实际38HP、零重算；6610展开/22888转移/3591.7788ms/1054352448B。此T4结果不计新增修复收益；额外开战最终0/1/T6、折算9优于人工12，见独立START记录。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-medium-replay-policy.json"
+  },
+  "DAMAGING-CONTINUATION-Q015-O068": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "原始 O068 ZIP 的 start，完整 ContinuationStamp 与原生二进制恢复；原 profile 仅固定为10000ms，自主协调器搜索与整场原生部署，Instant/0秒。",
+    "expected": "同根0药路线追平合法人工3战损；无状态漂移或计划外重算。独立生成哨兵保持5战损/1药/T4。",
+    "observed": "主线同开战根7/0/T4；最终限定弃牌、延迟伤害实际探测及死亡增援窗口识别，同源自主原生bda4c827af34449e94a680d16a4acc02为3/0/T4，实际57HP、零重算；1858展开/4935转移/869.8396ms/175002488B。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-replay-policy.json; coverage/fixtures/search/damaging-continuation-sentinel.json"
+  },
   "EXTRA-TURN-MIRROR-ORDER": {
     "status": "Passed",
     "level": "HeadlessNativeFullStateDifferentialAndFork",
@@ -2845,5 +2885,29 @@
     "expected": "原异常传播、信号释放、后续独占准入与作用域收尾。",
     "observed": "default-entry未修复基线失败：限额日志抛错后压力信号仍启用；最终2项通过。既有diagnostic-failure 8项、scopes 8项通过。",
     "evidence": "tools/testing/checks/CombatSolver.GcPolicyChecks/GcDiagnosticFailureChecks.cs; src/Runtime/SearchGcPolicy.cs; docs/TEST_MATRIX.md"
+  },
+  "DAMAGING-CONTINUATION-Q015-O066-START": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "原始O066 ZIP start，完整ContinuationStamp与原生状态恢复；原Medium/60/120000/DOP4政策仅固定10000ms，正常自主搜索与Instant/0秒原生整场部署。",
+    "expected": "按每瓶9HP，整场折算成本不劣于原生完整人工3损/1异鱼之油的12；无计划外重算。",
+    "observed": "主线42f90c67为36/0/T12，限定弃牌版本3449f77d为7/1/T8、折算16。仅追加死亡增援窗口识别后7e3d9c9ff0df468fada865f1aa33e5b4自主原生0/1异鱼之油/T6，实际41/75HP，损血/回血/自伤/未归因损血均0，零重算；28791展开/103540转移/8387.9231ms/4767277264B。28动作，T1用药，折算9较人工12少3。人工e2995e4e37动作原生3/1/T9、零额外搜索和重算，参照动作未注入生产。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-medium-replay-policy.json"
+  },
+  "DAMAGING-CONTINUATION-Q015-SENTINEL-DEPLOY": {
+    "status": "Passed",
+    "level": "HeadlessNativeDeploymentAndSearchQuality",
+    "procedure": "BYRDONIS_ELITE/SILENT维护输入仅改mode=Deploy；独立进程基线9a4489d8与合并版d30f95c4，同Custom60/120000/固定30000ms/DOP2/Smart/ServerGC/NoGC关闭/无详细日志，Instant/0秒整场部署。",
+    "expected": "完整原生开局、ContinuationStamp及执行政策相等，双方获胜、5损/1药/T4、零重算；正常搜索耗时无明显增加。",
+    "observed": "基线d3a448e499ba47c2905aca0f610f5fbe与候选abe046108c234fad8d8d6bff20aef6c0均Passed、51/70HP、零重算；完整开局/根/政策/runtime相等。17480/68036/8250.8126ms/2445527152B → 17589/67841/7998.459ms/2437694640B。单对样本不外推普遍性能收益。合并版O068 c885cebc3ca74a2eb761320f9ee188f0原生3/0/T4、57/75HP、零重算通过；其余生产搜索未变的原五主题证据复用。",
+    "evidence": "docs/issues/q015-route-quality.md; coverage/fixtures/search/damaging-continuation-sentinel.json"
+  },
+  "Q015-LEGACY-DEFAULT-HAND-LIMIT": {
+    "status": "Passed",
+    "level": "HeadlessNativeReplayAndStrictBoundaryContract",
+    "procedure": "合入main b2d23a05/PR224后，仅Testing在完整原生checkpoint核验且旧期望缺字段、实际唯一末尾默认10时迁移max_hand_size。现行生产续用/指纹不变，原包不改。",
+    "expected": "无门禁、非默认、显式冲突、重复、错位和其他状态漂移严格拒绝；原O068原生恢复及整场3/0/T4，固定哨兵5/1/T4，无计划外重算。",
+    "observed": "旧O068 7c3af4f4151e435aaedf168e098fc1d3在搜索前field_count24/25失败。严格合同584dceb12637437fb6d5b39e813e4913 Passed；原O0684dddc0ccdab04f9497d28baa4509442c Passed、57/75HP、完整native-state核验及迁移标记true；哨兵319191f08dce419ca14845719a2d421f Passed、51/70HP；后两项零重算，旧根字段除新增默认字段外及政策完整一致。新版本仅复测列出范围，其余主题沿用上游更新前证据。非默认旧上限不作为已验证。",
+    "evidence": "docs/issues/q015-route-quality.md; docs/CHECKPOINT_REPLAY.md; coverage/fixtures/search/damaging-continuation-sentinel.json"
   }
 }

@@ -8,14 +8,6 @@
 
 PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-quality.md#0494-重新验证2026-10-05)。当前 0.50.0 主线整合使用 O003、O004、O005 同根、同政策对照，结果与复跑预算见 [当前验收](issues/q002-route-quality.md#0500-主线整合2026-10-05)。
 
-0.49.4 的额外回合镜像顺序、同根成长胜利续用、整场自动部署与上传引导验证见 [历史卷 16](archive/testing/volume-16.md)。
-
-0.49.0 的行为验证沿用本页 PR #203、#204 合并验收与 [战斗状态修复验证](archive/testing/volume-13.md)。版本及发布文档调整采用 L0 检查和发布构建；原有未验证项保留。
-
-0.49.3 的框架、局外 Mod 与 BaseLib 验证见 [历史卷 14](archive/testing/volume-14.md)。
-
-移动运行库内存回收验证见 [历史卷 15](archive/testing/volume-15.md)。
-
 ## Ctrl+F9 面板可见性（PR #226）
 
 快捷键、新图层、重置和监控合同的通过、失败与可见验证范围见[历史卷21](archive/testing/volume-21.md#ctrlf9-面板可见性pr-226)。
@@ -28,6 +20,13 @@ PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-qua
 
 终局单药／双药低收益拒绝与 Force、奖励抵扣、原价高收益哨兵由 `SMART-OPENING-POTION-ADMISSION` 覆盖；跨成员比较由 `python -B tools/testing/checks/BeamWidthPortfolioChecks/run.py` 覆盖（118项通过）。原生 runId `d9629992ac31423586c7465510c18f6d` Passed（23.63秒，含建局），实例已清理。失败基线、同根材料与未验证范围见[问题记录](issues/potion-opportunity-20261006.md)。
 
+## 社区批次 Q015：路线保留
+
+五份原包均从start严格恢复，核对完整ContinuationStamp与原生状态；保留原政策，仅profile固定为10000ms，请求上限120s。Instant／0秒完整原生部署验证自主路线，断言计划外重算。政策输入为[High固定短搜](../coverage/fixtures/search/damaging-continuation-replay-policy.json)、[Medium固定短搜](../coverage/fixtures/search/damaging-continuation-medium-replay-policy.json)和[O067强制敏捷药](../coverage/fixtures/search/damaging-continuation-forced-dexterity-policy.json)；完整人工见证只证明可执行性，不充当自主发现。
+
+O066同开战根从主线36／0药改进为自主原生0／1异鱼之油／T6，实际41/75HP，折算9优于完整原生人工3／1药的12；原T4比较根兼容通过。O067自主原生7／1敏捷药／T7追平人工，O068为3／0／T4。O069最终40／0／T13，按每药9HP较人工折算41少1；裸战损与回合限制详见记录。O070为20／0／T11，战损追平人工20／0，晚1回合。五个主题均在同一最终版本从开战自主搜索并原生执行完胜，零计划外重算；固定独立哨兵保持5／1／T4，本轮只验证其首结果。原档位长搜和可见Steam帧时间未验证，单样本不外推普遍性能收益。
+
+O068攻击续路、O067限定弃牌续路／原名额内延迟伤害探测、O066死亡增援窗口分别取得可解释改善；宽选牌范围和累计伤害同分试验失败版本已取代或撤回。PR前已合入main a0b7cf0f，生产搜索不变；最短O068和独立哨兵原生整场补验通过，哨兵双方5／1／T4、零重算，完整根／政策／原生开局相等。PR #224合并后的旧日志默认手牌上限兼容限定完整原生检查点，REPLAY-BOUNDARY-CONTRACT覆盖无门禁／非默认／显式冲突／重复／位置／牌与RNG漂移拒绝；旧非默认上限未验证。最终同源结果、独立哨兵成本、失败试验及复跑命令见[Q015记录](issues/q015-route-quality.md)。
 ## 开局药水补搜准入
 
 固定两槽满栏，使用原版奖励 RNG 捕获确定掉药／不掉药的搜索根。`SMART-OPENING-POTION-ADMISSION` 覆盖低损共同准入与换药抵扣，`SMART-OPENING-POTION-VALUE` 覆盖原价省血边界。失败基线、最终结果与验证范围见 [历史卷 20](archive/testing/volume-20.md#开局药水补搜准入)。
