@@ -14,7 +14,7 @@
   "expectedInitialProjectedBattleHpLostAtMost": 30,
   "stopAfterInitialSolverResultAssertion": true,
   "headlessFastModeForTest": "Instant",
-  "timeoutSeconds": 300,
+  "timeoutSeconds": 120,
   "exitOnComplete": true,
   "expectedInitialPotionCount": 0,
   "expectedInitialFinalEnemyHpAtMost": 0,

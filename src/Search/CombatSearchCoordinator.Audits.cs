@@ -41,7 +41,8 @@ internal static partial class CombatSearchCoordinator
             if (!policy.PotionStrategy.HasForcedDirectives
                 && HasReachedAcceptableBattleHpLoss(policy, selected))
                 return selected;
-            selected = SmartPotionAuditMinimumMilliseconds(context, selected) > context.RemainingMilliseconds
+            long minimumMilliseconds = SmartPotionAuditMinimumMilliseconds(context, selected);
+            selected = minimumMilliseconds > 0 && minimumMilliseconds > context.RemainingMilliseconds
                 ? SearchSmartPotionGradientWithMinimumBudget(context, selected, memoryForecast)
                 : AuditSmartPotionUse(auditContext, cancellationToken, selected, memoryForecast);
             if (selected.ResultScope == SolverResultScope.SearchCompletion)

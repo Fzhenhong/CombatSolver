@@ -14,6 +14,6 @@
   "expectedFinishedPlayerHpAtLeast": 9,
   "expectedUnexpectedReplansAtMost": 0,
   "headlessFastModeForTest": "Instant",
-  "timeoutSeconds": 300,
+  "timeoutSeconds": 120,
   "exitOnComplete": true
 }

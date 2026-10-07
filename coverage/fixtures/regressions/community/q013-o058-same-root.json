@@ -14,6 +14,6 @@
   "expectedInitialProjectedBattleHpLostAtMost": 63,
   "stopAfterInitialSolverResultAssertion": true,
   "headlessFastModeForTest": "Instant",
-  "timeoutSeconds": 300,
+  "timeoutSeconds": 120,
   "exitOnComplete": true
 }
