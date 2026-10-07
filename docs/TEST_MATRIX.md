@@ -32,7 +32,8 @@ PR #213 的贡献者分阶段验证见 [Q002 历史入口](issues/q002-route-qua
 
 Q013（O056–O060，#220 / PR #228）的五条同根 `SearchOnly` 质量界夹具与两条 `DeploySolver` 夹具位于 `coverage/fixtures/regressions/community/q013-*.json`；逐条结果、失败基线与未验证项见 `coverage/evidence/test-evidence.json` 的 `Q013-*` 条目与[认领者记录](community/drafts/2026-10-06/Q013-claim-reproduction.md)。夹具依赖不入库的玩家原包 ZIP，故本页不提供行首可执行命令（与 Q010 同口径，矩阵可复跑清单条数不变）：复跑时把夹具 JSON 字段逐个传给 `tools/testing/run-unattended-test.ps1`，显式带 `-Sts2GameRoot` / `-RitsuWorkshopRoot` / `-CleanupInstanceOnExit`，判定以 `result.json.status` 为准（带实例清理时 launcher 退出码 1 不代表失败）。
 
-认领提交未改 `src`（`git diff --name-only 0d290fbe 0143d82f -- src` 为空），七条夹具在基点 `0d290fbe` 上按夹具本体全部 Passed；界锁各主题当时的实际产出，不构成改良值达标声明（O056/O057/O059 未达包内改良值，O060 默认预算下终值 35～43 摆动，O058 缺口在同一次请求内后续搜索的运行态）。合并 `6031debd` 后（`89798a78` 把 `max_hand_size` 写进续用指纹）七条全部在 `native_replay_events` 报 `restore_mismatch` 而未进入搜索，属旧包容兼容性边界，逐条 runId、包内取证与待处置口径见认领者记录第六轮。
+认领提交未改 `src`（`git diff --name-only 0d290fbe 0143d82f -- src` 为空），七条夹具在基点 `0d290fbe` 上按夹具本体全部 Passed；界锁各主题当时的实际产出，不构成改良值达标声明（O056/O057/O059 未达包内改良值，O060 默认预算下终值 35～43 摆动，O058 缺口在同一次请求内后续搜索的运行态）。合并 `6031debd` 后（`89798a78` 把 `max_hand_size` 写进续用指纹）七条全部在 `native_replay_events` 报 `restore_mismatch` 而未进入搜索，属旧包容兼容性边界，逐条 runId 与包内取证见[调查流水](archive/community/q013-claim-reproduction-20261006.md)；同一处在 #227 的 `952778fd4`（`allowLegacyDefaultHandLimit`）已有修复，等其合入 main 即可恢复复跑。
+
 ## 开局药水补搜准入
 
 固定两槽满栏，使用原版奖励 RNG 捕获确定掉药／不掉药的搜索根。`SMART-OPENING-POTION-ADMISSION` 覆盖低损共同准入与换药抵扣，`SMART-OPENING-POTION-VALUE` 覆盖原价省血边界。失败基线、最终结果与验证范围见 [历史卷 20](archive/testing/volume-20.md#开局药水补搜准入)。
