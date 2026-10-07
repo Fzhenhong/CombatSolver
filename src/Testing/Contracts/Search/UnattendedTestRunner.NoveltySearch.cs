@@ -37,15 +37,19 @@ internal sealed partial class UnattendedTestRunner
         using CancellationTokenSource cancellation = new(TimeSpan.FromSeconds(Math.Max(1, _request.TimeoutSeconds - _stopwatch.Elapsed.TotalSeconds)));
         foreach (NoveltyBenchmarkVariant options in variants)
         {
-            if (options.Scheduler is not ("beam" or "bfws" or "portfolio" or "tempo" or "tempo-portfolio"))
-                throw new InvalidDataException("Expected beam, bfws, portfolio, tempo or tempo-portfolio.");
-            var policy = captured with { UseNoveltyPortfolio = options.Scheduler == "portfolio",
-                UseBossTempoSearch = options.Scheduler == "tempo-portfolio",
+            if (options.Scheduler is not ("beam" or "bfws" or "portfolio" or "tempo" or "tempo-portfolio" or "request"))
+                throw new InvalidDataException("Expected beam, bfws, portfolio, tempo, tempo-portfolio or request.");
+            if (options.BossTempoSearch.HasValue && options.Scheduler != "request")
+                throw new InvalidDataException("BossTempoSearch requires the request scheduler.");
+            var policy = captured with { UseNoveltyPortfolio = options.Scheduler == "request"
+                    ? captured.UseNoveltyPortfolio : options.Scheduler == "portfolio",
+                UseBossTempoSearch = options.Scheduler == "request"
+                    ? options.BossTempoSearch ?? captured.UseBossTempoSearch : options.Scheduler == "tempo-portfolio",
                 BossTempoSearch = options.Scheduler == "tempo" ? new(2) : null,
                 NoveltySearch = options.Scheduler == "bfws" ? new() : null, FixedBudget = true,
                 Profile = captured.Profile with { SoftTimeBudgetMilliseconds = captured.BudgetOverrideMilliseconds ?? captured.Profile.SoftTimeBudgetMilliseconds,
                     BossTempoHpPricing = options.Scheduler == "tempo" } };
-            if (options.Scheduler is "portfolio" or "tempo-portfolio" && !smart)
+            if (options.Scheduler is "portfolio" or "tempo-portfolio" or "request" && !smart)
                 throw new InvalidDataException("Portfolio benchmarks require the request coordinator (smart.flag).");
             if (options.Scheduler == "bfws" && smart)
                 throw new InvalidDataException("Standalone novelty benchmarks require a direct solver.");
@@ -122,11 +126,17 @@ internal sealed partial class UnattendedTestRunner
                         await NextFrameAsync();
                     }
                     var outcome = ledger.Capture(combat, ended: true);
+                    var forensicOutcome = CombatBugReportExporter.CaptureOutcome(combat);
+                    int expectedRemainingLoss = result.ProjectedBattleHpLost - result.BattleHpLostSoFar;
+                    int expectedRemainingPotions = result.ProjectedBattlePotionCount - result.BattlePotionsUsedSoFar;
                     _writer.WriteGeneratedArtifact("native-outcome.json", new { outcome, expectedLoss = result.ProjectedBattleHpLost,
+                        expectedRemainingLoss, expectedRemainingPotions,
                         expectedPotions = result.ProjectedBattlePotionCount, unexpectedReplans = SolverController.UnexpectedReplanCount,
-                        observedEnd, finalPlayerMaxHp = player.Creature.MaxHp, forensicOutcome = CombatBugReportExporter.CaptureOutcome(combat) });
-                    if (!observedEnd || !outcome.Survived || outcome.FinalEnemyHp != 0 || outcome.HpLost != result.ProjectedBattleHpLost
-                        || outcome.Potions.Length != result.ProjectedBattlePotionCount || outcome.UnattributedHpLoss != 0
+                        observedEnd, finalPlayerMaxHp = player.Creature.MaxHp, forensicOutcome });
+                    if (!observedEnd || !outcome.Survived || outcome.FinalEnemyHp != 0 || outcome.HpLost != expectedRemainingLoss
+                        || outcome.Potions.Length != expectedRemainingPotions || outcome.UnattributedHpLoss != 0
+                        || forensicOutcome.HpLost != expectedRemainingLoss
+                        || forensicOutcome.Potions.Length != expectedRemainingPotions
                         || SolverController.UnexpectedReplanCount != 0)
                         throw new InvalidOperationException("Native battle outcome differed from the frozen initial result.");
                     _completedChecks.Add("NoveltySearch:NativeVictory:ExactLossPotions:NoUnexpectedReplans");
@@ -141,6 +151,7 @@ internal sealed partial class UnattendedTestRunner
 internal sealed record NoveltyBenchmarkVariant
 {
     public string Scheduler { get; init; } = "beam";
+    public bool? BossTempoSearch { get; init; }
 }
 
 internal static partial class CombatSearchCoordinator

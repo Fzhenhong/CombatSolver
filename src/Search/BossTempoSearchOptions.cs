@@ -2,6 +2,8 @@ namespace CombatSolver;
 
 internal sealed record BossTempoSearchOptions(int DiscrepancyAllowance)
 {
+    internal int ScoutTurns { get; init; }
+    internal Action<BossTempoPrefix>? PrefixObserver { get; init; }
     internal static SolverSearchProfile AdditionalBudget(SolverSearchProfile configured, int milliseconds)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(milliseconds);
@@ -28,3 +30,6 @@ internal sealed record BossTempoSearchTelemetry(
     long ElapsedMilliseconds, bool Improved);
 
 internal sealed record BossTempoIterationTelemetry(string Stop, int Discrepancies, int Deferred, int PeakPending);
+
+internal sealed record BossTempoPrefix(PlanAction[] Actions, StateFingerprint State,
+    int EliminatedEnemies, int PotionCount, double Rank);

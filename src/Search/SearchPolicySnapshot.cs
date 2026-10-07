@@ -30,6 +30,7 @@ internal sealed record SearchPolicySnapshot(
     internal bool UseBossTempoSearch { get; init; } = true;
     internal bool BossTempoNormalizeHpPricing { get; init; } = true;
     internal BossTempoSearchOptions? BossTempoSearch { get; init; }
+    internal bool PreserveBossTempoHpTies { get; init; }
     public NoveltyPortfolioBudget NoveltyBudget { get; init; } = NoveltyPortfolioBudget.Default;
     public bool Act3BossStrategy { get; init; }
     internal static bool IsAct3BossEncounter(int actIndex, string? encounterId)

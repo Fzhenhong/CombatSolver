@@ -48,6 +48,9 @@ internal sealed partial class CombatBeamSolver
     {
         BossTempoSearchOptions options = policy.BossTempoSearch!;
         ArgumentOutOfRangeException.ThrowIfNegative(options.DiscrepancyAllowance);
+        ArgumentOutOfRangeException.ThrowIfNegative(options.ScoutTurns);
+        if (options.ScoutTurns > 0 && options.PrefixObserver == null)
+            throw new InvalidOperationException("Boss tempo scouting requires a prefix observer.");
         Stack<(SearchNode Node, int Remaining)> pending = new();
         foreach (SearchNode seed in initial)
             pending.Push((seed, options.DiscrepancyAllowance));
@@ -102,18 +105,26 @@ internal sealed partial class CombatBeamSolver
                             completed.Add(child);
                             targetReached |= hpTarget(child);
                         }
+                        else if (options.ScoutTurns > 0
+                            && child.Turn >= _startTurnNumber + options.ScoutTurns
+                            && !child.Snapshot.PlayerDead && !child.Snapshot.HasRisk
+                            && child.BoundaryReason == SearchBoundaryReason.None)
+                        {
+                            options.PrefixObserver!(new(child.Actions.ToArray(), child.StateKey,
+                                _initialEnemyCount - System.Numerics.BitOperations.PopCount(child.Snapshot.AliveEnemyMask),
+                                child.PotionCount, Retention.IntermediateScore(child)));
+                        }
                     }
                     SearchNode[] ordered = children.Where(n => !n.IsTerminal && !n.Snapshot.PlayerDead)
+                        .Where(n => options.ScoutTurns == 0 || n.Turn < _startTurnNumber + options.ScoutTurns)
                         // A next-turn state includes refreshed energy and draws. Compare playable
                         // continuations before that refreshed state so waiting cannot buy free tempo.
                         .OrderBy(n => n.Turn > parent.Turn)
                         .ThenByDescending(n => n.PowerCommitment is
                             { Priority: PowerRoutePriority.Strong, NetUnrealizedValue: > 0 })
-                        .ThenByDescending(n => n.Snapshot.OffensiveProgressValue)
                         .ThenByDescending(Retention.IntermediateScore).ToArray();
                     List<SearchNode> retained = [];
                     // Explore early deviations before spending the pass on later deviations.
-                    // The zero-discrepancy pass already explored the best continuation.
                     if (ordered.Length > 0)
                     {
                         pending.Push((ordered[0], item.Remaining));

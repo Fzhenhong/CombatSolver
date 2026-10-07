@@ -46,7 +46,7 @@ dotnet .local/tool-build/OfflineSearchHarness/bin/Release/net9.0/OfflineSearchHa
 | `--potion-policy <p>` | 药水政策（默认 `Smart`） |
 | `--search-mode <m>` | `Evaluate`（默认）或 `Coordinator` |
 | `--use-portfolio` | 开宽度组合，只对 `Coordinator` 有效 |
-| `--boss-tempo on\|off\|legacy-pricing\|direct` | 默认 on，Coordinator 首领请求在原搜索后追加配置额度各20%；off 用于同条件对照；legacy-pricing 保留追加遍历但沿旧HP扣价；direct 仅 Evaluate，偏差额度2，直接验证遍历 |
+| `--boss-tempo on\|off\|legacy-pricing\|direct` | 默认 on，Coordinator 首领请求在原搜索后追加配置额度各20%，首回合侦察接固定前缀后续搜索；off 用于同条件对照；legacy-pricing 沿旧HP扣价；direct 仅 Evaluate，偏差额度2，直接验证整场遍历 |
 | `--out/--label/--language/--verbose-game-log/--milestone` | 产物目录、标签、本地化语言码、是否打游戏日志、跑到 M1 还是 M2 |
 | `--measure-phases` | 在运行日志里输出 `SEARCH_PHASE` 逐阶段排他耗时/分配表 |
 | `--early-turn-exploration-depth <0|1|2>` | Coordinator 测量时打开早期回合探索；默认 0，离线选项不改变生产默认值 |
