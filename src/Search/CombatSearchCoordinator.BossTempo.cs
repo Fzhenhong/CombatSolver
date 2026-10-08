@@ -113,8 +113,8 @@ internal static partial class CombatSearchCoordinator
             .OrderByDescending(ForcedCommitmentRank)
             .ThenByDescending(p => p.EliminatedEnemies).ThenBy(p => p.PotionCount)
             .ThenByDescending(p => p.Rank).Take(2).ToList();
-        // 侦察观测流缺失「0药打满 T1」前缀（O056: 338 观测中 potions=0 & actions>=5 为 0），
-        // 池内仅 3 牌同质族；把已证优的主搜 T1 段作为第三候选注入，检验续搜能否保主搜质量。
+        // 侦察观测流不保证覆盖主搜 T1 形态（池保留的同质短前缀与主搜路线可分叉），
+        // 故将主搜 T1 段作为确定性候选注入 attempt 序列，续搜以 Accept 的比较门槛裁决。
         PlanAction[] primaryActions = selected.BestNode.Actions.ToArray();
         if (primaryActions.Length > 0)
         {
@@ -125,7 +125,9 @@ internal static partial class CombatSearchCoordinator
             BossTempoPrefix primaryPrefix = new(t1Segment, null, 0,
                 t1Segment.Count(a => a.Kind == PlanActionKind.UsePotion), selected.BestNode.Score);
             prefixes.Add(primaryPrefix);
-            attemptPrefixes.Add(primaryPrefix);
+            // 主搜段是已验证优于池同质族的候选；附加预算紧张时排尾候选可能永远轮不到，
+            // 故置于 attempt 序列首位。
+            attemptPrefixes.Insert(0, primaryPrefix);
         }
         HashSet<BossTempoPrefix> attempted = new(attemptPrefixes);
         foreach (BossTempoPrefix retained in prefixes)
