@@ -97,7 +97,7 @@ internal static partial class CombatSearchCoordinator
             + $"nodes={allowance.MaxExpandedNodes} time_ms={allowance.SoftTimeBudgetMilliseconds}");
         SolverResult? scout = SolveOptionalPotionPosterior(new CombatBeamSolver(
             context.Root, context.DisplayNames, context.BattleDamage,
-            memberPolicy with { BossTempoSearch = new(3) { ScoutTurns = 1, PrefixObserver = ObservePrefix } },
+            memberPolicy with { BossTempoSearch = new(10) { ScoutTurns = 1, PrefixObserver = ObservePrefix } },
             context.CancellationToken, context.ProgressCallback,
             Member(Math.Max(1, allowance.MaxExpandedNodes / 3), Math.Max(1, allowance.SoftTimeBudgetMilliseconds / 3)),
             directSearchPurpose: DirectSearchPurpose.BossTempo,
