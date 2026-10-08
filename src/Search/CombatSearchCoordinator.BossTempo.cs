@@ -45,6 +45,15 @@ internal static partial class CombatSearchCoordinator
         long RemainingNodes() => allowance.MaxExpandedNodes
             - (context.Budget.WorkTotals.Snapshot().ExpandedNodes - before.ExpandedNodes);
         int RemainingTime() => allowance.SoftTimeBudgetMilliseconds - (int)clock.ElapsedMilliseconds;
+        // 复用主搜免药完胜作为 Smart 审计基线；不满足免药完胜条件时返回 null（不伪造基线）。
+        // 组件证书门（CanUseComponentSmartPotionEligibility）是剪枝捷径的条件，与审计基线语义无关。
+        PotionFreePolicyBaseline? FreeAuditBaseline(SolverResult primary)
+            => IsCompleteVictory(primary) && !primary.Snapshot.HasRisk
+                && primary.ExplicitPotionCount == 0
+                && primary.Snapshot.ProjectedDeathSaveUseCount == 0
+                    ? new(true, StrategicHpDeficit(context.Root, policy, primary),
+                        primary.Snapshot.PlayerHp, primary.CombatEndedTurn)
+                    : null;
         bool Accept(SolverResult? candidate)
         {
             if (candidate == null || candidate.Snapshot.HasRisk || !IsCompleteVictory(candidate)
@@ -83,7 +92,8 @@ internal static partial class CombatSearchCoordinator
             memberPolicy with { BossTempoSearch = new(3) { ScoutTurns = 1, PrefixObserver = ObservePrefix } },
             context.CancellationToken, context.ProgressCallback,
             Member(Math.Max(1, allowance.MaxExpandedNodes / 3), Math.Max(1, allowance.SoftTimeBudgetMilliseconds / 3)),
-            directSearchPurpose: DirectSearchPurpose.BossTempo), policy, "boss_tempo_scout");
+            directSearchPurpose: DirectSearchPurpose.BossTempo,
+            potionFreePolicyBaseline: FreeAuditBaseline(selected)), policy, "boss_tempo_scout");
         searches++;
         if (scout is { ResultScope: not SolverResultScope.SearchCompletion }) return scout;
         Accept(scout);
@@ -113,7 +123,8 @@ internal static partial class CombatSearchCoordinator
                 context.CancellationToken, context.ProgressCallback,
                 Member(availableNodes, availableTime),
                 fixedPrefixActions: prefix.Actions, primaryIncumbent: bound,
-                directSearchPurpose: DirectSearchPurpose.BossTempo), policy, "boss_tempo_continuation");
+                directSearchPurpose: DirectSearchPurpose.BossTempo,
+                potionFreePolicyBaseline: FreeAuditBaseline(selected)), policy, "boss_tempo_continuation");
             searches++;
             if (candidate is { ResultScope: not SolverResultScope.SearchCompletion }) return candidate;
             bool accepted = Accept(candidate);
