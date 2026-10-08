@@ -30,6 +30,13 @@ internal static partial class CombatSearchCoordinator
         void ObservePrefix(BossTempoPrefix prefix)
         {
             observed++;
+            string observeSeq = string.Join(">", prefix.Actions.Select(a =>
+                a.Kind == PlanActionKind.UsePotion ? a.PotionId
+                : a.Kind == PlanActionKind.PlayCard ? a.CardId : a.Kind.ToString()));
+            policy.Diagnostics.Info($"[CombatSolver/Test] BOSS_TEMPO_OBSERVE "
+                + $"actions={prefix.Actions.Length} potions={prefix.PotionCount} "
+                + $"eliminated={prefix.EliminatedEnemies} rank={prefix.Rank} "
+                + $"seq={(observeSeq.Length > 240 ? observeSeq[..240] + "…" : observeSeq)}");
             int prior = prefixes.FindIndex(p => p.State == prefix.State && p.PotionCount == prefix.PotionCount);
             if (prior >= 0)
             {
@@ -73,7 +80,8 @@ internal static partial class CombatSearchCoordinator
             BaseScoreOnly = false,
             SecondRankBand = false,
             ContextualRanking = null,
-            BeamWeightPerturbation = null,
+            // E5：主搜唯一47胜成员=OffensiveRefinement(EnemyHp×1.5)；清空扰动则续搜只到普通beam水平。
+            BeamWeightPerturbation = new(BeamWeightTerm.EnemyHp, 1.5d),
             ContinuousThreatRanking = false,
             BaseScoreTacticalTies = false,
             BossTempoHpPricing = policy.BossTempoNormalizeHpPricing,
@@ -98,13 +106,39 @@ internal static partial class CombatSearchCoordinator
         if (scout is { ResultScope: not SolverResultScope.SearchCompletion }) return scout;
         Accept(scout);
         policy.Diagnostics.Info($"[CombatSolver/Test] BOSS_TEMPO_PREFIXES observed={observed} retained={prefixes.Count}");
-        foreach (BossTempoPrefix prefix in prefixes.GroupBy(p => p.PotionCount)
+        List<BossTempoPrefix> attemptPrefixes = prefixes.GroupBy(p => p.PotionCount)
             .Select(bucket => bucket.OrderByDescending(ForcedCommitmentRank)
                 .ThenByDescending(p => p.EliminatedEnemies)
                 .ThenByDescending(p => p.Rank).First())
             .OrderByDescending(ForcedCommitmentRank)
             .ThenByDescending(p => p.EliminatedEnemies).ThenBy(p => p.PotionCount)
-            .ThenByDescending(p => p.Rank).Take(2))
+            .ThenByDescending(p => p.Rank).Take(2).ToList();
+        // 侦察观测流缺失「0药打满 T1」前缀（O056: 338 观测中 potions=0 & actions>=5 为 0），
+        // 池内仅 3 牌同质族；把已证优的主搜 T1 段作为第三候选注入，检验续搜能否保主搜质量。
+        PlanAction[] primaryActions = selected.BestNode.Actions.ToArray();
+        if (primaryActions.Length > 0)
+        {
+            int firstTurn = primaryActions[0].Turn;
+            PlanAction[] t1Segment = primaryActions.TakeWhile(a => a.Turn <= firstTurn).ToArray();
+            // State=null：主搜轨迹合成条目，无观测指纹，不参与去重；
+            // EliminatedEnemies=0 仅作诊断占位（T1 末敌况不可得），该条不参与池选择。
+            BossTempoPrefix primaryPrefix = new(t1Segment, null, 0,
+                t1Segment.Count(a => a.Kind == PlanActionKind.UsePotion), selected.BestNode.Score);
+            prefixes.Add(primaryPrefix);
+            attemptPrefixes.Add(primaryPrefix);
+        }
+        HashSet<BossTempoPrefix> attempted = new(attemptPrefixes);
+        foreach (BossTempoPrefix retained in prefixes)
+        {
+            string retainedSeq = string.Join(">", retained.Actions.Select(a =>
+                a.Kind == PlanActionKind.UsePotion ? a.PotionId
+                : a.Kind == PlanActionKind.PlayCard ? a.CardId : a.Kind.ToString()));
+            policy.Diagnostics.Info($"[CombatSolver/Test] BOSS_TEMPO_POOL "
+                + $"potions={retained.PotionCount} rank={retained.Rank} "
+                + $"eliminated={retained.EliminatedEnemies} attempt={(attempted.Contains(retained) ? 1 : 0)} "
+                + $"seq={(retainedSeq.Length > 240 ? retainedSeq[..240] + "…" : retainedSeq)}");
+        }
+        foreach (BossTempoPrefix prefix in attemptPrefixes)
         {
             context.CancellationToken.ThrowIfCancellationRequested();
             if (CanFinishTargetPortfolio(context.Root, policy, context.Profile, selected))
